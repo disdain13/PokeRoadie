@@ -2,11 +2,9 @@
 [1.1]: http://i.imgur.com/M4fJ65n.png (ATTENTION)
 [1.2]: http://i.imgur.com/NNcGs1n.png (BTC)
 <!-- title -->
-<h1>A Pokemon Go Bot based on FeroxRevs API</h1>
+<h1>A Pokemon Go Bot based on Spegeli Fork - PokeRodie</h1>
 <!-- disclaimer -->
 ![alt text][1.1] <strong><em> The contents of this repo are a proof of concept and are for educational use only </em></strong>![alt text][1.1]
-![](https://github.com/Spegeli/Pokemon-Go-Rocket-API/blob/master/Screenshot.png)
-Chatting about this Repository can be done on our Discord: https://discord.gg/VsVrjgr <br/>
 <br/>
 
 <h2><a name="features">Features</a></h2>
@@ -40,14 +38,17 @@ Chatting about this Repository can be done on our Discord: https://discord.gg/Vs
  - [Log File System]<br />
    (all activity will be tracked in a Log File)
  - [Random Task Delays]
- - [Statistic in the Header] ![alt tag](https://github.com/Spegeli/Pokemon-Go-Rocket-API/blob/master/StatisticScreenshot.png)
+ - [Statistic in the Header]
  - [Very color and useful Logging]<br />
    (so you every time up2date what currently happened)
  - and many more ;-)
+<br /><br /><h2><a name="features">NEW - Only in PokeRoadie</a></h2>
+ - [Global Destinations]<br />
+ - Create a list of waypoints around the world<br />spend x minutes farming in each geo<br /> Will move at freeway speeds and still catch<br />plan elaborate routes for hunting<br />
+ - [Prioritize Stops with Lures]
+ - [Statistics every x minutes]
+ - [Scaling speed based on distance]
 <br/>
-
-<h2><a name="screenshots">Screenshots</a></h2><br/>
-- coming soon -<br/>
 <hr/>
 <br/>
 
@@ -56,6 +57,6 @@ Make sure you check out our [Wiki](https://github.com/NecronomiconCoding/NecroBo
 <br/>
 
 <h2><a name="credits">Credits</a></h2>
-A big thank you goes to Feroxs' hard work on the API & Console. Without him, this would not have been possible. <3
+A big thank you goes to Ferox, Necronomicon, Spegeli <3
 <br/>
 Thanks to everyone who volunteered by contributing via Pull Requests!
