@@ -406,5 +406,29 @@ namespace PokemonGo.RocketAPI.Console {
                 this["DisplayAllPokemonInLog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableSpeedAdjustment {
+            get {
+                return ((bool)(this["EnableSpeedAdjustment"]));
+            }
+            set {
+                this["EnableSpeedAdjustment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableSpeedRandomizer {
+            get {
+                return ((bool)(this["EnableSpeedRandomizer"]));
+            }
+            set {
+                this["EnableSpeedRandomizer"] = value;
+            }
+        }
     }
 }

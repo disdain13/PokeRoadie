@@ -29,7 +29,6 @@ namespace PokemonGo.RocketAPI
         bool TransferPokemon { get; }
         int TransferPokemonKeepDuplicateAmount { get; }
         bool NotTransferPokemonsThatCanEvolve { get; }
-
         float KeepMinIVPercentage { get; }
         int KeepMinCP { get; }
         bool PrioritizeIVOverCP { get; }
@@ -45,6 +44,9 @@ namespace PokemonGo.RocketAPI
         int DestinationIndex { get; set; }
         int DisplayRefreshMinutes { get; }
         bool DisplayAllPokemonInLog { get; }
+        bool EnableSpeedAdjustment { get; }
+        bool EnableSpeedRandomizer { get; }
+
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsNotToTransfer { get; }

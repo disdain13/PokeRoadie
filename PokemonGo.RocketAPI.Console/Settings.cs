@@ -58,6 +58,8 @@ namespace PokemonGo.RocketAPI.Console
         public bool DestinationsEnabled => UserSettings.Default.DestinationsEnabled;
         public int DisplayRefreshMinutes => UserSettings.Default.DisplayRefreshMinutes;
         public bool DisplayAllPokemonInLog => UserSettings.Default.DisplayAllPokemonInLog;
+        public bool EnableSpeedAdjustment => UserSettings.Default.EnableSpeedAdjustment;
+        public bool EnableSpeedRandomizer => UserSettings.Default.EnableSpeedRandomizer;
 
         public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter 
         {

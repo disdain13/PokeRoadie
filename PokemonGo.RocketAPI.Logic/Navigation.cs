@@ -27,34 +27,37 @@ namespace PokemonGo.RocketAPI.Logic
         public async Task<PlayerUpdateResponse> HumanLikeWalking(GeoCoordinate targetLocation,
             double walkingSpeedInKilometersPerHour, Func<Task> functionExecutedWhileWalking)
         {
-            
-            var speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
 
+            //randomize speed for less detection
+            if (_client.Settings.EnableSpeedRandomizer)
+            {
+                if (walkingSpeedInKilometersPerHour > 3)
+                {
+                    walkingSpeedInKilometersPerHour += RandomHelper.RandomNumber(-2, 3);
+                }
+                else
+                {
+                    walkingSpeedInKilometersPerHour += RandomHelper.RandomNumber(0, 2);
+                }
+            }
+
+            var speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
             var sourceLocation = new GeoCoordinate(_client.CurrentLat, _client.CurrentLng);
             var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
             var seconds = distanceToTarget / speedInMetersPerSecond;
 
-            //adjust speed as needed
-            while (seconds > 60 && walkingSpeedInKilometersPerHour < 55)
+            //adjust speed to try and keep the trip under a minute, might not be possible
+            if (walkingSpeedInKilometersPerHour < 55 && _client.Settings.EnableSpeedAdjustment)
             {
-                if (walkingSpeedInKilometersPerHour < 15)
-                    walkingSpeedInKilometersPerHour = 15;
-                else if (walkingSpeedInKilometersPerHour < 25)
-                    walkingSpeedInKilometersPerHour = 25;
-                else if (walkingSpeedInKilometersPerHour < 35)
-                    walkingSpeedInKilometersPerHour = 35;
-                else if (walkingSpeedInKilometersPerHour < 45)
-                    walkingSpeedInKilometersPerHour = 45;
-                else if (walkingSpeedInKilometersPerHour < 55)
-                    walkingSpeedInKilometersPerHour = 55;
-                //else if (walkingSpeedInKilometersPerHour < 65)
-                //    walkingSpeedInKilometersPerHour = 65;
-                //else if (walkingSpeedInKilometersPerHour < 75)
-                //    walkingSpeedInKilometersPerHour = 75;
-                speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
-                seconds = distanceToTarget / speedInMetersPerSecond;
+                while (seconds > 60 && walkingSpeedInKilometersPerHour < 55)
+                {
+                    walkingSpeedInKilometersPerHour++;
+                    speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
+                    seconds = distanceToTarget / speedInMetersPerSecond;
+                }
             }
 
+            //log distance and time
             if (seconds > 60)
             {
                 Logger.Write($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {Math.Round(seconds / 60,2).ToString():0.##} minutes! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.None, ConsoleColor.Red);

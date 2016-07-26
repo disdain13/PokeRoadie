@@ -35,7 +35,7 @@ namespace PokemonGo.RocketAPI.Helpers
                     return;
                 }
 
-                Logger.Write("There is a new Version available: https://github.com/Spegeli/Pokemon-Go-Rocket-API", LogLevel.Info);
+                Logger.Write("There is a new Version available: https://github.com/disdain13/PokeRoadie/", LogLevel.Info);
                 Thread.Sleep(1000);
             }
             catch (Exception)
@@ -50,7 +50,7 @@ namespace PokemonGo.RocketAPI.Helpers
             using (var wC = new WebClient())
                 return
                     wC.DownloadString(
-                        "https://raw.githubusercontent.com/Spegeli/Pokemon-Go-Rocket-API/master/PokemonGo.RocketAPI/Properties/AssemblyInfo.cs");
+                        "https://raw.githubusercontent.com/disdain13/PokeRoadie/master/PokemonGo.RocketAPI.Console/Properties/AssemblyInfo.cs");
         }
     }
 }
