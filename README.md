@@ -44,19 +44,14 @@
  - and many more ;-)
 <br /><br /><h2><a name="features">NEW - Only in PokeRoadie</a></h2>
  - [Global Destinations]<br />
- - Create a list of waypoints around the world<br />spend x minutes farming in each geo<br /> Will move at freeway speeds and still catch<br />plan elaborate routes for hunting<br />
- - [Prioritize Stops with Lures]
- - [Statistics every x minutes]
- - [Scaling speed based on distance]
+ - Create a list of waypoints around the world.<br />Spend x minutes (60 by default) farming in each location.<br />Fly between global destinations at high speed (no catch).<br />Or, Drive to global destinations while catching!<br />Setup elaborate routes to hotspots everywhere!
+ - [Prioritize Stops with Lures]<br />Visit stops with lures first.<br />If there are multiple stops with lures, bounce back and forth a little.
+ - [Statistics every x minutes]<br />Detailed Pokemon stats.<br />Detailed Destination stats.<br />Ability to log all Pokemon.<br />
+ - [Dynamic Speed]<br />Dynamically Adjust speed between 2-55kmph based upon next waypoint distance, and the time to get there.<br />Randomize Speed slightly to present more realistic simulation.
 <br/>
 <hr/>
-<br/>
-
-<h2><a name="getting-started">Getting Started</a></h2>
-Make sure you check out our [Wiki](https://github.com/NecronomiconCoding/NecroBot/wiki) to get started.
 <br/>
 
 <h2><a name="credits">Credits</a></h2>
 A big thank you goes to Ferox, Necronomicon, Spegeli <3
 <br/>
-Thanks to everyone who volunteered by contributing via Pull Requests!
