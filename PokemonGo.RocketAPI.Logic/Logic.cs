@@ -321,7 +321,7 @@ namespace PokemonGo.RocketAPI.Logic
                             var destination = _client.Destinations[newIndex];
 
                             //set new lat and long
-                            _client.StartLat = destination.Latitude; ;
+                            _client.StartLat = destination.Latitude;
                             _client.StartLng = destination.Longitude;
                             _client.StartAltitude = destination.Altitude;
 
