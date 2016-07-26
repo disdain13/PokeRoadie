@@ -42,7 +42,7 @@
  - [Very color and useful Logging]<br />
    (so you every time up2date what currently happened)
  - and many more ;-)
-<br /><br /><h2><a name="features">NEW - Only in PokeRoadie</a></h2>
+<br /><br /><h2><a name="features">New Features - Only in PokeRoadie</a></h2>
  - [Global Destinations]<br />Create a list of waypoints around the world.<br />Spend x minutes (60 by default) farming in each location.<br />Fly between global destinations at high speed (no catch).<br />Or, Drive to global destinations while catching!<br />Setup elaborate routes to hotspots everywhere!
  - [Prioritize Stops with Lures]<br />Visit stops with lures first.<br />If there are multiple stops with lures, bounce back and forth a little.
  - [Statistics every x minutes]<br />Detailed Pokemon stats.<br />Detailed Destination stats.<br />Ability to log all Pokemon.<br />
