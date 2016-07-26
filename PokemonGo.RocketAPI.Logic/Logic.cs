@@ -98,10 +98,16 @@ namespace PokemonGo.RocketAPI.Logic
             }
         }
 
-        private async void WriteStats(string playerName, string currentLevelInfos)
+        private async void WriteStats()
         {
             if (!_client.RefreshEndDate.HasValue || _client.RefreshEndDate.Value >= DateTime.Now)
             {
+                await Inventory.getCachedInventory(_client);
+                _playerProfile = await _client.GetProfile();
+                var playerName = Statistics.GetUsername(_client, _playerProfile);
+                _stats.UpdateConsoleTitle(_client, _inventory);
+                var currentLevelInfos = await Statistics._getcurrentLevelInfos(_inventory);
+
                 Logger.Write("----------------------------", LogLevel.None, ConsoleColor.Yellow);
                 if (_clientSettings.AuthType == AuthType.Ptc)
                     Logger.Write($"PTC Account: {playerName}\n", LogLevel.None, ConsoleColor.Cyan);
@@ -124,15 +130,9 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 if (!IsInitialized)
                 {
-                    //get user information
-                    await Inventory.getCachedInventory(_client);
-                    _playerProfile = await _client.GetProfile();
-                    var PlayerName = Statistics.GetUsername(_client, _playerProfile);
-                    _stats.UpdateConsoleTitle(_client, _inventory);
-                    var _currentLevelInfos = await Statistics._getcurrentLevelInfos(_inventory);
 
                     //write stats
-                    WriteStats(PlayerName, _currentLevelInfos);
+                    WriteStats();
 
                     //get ignore lists
                     var PokemonsNotToTransfer = _clientSettings.PokemonsNotToTransfer;
@@ -170,6 +170,9 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task ExecuteFarmingPokestopsAndPokemons(bool path)
         {
+
+            WriteStats();
+
             if (!path)
                 await ExecuteFarmingPokestopsAndPokemons();
             else
