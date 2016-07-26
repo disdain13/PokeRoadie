@@ -313,7 +313,7 @@ namespace PokemonGo.RocketAPI.Logic
                     if (DateTime.Now > _client.DestinationEndDate.Value)
                     {
 
-                        if (_client.Destinations != null && _client.Destinations.Count > 0)
+                        if (_client.Destinations != null && _client.Destinations.Count > 1)
                         {
                             //get new destination index
                             var newIndex = _clientSettings.DestinationIndex + 1 >= _client.Destinations.Count ? 0 : _clientSettings.DestinationIndex + 1;

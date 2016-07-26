@@ -36,7 +36,6 @@ namespace PokemonGo.RocketAPI
         public Client(ISettings settings)
         {
             Settings = settings;
-            Destinations = GetDestinationListFromFile();
 
             Tuple<double, double> latLngFromFile = GetLatLngFromFile();
             if (latLngFromFile != null && latLngFromFile.Item1 != 0 && latLngFromFile.Item2 != 0)
@@ -49,6 +48,8 @@ namespace PokemonGo.RocketAPI
                     Logger.Write("Missing \"\\Configs\\LastCoords.ini\", using default settings for coordinates to create a new one...");
                 SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
             }
+
+            Destinations = GetDestinationListFromFile(settings);
 
             //Setup HttpClient and create default headers
             var handler = new HttpClientHandler
@@ -111,7 +112,7 @@ namespace PokemonGo.RocketAPI
         /// Gets a list of target destinations.
         /// </summary>
         /// <returns>list of target destinations</returns>
-        public static List<Destination> GetDestinationListFromFile()
+        public static List<Destination> GetDestinationListFromFile(ISettings settings)
         {
             var list = new List<Destination>();
             if (!Directory.Exists(configs_path))
@@ -173,6 +174,15 @@ namespace PokemonGo.RocketAPI
                         line = r.ReadLine();
                     }
                     r.Close();
+                }
+            }
+            else
+            {
+                if (settings.DefaultLatitude > 0 && settings.DefaultLongitude > 0)
+                using (StreamWriter w = File.CreateText(destinationcoords_file))
+                {
+                    w.Write($"{settings.DefaultLatitude}:{settings.DefaultLongitude}");
+                    w.Close();
                 }
             }
             return list;
