@@ -44,7 +44,7 @@ namespace PokemonGo.RocketAPI
         bool DestinationsEnabled { get; }
         int DestinationIndex { get; set; }
         int DisplayRefreshMinutes { get; }
-
+        bool DisplayAllPokemonInLog { get; }
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsNotToTransfer { get; }

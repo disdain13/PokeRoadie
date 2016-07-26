@@ -102,7 +102,6 @@ namespace PokemonGo.RocketAPI.Logic
         {
             if (!_client.RefreshEndDate.HasValue || _client.RefreshEndDate.Value >= DateTime.Now)
             {
-                await Inventory.getCachedInventory(_client);
                 _playerProfile = await _client.GetProfile();
                 var playerName = Statistics.GetUsername(_client, _playerProfile);
                 _stats.UpdateConsoleTitle(_client, _inventory);
@@ -110,7 +109,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                 Logger.Write("----------------------------", LogLevel.None, ConsoleColor.Yellow);
                 if (_clientSettings.AuthType == AuthType.Ptc)
-                    Logger.Write($"PTC Account: {playerName}\n", LogLevel.None, ConsoleColor.Cyan);
+                    Logger.Write($"PTC Account: {playerName}\n", LogLevel.None, ConsoleColor.DarkGray);
                 Logger.Write($"Name: {playerName}", LogLevel.None, ConsoleColor.DarkGray);
                 Logger.Write($"Team: {_playerProfile.Profile.Team}", LogLevel.None, ConsoleColor.DarkGray);
                 Logger.Write($"Level: {currentLevelInfos}", LogLevel.None, ConsoleColor.DarkGray);
@@ -130,6 +129,8 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 if (!IsInitialized)
                 {
+
+                    await Inventory.getCachedInventory(_client);
 
                     //write stats
                     WriteStats();
@@ -705,6 +706,26 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task DisplayHighests()
         {
+            //get all ordered by id, then cp
+            var allPokemon = (await _inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
+            if (_clientSettings.DestinationsEnabled && _client.Destinations != null && _client.Destinations.Count > 0)
+            {
+                Logger.Write("====== Pokemon Stats ======", LogLevel.None, ConsoleColor.Yellow);
+                Logger.Write($"{allPokemon.Count} Total Pokemon", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== Cp ======", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"< 100 Cp: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"100-499 Cp: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"500-999 Cp: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"1000-1499 Cp: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"> 1499 Cp: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== IV ======", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"24% or less: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) < 25).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"25%-49%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 24 && PokemonInfo.CalculatePokemonPerfection(x) < 50).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"50%-74%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 49 && PokemonInfo.CalculatePokemonPerfection(x) < 75).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"75%-89%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 74 && PokemonInfo.CalculatePokemonPerfection(x) < 90).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"90%-100%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 89).Count()}", LogLevel.None, ConsoleColor.White);
+            }
+
             if (_clientSettings.DestinationsEnabled && _client.Destinations != null && _client.Destinations.Count > 0)
             {
                 Logger.Write("====== Destinations ======", LogLevel.None, ConsoleColor.Yellow);
@@ -728,14 +749,17 @@ namespace PokemonGo.RocketAPI.Logic
                     $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCP(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
                     LogLevel.None, ConsoleColor.White);
             }
-            var allPokemon = await _inventory.GetPokemons();
-            Logger.Write("====== " + allPokemon.Count().ToString() + " Total Pokemon ======", LogLevel.None, ConsoleColor.Yellow);
-            foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
+            if (_clientSettings.DisplayAllPokemonInLog)
             {
-                Logger.Write(
-                      $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCP(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
-                      LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== Full Pokemon List ======", LogLevel.None, ConsoleColor.Yellow);
+                foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
+                {
+                    Logger.Write(
+                          $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCP(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
+                          LogLevel.None, ConsoleColor.White);
+                }
             }
+
         }
 
         /*

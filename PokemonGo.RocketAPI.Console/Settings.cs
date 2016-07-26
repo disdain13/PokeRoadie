@@ -57,6 +57,7 @@ namespace PokemonGo.RocketAPI.Console
         public bool PrioritizeStopsWithLures => UserSettings.Default.PrioritizeStopsWithLures;
         public bool DestinationsEnabled => UserSettings.Default.DestinationsEnabled;
         public int DisplayRefreshMinutes => UserSettings.Default.DisplayRefreshMinutes;
+        public bool DisplayAllPokemonInLog => UserSettings.Default.DisplayAllPokemonInLog;
 
         public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter 
         {

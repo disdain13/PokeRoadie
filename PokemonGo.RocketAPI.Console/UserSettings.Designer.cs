@@ -394,5 +394,17 @@ namespace PokemonGo.RocketAPI.Console {
                 this["DisplayRefreshMinutes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayAllPokemonInLog {
+            get {
+                return ((bool)(this["DisplayAllPokemonInLog"]));
+            }
+            set {
+                this["DisplayAllPokemonInLog"] = value;
+            }
+        }
     }
 }
