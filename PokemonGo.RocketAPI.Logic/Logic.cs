@@ -365,11 +365,13 @@ namespace PokemonGo.RocketAPI.Logic
             }
             
             var mapObjects = await _client.GetMapObjects();
+
             var pokeStops =
                 Navigation.pathByNearestNeighbour(
                 mapObjects.MapCells.SelectMany(i => i.Forts)
                     .Where(
                         i =>
+                            i.Type != FortType.Gym &&
                             i.Type == FortType.Checkpoint &&
                             i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() &&
                             (_clientSettings.MaxTravelDistanceInMeters == 0 ||
@@ -434,82 +436,94 @@ namespace PokemonGo.RocketAPI.Logic
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLat, _client.CurrentLng, pokeStop.Latitude, pokeStop.Longitude);
                 var fortInfo = await _client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
 
-                try
+
+                if (pokeStop.Type != FortType.Gym)
                 {
-                    var fortFile = Path.Combine(pokestopsDir, pokeStop.Id + ".txt");
-                    if (!File.Exists(fortFile))
+                    try
                     {
-                        using (StreamWriter w = File.CreateText(fortFile))
+                        var fortFile = Path.Combine(pokestopsDir, pokeStop.Id + ".txt");
+                        if (!File.Exists(fortFile))
                         {
-                            w.WriteLine(fortInfo.FortId.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                            w.WriteLine(fortInfo.Type);
-                            w.WriteLine(fortInfo.Latitude);
-                            w.WriteLine(fortInfo.Longitude);
-                            w.WriteLine(fortInfo.Name.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                            w.WriteLine(fortInfo.Description.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                            w.WriteLine();
-                            foreach (var img in fortInfo.ImageUrls)
+                            using (StreamWriter w = File.CreateText(fortFile))
                             {
-                                w.WriteLine(img);
+                                w.WriteLine(fortInfo.FortId.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
+                                w.WriteLine(fortInfo.Type);
+                                w.WriteLine(fortInfo.Latitude);
+                                w.WriteLine(fortInfo.Longitude);
+                                w.WriteLine(fortInfo.Name.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
+                                w.WriteLine(fortInfo.Description.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
+                                w.WriteLine();
+                                foreach (var img in fortInfo.ImageUrls)
+                                {
+                                    w.WriteLine(img);
+                                }
+                                w.Close();
                             }
-                            w.Close();
                         }
                     }
-                }
-                catch(Exception e)
-                {
-                    Logger.Write("Could not save the pokestop information file. " + e.ToString(), LogLevel.Error);
-                }
-
-                var name = $"Name: {fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
-                Logger.Write(name, LogLevel.Pokestop);
-
-                Func<Task> del = null;
-                if (_clientSettings.CatchPokemon) del = ExecuteCatchAllNearbyPokemons;
-                var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _clientSettings.WalkingSpeedInKilometerPerHour, del);
-
-                var fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                if (fortSearch.ExperienceAwarded > 0)
-                {
-                    _stats.AddExperience(fortSearch.ExperienceAwarded);
-                    _stats.UpdateConsoleTitle(_client, _inventory);
-                    string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-                    Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
-                    recycleCounter++;
-                }
-
-                if (_clientSettings.LoiteringActive && pokeStop.LureInfo != null)
-                {
-                    Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
-                    while (_clientSettings.LoiteringActive && pokeStop.LureInfo != null)
+                    catch (Exception e)
                     {
-                        if (_clientSettings.CatchPokemon)
-                            await ExecuteCatchAllNearbyPokemons();
+                        Logger.Write("Could not save the pokestop information file. " + e.ToString(), LogLevel.Error);
+                    }
 
-                        fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                        if (fortSearch.ExperienceAwarded > 0)
+                    var name = $"Name: {fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
+                    Logger.Write(name, LogLevel.Pokestop);
+
+                    Func<Task> del = null;
+                    if (_clientSettings.CatchPokemon) del = ExecuteCatchAllNearbyPokemons;
+                    var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _clientSettings.WalkingSpeedInKilometerPerHour, del);
+
+                    var fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                    if (fortSearch.ExperienceAwarded > 0)
+                    {
+                        _stats.AddExperience(fortSearch.ExperienceAwarded);
+                        _stats.UpdateConsoleTitle(_client, _inventory);
+                        string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+                        Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                        recycleCounter++;
+                    }
+
+                    if (_clientSettings.LoiteringActive && pokeStop.LureInfo != null)
+                    {
+                        Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
+                        while (_clientSettings.LoiteringActive && pokeStop.LureInfo != null)
                         {
-                            _stats.AddExperience(fortSearch.ExperienceAwarded);
-                            _stats.UpdateConsoleTitle(_client, _inventory);
-                            string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-                            Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
-                            recycleCounter++;
+                            if (_clientSettings.CatchPokemon)
+                                await ExecuteCatchAllNearbyPokemons();
+
+                            fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                            if (fortSearch.ExperienceAwarded > 0)
+                            {
+                                _stats.AddExperience(fortSearch.ExperienceAwarded);
+                                _stats.UpdateConsoleTitle(_client, _inventory);
+                                string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+                                Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                                recycleCounter++;
+                            }
+
+
+                            if (recycleCounter >= 5)
+                                await RecycleItems();
+
+                            await RandomHelper.RandomDelay(15000, 30000);
+                            pokeStop = mapObjects.MapCells.SelectMany(i => i.Forts).Where(x => x.Id == pokeStop.Id).FirstOrDefault();
+                            if (pokeStop.LureInfo != null) Logger.Write($"Loitering: {fortInfo.Name} still has a lure, chillin out!", LogLevel.Info);
                         }
+                    }
 
-
-                        if (recycleCounter >= 5)
-                            await RecycleItems();
-
-                        await RandomHelper.RandomDelay(15000, 30000);
-                        pokeStop = mapObjects.MapCells.SelectMany(i => i.Forts).Where(x => x.Id == pokeStop.Id).FirstOrDefault();
-                        if (pokeStop.LureInfo != null) Logger.Write($"Loitering: {fortInfo.Name} still has a lure, chillin out!", LogLevel.Info);
-
+                    await RandomHelper.RandomDelay(50, 200);
+                    if (recycleCounter >= 5)
+                        await RecycleItems();
+                }
+                else
+                {
+                    //if it is a gym
+                    if (pokeStop.OwnedByTeam == _playerProfile.Profile.Team)
+                    {
+                
                     }
                 }
-
                 await RandomHelper.RandomDelay(50, 200);
-                if (recycleCounter >= 5)
-                    await RecycleItems();
             }
         }
 
