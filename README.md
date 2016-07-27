@@ -4,7 +4,8 @@
 <!-- title -->
 <h1>PokeRodie</h1>
 <h2>Advanced Pokemon Go Bot</h2>
- -  Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
+A big thank you goes to Ferox, Necronomicon, Spegeli <3
+Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
 <br/><br/>
 
 ![alt text][1.1] <strong><em> The contents of this repo are a proof of concept and are for educational use only </em></strong>![alt text][1.1]
@@ -95,6 +96,4 @@
 <hr/>
 <br/>
 
-<h2><a name="credits">Credits</a></h2>
-A big thank you goes to Ferox, Necronomicon, Spegeli <3
-<br/>
+
