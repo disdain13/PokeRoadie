@@ -2,7 +2,7 @@
 [1.1]: http://i.imgur.com/M4fJ65n.png (ATTENTION)
 [1.2]: http://i.imgur.com/NNcGs1n.png (BTC)
 <!-- title -->
-<h1>PokeRodie</h1>
+<h1>PokeRoadie</h1>
 <h2>Advanced Pokemon Go Bot</h2>
 A big thank you goes to Ferox, Necronomicon, Spegeli <3
 Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
