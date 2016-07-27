@@ -14,57 +14,56 @@ using PokemonGo.RocketAPI.Logging;
 
 namespace PokemonGo.RocketAPI.Console
 {
+    [Serializable]
     public class Settings : ISettings
     {
+        private static object syncRoot => new object();
+
         private string configs_path = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
         private ICollection<PokemonId> _pokemonsNotToTransfer;
         private ICollection<PokemonId> _pokemonsToEvolve;
         private ICollection<PokemonId> _pokemonsNotToCatch;
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
 
-        public AuthType AuthType => (AuthType)Enum.Parse(typeof(AuthType), UserSettings.Default.AuthType, true);
-        public string PtcUsername => UserSettings.Default.PtcUsername;
-        public string PtcPassword => UserSettings.Default.PtcPassword;
+        public AuthType AuthType { get; set; }
+        public string PtcUsername { get; set; }
+        public string PtcPassword { get; set; }
+        public double DefaultLatitude { get; set; }
+        public double DefaultLongitude { get; set; }
+        public double DefaultAltitude { get; set; }
+        public int DestinationIndex { get; set; }
+        public bool CatchPokemon { get; set; }
+        public bool UseGPXPathing { get; set; }
+        public string GPXFile { get; set; }
+        public double WalkingSpeedInKilometerPerHour { get; set; }
+        public int MaxTravelDistanceInMeters { get; set; }
+        public bool UsePokemonToNotCatchList { get; set; }
+        public bool EvolvePokemon { get; set; }
+        public bool EvolveOnlyPokemonAboveIV { get; set; }
+        public float EvolveOnlyPokemonAboveIVValue { get; set; }
+        public bool TransferPokemon { get; set; }
+        public int TransferPokemonKeepDuplicateAmount { get; set; }
+        public bool NotTransferPokemonsThatCanEvolve { get; set; }
+        public float KeepMinIVPercentage { get; set; }
+        public int KeepMinCP { get; set; }
+        public bool useLuckyEggsWhileEvolving { get; set; }
+        public bool PrioritizeIVOverCP { get; set; }
+        public bool LoiteringActive { get; set; }
+        public int MinutesPerDestination { get; set; }
+        public int FlyingSpeedInKilometerPerHour { get; set; }
+        public bool CatchWhileFlying { get; set; }
+        public bool FlyingEnabled { get; set; }
+        public bool MoveWhenNoStops { get; set; }
+        public bool PrioritizeStopsWithLures { get; set; }
+        public bool DestinationsEnabled { get; set; }
+        public int DisplayRefreshMinutes { get; set; }
+        public bool DisplayAllPokemonInLog { get; set; }
+        public bool EnableSpeedAdjustment { get; set; }
+        public bool EnableSpeedRandomizer { get; set; }
+        public int WalkingSpeedInKilometerPerHourMax { get; set; }
+        public int MaxSecondsBetweenStops { get; set; }
 
-        public double DefaultLatitude { get { return UserSettings.Default.DefaultLatitude; } set { UserSettings.Default.DefaultLatitude = value; } }
-        public double DefaultLongitude { get { return UserSettings.Default.DefaultLongitude; } set { UserSettings.Default.DefaultLongitude = value; } }
-        public double DefaultAltitude { get { return UserSettings.Default.DefaultAltitude; } set { UserSettings.Default.DefaultAltitude = value; } }
-        public int DestinationIndex { get { return UserSettings.Default.DestinationIndex; } set { UserSettings.Default.DestinationIndex = value; } }
-        public bool CatchPokemon { get { return UserSettings.Default.CatchPokemon; } set { UserSettings.Default.CatchPokemon = value; } }
-
-        public bool UseGPXPathing => UserSettings.Default.UseGPXPathing;
-        public string GPXFile => UserSettings.Default.GPXFile;
-        public double WalkingSpeedInKilometerPerHour => UserSettings.Default.WalkingSpeedInKilometerPerHour;
-        public int MaxTravelDistanceInMeters => UserSettings.Default.MaxTravelDistanceInMeters;
-
-        public bool UsePokemonToNotCatchList => UserSettings.Default.UsePokemonToNotCatchList;
-        public bool EvolvePokemon => UserSettings.Default.EvolvePokemon;
-        public bool EvolveOnlyPokemonAboveIV => UserSettings.Default.EvolveOnlyPokemonAboveIV;
-        public float EvolveOnlyPokemonAboveIVValue => UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
-        public bool TransferPokemon => UserSettings.Default.TransferPokemon;
-        public int TransferPokemonKeepDuplicateAmount => UserSettings.Default.TransferPokemonKeepDuplicateAmount;
-        public bool NotTransferPokemonsThatCanEvolve => UserSettings.Default.NotTransferPokemonsThatCanEvolve;
-
-        public float KeepMinIVPercentage => UserSettings.Default.KeepMinIVPercentage;
-        public int KeepMinCP => UserSettings.Default.KeepMinCP;
-        public bool useLuckyEggsWhileEvolving => UserSettings.Default.useLuckyEggsWhileEvolving;
-        public bool PrioritizeIVOverCP => UserSettings.Default.PrioritizeIVOverCP;
-        public bool LoiteringActive => UserSettings.Default.LoiteringActive;
-        public int MinutesPerDestination => UserSettings.Default.MinutesPerDestination;
-        public int FlyingSpeedInKilometerPerHour => UserSettings.Default.FlyingSpeedInKilometerPerHour;
-        public bool CatchWhileFlying => UserSettings.Default.CatchWhileFlying;
-        public bool FlyingEnabled => UserSettings.Default.FlyingEnabled;
-        public bool MoveWhenNoStops => UserSettings.Default.MoveWhenNoStops;
-        public bool PrioritizeStopsWithLures => UserSettings.Default.PrioritizeStopsWithLures;
-        public bool DestinationsEnabled => UserSettings.Default.DestinationsEnabled;
-        public int DisplayRefreshMinutes => UserSettings.Default.DisplayRefreshMinutes;
-        public bool DisplayAllPokemonInLog => UserSettings.Default.DisplayAllPokemonInLog;
-        public bool EnableSpeedAdjustment => UserSettings.Default.EnableSpeedAdjustment;
-        public bool EnableSpeedRandomizer => UserSettings.Default.EnableSpeedRandomizer;
-        public int WalkingSpeedInKilometerPerHourMax => UserSettings.Default.WalkingSpeedInKilometerPerHourMax;
-        public int MaxSecondsBetweenStops => UserSettings.Default.MaxSecondsBetweenStops;
-
-        public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter 
+        public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter
         {
             get
             {
@@ -114,7 +113,6 @@ namespace PokemonGo.RocketAPI.Console
             }
 
         }
-
 
         public ICollection<KeyValuePair<ItemId, int>> LoadItemList(string filename, List<KeyValuePair<ItemId, int>> defaultItems)
         {
@@ -257,9 +255,138 @@ namespace PokemonGo.RocketAPI.Console
             DefaultAltitude = z;
             Save();
         }
+
+        public Settings()
+        {
+            this.AuthType = (AuthType)Enum.Parse(typeof(AuthType), UserSettings.Default.AuthType, true);
+            this.CatchPokemon = UserSettings.Default.CatchPokemon;
+            this.CatchWhileFlying = UserSettings.Default.CatchWhileFlying;
+            this.DefaultAltitude = UserSettings.Default.DefaultAltitude;
+            this.DefaultLatitude = UserSettings.Default.DefaultLatitude;
+            this.DefaultLongitude = UserSettings.Default.DefaultLongitude;
+            this.DestinationIndex = UserSettings.Default.DestinationIndex;
+            this.DestinationsEnabled = UserSettings.Default.DestinationsEnabled;
+            this.DisplayAllPokemonInLog = UserSettings.Default.DisplayAllPokemonInLog;
+            this.DisplayRefreshMinutes = UserSettings.Default.DisplayRefreshMinutes;
+            this.EnableSpeedAdjustment = UserSettings.Default.EnableSpeedAdjustment;
+            this.EnableSpeedRandomizer = UserSettings.Default.EnableSpeedRandomizer;
+            this.EvolveOnlyPokemonAboveIV = UserSettings.Default.EvolveOnlyPokemonAboveIV;
+            this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
+            this.EvolvePokemon = UserSettings.Default.EvolvePokemon;
+            this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
+            this.FlyingSpeedInKilometerPerHour = UserSettings.Default.FlyingSpeedInKilometerPerHour;
+            this.GPXFile = UserSettings.Default.GPXFile;
+            this.KeepMinCP = UserSettings.Default.KeepMinCP;
+            this.KeepMinIVPercentage = UserSettings.Default.KeepMinIVPercentage;
+            this.LoiteringActive = UserSettings.Default.LoiteringActive;
+            this.MaxSecondsBetweenStops = UserSettings.Default.MaxSecondsBetweenStops;
+            this.MaxTravelDistanceInMeters = UserSettings.Default.MaxTravelDistanceInMeters;
+            this.MinutesPerDestination = UserSettings.Default.MinutesPerDestination;
+            this.MoveWhenNoStops = UserSettings.Default.MoveWhenNoStops;
+            this.NotTransferPokemonsThatCanEvolve = UserSettings.Default.NotTransferPokemonsThatCanEvolve;
+            this.PrioritizeIVOverCP = UserSettings.Default.PrioritizeIVOverCP;
+            this.PrioritizeStopsWithLures = UserSettings.Default.PrioritizeStopsWithLures;
+            this.PtcPassword = UserSettings.Default.PtcPassword;
+            this.PtcUsername = UserSettings.Default.PtcUsername;
+            this.TransferPokemon = UserSettings.Default.TransferPokemon;
+            this.TransferPokemonKeepDuplicateAmount = UserSettings.Default.TransferPokemonKeepDuplicateAmount;
+            this.UseGPXPathing = UserSettings.Default.UseGPXPathing;
+            this.useLuckyEggsWhileEvolving = UserSettings.Default.useLuckyEggsWhileEvolving;
+            this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
+            this.WalkingSpeedInKilometerPerHour = UserSettings.Default.WalkingSpeedInKilometerPerHour;
+            this.WalkingSpeedInKilometerPerHourMax = UserSettings.Default.WalkingSpeedInKilometerPerHourMax;
+        }
+
         public void Save()
         {
-            UserSettings.Default.Save();
+            //UserSettings.Default.Save();
+            try
+            {
+                string fileName = "Settings.xml";
+                string filePath = Path.Combine(configs_path, fileName);
+                lock (syncRoot)
+                {
+                    using (FileStream s = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        var x = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
+                        x.Serialize(s, this);
+                        s.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Write("Could not save settings to file. Error: " + e.ToString(), LogLevel.Error);
+            }
+        }
+        public void Load()
+        {
+            if (!Directory.Exists(configs_path))
+                Directory.CreateDirectory(configs_path);
+            string fileName = "Settings.xml";
+            string filePath = Path.Combine(configs_path, fileName);
+            if (!File.Exists(filePath))
+            {
+                Logger.Write($"File: \"\\Configs\\{fileName}\" not found, creating new...", LogLevel.Warning);
+                Save();
+            }
+            else
+            {
+                Logger.Write($"Loading File: \"\\Configs\\{fileName}\"", LogLevel.Info);
+
+                var content = string.Empty;
+                Settings obj = null;
+                lock (syncRoot)
+                {
+                    using (FileStream s = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        var x = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
+                        obj = (Settings)x.Deserialize(s);
+                        s.Close();
+                    }
+                }
+
+                if (obj != null)
+                {
+                    this.AuthType = obj.AuthType;
+                    this.CatchPokemon = obj.CatchPokemon;
+                    this.CatchWhileFlying = obj.CatchWhileFlying;
+                    this.DefaultAltitude = obj.DefaultAltitude;
+                    this.DefaultLatitude = obj.DefaultLatitude;
+                    this.DefaultLongitude = obj.DefaultLongitude;
+                    this.DestinationIndex = obj.DestinationIndex;
+                    this.DestinationsEnabled = obj.DestinationsEnabled;
+                    this.DisplayAllPokemonInLog = obj.DisplayAllPokemonInLog;
+                    this.DisplayRefreshMinutes = obj.DisplayRefreshMinutes;
+                    this.EnableSpeedAdjustment = obj.EnableSpeedAdjustment;
+                    this.EnableSpeedRandomizer = obj.EnableSpeedRandomizer;
+                    this.EvolveOnlyPokemonAboveIV = obj.EvolveOnlyPokemonAboveIV;
+                    this.EvolveOnlyPokemonAboveIVValue = obj.EvolveOnlyPokemonAboveIVValue;
+                    this.EvolvePokemon = obj.EvolvePokemon;
+                    this.FlyingEnabled = obj.FlyingEnabled;
+                    this.FlyingSpeedInKilometerPerHour = obj.FlyingSpeedInKilometerPerHour;
+                    this.GPXFile = obj.GPXFile;
+                    this.KeepMinCP = obj.KeepMinCP;
+                    this.KeepMinIVPercentage = obj.KeepMinIVPercentage;
+                    this.LoiteringActive = obj.LoiteringActive;
+                    this.MaxSecondsBetweenStops = obj.MaxSecondsBetweenStops;
+                    this.MaxTravelDistanceInMeters = obj.MaxTravelDistanceInMeters;
+                    this.MinutesPerDestination = obj.MinutesPerDestination;
+                    this.MoveWhenNoStops = obj.MoveWhenNoStops;
+                    this.NotTransferPokemonsThatCanEvolve = obj.NotTransferPokemonsThatCanEvolve;
+                    this.PrioritizeIVOverCP = obj.PrioritizeIVOverCP;
+                    this.PrioritizeStopsWithLures = obj.PrioritizeStopsWithLures;
+                    this.PtcPassword = obj.PtcPassword;
+                    this.PtcUsername = obj.PtcUsername;
+                    this.TransferPokemon = obj.TransferPokemon;
+                    this.TransferPokemonKeepDuplicateAmount = obj.TransferPokemonKeepDuplicateAmount;
+                    this.UseGPXPathing = obj.UseGPXPathing;
+                    this.useLuckyEggsWhileEvolving = obj.useLuckyEggsWhileEvolving;
+                    this.UsePokemonToNotCatchList = obj.UsePokemonToNotCatchList;
+                    this.WalkingSpeedInKilometerPerHour = obj.WalkingSpeedInKilometerPerHour;
+                    this.WalkingSpeedInKilometerPerHourMax = obj.WalkingSpeedInKilometerPerHourMax;
+                }
+            }
         }
     }
 }

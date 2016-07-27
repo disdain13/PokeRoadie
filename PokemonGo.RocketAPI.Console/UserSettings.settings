@@ -2,115 +2,115 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PokemonGo.RocketAPI.Console" GeneratedClassName="UserSettings">
   <Profiles />
   <Settings>
-    <Setting Name="DefaultAltitude" Type="System.Double" Scope="User">
+    <Setting Name="DefaultAltitude" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="KeepMinIVPercentage" Type="System.Single" Scope="User">
+    <Setting Name="KeepMinIVPercentage" Type="System.Single" Scope="Application">
       <Value Profile="(Default)">90</Value>
     </Setting>
-    <Setting Name="KeepMinCP" Type="System.Int32" Scope="User">
+    <Setting Name="KeepMinCP" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">900</Value>
     </Setting>
-    <Setting Name="WalkingSpeedInKilometerPerHour" Type="System.Double" Scope="User">
+    <Setting Name="WalkingSpeedInKilometerPerHour" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">40</Value>
     </Setting>
-    <Setting Name="DefaultLatitude" Type="System.Double" Scope="User">
+    <Setting Name="DefaultLatitude" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">34.0114062</Value>
     </Setting>
-    <Setting Name="DefaultLongitude" Type="System.Double" Scope="User">
+    <Setting Name="DefaultLongitude" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">-118.495009</Value>
     </Setting>
-    <Setting Name="UsePokemonToNotCatchList" Type="System.Boolean" Scope="User">
+    <Setting Name="UsePokemonToNotCatchList" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AuthType" Type="System.String" Scope="User">
+    <Setting Name="AuthType" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Google</Value>
     </Setting>
-    <Setting Name="PtcUsername" Type="System.String" Scope="User">
+    <Setting Name="PtcUsername" Type="System.String" Scope="Application">
       <Value Profile="(Default)">username</Value>
     </Setting>
-    <Setting Name="PtcPassword" Type="System.String" Scope="User">
+    <Setting Name="PtcPassword" Type="System.String" Scope="Application">
       <Value Profile="(Default)">password</Value>
     </Setting>
-    <Setting Name="PrioritizeIVOverCP" Type="System.Boolean" Scope="User">
+    <Setting Name="PrioritizeIVOverCP" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MaxTravelDistanceInMeters" Type="System.Int32" Scope="User">
+    <Setting Name="MaxTravelDistanceInMeters" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10000</Value>
     </Setting>
-    <Setting Name="UseGPXPathing" Type="System.Boolean" Scope="User">
+    <Setting Name="UseGPXPathing" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="GPXFile" Type="System.String" Scope="User">
+    <Setting Name="GPXFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">GPXFILE.gpx</Value>
     </Setting>
-    <Setting Name="useLuckyEggsWhileEvolving" Type="System.Boolean" Scope="User">
+    <Setting Name="useLuckyEggsWhileEvolving" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="NotTransferPokemonsThatCanEvolve" Type="System.Boolean" Scope="User">
+    <Setting Name="NotTransferPokemonsThatCanEvolve" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EvolveOnlyPokemonAboveIV" Type="System.Boolean" Scope="User">
+    <Setting Name="EvolveOnlyPokemonAboveIV" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EvolvePokemon" Type="System.Boolean" Scope="User">
+    <Setting Name="EvolvePokemon" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EvolveOnlyPokemonAboveIVValue" Type="System.Single" Scope="User">
+    <Setting Name="EvolveOnlyPokemonAboveIVValue" Type="System.Single" Scope="Application">
       <Value Profile="(Default)">85</Value>
     </Setting>
-    <Setting Name="TransferPokemon" Type="System.Boolean" Scope="User">
+    <Setting Name="TransferPokemon" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="TransferPokemonKeepDuplicateAmount" Type="System.Int32" Scope="User">
+    <Setting Name="TransferPokemonKeepDuplicateAmount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="LoiteringActive" Type="System.Boolean" Scope="User">
+    <Setting Name="LoiteringActive" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MinutesPerDestination" Type="System.Int32" Scope="User">
+    <Setting Name="MinutesPerDestination" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="FlyingSpeedInKilometerPerHour" Type="System.Int32" Scope="User">
+    <Setting Name="FlyingSpeedInKilometerPerHour" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="CatchWhileFlying" Type="System.Boolean" Scope="User">
+    <Setting Name="CatchWhileFlying" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="FlyingEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="FlyingEnabled" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MoveWhenNoStops" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveWhenNoStops" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="PrioritizeStopsWithLures" Type="System.Boolean" Scope="User">
+    <Setting Name="PrioritizeStopsWithLures" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DestinationsEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="DestinationsEnabled" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="DestinationIndex" Type="System.Int32" Scope="User">
+    <Setting Name="DestinationIndex" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="DisplayRefreshMinutes" Type="System.Int32" Scope="User">
+    <Setting Name="DisplayRefreshMinutes" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="DisplayAllPokemonInLog" Type="System.Boolean" Scope="User">
+    <Setting Name="DisplayAllPokemonInLog" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EnableSpeedAdjustment" Type="System.Boolean" Scope="User">
+    <Setting Name="EnableSpeedAdjustment" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EnableSpeedRandomizer" Type="System.Boolean" Scope="User">
+    <Setting Name="EnableSpeedRandomizer" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CatchPokemon" Type="System.Boolean" Scope="User">
+    <Setting Name="CatchPokemon" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="WalkingSpeedInKilometerPerHourMax" Type="System.Int32" Scope="User">
+    <Setting Name="WalkingSpeedInKilometerPerHourMax" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="MaxSecondsBetweenStops" Type="System.Int32" Scope="User">
+    <Setting Name="MaxSecondsBetweenStops" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">25</Value>
     </Setting>
   </Settings>

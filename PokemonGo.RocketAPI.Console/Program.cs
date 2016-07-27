@@ -31,29 +31,44 @@ namespace PokemonGo.RocketAPI.Console
 
             Task.Run(() =>
             {
+                bool settingsLoaded = false;
+                Settings settings = null;
                 try
                 {
-                    new Logic.Logic(new Settings()).Execute().Wait();
+                    settings = new Settings();
+                    settings.Load();
+                    settingsLoaded = true;
                 }
-                catch (PtcOfflineException)
+                catch (Exception e)
                 {
-                    Logger.Write("PTC Servers are probably down OR your credentials are wrong. Try google", LogLevel.Error);
-                    Logger.Write("Trying again in 60 seconds...");
-                    Thread.Sleep(60000);
-                    new Logic.Logic(new Settings()).Execute().Wait();
+                    Logger.Write("Could not load settings from configuration from file. Continuing with default settings. Error: " + e.ToString(), LogLevel.Error);
                 }
-                catch (AccountNotVerifiedException)
+                if (settingsLoaded)
                 {
-                    Logger.Write("Account not verified. - Exiting");
-                    Environment.Exit(0);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write($"Unhandled exception: {ex}", LogLevel.Error);
-                    new Logic.Logic(new Settings()).Execute().Wait();
+                    try
+                    {
+                        new Logic.Logic(settings).Execute().Wait();
+                    }
+                    catch (PtcOfflineException)
+                    {
+                        Logger.Write("PTC Servers are probably down OR your credentials are wrong. Try google", LogLevel.Error);
+                        Logger.Write("Trying again in 60 seconds...");
+                        Thread.Sleep(60000);
+                        new Logic.Logic(settings).Execute().Wait();
+                    }
+                    catch (AccountNotVerifiedException)
+                    {
+                        Logger.Write("Account not verified. - Exiting");
+                        Environment.Exit(0);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write($"Unhandled exception: {ex}", LogLevel.Error);
+                        new Logic.Logic(settings).Execute().Wait();
+                    }
                 }
             });
-             System.Console.ReadLine();
+            System.Console.ReadLine();
         }
 
         public static bool Validator(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
