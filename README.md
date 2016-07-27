@@ -4,7 +4,7 @@
 <!-- title -->
 <h1>PokeRoadie</h1>
 <h2>Advanced Pokemon Go Bot</h2>
-A big thank you goes to Ferox, Necronomicon, Spegeli <3
+A big thank you goes to Ferox, Necronomicon, Spegeli <3<br/>
 Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
 <br/><br/>
 
