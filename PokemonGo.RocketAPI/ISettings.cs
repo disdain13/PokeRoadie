@@ -11,6 +11,9 @@ namespace PokemonGo.RocketAPI
 {
     public interface ISettings
     {
+
+        #region " Properties "
+
         AuthType AuthType { get; set; }
         string PtcPassword { get; set; }
         string PtcUsername { get; set; }
@@ -24,12 +27,13 @@ namespace PokemonGo.RocketAPI
         bool UsePokemonToNotCatchList { get; set; }
         bool EvolvePokemon { get; set; }
         bool EvolveOnlyPokemonAboveIV { get; set; }
-        float EvolveOnlyPokemonAboveIVValue { get; set; }
+        double EvolveOnlyPokemonAboveIVValue { get; set; }
         bool TransferPokemon { get; set; }
         int TransferPokemonKeepDuplicateAmount { get; set; }
         bool NotTransferPokemonsThatCanEvolve { get; set; }
-        float KeepMinIVPercentage { get; set; }
-        int KeepMinCP { get; set; }
+        double KeepAboveIV { get; set; }
+        double KeepAboveV { get; set; }
+        int KeepAboveCP { get; set; }
         bool PrioritizeIVOverCP { get; set; }
         bool useLuckyEggsWhileEvolving { get; set; }
         bool LoiteringActive { get; set; }
@@ -48,14 +52,22 @@ namespace PokemonGo.RocketAPI
         bool CatchPokemon { get; set; }
         int WalkingSpeedInKilometerPerHourMax { get; set; }
         int MaxSecondsBetweenStops { get; set; }
+        PriorityType PriorityType { get; set; }
 
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsNotToTransfer { get; }
         ICollection<PokemonId> PokemonsNotToCatch { get; }
+        ICollection<PokemonMoveDetail> PokemonMoveDetails { get; }
+
+        #endregion
+        #region " Methods "
 
         void SetDefaultLocation(double lat, double lng, double z);
         void Save();
         void Load();
+
+        #endregion
+
     }
 }

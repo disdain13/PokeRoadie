@@ -668,7 +668,7 @@ namespace PokemonGo.RocketAPI.Logic
         private async Task TransferPokemon()
         {
             await Inventory.getCachedInventory(_client, true);
-            var duplicatePokemons = await _inventory.GetPokemonToTransfer(_clientSettings.NotTransferPokemonsThatCanEvolve, _clientSettings.PrioritizeIVOverCP, _clientSettings.PokemonsNotToTransfer);
+            var duplicatePokemons = await _inventory.GetPokemonToTransfer(_clientSettings);
             if (duplicatePokemons != null && duplicatePokemons.Any())
                 Logger.Write($"Found {duplicatePokemons.Count()} Pokemon for Transfer:", LogLevel.Info);
 
@@ -691,7 +691,7 @@ namespace PokemonGo.RocketAPI.Logic
                 var bestPokemonOfType = _client.Settings.PrioritizeIVOverCP
                     ? await _inventory.GetHighestPokemonOfTypeByIV(duplicatePokemon)
                     : await _inventory.GetHighestPokemonOfTypeByCP(duplicatePokemon);
-                Logger.Write($"{duplicatePokemon.PokemonId} (CP {duplicatePokemon.Cp} | {PokemonInfo.CalculatePokemonPerfection(duplicatePokemon).ToString("0.00")} % perfect) | (Best: {bestPokemonOfType.Cp} CP | {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")} % perfect) | Family Candies: {FamilyCandies}", LogLevel.Transfer);
+                Logger.Write($"{duplicatePokemon.PokemonId} (CP {duplicatePokemon.Cp} | {duplicatePokemon.GetPerfection().ToString("0.00")} % perfect) | (Best: {bestPokemonOfType.Cp} CP | {bestPokemonOfType.GetPerfection().ToString("0.00")} % perfect) | Family Candies: {FamilyCandies}", LogLevel.Transfer);
                 await Task.Delay(500);
             }
         }
@@ -748,7 +748,7 @@ namespace PokemonGo.RocketAPI.Logic
                 //return the default
                 return MiscEnums.Item.ITEM_MASTER_BALL;
             }
-            if (ultraBalls != null && (pokemonCp >= 1000 || (iV >= _clientSettings.KeepMinIVPercentage && proba < 0.40)))
+            if (ultraBalls != null && (pokemonCp >= 1000 || (iV >= _clientSettings.KeepAboveIV && proba < 0.40)))
             {
                 //substitute when low (Upgrade)
                 if (masterBalls != null && ultraBalls.Count * 3 < masterBalls.Count)
@@ -759,7 +759,7 @@ namespace PokemonGo.RocketAPI.Logic
                 //return the default
                 return MiscEnums.Item.ITEM_ULTRA_BALL;
             }
-            if (greatBalls != null && (pokemonCp >= 300 || (iV >= _clientSettings.KeepMinIVPercentage && proba < 0.50)))
+            if (greatBalls != null && (pokemonCp >= 300 || (iV >= _clientSettings.KeepAboveIV && proba < 0.50)))
             {
                 //substitute when low (Upgrade)
                 if (ultraBalls != null && greatBalls.Count * 3 < ultraBalls.Count)
@@ -812,10 +812,10 @@ namespace PokemonGo.RocketAPI.Logic
             if (weparBerryCount > 0 && pokemonCp >= 1500)
                 return ItemId.ItemWeparBerry;
 
-            if (nanabBerryCount > 0 && (pokemonCp >= 1000 || (iV >= _clientSettings.KeepMinIVPercentage && proba < 0.40)))
+            if (nanabBerryCount > 0 && (pokemonCp >= 1000 || (iV >= _clientSettings.KeepAboveIV && proba < 0.40)))
                 return ItemId.ItemNanabBerry;
 
-            if (blukBerryCount > 0 && (pokemonCp >= 500 || (iV >= _clientSettings.KeepMinIVPercentage && proba < 0.50)))
+            if (blukBerryCount > 0 && (pokemonCp >= 500 || (iV >= _clientSettings.KeepAboveIV && proba < 0.50)))
                 return ItemId.ItemBlukBerry;
 
             if (razzBerryCount > 0 && pokemonCp >= 150)
@@ -840,11 +840,11 @@ namespace PokemonGo.RocketAPI.Logic
                 Logger.Write($"1000-1499 Cp: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"> 1499 Cp: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
                 Logger.Write("====== IV ======", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"24% or less: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) < 25).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"25%-49%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 24 && PokemonInfo.CalculatePokemonPerfection(x) < 50).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"50%-74%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 49 && PokemonInfo.CalculatePokemonPerfection(x) < 75).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"75%-89%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 74 && PokemonInfo.CalculatePokemonPerfection(x) < 90).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"90%-100%: {allPokemon.Where(x => PokemonInfo.CalculatePokemonPerfection(x) > 89).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"24% or less: {allPokemon.Where(x => x.GetPerfection() < 25).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"25%-49%: {allPokemon.Where(x => x.GetPerfection() > 24 && x.GetPerfection() < 50).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"50%-74%: {allPokemon.Where(x => x.GetPerfection() > 49 && x.GetPerfection() < 75).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"75%-89%: {allPokemon.Where(x => x.GetPerfection() > 74 && x.GetPerfection() < 90).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"90%-100%: {allPokemon.Where(x => x.GetPerfection() > 89).Count()}", LogLevel.None, ConsoleColor.White);
             }
 
             if (_clientSettings.DestinationsEnabled && _client.Destinations != null && _client.Destinations.Count > 0)
@@ -875,14 +875,14 @@ namespace PokemonGo.RocketAPI.Logic
             var highestsPokemonCp = await _inventory.GetHighestsCP(10);
             foreach (var pokemon in highestsPokemonCp)
                 Logger.Write(
-                    $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCP(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
+                    $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{pokemon.GetMaxCP().ToString().PadLeft(4, ' ')} | ({pokemon.GetPerfection().ToString("0.00")}% perfect)\t| Lvl {pokemon.GetLevel().ToString("00")}\t NAME: '{pokemon.PokemonId}'",
                     LogLevel.None, ConsoleColor.White);
             Logger.Write("====== Highest Perfect Pokemon ======", LogLevel.None, ConsoleColor.Yellow);
             var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(10);
             foreach (var pokemon in highestsPokemonPerfect)
             {
                 Logger.Write(
-                    $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCP(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
+                    $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{pokemon.GetMaxCP().ToString().PadLeft(4, ' ')} | ({pokemon.GetPerfection().ToString("0.00")}% perfect)\t| Lvl {pokemon.GetLevel().ToString("00")}\t NAME: '{pokemon.PokemonId}'",
                     LogLevel.None, ConsoleColor.White);
             }
             if (_clientSettings.DisplayAllPokemonInLog)
@@ -891,7 +891,7 @@ namespace PokemonGo.RocketAPI.Logic
                 foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
                 {
                     Logger.Write(
-                          $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCP(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
+                          $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{pokemon.GetMaxCP().ToString().PadLeft(4, ' ')} | ({pokemon.GetPerfection().ToString("0.00")}% perfect)\t| Lvl {pokemon.GetLevel().ToString("00")}\t NAME: '{pokemon.PokemonId}'",
                           LogLevel.None, ConsoleColor.White);
                 }
             }

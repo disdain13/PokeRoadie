@@ -35,18 +35,18 @@ namespace PokemonGo.RocketAPI.Console {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("90")]
-        public float KeepMinIVPercentage {
+        public double KeepAboveIV {
             get {
-                return ((float)(this["KeepMinIVPercentage"]));
+                return ((double)(this["KeepAboveIV"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("900")]
-        public int KeepMinCP {
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int KeepAboveCP {
             get {
-                return ((int)(this["KeepMinCP"]));
+                return ((int)(this["KeepAboveCP"]));
             }
         }
         
@@ -353,6 +353,27 @@ namespace PokemonGo.RocketAPI.Console {
         public int MaxSecondsBetweenStops {
             get {
                 return ((int)(this["MaxSecondsBetweenStops"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("V")]
+        public string PriorityType {
+            get {
+                return ((string)(this["PriorityType"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public double KeepAboveV {
+            get {
+                return ((double)(this["KeepAboveV"]));
+            }
+            set {
+                this["KeepAboveV"] = value;
             }
         }
     }
