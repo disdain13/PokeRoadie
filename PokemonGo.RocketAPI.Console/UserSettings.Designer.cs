@@ -23,447 +23,357 @@ namespace PokemonGo.RocketAPI.Console {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public double DefaultAltitude {
             get {
                 return ((double)(this["DefaultAltitude"]));
             }
-            set {
-                this["DefaultAltitude"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("90")]
-        public float KeepMinIVPercentage {
+        public double KeepAboveIV {
             get {
-                return ((float)(this["KeepMinIVPercentage"]));
-            }
-            set {
-                this["KeepMinIVPercentage"] = value;
+                return ((double)(this["KeepAboveIV"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("900")]
-        public int KeepMinCP {
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int KeepAboveCP {
             get {
-                return ((int)(this["KeepMinCP"]));
-            }
-            set {
-                this["KeepMinCP"] = value;
+                return ((int)(this["KeepAboveCP"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
         public double WalkingSpeedInKilometerPerHour {
             get {
                 return ((double)(this["WalkingSpeedInKilometerPerHour"]));
             }
-            set {
-                this["WalkingSpeedInKilometerPerHour"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("34.0114062")]
         public double DefaultLatitude {
             get {
                 return ((double)(this["DefaultLatitude"]));
             }
-            set {
-                this["DefaultLatitude"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-118.495009")]
         public double DefaultLongitude {
             get {
                 return ((double)(this["DefaultLongitude"]));
             }
-            set {
-                this["DefaultLongitude"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UsePokemonToNotCatchList {
             get {
                 return ((bool)(this["UsePokemonToNotCatchList"]));
             }
-            set {
-                this["UsePokemonToNotCatchList"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Google")]
         public string AuthType {
             get {
                 return ((string)(this["AuthType"]));
             }
-            set {
-                this["AuthType"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("username")]
         public string PtcUsername {
             get {
                 return ((string)(this["PtcUsername"]));
             }
-            set {
-                this["PtcUsername"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("password")]
         public string PtcPassword {
             get {
                 return ((string)(this["PtcPassword"]));
             }
-            set {
-                this["PtcPassword"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool PrioritizeIVOverCP {
             get {
                 return ((bool)(this["PrioritizeIVOverCP"]));
             }
-            set {
-                this["PrioritizeIVOverCP"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10000")]
         public int MaxTravelDistanceInMeters {
             get {
                 return ((int)(this["MaxTravelDistanceInMeters"]));
             }
-            set {
-                this["MaxTravelDistanceInMeters"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UseGPXPathing {
             get {
                 return ((bool)(this["UseGPXPathing"]));
             }
-            set {
-                this["UseGPXPathing"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("GPXFILE.gpx")]
         public string GPXFile {
             get {
                 return ((string)(this["GPXFile"]));
             }
-            set {
-                this["GPXFile"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool useLuckyEggsWhileEvolving {
             get {
                 return ((bool)(this["useLuckyEggsWhileEvolving"]));
             }
-            set {
-                this["useLuckyEggsWhileEvolving"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool NotTransferPokemonsThatCanEvolve {
             get {
                 return ((bool)(this["NotTransferPokemonsThatCanEvolve"]));
             }
-            set {
-                this["NotTransferPokemonsThatCanEvolve"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool EvolveOnlyPokemonAboveIV {
             get {
                 return ((bool)(this["EvolveOnlyPokemonAboveIV"]));
             }
-            set {
-                this["EvolveOnlyPokemonAboveIV"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool EvolvePokemon {
             get {
                 return ((bool)(this["EvolvePokemon"]));
             }
-            set {
-                this["EvolvePokemon"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("85")]
         public float EvolveOnlyPokemonAboveIVValue {
             get {
                 return ((float)(this["EvolveOnlyPokemonAboveIVValue"]));
             }
-            set {
-                this["EvolveOnlyPokemonAboveIVValue"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TransferPokemon {
             get {
                 return ((bool)(this["TransferPokemon"]));
             }
-            set {
-                this["TransferPokemon"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int TransferPokemonKeepDuplicateAmount {
             get {
                 return ((int)(this["TransferPokemonKeepDuplicateAmount"]));
             }
-            set {
-                this["TransferPokemonKeepDuplicateAmount"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool LoiteringActive {
             get {
                 return ((bool)(this["LoiteringActive"]));
             }
-            set {
-                this["LoiteringActive"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public int MinutesPerDestination {
             get {
                 return ((int)(this["MinutesPerDestination"]));
             }
-            set {
-                this["MinutesPerDestination"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public int FlyingSpeedInKilometerPerHour {
             get {
                 return ((int)(this["FlyingSpeedInKilometerPerHour"]));
             }
-            set {
-                this["FlyingSpeedInKilometerPerHour"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CatchWhileFlying {
             get {
                 return ((bool)(this["CatchWhileFlying"]));
             }
-            set {
-                this["CatchWhileFlying"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool FlyingEnabled {
             get {
                 return ((bool)(this["FlyingEnabled"]));
             }
-            set {
-                this["FlyingEnabled"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool MoveWhenNoStops {
             get {
                 return ((bool)(this["MoveWhenNoStops"]));
             }
-            set {
-                this["MoveWhenNoStops"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool PrioritizeStopsWithLures {
             get {
                 return ((bool)(this["PrioritizeStopsWithLures"]));
             }
-            set {
-                this["PrioritizeStopsWithLures"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DestinationsEnabled {
             get {
                 return ((bool)(this["DestinationsEnabled"]));
             }
-            set {
-                this["DestinationsEnabled"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int DestinationIndex {
             get {
                 return ((int)(this["DestinationIndex"]));
             }
-            set {
-                this["DestinationIndex"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int DisplayRefreshMinutes {
             get {
                 return ((int)(this["DisplayRefreshMinutes"]));
             }
-            set {
-                this["DisplayRefreshMinutes"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DisplayAllPokemonInLog {
             get {
                 return ((bool)(this["DisplayAllPokemonInLog"]));
             }
-            set {
-                this["DisplayAllPokemonInLog"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool EnableSpeedAdjustment {
             get {
                 return ((bool)(this["EnableSpeedAdjustment"]));
             }
-            set {
-                this["EnableSpeedAdjustment"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool EnableSpeedRandomizer {
             get {
                 return ((bool)(this["EnableSpeedRandomizer"]));
             }
-            set {
-                this["EnableSpeedRandomizer"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CatchPokemon {
             get {
                 return ((bool)(this["CatchPokemon"]));
             }
-            set {
-                this["CatchPokemon"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public int WalkingSpeedInKilometerPerHourMax {
             get {
                 return ((int)(this["WalkingSpeedInKilometerPerHourMax"]));
             }
-            set {
-                this["WalkingSpeedInKilometerPerHourMax"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int MaxSecondsBetweenStops {
             get {
                 return ((int)(this["MaxSecondsBetweenStops"]));
             }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("V")]
+        public string PriorityType {
+            get {
+                return ((string)(this["PriorityType"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public double KeepAboveV {
+            get {
+                return ((double)(this["KeepAboveV"]));
+            }
             set {
-                this["MaxSecondsBetweenStops"] = value;
+                this["KeepAboveV"] = value;
             }
         }
     }

@@ -11,51 +11,63 @@ namespace PokemonGo.RocketAPI
 {
     public interface ISettings
     {
-        AuthType AuthType { get; }
-        string PtcPassword { get; }
-        string PtcUsername { get; }
+
+        #region " Properties "
+
+        AuthType AuthType { get; set; }
+        string PtcPassword { get; set; }
+        string PtcUsername { get; set; }
         double DefaultLatitude { get; set; }
         double DefaultLongitude { get; set; }
         double DefaultAltitude { get; set; }
-        bool UseGPXPathing { get; }
-        string GPXFile { get; }
-        double WalkingSpeedInKilometerPerHour { get; }
-        int MaxTravelDistanceInMeters { get; }
-
-        bool UsePokemonToNotCatchList { get; }
-        bool EvolvePokemon { get; }
-        bool EvolveOnlyPokemonAboveIV { get; }
-        float EvolveOnlyPokemonAboveIVValue { get; }
-        bool TransferPokemon { get; }
-        int TransferPokemonKeepDuplicateAmount { get; }
-        bool NotTransferPokemonsThatCanEvolve { get; }
-        float KeepMinIVPercentage { get; }
-        int KeepMinCP { get; }
-        bool PrioritizeIVOverCP { get; }
-        bool useLuckyEggsWhileEvolving { get; }
-        bool LoiteringActive { get; }
-        int MinutesPerDestination { get; }
-        int FlyingSpeedInKilometerPerHour { get; }
-        bool CatchWhileFlying { get; }
-        bool FlyingEnabled { get; }
-        bool MoveWhenNoStops { get; }
-        bool PrioritizeStopsWithLures { get; }
-        bool DestinationsEnabled { get; }
+        bool UseGPXPathing { get; set; }
+        string GPXFile { get; set; }
+        double WalkingSpeedInKilometerPerHour { get; set; }
+        int MaxTravelDistanceInMeters { get; set; }
+        bool UsePokemonToNotCatchList { get; set; }
+        bool EvolvePokemon { get; set; }
+        bool EvolveOnlyPokemonAboveIV { get; set; }
+        double EvolveOnlyPokemonAboveIVValue { get; set; }
+        bool TransferPokemon { get; set; }
+        int TransferPokemonKeepDuplicateAmount { get; set; }
+        bool NotTransferPokemonsThatCanEvolve { get; set; }
+        double KeepAboveIV { get; set; }
+        double KeepAboveV { get; set; }
+        int KeepAboveCP { get; set; }
+        bool PrioritizeIVOverCP { get; set; }
+        bool useLuckyEggsWhileEvolving { get; set; }
+        bool LoiteringActive { get; set; }
+        int MinutesPerDestination { get; set; }
+        int FlyingSpeedInKilometerPerHour { get; set; }
+        bool CatchWhileFlying { get; set; }
+        bool FlyingEnabled { get; set; }
+        bool MoveWhenNoStops { get; set; }
+        bool PrioritizeStopsWithLures { get; set; }
+        bool DestinationsEnabled { get; set; }
         int DestinationIndex { get; set; }
-        int DisplayRefreshMinutes { get; }
-        bool DisplayAllPokemonInLog { get; }
-        bool EnableSpeedAdjustment { get; }
-        bool EnableSpeedRandomizer { get; }
+        int DisplayRefreshMinutes { get; set; }
+        bool DisplayAllPokemonInLog { get; set; }
+        bool EnableSpeedAdjustment { get; set; }
+        bool EnableSpeedRandomizer { get; set; }
         bool CatchPokemon { get; set; }
-        int WalkingSpeedInKilometerPerHourMax { get; }
-        int MaxSecondsBetweenStops { get; }
+        int WalkingSpeedInKilometerPerHourMax { get; set; }
+        int MaxSecondsBetweenStops { get; set; }
+        PriorityType PriorityType { get; set; }
 
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsNotToTransfer { get; }
         ICollection<PokemonId> PokemonsNotToCatch { get; }
+        ICollection<PokemonMoveDetail> PokemonMoveDetails { get; }
+
+        #endregion
+        #region " Methods "
 
         void SetDefaultLocation(double lat, double lng, double z);
         void Save();
+        void Load();
+
+        #endregion
+
     }
 }

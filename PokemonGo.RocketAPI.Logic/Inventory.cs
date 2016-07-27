@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.GeneratedCode;
+using PokemonGo.RocketAPI.Extensions;
 using System.Collections.Concurrent;
 using System;
 using System.Threading;
@@ -28,14 +29,15 @@ namespace PokemonGo.RocketAPI.Logic
             _client = client;
         }
 
-        public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCP = false, IEnumerable<PokemonId> filter = null)
+        public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(ISettings clientSettings)
         {
+            //bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCP = false, IEnumerable<PokemonId> filter = null
             var myPokemon = await GetPokemons();
-            var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0 && p.Cp < _client.Settings.KeepMinCP).ToList();
-            if (filter != null)
-                pokemonList = pokemonList.Where(p => !filter.Contains(p.PokemonId)).ToList();
+            var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0 && p.Cp < clientSettings.KeepAboveCP).ToList();
+            if (clientSettings.PokemonsNotToTransfer != null)
+                pokemonList = pokemonList.Where(p => !clientSettings.PokemonsNotToTransfer.Contains(p.PokemonId)).ToList();
 
-            if (keepPokemonsThatCanEvolve)
+            if (clientSettings.NotTransferPokemonsThatCanEvolve)
             {
                 var results = new List<PokemonData>();
                 var pokemonsThatCanBeTransfered = pokemonList.GroupBy(p => p.PokemonId)
@@ -56,7 +58,7 @@ namespace PokemonGo.RocketAPI.Logic
                     if (settings.CandyToEvolve > 0 && familyCandy.Candy / settings.CandyToEvolve > amountToSkip)
                         amountToSkip = familyCandy.Candy / settings.CandyToEvolve;
 
-                    if (prioritizeIVoverCP)
+                    if (clientSettings.PrioritizeIVOverCP)
                     {
                         results.AddRange(pokemonList.Where(x => x.PokemonId == pokemon.Key)
                             .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
@@ -76,7 +78,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                 return results;
             }
-            if (prioritizeIVoverCP)
+            if (clientSettings.PrioritizeIVOverCP)
             {
                 return pokemonList
                 .GroupBy(p => p.PokemonId)
@@ -205,7 +207,7 @@ namespace PokemonGo.RocketAPI.Logic
                 myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));		
 
             if (_client.Settings.EvolveOnlyPokemonAboveIV)
-                myPokemons = myPokemons.Where(p => PokemonInfo.CalculatePokemonPerfection(p) >= _client.Settings.EvolveOnlyPokemonAboveIVValue);
+                myPokemons = myPokemons.Where(p => p.GetPerfection() >= _client.Settings.EvolveOnlyPokemonAboveIVValue);
 
             var pokemons = myPokemons.ToList();
 
@@ -299,7 +301,7 @@ namespace PokemonGo.RocketAPI.Logic
                             var encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(toEncode));
                             var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                             var familiecandies = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId).Candy;
-                            string perfection = PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00");
+                            string perfection = pokemon.GetPerfection().ToString("0.00");
                             perfection = perfection.Replace(",", ls == "," ? "." : ",");
                             string content_part1 = $"{(int)pokemon.PokemonId},{pokemon.PokemonId},{pokemon.Nickname},{pokemon.Cp}/{PokemonInfo.CalculateMaxCP(pokemon)},";
                             string content_part2 = $",{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},https://jackhumbert.github.io/poke-rater/#{encoded}";
