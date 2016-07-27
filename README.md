@@ -37,15 +37,16 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>FlyingEnabled</b><br/>
  - <b>FlyingSpeedInKilometerPerHour</b><br/>
  - <b>GPXFile</b><br/>
- - <b>KeepMinCP</b><br/>
- - <b>KeepMinIVPercentage</b><br/>
+ - <b>KeepAboveCP</b><br/>
+ - <b>KeepAboveIV</b><br/>
+ - <b>KeepAboveV</b><br/>
  - <b>LoiteringActive</b><br/>
  - <b>MaxSecondsBetweenStops</b><br/>
  - <b>MaxTravelDistanceInMeters</b><br/>
  - <b>MinutesPerDestination</b><br/>
  - <b>MoveWhenNoStops</b><br/>
  - <b>NotTransferPokemonsThatCanEvolve</b><br/>
- - <b>PrioritizeIVOverCP</b><br/>
+ - <b>PrioritizeIVOverCP</b> (Will be depricated by PriorityType)<br/>
  - <b>PrioritizeStopsWithLures</b><br/>
  - <b>PtcPassword</b><br/>
  - <b>PtcUsername</b><br/>
@@ -56,6 +57,7 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>UsePokemonToNotCatchList</b><br/></b><br/>
  - <b>WalkingSpeedInKilometerPerHour</b><br/>
  - <b>WalkingSpeedInKilometerPerHourMax</b><br/>
+ - <b>PriorityType</b> (Not yet implemented)<br/>
 <br/><br/>
 <h2><a name="features">Spegeli Original Features</a></h2>
  
