@@ -9,16 +9,16 @@
       <Value Profile="(Default)">90</Value>
     </Setting>
     <Setting Name="KeepMinCP" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
+      <Value Profile="(Default)">900</Value>
     </Setting>
     <Setting Name="WalkingSpeedInKilometerPerHour" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">25</Value>
+      <Value Profile="(Default)">40</Value>
     </Setting>
     <Setting Name="DefaultLatitude" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">27.9907673</Value>
+      <Value Profile="(Default)">34.0114062</Value>
     </Setting>
     <Setting Name="DefaultLongitude" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">-82.6931937</Value>
+      <Value Profile="(Default)">-118.495009</Value>
     </Setting>
     <Setting Name="UsePokemonToNotCatchList" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -51,13 +51,13 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EvolveOnlyPokemonAboveIV" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EvolvePokemon" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EvolveOnlyPokemonAboveIVValue" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">95</Value>
+      <Value Profile="(Default)">85</Value>
     </Setting>
     <Setting Name="TransferPokemon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -72,7 +72,7 @@
       <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="FlyingSpeedInKilometerPerHour" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">59</Value>
+      <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="CatchWhileFlying" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -84,7 +84,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="PrioritizeStopsWithLures" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DestinationsEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -93,7 +93,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="DisplayRefreshMinutes" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">7</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="DisplayAllPokemonInLog" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -103,6 +103,15 @@
     </Setting>
     <Setting Name="EnableSpeedRandomizer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CatchPokemon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="WalkingSpeedInKilometerPerHourMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="MaxSecondsBetweenStops" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
     </Setting>
   </Settings>
 </SettingsFile>

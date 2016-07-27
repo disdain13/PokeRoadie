@@ -15,14 +15,14 @@ namespace PokemonGo.RocketAPI.Console
     //  The SettingsSaving event is raised before the setting values are saved.
     internal sealed partial class UserSettings
     {
-        private void SettingChangingEventHandler(object sender, SettingChangingEventArgs e)
-        {
-            // Add code to handle the SettingChangingEvent event here.
-        }
+        //private void SettingChangingEventHandler(object sender, SettingChangingEventArgs e)
+        //{
+        //    // Add code to handle the SettingChangingEvent event here.
+        //}
 
-        private void SettingsSavingEventHandler(object sender, CancelEventArgs e)
-        {
-            // Add code to handle the SettingsSaving event here.
-        }
+        //private void SettingsSavingEventHandler(object sender, CancelEventArgs e)
+        //{
+        //    // Add code to handle the SettingsSaving event here.
+        //}
     }
 }

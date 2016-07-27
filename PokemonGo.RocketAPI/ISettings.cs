@@ -46,6 +46,9 @@ namespace PokemonGo.RocketAPI
         bool DisplayAllPokemonInLog { get; }
         bool EnableSpeedAdjustment { get; }
         bool EnableSpeedRandomizer { get; }
+        bool CatchPokemon { get; set; }
+        int WalkingSpeedInKilometerPerHourMax { get; }
+        int MaxSecondsBetweenStops { get; }
 
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
         ICollection<PokemonId> PokemonsToEvolve { get; }
@@ -53,5 +56,6 @@ namespace PokemonGo.RocketAPI
         ICollection<PokemonId> PokemonsNotToCatch { get; }
 
         void SetDefaultLocation(double lat, double lng, double z);
+        void Save();
     }
 }

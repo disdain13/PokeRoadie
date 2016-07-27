@@ -30,6 +30,7 @@ namespace PokemonGo.RocketAPI.Console
         public double DefaultLongitude { get { return UserSettings.Default.DefaultLongitude; } set { UserSettings.Default.DefaultLongitude = value; } }
         public double DefaultAltitude { get { return UserSettings.Default.DefaultAltitude; } set { UserSettings.Default.DefaultAltitude = value; } }
         public int DestinationIndex { get { return UserSettings.Default.DestinationIndex; } set { UserSettings.Default.DestinationIndex = value; } }
+        public bool CatchPokemon { get { return UserSettings.Default.CatchPokemon; } set { UserSettings.Default.CatchPokemon = value; } }
 
         public bool UseGPXPathing => UserSettings.Default.UseGPXPathing;
         public string GPXFile => UserSettings.Default.GPXFile;
@@ -60,6 +61,8 @@ namespace PokemonGo.RocketAPI.Console
         public bool DisplayAllPokemonInLog => UserSettings.Default.DisplayAllPokemonInLog;
         public bool EnableSpeedAdjustment => UserSettings.Default.EnableSpeedAdjustment;
         public bool EnableSpeedRandomizer => UserSettings.Default.EnableSpeedRandomizer;
+        public int WalkingSpeedInKilometerPerHourMax => UserSettings.Default.WalkingSpeedInKilometerPerHourMax;
+        public int MaxSecondsBetweenStops => UserSettings.Default.MaxSecondsBetweenStops;
 
         public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter 
         {
@@ -252,6 +255,11 @@ namespace PokemonGo.RocketAPI.Console
             DefaultLatitude = lat;
             DefaultLongitude = lng;
             DefaultAltitude = z;
+            Save();
+        }
+        public void Save()
+        {
+            UserSettings.Default.Save();
         }
     }
 }

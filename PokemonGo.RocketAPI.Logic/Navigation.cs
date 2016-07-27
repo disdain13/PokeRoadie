@@ -45,11 +45,10 @@ namespace PokemonGo.RocketAPI.Logic
             var sourceLocation = new GeoCoordinate(_client.CurrentLat, _client.CurrentLng);
             var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
             var seconds = distanceToTarget / speedInMetersPerSecond;
-
             //adjust speed to try and keep the trip under a minute, might not be possible
-            if (walkingSpeedInKilometersPerHour < 55 && _client.Settings.EnableSpeedAdjustment)
+            if (walkingSpeedInKilometersPerHour < _client.Settings.WalkingSpeedInKilometerPerHourMax && _client.Settings.EnableSpeedAdjustment)
             {
-                while (seconds > 60 && walkingSpeedInKilometersPerHour < 55)
+                while (seconds > _client.Settings.MaxSecondsBetweenStops && walkingSpeedInKilometersPerHour < _client.Settings.WalkingSpeedInKilometerPerHourMax)
                 {
                     walkingSpeedInKilometersPerHour++;
                     speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
@@ -57,14 +56,15 @@ namespace PokemonGo.RocketAPI.Logic
                 }
             }
 
+
             //log distance and time
             if (seconds > 60)
             {
-                Logger.Write($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {Math.Round(seconds / 60,2).ToString():0.##} minutes! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.None, ConsoleColor.Red);
+                Logger.Write($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)}! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.None, ConsoleColor.Red);
             } 
             else
             {
-                Logger.Write($"Distance to target location: {distanceToTarget:0.##} meters. Will take {seconds:0.##} seconds! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.Navigation);
+                Logger.Write($"Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)}! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.Navigation);
             }
 
             var nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);

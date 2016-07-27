@@ -178,11 +178,21 @@ namespace PokemonGo.RocketAPI
             }
             else
             {
-                if (settings.DefaultLatitude > 0 && settings.DefaultLongitude > 0)
-                using (StreamWriter w = File.CreateText(destinationcoords_file))
+                if (settings.DefaultLatitude != 0 && settings.DefaultLongitude != 0)
                 {
-                    w.Write($"{settings.DefaultLatitude}:{settings.DefaultLongitude}");
-                    w.Close();
+
+                    using (StreamWriter w = File.CreateText(destinationcoords_file))
+                    {
+                        w.Write($"{settings.DefaultLatitude}:{settings.DefaultLongitude}:{settings.DefaultAltitude}:Default Location");
+                        w.Close();
+                    }
+
+                    var d = new Destination();
+                    d.Latitude = settings.DefaultLatitude;
+                    d.Longitude = settings.DefaultLongitude;
+                    d.Altitude = settings.DefaultAltitude;
+                    d.Name = "Default Location";
+                    list.Add(d);
                 }
             }
             return list;
