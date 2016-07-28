@@ -47,7 +47,6 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>EvolvePokemon</b><br/>
  - <b>FlyingEnabled</b><br/>
  - <b>FlyingSpeed</b><br/>
- - <b>GPXFile</b> (Not Currently Supported)<br/>
  - <b>KeepAboveCP</b><br/>
  - <b>KeepAboveIV</b><br/>
  - <b>KeepAboveV</b><br/>
@@ -62,7 +61,6 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>PtcUsername</b><br/>
  - <b>TransferPokemon</b><br/>Enable automatic transfers based on value specified by the <b>PriorityType</b> setting.<br/>
  - <b>KeepDuplicateAmount</b><br/>The acceptable number of each species to keep based on value specified by the <b>PriorityType</b> setting. The default value is 2.<br/>
- - <b>UseGPXPathing</b> (Not Currently Supported)<br/>
  - <b>UseLuckyEggs</b><br/>Specifies if a Lucky Egg should be used when automatically evolving pokemon.
  - <b>UsePokemonToNotCatchList</b><br/>Specifies if the <i>Configs\PokemonsNotToCatch.ini</i> file should be used to ignore specific pokemon. Pokemon listed in this file will be ignored during encounters.<br/>
  - <b>MinSpeed</b><br/>The minimum speed (in kilometers per hour) your player will walk/drive when exploring a destination for pokestops and pokemon.<br/>
