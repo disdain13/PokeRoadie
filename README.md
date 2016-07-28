@@ -9,10 +9,12 @@
 A big thank you goes to Ferox, Necronomicon, Spegeli <3<br/>
 Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
 <br/><br/>
-
-![alt text][1.1] <strong><em> The contents of this repo are a proof of concept and are for educational use only </em></strong>![alt text][1.1]
-<br/>
-
+<h2><a name="features">Easy To Use!</a></h2>
+ - <a href="https://github.com/disdain13/PokeRoadie/releases" title="Download Pokemon Bot Release"/><b>Download the latest release.</b></a>
+ - Unzip to any directory
+ - <b>Google Auth</b> (default)<br/>Just run PokeRoadie.exe - When you start the application, it will require you to log into google and approve the application as a "device". We have made this simple as possible. On start, it will pop up a google window. Log in if you are not already. When the google window asks for the code, just hit control-v in the "Enter Code" box. The code will already be on your clipboard. hit submit, and approve the interaction. Once you have done that, the program will continue to run and play the game for you.
+ - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/>
+ 
 <h2><a name="features">PokeRoadie New Features</a></h2>
  - <b>Pokemon Moves Imported</b><br/>All the move information imported.<br/>Used in NEW pokemon value calculations.
  - <b>Pokemon True Value</b><br/>Developed a new formula to calculate the <i>True Value</i> of pokemon.<br/>Value is based on CP, Perfect %, Level, Move Power, and Move Accuracy.<br/>Can now use value "V" in <b>PriorityType</b> setting to Transfer based on <i>True Value</i>.<br />Can set <b>KeepAboveV</b> setting to keep any pokemon equal to or above the specified <i>True Value</i>.<br/>
