@@ -28,7 +28,7 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <a href="https://github.com/disdain13/PokeRoadie/releases" title="Download Pokemon Bot Release"/><b>Download the latest release.</b></a>
  - Unzip to any directory
  - <b>Notice</b> - By default transfers, evolution, and other advanced features are disabled. To enable these features checkout the <b>Configs\Settings.xml</b> file, as well as other files in that directory.
- - <b>Google Auth</b> (default)<br/>Just run PokeRoadie.exe - When you start the application, it will require you to log into google and approve the application as a "device". We have made this simple as possible. On start, it will pop up a google window. Log in if you are not already. When the google window asks for the code, just hit control-v in the "Enter Code" box. The code will already be on your clipboard. hit submit, and approve the interaction. Once you have done that, the program will continue to run and play the game for you.
+ - <b>Google Auth</b> (default)<br/><b>Login to google and be sure Two-Step-Verification is turned off!</b> Then run PokeRoadie.exe - When you start the application, it will require you to log into google. There have been some reports of various authentication errors which we are still addressing. Please let us know if you experience issues by <a href="https://github.com/disdain13/PokeRoadie/issues" title="post an issue">posting an Issue</a>.
  - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/><br/>
  
 <h2>Global Destinations</h2>
