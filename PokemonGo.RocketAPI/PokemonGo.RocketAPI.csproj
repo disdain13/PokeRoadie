@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PokemonGo.RocketAPI</RootNamespace>
-    <AssemblyName>Pokemon Go Rocket API</AssemblyName>
+    <AssemblyName>PokeRoadie.API</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AssemblyInfoFilePath>Properties\AssemblyInfo.cs</AssemblyInfoFilePath>

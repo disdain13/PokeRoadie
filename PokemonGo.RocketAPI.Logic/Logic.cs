@@ -867,17 +867,27 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     var destination = _client.Destinations[i];
                     var str = $"{i} - {destination.Name} - {destination.Latitude}:{destination.Longitude}:{destination.Altitude}";
-                    if (lastDestination != null)
+                    if (_clientSettings.DestinationIndex < i)
                     {
+                        if (lastDestination != null)
+                        {
 
-                        var sourceLocation = new GeoCoordinate(lastDestination.Latitude, lastDestination.Longitude, lastDestination.Altitude);
-                        var targetLocation = new GeoCoordinate(destination.Latitude, destination.Longitude, destination.Altitude);
-                        var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
-                        var speedInMetersPerSecond = _clientSettings.MaxSpeed / 3.6;
-                        var seconds = distanceToTarget / speedInMetersPerSecond;
-                        str += " (";
-                        str += StringUtils.GetSecondsDisplay(seconds);
-                        str += $" at { _clientSettings.MaxSpeed}kmh)";
+                            var sourceLocation = new GeoCoordinate(lastDestination.Latitude, lastDestination.Longitude, lastDestination.Altitude);
+                            var targetLocation = new GeoCoordinate(destination.Latitude, destination.Longitude, destination.Altitude);
+                            var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
+                            var speed = _clientSettings.FlyingEnabled ? _clientSettings.FlyingSpeed : _clientSettings.MaxSpeed;
+                            var speedInMetersPerSecond = speed / 3.6;
+                            var seconds = distanceToTarget / speedInMetersPerSecond;
+                            var action = _clientSettings.FlyingEnabled ? "flying" : "driving";
+                            str += " (";
+                            str += StringUtils.GetSecondsDisplay(seconds);
+                            str += $" {action} at {speed}kmh)";
+
+                        }
+                    }
+                    else if (_clientSettings.DestinationIndex == i)
+                    {
+                        str += " <-- You Are Here!";
                     }
                     Logger.Write(str, LogLevel.None, _clientSettings.DestinationIndex == i ? ConsoleColor.Red : ConsoleColor.White);
                     lastDestination = destination;

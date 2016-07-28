@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PokemonGo.RocketAPI.Console</RootNamespace>
-    <AssemblyName>PokemonGo.RocketAPI.Console</AssemblyName>
+    <AssemblyName>PokeRoadie</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>

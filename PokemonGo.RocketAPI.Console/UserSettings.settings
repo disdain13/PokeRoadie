@@ -12,7 +12,7 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="MinSpeed" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">40</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="DefaultLatitude" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">34.0114062</Value>
@@ -33,7 +33,7 @@
       <Value Profile="(Default)">password</Value>
     </Setting>
     <Setting Name="MaxDistance" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">10000</Value>
+      <Value Profile="(Default)">3000</Value>
     </Setting>
     <Setting Name="UseGPXPathing" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
@@ -51,16 +51,16 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EvolvePokemon" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EvolveOnlyPokemonAboveIVValue" Type="System.Single" Scope="Application">
-      <Value Profile="(Default)">85</Value>
+      <Value Profile="(Default)">90</Value>
     </Setting>
     <Setting Name="TransferPokemon" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="KeepDuplicateAmount" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="LoiteringActive" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
@@ -108,7 +108,7 @@
       <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="MaxSecondsBetweenStops" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">25</Value>
+      <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="PriorityType" Type="System.String" Scope="Application">
       <Value Profile="(Default)">V</Value>
