@@ -48,7 +48,7 @@ For example, the following contents would lead you on a tour of Southern Califor
 34.4759205:-114.3530481:14.75:California, Lake Havasu<br/>
 <br/><br/>
 <h2>PokeRoadie Settings</h2>
-Below is a breakdown of each settings related file.
+PokeRoadie is vastly configurable. The advanced features can currently be accessed through a series of configuration files. Below is a breakdown of each settings related file.
 <h3>Configs\Settings.xml</h3>
 The primary settings file where most configuration will be done. In a few cases, like Global Destinations and Recycling, you will go into other files.<br/><br/>
  - <b>AuthType</b><br/>The type of login authentication for PokemonGo. Valid values are (default) <b>Google</b>, and <b>Ptc</b>. 
