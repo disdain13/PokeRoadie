@@ -255,20 +255,8 @@ namespace PokemonGo.RocketAPI.Console
             string filePath = Path.Combine(configs_path, fileName);
             if (!File.Exists(filePath))
             {
-                var d = new UsernamePasswordForm();
-                if (d.ShowDialog() != System.Windows.Forms.DialogResult.OK)
-                {
-                    Logger.Write($"User quit before providing credentials.", LogLevel.Warning);
-                    Program.ExitApplication(1);
-                }
-                this.Username = d.Username;
-                this.Password = d.Password;
-                this.AuthType = (AuthType)Enum.Parse(typeof(AuthType), d.AuthType, true);
-                d.Dispose();
-                d = null;
-
+                var result = PromptForCredentials();
                 Logger.Write($"File: \"\\Configs\\{fileName}\" not found, creating new...", LogLevel.Warning);
-
                 Save();
             }
             else
@@ -460,6 +448,25 @@ namespace PokemonGo.RocketAPI.Console
             Save();
         }
 
+        public bool PromptForCredentials()
+        {
+            var d = new UsernamePasswordForm();
+            var result = d.ShowDialog();
+            if (result != System.Windows.Forms.DialogResult.OK)
+            {
+                Logger.Write($"User quit before providing credentials.", LogLevel.Warning);
+                Program.ExitApplication(1);
+            }
+
+            this.Username = d.Username;
+            this.Password = d.Password;
+            this.AuthType = (AuthType)Enum.Parse(typeof(AuthType), d.AuthType, true);
+
+            d.Dispose();
+            d = null;
+
+            return result == System.Windows.Forms.DialogResult.OK;
+        }
         #endregion
 
     }

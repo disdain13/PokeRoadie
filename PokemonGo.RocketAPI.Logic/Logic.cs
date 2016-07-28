@@ -20,6 +20,8 @@ namespace PokemonGo.RocketAPI.Logic
 {
     public class Logic
     {
+        public event Func<bool> ShowEditCredentials;
+
         private readonly Client _client;
         private readonly ISettings _clientSettings;
         private readonly Inventory _inventory;
@@ -92,8 +94,22 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     if (e.Message.Contains("NeedsBrowser"))
                     {
-                        Logger.Write("LOGIN ERROR: Please login to your google account and turn off 'Two-Step Authentication' under security settings (temporarily). We are working on fixing this bug. " + e.Message + " trying automatic restart in 15 seconds...", LogLevel.Error);
+                        Logger.Write("Please login to your google account and turn off 'Two-Step Authentication' under security settings (temporarily). We are working on fixing this bug. " + e.Message + " trying automatic restart in 15 seconds...", LogLevel.LoginError);
                         await Task.Delay(15000);
+                    }
+                    else if (e.Message.Contains("BadAuthentication"))
+                    {
+                        Logger.Write(" The username and password provided failed. " + e.Message, LogLevel.LoginError);
+                        if (ShowEditCredentials != null)
+                        {
+                            var result = ShowEditCredentials.Invoke();
+                            if (!result)
+                            {
+
+                            }
+                        }
+
+                        await Task.Delay(2000);
                     }
                     else
                     {

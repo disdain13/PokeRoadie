@@ -58,6 +58,10 @@ namespace PokemonGo.RocketAPI.Logging
                     System.Console.ForegroundColor = ConsoleColor.Red;
                     System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] (ERROR) {message}");
                     break;
+                case LogLevel.LoginError:
+                    System.Console.ForegroundColor = ConsoleColor.Red;
+                    System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] (LOGINERROR) {message}");
+                    break;
                 case LogLevel.Debug:
                     System.Console.ForegroundColor = ConsoleColor.Gray;
                     System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] (DEBUG) {message}");
@@ -131,6 +135,7 @@ namespace PokemonGo.RocketAPI.Logging
         Evolve = 9,
         Berry = 10,
         Egg = 11,
-        Recycling = 12
+        Recycling = 12,
+        LoginError = 13
     }
 }

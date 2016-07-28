@@ -69,6 +69,7 @@ namespace PokemonGo.RocketAPI
         void SetDefaultLocation(double lat, double lng, double z);
         void Save();
         void Load();
+        bool PromptForCredentials();
 
         #endregion
 
