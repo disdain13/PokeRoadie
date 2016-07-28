@@ -3,7 +3,8 @@
 [1.2]: http://i.imgur.com/NNcGs1n.png (BTC)
 <!-- title -->
 <h1>PokeRoadie</h1>
-<h2>Advanced Pokemon Go Bot</h2>
+<h2>Advanced PokemonGo Bot</h2><br/>
+Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. But, just wait till you can see what else it can do!<br/>
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_1.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/>
 A big thank you goes to Ferox, Necronomicon, Spegeli <3<br/>
@@ -26,6 +27,22 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.<br/>
  - <b>Settings Re-Write</b><br/> Have re-written the entire settings system to work out of the "Configs" directory.<br/>No longer using user specific settings stored in the AppData.<br/><br/>
 
+<h2>Global Destinations</h2>
+PokeRoadie will grind the world for you! Plan global destinations, the bot will simulate flight travel and driving. It will harvest (pokestops/pokemon) at each global destination for a configurable number of minutes, then travel to the next. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file. Within this file, each line should contain the following information and format:<br/><br/>
+<b>latitude:longitude:altitude:name<b/><br/><br/>
+For example, the following contents would lead you on a tour of Southern California:<br/><br/>
+34.0114062:-118.495009:18.82:California, Santa Monica Beach<br/>
+33.9852255:-118.4716024:18.31:California, Venice Beach<br/>
+33.9799683:-118.4615049:17.35:California, Marina Del Ray<br/>
+33.7667375:-118.193248:16.9:California, Long Beach<br/>
+33.7440859:-118.1072774:15.94:California, Seal Beach<br/>
+33.6570156:-118.0024499:18.36:California, Hunnington Beach<br/>
+33.6147486:-117.9322158:16.6:California, Newport Beach<br/>
+33.8120962:-117.9211629:17:California, Disneyland<br/>
+33.957283:-117.3945371:15.75:California, Riverside Plaza<br/>
+33.8252865:-116.5361597:14.25:California, Palm Springs<br/>
+34.4759205:-114.3530481:14.75:California, Lake Havasu<br/>
+<br/><br/>
 <h2>PokeRoadie Settings</h2>
 Below is a breakdown of each settings related file.
 <h3>Configs\Settings.xml</h3>
