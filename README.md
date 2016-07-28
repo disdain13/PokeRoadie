@@ -12,8 +12,9 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
 <h2><a name="features">Easy To Use!</a></h2>
  - <a href="https://github.com/disdain13/PokeRoadie/releases" title="Download Pokemon Bot Release"/><b>Download the latest release.</b></a>
  - Unzip to any directory
+ - <b>Notice</b> - By default transfers, evolution, and other advanced features are disabled. To enable these features checkout the <b>Configs\Settings.xml</b> file, as well as other files in that directory.
  - <b>Google Auth</b> (default)<br/>Just run PokeRoadie.exe - When you start the application, it will require you to log into google and approve the application as a "device". We have made this simple as possible. On start, it will pop up a google window. Log in if you are not already. When the google window asks for the code, just hit control-v in the "Enter Code" box. The code will already be on your clipboard. hit submit, and approve the interaction. Once you have done that, the program will continue to run and play the game for you.
- - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/>
+ - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/><br/>
  
 <h2><a name="features">PokeRoadie New Features</a></h2>
  - <b>Pokemon Moves Imported</b><br/>All the move information imported.<br/>Used in NEW pokemon value calculations.
@@ -25,7 +26,10 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.<br/>
  - <b>Settings Re-Write</b><br/> Have re-written the entire settings system to work out of the "Configs" directory.<br/>No longer using user specific settings stored in the AppData.<br/>
 <br/><br/>
-<h2><a name="settings">PokeRoadie Settings</a></h2><br/>(Under Construction)<br/>
+<h2>PokeRoadie Settings</h2>
+Below is a breakdown of each settings related file.
+<h3>Configs\Settings.xml</h3>
+The primary settings file where most configuration will be done. In a few cases, like Global Destinations and Recycling, you will go into other files.<br/><br/>
  - <b>AuthType</b><br/>The type of login authentication for PokemonGo. Valid values are (default) <b>Google</b>, and <b>Ptc</b>. 
  - <b>CatchPokemon</b><br/>
  - <b>CatchWhileFlying</b><br/>
