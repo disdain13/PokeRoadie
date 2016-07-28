@@ -32,7 +32,7 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/><br/>
  
 <h2>Global Destinations</h2>
-PokeRoadie will grind the world for you! Plan global destinations, the bot will simulate flight travel and driving. It will harvest (pokestops/pokemon) at each global destination for a configurable number of minutes, then travel to the next. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file. Within this file, each line should contain the following information and format:<br/><br/>
+PokeRoadie will grind the world for you! Plan global destinations, the bot will simulate flight travel and driving. It will harvest (pokestops/pokemon) at each <i>Global Destination</i> for a configurable number of minutes, then travel to the next. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file. Within this file, each line should contain the following information and format:<br/><br/>
 <b>latitude:longitude:altitude:name</b><br/><br/>
 For example, the following contents would lead you on a tour of Southern California:<br/><br/>
 34.0114062:-118.495009:18.82:California, Santa Monica Beach<br/>
@@ -57,20 +57,20 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>CurrentAltitude</b><br/>The current altitude of the player.
  - <b>CurrentLatitude</b><br/>The current latitude of the player.
  - <b>CurrentLongitude</b><br/>The current longitude of the player.
- - <b>DestinationIndex</b><br/>The index number of the destination the player is currently at..
- - <b>DestinationsEnabled</b><br/>Specifies if <i>Global Destinations</i> are active. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file.
+ - <b>DestinationIndex</b><br/>The index number of the <i>Global Destination</i> the player is currently at.
+ - <b>DestinationsEnabled</b><br/>Specifies if <i>Global Destinations</i> are active. Harvest pokestops/pokemon at each <i>Global Destination</i> defined in the <b>Configs\DestinationCoords.ini</b> file. Each <i>Global Destination</i> can be harvested for a configurable number of minutes, defined by the <b>MinutesPerDestination</b> setting.
  - <b>DisplayAllPokemonInLog</b><br/>Display a complete pokemon list in periodacal statistics. 
  - <b>DisplayRefreshMinutes</b><br/>The number of minutes between rendering the periodical statistics.
  - <b>EnableSpeedAdjustment</b><br/>When enabled, the program will attempt to reduce travel time below the seconds specified in the <b>MaxSecondsBetweenStops</b> setting, by increasing the travel speed until it hits the value specified in the <b>MaxSpeed</b> setting.
  - <b>EnableSpeedRandomizer</b><br/>When enabled, speed will be randomly adjusted up to 3kph. This provides a more realistic simulation.
- - <b>EvolveOnlyPokemonAboveIV</b><br/>
- - <b>EvolveOnlyPokemonAboveIVValue</b><br/>
- - <b>EvolvePokemon</b><br/>
- - <b>FlyingEnabled</b><br/>
- - <b>FlyingSpeed</b><br/>
- - <b>KeepAboveCP</b><br/>
- - <b>KeepAboveIV</b><br/>
- - <b>KeepAboveV</b><br/>
+ - <b>EvolveOnlyPokemonAboveIV</b><br/>Evolve pokemon with a IV (Perfect %) equal to this or above.
+ - <b>EvolveOnlyPokemonAboveIVValue</b><br/>Specifies if evolution is based on IV (Perfect %). If enabled, only pokemon with an IV equal to or above the value specified in <b>EvolveOnlyPokemonAboveIV</b> will be considered.
+ - <b>EvolvePokemon</b><br/>Enables automatic evolution of pokemon.
+ - <b>FlyingEnabled</b><br/>Enables fast-traveling between <i>Global Destinations</b>. Will travel at the speed specified in the <b>FlyingSpeed</b> setting.
+ - <b>FlyingSpeed</b><br/>The base speed to travel between <i>Global Destinations</b> when <b>FlyingEnabled</b> settings is true
+ - <b>KeepAboveCP</b><br/>If a pokemon CP is => the value specified by this setting, it will NEVER be transferred. Setting this value to 0 will disable this filter.
+ - <b>KeepAboveIV</b><br/>If a pokemon IV (Perfect %) is => the value specified by this setting, it will NEVER be transferred. Setting this value to 0 will disable this filter.
+ - <b>KeepAboveV</b><br/>If a pokemon V (<i>True Value</i>) is => the value specified by this setting, it will NEVER be transferred. Setting this value to 0 will disable this filter.
  - <b>LoiteringActive</b><br/>
  - <b>MaxSecondsBetweenStops</b><br/>
  - <b>MaxDistance</b><br/>
