@@ -78,8 +78,8 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>MoveWhenNoStops</b><br/>
  - <b>NotTransferPokemonsThatCanEvolve</b><br/>
  - <b>PrioritizeStopsWithLures</b><br/>
- - <b>PtcPassword</b><br/>
- - <b>PtcUsername</b><br/>
+ - <b>Password</b><br/>Password for the account you want to login on.
+ - <b>Username</b><br/>Username for the account you want to login on.
  - <b>TransferPokemon</b><br/>Enable automatic transfers based on value specified by the <b>PriorityType</b> setting.<br/>
  - <b>KeepDuplicateAmount</b><br/>The acceptable number of each species to keep based on value specified by the <b>PriorityType</b> setting. The default value is 2.<br/>
  - <b>UseLuckyEggs</b><br/>Specifies if a Lucky Egg should be used when automatically evolving pokemon.
