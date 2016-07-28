@@ -883,7 +883,11 @@ namespace PokemonGo.RocketAPI.Logic
                     {
                         str += " <-- You Are Here!";
                     }
-                    Logger.Write(str, LogLevel.None, _clientSettings.DestinationIndex == i ? ConsoleColor.Red : ConsoleColor.White);
+                    else
+                    {
+                        str += " (Visited)";
+                    }
+                    Logger.Write(str, LogLevel.None, _clientSettings.DestinationIndex == i ? ConsoleColor.Red : _clientSettings.DestinationIndex > i ? ConsoleColor.White : ConsoleColor.DarkGray);
                     lastDestination = destination;
                 }
             }
