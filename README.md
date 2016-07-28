@@ -66,8 +66,8 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>EvolveOnlyPokemonAboveIV</b><br/>Evolve pokemon with a IV (Perfect %) equal to this or above.
  - <b>EvolveOnlyPokemonAboveIVValue</b><br/>Specifies if evolution is based on IV (Perfect %). If enabled, only pokemon with an IV equal to or above the value specified in <b>EvolveOnlyPokemonAboveIV</b> will be considered.
  - <b>EvolvePokemon</b><br/>Enables automatic evolution of pokemon.
- - <b>FlyingEnabled</b><br/>Enables fast-traveling between <i>Global Destinations</b>. Will travel at the speed specified in the <b>FlyingSpeed</b> setting.
- - <b>FlyingSpeed</b><br/>The base speed to travel between <i>Global Destinations</b> when <b>FlyingEnabled</b> settings is true
+ - <b>FlyingEnabled</b><br/>Enables fast-traveling between <i>Global Destinations</i>. Will travel at the speed specified in the <b>FlyingSpeed</b> setting.
+ - <b>FlyingSpeed</b><br/>The base speed to travel between <i>Global Destinations</i> when <b>FlyingEnabled</b> settings is true
  - <b>KeepAboveCP</b><br/>If a pokemon CP is => the value specified by this setting, it will NEVER be transferred. Setting this value to 0 will disable this filter.
  - <b>KeepAboveIV</b><br/>If a pokemon IV (Perfect %) is => the value specified by this setting, it will NEVER be transferred. Setting this value to 0 will disable this filter.
  - <b>KeepAboveV</b><br/>If a pokemon V (<i>True Value</i>) is => the value specified by this setting, it will NEVER be transferred. Setting this value to 0 will disable this filter.
