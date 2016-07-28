@@ -236,30 +236,64 @@ namespace PokemonGo.RocketAPI
                     _httpClient.PostProtoPayload<Request, CatchPokemonResponse>($"https://{_apiUrl}/rpc", catchPokemonRequest);
         }
 
-        public async Task DoGoogleLogin(string filename = "GoogleAuth.ini")
+        //public async Task DoGoogleLogin(string filename = "GoogleAuth.ini")
+        //{
+        //    _authType = AuthType.Google;
+        //    string googleRefreshToken = string.Empty;
+        //    if (!Directory.Exists(configs_path))
+        //        Directory.CreateDirectory(configs_path);
+        //    string googletoken_file = Path.Combine(configs_path, filename);
+        //    if (File.Exists(googletoken_file))
+        //        googleRefreshToken = File.ReadAllText(googletoken_file);
+        //    GoogleLogin.TokenResponseModel tokenResponse;
+        //    if (googleRefreshToken != string.Empty)
+        //    {
+        //        tokenResponse = await GoogleLogin.GetAccessToken(googleRefreshToken);
+        //        AccessToken = tokenResponse?.id_token;
+        //    }
+        //    if (AccessToken == null)
+        //    {
+        //        var deviceCode = await GoogleLogin.GetDeviceCode();
+        //        tokenResponse = await GoogleLogin.GetAccessToken(deviceCode);
+        //        googleRefreshToken = tokenResponse?.refresh_token;
+        //        Logger.Write("Refreshtoken " + tokenResponse?.refresh_token + " saved", LogLevel.Info);
+        //        File.WriteAllText(googletoken_file, googleRefreshToken);
+        //        AccessToken = tokenResponse?.id_token;
+        //    }
+        //}
+
+        public async Task DoGoogleLogin(string username, string password)
         {
             _authType = AuthType.Google;
-            string googleRefreshToken = string.Empty;
-            if (!Directory.Exists(configs_path))
-                Directory.CreateDirectory(configs_path);
-            string googletoken_file = Path.Combine(configs_path, filename);
-            if (File.Exists(googletoken_file))
-                googleRefreshToken = File.ReadAllText(googletoken_file);
-            GoogleLogin.TokenResponseModel tokenResponse;
-            if (googleRefreshToken != string.Empty)
+
+            AccessToken = GoogleLoginGPSOAuth.DoLogin(username, password);
+            await SetServer();
+
+            /*
+            * This is our old authentication method
+            * Keeping this around in case we might need it later on
+            *
+            GoogleLogin.TokenResponseModel tokenResponse = null;
+            if (_client.Settings.GoogleRefreshToken != string.Empty)
             {
-                tokenResponse = await GoogleLogin.GetAccessToken(googleRefreshToken);
-                AccessToken = tokenResponse?.id_token;
+                tokenResponse = await GoogleLogin.GetAccessToken(_client.Settings.GoogleRefreshToken);
+                _client.AuthToken = tokenResponse?.id_token;
             }
-            if (AccessToken == null)
+
+            if (_client.AuthToken == null)
             {
                 var deviceCode = await GoogleLogin.GetDeviceCode();
+                if(deviceCode?.user_code == null || deviceCode?.verification_url == null)
+                    throw new GoogleOfflineException();
+
+                GoogleDeviceCodeEvent?.Invoke(deviceCode.user_code, deviceCode.verification_url);
                 tokenResponse = await GoogleLogin.GetAccessToken(deviceCode);
-                googleRefreshToken = tokenResponse?.refresh_token;
-                Logger.Write("Refreshtoken " + tokenResponse?.refresh_token + " saved", LogLevel.Info);
-                File.WriteAllText(googletoken_file, googleRefreshToken);
-                AccessToken = tokenResponse?.id_token;
+                _client.Settings.GoogleRefreshToken = tokenResponse?.refresh_token;
+                _client.AuthToken = tokenResponse?.id_token;
             }
+
+            await SetServer();
+            */
         }
 
         public async Task DoPtcLogin(string username, string password)
@@ -502,6 +536,12 @@ namespace PokemonGo.RocketAPI
                 Timestamp = serverResponse.Auth.Timestamp,
                 Unknown73 = serverResponse.Auth.Unknown73
             };
+
+            if (serverResponse.Auth == null)
+            {
+                AccessToken = null;
+                throw new AccessTokenExpiredException();
+            }
 
             _apiUrl = serverResponse.ApiUrl;
         }

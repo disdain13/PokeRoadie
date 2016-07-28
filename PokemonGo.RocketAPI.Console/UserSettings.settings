@@ -20,10 +20,10 @@
     <Setting Name="AuthType" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Google</Value>
     </Setting>
-    <Setting Name="PtcUsername" Type="System.String" Scope="Application">
+    <Setting Name="Username" Type="System.String" Scope="Application">
       <Value Profile="(Default)">username</Value>
     </Setting>
-    <Setting Name="PtcPassword" Type="System.String" Scope="Application">
+    <Setting Name="Password" Type="System.String" Scope="Application">
       <Value Profile="(Default)">password</Value>
     </Setting>
     <Setting Name="UseGPXPathing" Type="System.Boolean" Scope="Application">

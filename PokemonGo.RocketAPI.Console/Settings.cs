@@ -32,8 +32,8 @@ namespace PokemonGo.RocketAPI.Console
         #region " Properties "
 
         public AuthType AuthType { get; set; }
-        public string PtcUsername { get; set; }
-        public string PtcPassword { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
         public double CurrentLatitude { get; set; }
         public double CurrentLongitude { get; set; }
         public double CurrentAltitude { get; set; }
@@ -205,8 +205,8 @@ namespace PokemonGo.RocketAPI.Console
             this.NotTransferPokemonsThatCanEvolve = UserSettings.Default.NotTransferPokemonsThatCanEvolve;
             this.PrioritizeStopsWithLures = UserSettings.Default.PrioritizeStopsWithLures;
             this.PriorityType = (PriorityType)Enum.Parse(typeof(PriorityType), UserSettings.Default.PriorityType, true);
-            this.PtcPassword = UserSettings.Default.PtcPassword;
-            this.PtcUsername = UserSettings.Default.PtcUsername;
+            this.Password = UserSettings.Default.Password;
+            this.Username = UserSettings.Default.Username;
             this.TransferPokemon = UserSettings.Default.TransferPokemon;
             this.KeepDuplicateAmount = UserSettings.Default.KeepDuplicateAmount;
             this.UseGPXPathing = UserSettings.Default.UseGPXPathing;
@@ -306,8 +306,8 @@ namespace PokemonGo.RocketAPI.Console
                     this.NotTransferPokemonsThatCanEvolve = obj.NotTransferPokemonsThatCanEvolve;
                     this.PrioritizeStopsWithLures = obj.PrioritizeStopsWithLures;
                     this.PriorityType = obj.PriorityType;
-                    this.PtcPassword = obj.PtcPassword;
-                    this.PtcUsername = obj.PtcUsername;
+                    this.Password = obj.Password;
+                    this.Username = obj.Username;
                     this.TransferPokemon = obj.TransferPokemon;
                     this.KeepDuplicateAmount = obj.KeepDuplicateAmount;
                     this.UseGPXPathing = obj.UseGPXPathing;

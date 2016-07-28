@@ -15,8 +15,8 @@ namespace PokemonGo.RocketAPI
         #region " Properties "
 
         AuthType AuthType { get; set; }
-        string PtcPassword { get; set; }
-        string PtcUsername { get; set; }
+        string Password { get; set; }
+        string Username { get; set; }
         double CurrentLatitude { get; set; }
         double CurrentLongitude { get; set; }
         double CurrentAltitude { get; set; }

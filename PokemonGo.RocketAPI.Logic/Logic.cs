@@ -73,10 +73,10 @@ namespace PokemonGo.RocketAPI.Logic
                     switch (_clientSettings.AuthType)
                     {
                         case AuthType.Ptc:
-                            await _client.DoPtcLogin(_clientSettings.PtcUsername, _clientSettings.PtcPassword);
+                            await _client.DoPtcLogin(_clientSettings.Username, _clientSettings.Password);
                             break;
                         case AuthType.Google:
-                            await _client.DoGoogleLogin("GoogleAuth.ini");
+                            await _client.DoGoogleLogin(_clientSettings.Username, _clientSettings.Password);
                             break;
                         default:
                             Logger.Write("wrong AuthType");
