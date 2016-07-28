@@ -33,7 +33,7 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  
 <h2>Global Destinations</h2>
 PokeRoadie will grind the world for you! Plan global destinations, the bot will simulate flight travel and driving. It will harvest (pokestops/pokemon) at each global destination for a configurable number of minutes, then travel to the next. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file. Within this file, each line should contain the following information and format:<br/><br/>
-<b>latitude:longitude:altitude:name<b/><br/><br/>
+<b>latitude:longitude:altitude:name</b><br/><br/>
 For example, the following contents would lead you on a tour of Southern California:<br/><br/>
 34.0114062:-118.495009:18.82:California, Santa Monica Beach<br/>
 33.9852255:-118.4716024:18.31:California, Venice Beach<br/>
