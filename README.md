@@ -89,8 +89,7 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>PriorityType</b><br/>Determines how to prioritize pokemon for transfer and evolution. The valid setting values are (default) <b>V</b> for <i>True Value</i>, <b>IV</b> for Perfection %, and <b>CP</b> for Combat Points.<br/>
 <br/><br/>
 
-<h2><a name="features">Spegeli Original Features</a></h2>
- 
+<h2><a name="features">Ferox, Necronomicon, Spegeli Pre-Fork Contributions</a></h2>
  - [PTC Login / Google]
  - [Humanlike Walking]<br />
  - [Configurable Custom Pathing]<br />
