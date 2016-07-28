@@ -12,19 +12,22 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
 <br/>
 
 <h2><a name="features">PokeRoadie New Features</a></h2>
+ - <b>Pokemon Moves Imported</b><br/>All the move information imported.<br/>Used in NEW pokemon value calculations.
+ - <b>Pokemon True Value</b><br/>Developed a new formula to calculate the <i>True Value</i> of pokemon.<br/>Value is based on CP, Perfect %, Level, Move Power, and Move Accuracy.<br/>Can now use value "V" in <b>PriorityType</b> setting to Transfer based on <i>True Value</i>.<br />Can set <b>KeepAboveV</b> setting to keep any pokemon equal to or above the specified <i>True Value</i>.<br/>
  - <b>Global Destinations</b><br />Create a list of waypoints around the world.<br />Spend x minutes (60 by default) farming in each location.<br />Fly between global destinations at high speed (no catch).<br />Or, Drive to global destinations while catching!<br />Setup elaborate routes to hotspots everywhere!<br/>Manage destinations through the DestinationCoords.ini file.
  - <b>Lure Awareness</b><br />Visit stops with lures first.<br />If there are multiple stops with lures, bounce back and forth a little.<br/>Destinations with lures will say "WITH LURE" after the name.
  - <b>Statistics every x minutes</b><br />Detailed Pokemon stats.<br />Detailed Destination stats.<br />Ability to log all Pokemon.<br />Detailed Inventory Stats.<br/>
  - <b>Dynamic Speed</b><br />Dynamically Adjust speed between 2-55kmph based upon next waypoint distance, and the time to get there.<br />Randomize Speed slightly to present more realistic simulation.
- - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.
+ - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.<br/>
+ - <b>Settings Re-Write</b><br/> Have re-written the entire settings system to work out of the "Configs" directory.<br/>No longer using user specific settings stored in the AppData.<br/>
 <br/><br/>
 <h2><a name="features">PokeRoadie Settings</a></h2>
- - <b>AuthType</b><br/>
+ - <b>AuthType</b><br/>The type of login authentication for PokemonGo. Valid values are (default) <b>Google</b>, and <b>Ptc</b>. 
  - <b>CatchPokemon</b><br/>
  - <b>CatchWhileFlying</b><br/>
- - <b>DefaultAltitude</b><br/>
- - <b>DefaultLatitude</b><br/>
- - <b>DefaultLongitude</b><br/>
+ - <b>CurrentAltitude</b><br/>
+ - <b>CurrentLatitude</b><br/>
+ - <b>CurrentLongitude</b><br/>
  - <b>DestinationIndex</b><br/>
  - <b>DestinationsEnabled</b><br/>
  - <b>DisplayAllPokemonInLog</b><br/>
@@ -35,29 +38,28 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>EvolveOnlyPokemonAboveIVValue</b><br/>
  - <b>EvolvePokemon</b><br/>
  - <b>FlyingEnabled</b><br/>
- - <b>FlyingSpeedInKilometerPerHour</b><br/>
- - <b>GPXFile</b><br/>
+ - <b>FlyingSpeed</b><br/>
+ - <b>GPXFile</b> (Not Currently Supported)<br/>
  - <b>KeepAboveCP</b><br/>
  - <b>KeepAboveIV</b><br/>
  - <b>KeepAboveV</b><br/>
  - <b>LoiteringActive</b><br/>
  - <b>MaxSecondsBetweenStops</b><br/>
- - <b>MaxTravelDistanceInMeters</b><br/>
+ - <b>MaxDistance</b><br/>
  - <b>MinutesPerDestination</b><br/>
  - <b>MoveWhenNoStops</b><br/>
  - <b>NotTransferPokemonsThatCanEvolve</b><br/>
- - <b>PrioritizeIVOverCP</b> (Will be depricated by PriorityType)<br/>
  - <b>PrioritizeStopsWithLures</b><br/>
  - <b>PtcPassword</b><br/>
  - <b>PtcUsername</b><br/>
- - <b>TransferPokemon</b><br/>
- - <b>TransferPokemonKeepDuplicateAmount</b><br/>
- - <b>UseGPXPathing</b><br/>
- - <b>useLuckyEggsWhileEvolving</b><br/>
- - <b>UsePokemonToNotCatchList</b><br/></b><br/>
- - <b>WalkingSpeedInKilometerPerHour</b><br/>
- - <b>WalkingSpeedInKilometerPerHourMax</b><br/>
- - <b>PriorityType</b> (Not yet implemented)<br/>
+ - <b>TransferPokemon</b><br/>Enable automatic transfers based on value specified by the <b>PriorityType</b> setting.<br/>
+ - <b>KeepDuplicateAmount</b><br/>The acceptable number of each species to keep based on value specified by the <b>PriorityType</b> setting. The default value is 2.<br/>
+ - <b>UseGPXPathing</b> (Not Currently Supported)<br/>
+ - <b>UseLuckyEggs</b><br/>Specifies if a Lucky Egg should be used when automatically evolving pokemon.
+ - <b>UsePokemonToNotCatchList</b><br/>Specifies if the <i>Configs\PokemonsNotToCatch.ini</i> file should be used to ignore specific pokemon. Pokemon listed in this file will be ignored during encounters.<br/>
+ - <b>MinSpeed</b><br/>The minimum speed (in kilometers per hour) your player will walk/drive when exploring a destination for pokestops and pokemon.<br/>
+ - <b>MaxSpeed</b><br/>The maximum speed (in kilometers per hour) your player will walk/drive when exploring a destination for pokestops and pokemon. Setting this above 80 usually results in pokemon fleeing during encounters.<br/>
+ - <b>PriorityType</b><br/>Determines how to prioritize pokemon for transfer and evolution. The valid setting values are (default) <b>V</b> for <i>True Value</i>, <b>IV</b> for Perfection %, and <b>CP</b> for Combat Points.<br/>
 <br/><br/>
 <h2><a name="features">Spegeli Original Features</a></h2>
  
