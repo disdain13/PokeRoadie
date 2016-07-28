@@ -23,7 +23,7 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.<br/>
  - <b>Settings Re-Write</b><br/> Have re-written the entire settings system to work out of the "Configs" directory.<br/>No longer using user specific settings stored in the AppData.<br/>
 <br/><br/>
-<h2><a name="features">PokeRoadie Settings</a></h2>
+<h2><a name="settings">PokeRoadie Settings</a></h2><br/>(Under Construction)<br/>
  - <b>AuthType</b><br/>The type of login authentication for PokemonGo. Valid values are (default) <b>Google</b>, and <b>Ptc</b>. 
  - <b>CatchPokemon</b><br/>
  - <b>CatchWhileFlying</b><br/>
