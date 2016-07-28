@@ -52,17 +52,17 @@ PokeRoadie is vastly configurable. The advanced features can currently be access
 <h3>Configs\Settings.xml</h3>
 The primary settings file where most configuration will be done. In a few cases, like Global Destinations and Recycling, you will go into other files.<br/><br/>
  - <b>AuthType</b><br/>The type of login authentication for PokemonGo. Valid values are (default) <b>Google</b>, and <b>Ptc</b>. 
- - <b>CatchPokemon</b><br/>
- - <b>CatchWhileFlying</b><br/>
- - <b>CurrentAltitude</b><br/>
- - <b>CurrentLatitude</b><br/>
- - <b>CurrentLongitude</b><br/>
- - <b>DestinationIndex</b><br/>
- - <b>DestinationsEnabled</b><br/>
- - <b>DisplayAllPokemonInLog</b><br/>
- - <b>DisplayRefreshMinutes</b><br/>
- - <b>EnableSpeedAdjustment</b><br/>
- - <b>EnableSpeedRandomizer</b><br/>
+ - <b>CatchPokemon</b><br/>Specifies if we should catch pokemon while traveling. Otherwise, only pokestops will be harvested.
+ - <b>CatchWhileFlying</b><br/>Specifies if we should catch pokemon while flying. This is not suggested because you will waste pokeballs. Once moving beyond 75 kph, most encounters will result in the creature Fleeing immediately.
+ - <b>CurrentAltitude</b><br/>The current altitude of the player.
+ - <b>CurrentLatitude</b><br/>The current latitude of the player.
+ - <b>CurrentLongitude</b><br/>The current longitude of the player.
+ - <b>DestinationIndex</b><br/>The index number of the destination the player is currently at..
+ - <b>DestinationsEnabled</b><br/>Specifies if <i>Global Destinations</i> are active. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file.
+ - <b>DisplayAllPokemonInLog</b><br/>Display a complete pokemon list in periodacal statistics. 
+ - <b>DisplayRefreshMinutes</b><br/>The number of minutes between rendering the periodical statistics.
+ - <b>EnableSpeedAdjustment</b><br/>When enabled, the program will attempt to reduce travel time below the seconds specified in the <b>MaxSecondsBetweenStops</b> setting, by increasing the travel speed until it hits the value specified in the <b>MaxSpeed</b> setting.
+ - <b>EnableSpeedRandomizer</b><br/>When enabled, speed will be randomly adjusted up to 3kph. This provides a more realistic simulation.
  - <b>EvolveOnlyPokemonAboveIV</b><br/>
  - <b>EvolveOnlyPokemonAboveIVValue</b><br/>
  - <b>EvolvePokemon</b><br/>
