@@ -89,6 +89,13 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>PriorityType</b><br/>Determines how to prioritize pokemon for transfer and evolution. The valid setting values are (default) <b>V</b> for <i>True Value</i>, <b>IV</b> for Perfection %, and <b>CP</b> for Combat Points.<br/>
 <br/><br/>
 
+<h2>Contributors</h2>
+Below are some of the many kewl PokemonGo bots and people who contributed along the way:<br/>
+http://www.ownedcore.com/forums/members/149804-maclone.html - Maclone <3 Settings are key.<br/>
+https://github.com/DetectiveSquirrel...-Go-Rocket-API - For awesome color<br/>
+https://github.com/FeroxRev/Pokemon-Go-Rocket-API - For starting all of this! <3<br/>
+https://github.com/NecronomiconCodin...Go-Rocket-API/ - For Adding initial stuff that we wanted!<br/>
+
 <h2><a name="features">Ferox, Necronomicon, Spegeli Pre-Fork Contributions</a></h2>
  - [PTC Login / Google]
  - [Humanlike Walking]<br />
