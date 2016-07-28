@@ -3,8 +3,8 @@
 [1.2]: http://i.imgur.com/NNcGs1n.png (BTC)
 <!-- title -->
 <h1>PokeRoadie</h1>
-<h2>Advanced PokemonGo Bot</h2><br/>
-Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. But, just wait till you can see what else it can do!<br/>
+<h2>Advanced PokemonGo Bot</h2>
+Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. But, just wait till you can see what else it can do!<br/><br/>
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_1.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/>
 A big thank you goes to Ferox, Necronomicon, Spegeli <3<br/>
