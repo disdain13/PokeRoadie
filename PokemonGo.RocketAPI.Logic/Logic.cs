@@ -90,8 +90,16 @@ namespace PokemonGo.RocketAPI.Logic
                 }
                 catch (Exception e)
                 {
-                    Logger.Write(e.Message + " from " + e.Source);
-                    Logger.Write("Got an exception, trying automatic restart..", LogLevel.Error);
+                    if (e.Message.Contains("NeedsBrowser"))
+                    {
+                        Logger.Write("LOGIN ERROR: Please login to your google account and turn off 'Two-Step Authentication' under security settings (temporarily). We are working on fixing this bug. " + e.Message + " trying automatic restart in 15 seconds...", LogLevel.Error);
+                        await Task.Delay(15000);
+                    }
+                    else
+                    {
+                        Logger.Write(e.Message + " from " + e.Source);
+                        Logger.Write("Got an exception, trying automatic restart..", LogLevel.Error);
+                    }
                     await Execute();
                 }
                 await Task.Delay(10000);

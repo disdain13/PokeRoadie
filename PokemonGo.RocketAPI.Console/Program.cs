@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Exceptions;
 using PokemonGo.RocketAPI.Logging;
-
+using System.Windows.Forms;
 #endregion
 
 
@@ -16,6 +16,14 @@ namespace PokemonGo.RocketAPI.Console
 {
     internal class Program
     {
+        static int exitCode = 0;
+
+        public static void ExitApplication(int exitCode)
+        {
+            Program.exitCode = exitCode;
+            Application.Exit();
+        }
+
         private static void Main()
         {
             AppDomain.CurrentDomain.UnhandledException

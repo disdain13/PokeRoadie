@@ -214,7 +214,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DestinationsEnabled {
             get {
                 return ((bool)(this["DestinationsEnabled"]));
@@ -286,7 +286,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int MaxSecondsBetweenStops {
             get {
                 return ((int)(this["MaxSecondsBetweenStops"]));
@@ -331,7 +331,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
         public double MinSpeed {
             get {
                 return ((double)(this["MinSpeed"]));
@@ -340,7 +340,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
         public int MaxDistance {
             get {
                 return ((int)(this["MaxDistance"]));
@@ -349,7 +349,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UseLuckyEggs {
             get {
                 return ((bool)(this["UseLuckyEggs"]));
@@ -358,7 +358,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool EvolvePokemon {
             get {
                 return ((bool)(this["EvolvePokemon"]));
@@ -367,7 +367,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool TransferPokemon {
             get {
                 return ((bool)(this["TransferPokemon"]));
