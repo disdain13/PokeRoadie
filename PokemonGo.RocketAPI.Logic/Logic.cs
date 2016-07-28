@@ -299,16 +299,22 @@ namespace PokemonGo.RocketAPI.Logic
             if (_clientSettings.MaxDistance != 0 &&
                 distanceFromStart > _clientSettings.MaxDistance)
             {
-                Logger.Write(
-                    $"You're outside of your defined radius! Walking to start ({distanceFromStart}m away) in 5 seconds. Is your Coords.ini file correct?",
-                    LogLevel.Warning);
-                await Task.Delay(5000);
-                Logger.Write("Moving to start location now.");
+
+                if (_clientSettings.FlyingEnabled)
+                    Logger.Write($"Boarded flight #{RandomHelper.RandomNumber(101,501)}", LogLevel.Navigation, ConsoleColor.White);
+                else
+                {
+                    Logger.Write("Hopped in car", LogLevel.Navigation, ConsoleColor.White);
+                }
+
+                await Task.Delay(500);
                 Func<Task> del = null;
                 if (_clientSettings.CatchPokemon && !_clientSettings.FlyingEnabled || (_clientSettings.FlyingEnabled && _clientSettings.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
                 var ToStart = await _navigation.HumanLikeWalking(
                     new GeoCoordinate(_client.StartLat, _client.StartLng,_client.StartAltitude),
                     _clientSettings.FlyingEnabled ? _clientSettings.FlyingSpeed: _clientSettings.MinSpeed, del);
+
+                Logger.Write($"Arrived at destination", LogLevel.Navigation);
             }
 
             //if destinations are enabled
@@ -338,7 +344,13 @@ namespace PokemonGo.RocketAPI.Logic
                             _clientSettings.CurrentAltitude = destination.Altitude;
                             _clientSettings.Save();
 
-                            Logger.Write($"Moving to new global destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.None, ConsoleColor.Red);
+                            if (_clientSettings.FlyingEnabled)
+                                Logger.Write($"Boarded flight #{RandomHelper.RandomNumber(101, 501)}", LogLevel.Navigation, ConsoleColor.White);
+                            else
+                            {
+                                Logger.Write("Hopped in car", LogLevel.None, ConsoleColor.White);
+                            }
+                            Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
 
                             //fly to location
                             Func<Task> del = null;
@@ -350,7 +362,7 @@ namespace PokemonGo.RocketAPI.Logic
                             //reset destination timer
                             _client.DestinationEndDate = DateTime.Now.AddMinutes(_clientSettings.MinutesPerDestination);
 
-                            Logger.Write($"Arrived at new global destination - {destination.Name}!", LogLevel.None, ConsoleColor.Red);
+                            Logger.Write($"Arrived at destination - {destination.Name}!", LogLevel.Navigation, ConsoleColor.White);
                         }
                         else
                         {
@@ -843,24 +855,6 @@ namespace PokemonGo.RocketAPI.Logic
 
             if (_clientSettings.DestinationsEnabled && _client.Destinations != null && _client.Destinations.Count > 0)
             {
-                Logger.Write("====== Aggregate Pokemon Stats ======", LogLevel.None, ConsoleColor.Yellow);
-                Logger.Write($"{allPokemon.Count} Total Pokemon", LogLevel.None, ConsoleColor.White);
-                Logger.Write("====== Cp ======", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"< 100 Cp: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"100-499 Cp: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"500-999 Cp: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"1000-1499 Cp: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"> 1499 Cp: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write("====== IV ======", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"24% or less: {allPokemon.Where(x => x.GetPerfection() < 25).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"25%-49%: {allPokemon.Where(x => x.GetPerfection() > 24 && x.GetPerfection() < 50).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"50%-74%: {allPokemon.Where(x => x.GetPerfection() > 49 && x.GetPerfection() < 75).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"75%-89%: {allPokemon.Where(x => x.GetPerfection() > 74 && x.GetPerfection() < 90).Count()}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"90%-100%: {allPokemon.Where(x => x.GetPerfection() > 89).Count()}", LogLevel.None, ConsoleColor.White);
-            }
-
-            if (_clientSettings.DestinationsEnabled && _client.Destinations != null && _client.Destinations.Count > 0)
-            {
                 Logger.Write("====== Destinations ======", LogLevel.None, ConsoleColor.Yellow);
                 Destination lastDestination = null;
                 for (int i = 0; i < _client.Destinations.Count; i++)
@@ -893,23 +887,44 @@ namespace PokemonGo.RocketAPI.Logic
                     lastDestination = destination;
                 }
             }
-            Logger.Write("====== Highest CP Pokemon ======", LogLevel.None, ConsoleColor.Yellow);
-            var highestsPokemonCp = await _inventory.GetHighestsCP(10);
+            Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
+            var highestsPokemonV = await _inventory.GetHighestsV(20);
+            foreach (var pokemon in highestsPokemonV)
+                Logger.Write(pokemon.ToString(_clientSettings), LogLevel.None, ConsoleColor.White);
+            Logger.Write("====== Highest CP ======", LogLevel.None, ConsoleColor.Yellow);
+            var highestsPokemonCp = await _inventory.GetHighestsCP(20);
             foreach (var pokemon in highestsPokemonCp)
                 Logger.Write(pokemon.ToString(_clientSettings), LogLevel.None, ConsoleColor.White);
-            Logger.Write("====== Highest Perfect Pokemon ======", LogLevel.None, ConsoleColor.Yellow);
-            var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(10);
+            Logger.Write("====== Most Perfect Genetics ======", LogLevel.None, ConsoleColor.Yellow);
+            var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(20);
             foreach (var pokemon in highestsPokemonPerfect)
             {
                 Logger.Write(pokemon.ToString(_clientSettings), LogLevel.None, ConsoleColor.White);
             }
             if (_clientSettings.DisplayAllPokemonInLog)
             {
-                Logger.Write("====== Full Pokemon List ======", LogLevel.None, ConsoleColor.Yellow);
+                Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
                 foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
                 {
                     Logger.Write(pokemon.ToString(_clientSettings), LogLevel.None, ConsoleColor.White);
                 }
+            }
+            if (_clientSettings.DisplayAggregateLog)
+            {
+                Logger.Write("====== Aggregate Data ======", LogLevel.None, ConsoleColor.Yellow);
+                Logger.Write($"{allPokemon.Count} Total Pokemon", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== Cp ======", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"< 100 Cp: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"100-499 Cp: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"500-999 Cp: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"1000-1499 Cp: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"> 1499 Cp: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== IV ======", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"24% or less: {allPokemon.Where(x => x.GetPerfection() < 25).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"25%-49%: {allPokemon.Where(x => x.GetPerfection() > 24 && x.GetPerfection() < 50).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"50%-74%: {allPokemon.Where(x => x.GetPerfection() > 49 && x.GetPerfection() < 75).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"75%-89%: {allPokemon.Where(x => x.GetPerfection() > 74 && x.GetPerfection() < 90).Count()}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"90%-100%: {allPokemon.Where(x => x.GetPerfection() > 89).Count()}", LogLevel.None, ConsoleColor.White);
             }
 
         }

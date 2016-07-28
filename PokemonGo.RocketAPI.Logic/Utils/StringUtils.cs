@@ -53,5 +53,25 @@ namespace PokemonGo.RocketAPI.Logic.Utils
                 return $"{Math.Round(seconds, 2).ToString():0.##} seconds";
             }
         }
+
+        public static string GetTravelActionString(double speed, bool flyingEnabled)
+        {
+            var action = "rocking";
+            if (speed < 1)
+                action = "standing";
+            else if (speed < 5)
+                action = "crawling";
+            else if (speed < 10)
+                action = "walking";
+            else if (speed < 15)
+                action = "jogging";
+            else if (speed < 25)
+                action = "running";
+            else if (speed < 80)
+                action = "driving";
+            else
+                action = flyingEnabled ? "flying" : "driving mad";
+            return action;
+        }
     }
 }

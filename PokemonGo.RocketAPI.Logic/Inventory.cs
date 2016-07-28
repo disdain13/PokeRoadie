@@ -226,6 +226,13 @@ namespace PokemonGo.RocketAPI.Logic
             }
         }
 
+        public async Task<IEnumerable<PokemonData>> GetHighestsV(int limit)
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.OrderByDescending(x => PokemonInfo.CalculatePokemonValue(x, _client.Settings.PokemonMoveDetails.GetMove(x.Move1.ToString()), _client.Settings.PokemonMoveDetails.GetMove(x.Move2.ToString()))).ThenBy(n => n.StaminaMax).Take(limit);
+        }
+
         public async Task<IEnumerable<PokemonData>> GetHighestsCP(int limit)
         {
             var myPokemon = await GetPokemons();

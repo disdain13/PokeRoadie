@@ -56,15 +56,14 @@ namespace PokemonGo.RocketAPI.Logic
                 }
             }
 
-
             //log distance and time
             if (seconds > 60)
             {
-                Logger.Write($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)}! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.None, ConsoleColor.Red);
+                Logger.Write($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour,_client.Settings.FlyingEnabled)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.None, ConsoleColor.Red);
             } 
             else
             {
-                Logger.Write($"Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)}! ({walkingSpeedInKilometersPerHour}kmh)", LogLevel.Navigation);
+                Logger.Write($"Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour, _client.Settings.FlyingEnabled)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.Navigation);
             }
 
             var nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);
