@@ -34,40 +34,40 @@ namespace PokemonGo.RocketAPI.Console
         public AuthType AuthType { get; set; }
         public string PtcUsername { get; set; }
         public string PtcPassword { get; set; }
-        public double DefaultLatitude { get; set; }
-        public double DefaultLongitude { get; set; }
-        public double DefaultAltitude { get; set; }
+        public double CurrentLatitude { get; set; }
+        public double CurrentLongitude { get; set; }
+        public double CurrentAltitude { get; set; }
         public int DestinationIndex { get; set; }
         public bool CatchPokemon { get; set; }
         public bool UseGPXPathing { get; set; }
         public string GPXFile { get; set; }
-        public double WalkingSpeedInKilometerPerHour { get; set; }
-        public int MaxTravelDistanceInMeters { get; set; }
+        public double MinSpeed { get; set; }
+        public int MaxDistance { get; set; }
         public bool UsePokemonToNotCatchList { get; set; }
         public bool EvolvePokemon { get; set; }
         public bool EvolveOnlyPokemonAboveIV { get; set; }
         public double EvolveOnlyPokemonAboveIVValue { get; set; }
         public bool TransferPokemon { get; set; }
-        public int TransferPokemonKeepDuplicateAmount { get; set; }
+        public int KeepDuplicateAmount { get; set; }
         public bool NotTransferPokemonsThatCanEvolve { get; set; }
         public double KeepAboveIV { get; set; }
         public double KeepAboveV { get; set; }
         public int KeepAboveCP { get; set; }
-        public bool useLuckyEggsWhileEvolving { get; set; }
-        public bool PrioritizeIVOverCP { get; set; }
+        public bool UseLuckyEggs { get; set; }
         public bool LoiteringActive { get; set; }
         public int MinutesPerDestination { get; set; }
-        public int FlyingSpeedInKilometerPerHour { get; set; }
+        public int FlyingSpeed { get; set; }
         public bool CatchWhileFlying { get; set; }
         public bool FlyingEnabled { get; set; }
         public bool MoveWhenNoStops { get; set; }
         public bool PrioritizeStopsWithLures { get; set; }
         public bool DestinationsEnabled { get; set; }
         public int DisplayRefreshMinutes { get; set; }
+        public bool DisplayAggregateLog { get; set; }
         public bool DisplayAllPokemonInLog { get; set; }
         public bool EnableSpeedAdjustment { get; set; }
         public bool EnableSpeedRandomizer { get; set; }
-        public int WalkingSpeedInKilometerPerHourMax { get; set; }
+        public int MaxSpeed { get; set; }
         public int MaxSecondsBetweenStops { get; set; }
         public PriorityType PriorityType { get; set; }
 
@@ -175,12 +175,13 @@ namespace PokemonGo.RocketAPI.Console
             this.AuthType = (AuthType)Enum.Parse(typeof(AuthType), UserSettings.Default.AuthType, true);
             this.CatchPokemon = UserSettings.Default.CatchPokemon;
             this.CatchWhileFlying = UserSettings.Default.CatchWhileFlying;
-            this.DefaultAltitude = UserSettings.Default.DefaultAltitude;
-            this.DefaultLatitude = UserSettings.Default.DefaultLatitude;
-            this.DefaultLongitude = UserSettings.Default.DefaultLongitude;
+            this.CurrentAltitude = UserSettings.Default.DefaultAltitude;
+            this.CurrentLatitude = UserSettings.Default.DefaultLatitude;
+            this.CurrentLongitude = UserSettings.Default.DefaultLongitude;
             this.DestinationIndex = UserSettings.Default.DestinationIndex;
             this.DestinationsEnabled = UserSettings.Default.DestinationsEnabled;
             this.DisplayAllPokemonInLog = UserSettings.Default.DisplayAllPokemonInLog;
+            this.DisplayAggregateLog = UserSettings.Default.DisplayAggregateLog;
             this.DisplayRefreshMinutes = UserSettings.Default.DisplayRefreshMinutes;
             this.EnableSpeedAdjustment = UserSettings.Default.EnableSpeedAdjustment;
             this.EnableSpeedRandomizer = UserSettings.Default.EnableSpeedRandomizer;
@@ -188,29 +189,28 @@ namespace PokemonGo.RocketAPI.Console
             this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
             this.EvolvePokemon = UserSettings.Default.EvolvePokemon;
             this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
-            this.FlyingSpeedInKilometerPerHour = UserSettings.Default.FlyingSpeedInKilometerPerHour;
+            this.FlyingSpeed = UserSettings.Default.FlyingSpeed;
             this.GPXFile = UserSettings.Default.GPXFile;
             this.KeepAboveCP = UserSettings.Default.KeepAboveCP;
             this.KeepAboveIV = UserSettings.Default.KeepAboveIV;
             this.KeepAboveV = UserSettings.Default.KeepAboveV;
             this.LoiteringActive = UserSettings.Default.LoiteringActive;
             this.MaxSecondsBetweenStops = UserSettings.Default.MaxSecondsBetweenStops;
-            this.MaxTravelDistanceInMeters = UserSettings.Default.MaxTravelDistanceInMeters;
+            this.MaxDistance = UserSettings.Default.MaxDistance;
             this.MinutesPerDestination = UserSettings.Default.MinutesPerDestination;
             this.MoveWhenNoStops = UserSettings.Default.MoveWhenNoStops;
             this.NotTransferPokemonsThatCanEvolve = UserSettings.Default.NotTransferPokemonsThatCanEvolve;
-            this.PrioritizeIVOverCP = UserSettings.Default.PrioritizeIVOverCP;
             this.PrioritizeStopsWithLures = UserSettings.Default.PrioritizeStopsWithLures;
             this.PriorityType = (PriorityType)Enum.Parse(typeof(PriorityType), UserSettings.Default.PriorityType, true);
             this.PtcPassword = UserSettings.Default.PtcPassword;
             this.PtcUsername = UserSettings.Default.PtcUsername;
             this.TransferPokemon = UserSettings.Default.TransferPokemon;
-            this.TransferPokemonKeepDuplicateAmount = UserSettings.Default.TransferPokemonKeepDuplicateAmount;
+            this.KeepDuplicateAmount = UserSettings.Default.KeepDuplicateAmount;
             this.UseGPXPathing = UserSettings.Default.UseGPXPathing;
-            this.useLuckyEggsWhileEvolving = UserSettings.Default.useLuckyEggsWhileEvolving;
+            this.UseLuckyEggs = UserSettings.Default.UseLuckyEggs;
             this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
-            this.WalkingSpeedInKilometerPerHour = UserSettings.Default.WalkingSpeedInKilometerPerHour;
-            this.WalkingSpeedInKilometerPerHourMax = UserSettings.Default.WalkingSpeedInKilometerPerHourMax;
+            this.MinSpeed = UserSettings.Default.MinSpeed;
+            this.MaxSpeed = UserSettings.Default.MaxSpeed;
 
         }
 
@@ -254,7 +254,7 @@ namespace PokemonGo.RocketAPI.Console
             }
             else
             {
-                Logger.Write($"Loading File: \"\\Configs\\{fileName}\"", LogLevel.Info);
+                //Logger.Write($"Loading File: \"\\Configs\\{fileName}\"", LogLevel.Info);
 
                 var content = string.Empty;
                 Settings obj = null;
@@ -273,12 +273,13 @@ namespace PokemonGo.RocketAPI.Console
                     this.AuthType = obj.AuthType;
                     this.CatchPokemon = obj.CatchPokemon;
                     this.CatchWhileFlying = obj.CatchWhileFlying;
-                    this.DefaultAltitude = obj.DefaultAltitude;
-                    this.DefaultLatitude = obj.DefaultLatitude;
-                    this.DefaultLongitude = obj.DefaultLongitude;
+                    this.CurrentAltitude = obj.CurrentAltitude;
+                    this.CurrentLatitude = obj.CurrentLatitude;
+                    this.CurrentLongitude = obj.CurrentLongitude;
                     this.DestinationIndex = obj.DestinationIndex;
                     this.DestinationsEnabled = obj.DestinationsEnabled;
                     this.DisplayAllPokemonInLog = obj.DisplayAllPokemonInLog;
+                    this.DisplayAggregateLog = obj.DisplayAggregateLog;
                     this.DisplayRefreshMinutes = obj.DisplayRefreshMinutes;
                     this.EnableSpeedAdjustment = obj.EnableSpeedAdjustment;
                     this.EnableSpeedRandomizer = obj.EnableSpeedRandomizer;
@@ -286,29 +287,28 @@ namespace PokemonGo.RocketAPI.Console
                     this.EvolveOnlyPokemonAboveIVValue = obj.EvolveOnlyPokemonAboveIVValue;
                     this.EvolvePokemon = obj.EvolvePokemon;
                     this.FlyingEnabled = obj.FlyingEnabled;
-                    this.FlyingSpeedInKilometerPerHour = obj.FlyingSpeedInKilometerPerHour;
+                    this.FlyingSpeed = obj.FlyingSpeed;
                     this.GPXFile = obj.GPXFile;
                     this.KeepAboveCP = obj.KeepAboveCP;
                     this.KeepAboveIV = obj.KeepAboveIV;
                     this.KeepAboveV = obj.KeepAboveV;
                     this.LoiteringActive = obj.LoiteringActive;
                     this.MaxSecondsBetweenStops = obj.MaxSecondsBetweenStops;
-                    this.MaxTravelDistanceInMeters = obj.MaxTravelDistanceInMeters;
+                    this.MaxDistance = obj.MaxDistance;
                     this.MinutesPerDestination = obj.MinutesPerDestination;
                     this.MoveWhenNoStops = obj.MoveWhenNoStops;
                     this.NotTransferPokemonsThatCanEvolve = obj.NotTransferPokemonsThatCanEvolve;
-                    this.PrioritizeIVOverCP = obj.PrioritizeIVOverCP;
                     this.PrioritizeStopsWithLures = obj.PrioritizeStopsWithLures;
                     this.PriorityType = obj.PriorityType;
                     this.PtcPassword = obj.PtcPassword;
                     this.PtcUsername = obj.PtcUsername;
                     this.TransferPokemon = obj.TransferPokemon;
-                    this.TransferPokemonKeepDuplicateAmount = obj.TransferPokemonKeepDuplicateAmount;
+                    this.KeepDuplicateAmount = obj.KeepDuplicateAmount;
                     this.UseGPXPathing = obj.UseGPXPathing;
-                    this.useLuckyEggsWhileEvolving = obj.useLuckyEggsWhileEvolving;
+                    this.UseLuckyEggs = obj.UseLuckyEggs;
                     this.UsePokemonToNotCatchList = obj.UsePokemonToNotCatchList;
-                    this.WalkingSpeedInKilometerPerHour = obj.WalkingSpeedInKilometerPerHour;
-                    this.WalkingSpeedInKilometerPerHourMax = obj.WalkingSpeedInKilometerPerHourMax;
+                    this.MinSpeed = obj.MinSpeed;
+                    this.MaxSpeed = obj.MaxSpeed;
                 }
             }
         }
@@ -321,7 +321,7 @@ namespace PokemonGo.RocketAPI.Console
 
             if (File.Exists(Directory.GetCurrentDirectory() + "\\" + filename))
             {
-                Logger.Write($"Loading File: {filename}");
+                //Logger.Write($"Loading File: {filename}");
 
                 var content = string.Empty;
                 using (StreamReader reader = new StreamReader(filename))
@@ -372,7 +372,7 @@ namespace PokemonGo.RocketAPI.Console
             string pokemonlist_file = Path.Combine(configs_path, filename);
             if (!File.Exists(pokemonlist_file))
             {
-                Logger.Write($"File: \"\\Configs\\{filename}\" not found, creating new...", LogLevel.Warning);
+                //Logger.Write($"File: \"\\Configs\\{filename}\" not found, creating new...", LogLevel.Warning);
                 using (var w = File.AppendText(pokemonlist_file))
                 {
                     defaultPokemon.ForEach(pokemon => w.WriteLine(pokemon.ToString()));
@@ -382,7 +382,7 @@ namespace PokemonGo.RocketAPI.Console
             }
             if (File.Exists(pokemonlist_file))
             {
-                Logger.Write($"Loading File: \"\\Configs\\{filename}\"", LogLevel.Info);
+                //Logger.Write($"Loading File: \"\\Configs\\{filename}\"", LogLevel.Info);
 
                 var content = string.Empty;
                 using (StreamReader reader = new StreamReader(pokemonlist_file))
@@ -415,7 +415,7 @@ namespace PokemonGo.RocketAPI.Console
 
             string fileName = "PokemonMoveDetails.xml";
             string filePath = Path.Combine(configs_path, fileName);
-            Logger.Write($"Loading File: \"\\Configs\\{fileName}\"", LogLevel.Info);
+            //Logger.Write($"Loading File: \"\\Configs\\{fileName}\"", LogLevel.Info);
 
             var content = string.Empty;
             lock (syncRoot)
@@ -432,9 +432,9 @@ namespace PokemonGo.RocketAPI.Console
 
         public void SetDefaultLocation(double lat, double lng, double z)
         {
-            DefaultLatitude = lat;
-            DefaultLongitude = lng;
-            DefaultAltitude = z;
+            CurrentLatitude = lat;
+            CurrentLongitude = lng;
+            CurrentAltitude = z;
             Save();
         }
 

@@ -27,7 +27,7 @@ namespace PokemonGo.RocketAPI
         public static double CalculatePokemonValue(PokemonData poke, PokemonMoveDetail move1, PokemonMoveDetail move2)
         {
             var p = System.Convert.ToInt32(CalculatePokemonPerfection(poke));
-            var cp = (poke.Cp == 0 ? 0 : poke.Cp / 2000) * 200;
+            var cp = Convert.ToInt32((poke.Cp == 0 ? 0 : (double)poke.Cp / (double)2000) * 200);
             var m1 = move1 == null && move1.Power > 0 ? 0 : move1.Power / 2;
             var m2 = move2 == null && move2.Power > 0 ? 0 : move2.Power / 2;
             return p + cp + m1 + m2;

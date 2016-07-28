@@ -17,28 +17,27 @@ namespace PokemonGo.RocketAPI
         AuthType AuthType { get; set; }
         string PtcPassword { get; set; }
         string PtcUsername { get; set; }
-        double DefaultLatitude { get; set; }
-        double DefaultLongitude { get; set; }
-        double DefaultAltitude { get; set; }
+        double CurrentLatitude { get; set; }
+        double CurrentLongitude { get; set; }
+        double CurrentAltitude { get; set; }
         bool UseGPXPathing { get; set; }
         string GPXFile { get; set; }
-        double WalkingSpeedInKilometerPerHour { get; set; }
-        int MaxTravelDistanceInMeters { get; set; }
+        double MinSpeed { get; set; }
+        int MaxDistance { get; set; }
         bool UsePokemonToNotCatchList { get; set; }
         bool EvolvePokemon { get; set; }
         bool EvolveOnlyPokemonAboveIV { get; set; }
         double EvolveOnlyPokemonAboveIVValue { get; set; }
         bool TransferPokemon { get; set; }
-        int TransferPokemonKeepDuplicateAmount { get; set; }
+        int KeepDuplicateAmount { get; set; }
         bool NotTransferPokemonsThatCanEvolve { get; set; }
         double KeepAboveIV { get; set; }
         double KeepAboveV { get; set; }
         int KeepAboveCP { get; set; }
-        bool PrioritizeIVOverCP { get; set; }
-        bool useLuckyEggsWhileEvolving { get; set; }
+        bool UseLuckyEggs { get; set; }
         bool LoiteringActive { get; set; }
         int MinutesPerDestination { get; set; }
-        int FlyingSpeedInKilometerPerHour { get; set; }
+        int FlyingSpeed { get; set; }
         bool CatchWhileFlying { get; set; }
         bool FlyingEnabled { get; set; }
         bool MoveWhenNoStops { get; set; }
@@ -47,10 +46,11 @@ namespace PokemonGo.RocketAPI
         int DestinationIndex { get; set; }
         int DisplayRefreshMinutes { get; set; }
         bool DisplayAllPokemonInLog { get; set; }
+        bool DisplayAggregateLog { get; set; }
         bool EnableSpeedAdjustment { get; set; }
         bool EnableSpeedRandomizer { get; set; }
         bool CatchPokemon { get; set; }
-        int WalkingSpeedInKilometerPerHourMax { get; set; }
+        int MaxSpeed { get; set; }
         int MaxSecondsBetweenStops { get; set; }
         PriorityType PriorityType { get; set; }
 

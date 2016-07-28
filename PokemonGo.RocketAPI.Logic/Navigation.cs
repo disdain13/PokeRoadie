@@ -46,9 +46,9 @@ namespace PokemonGo.RocketAPI.Logic
             var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
             var seconds = distanceToTarget / speedInMetersPerSecond;
             //adjust speed to try and keep the trip under a minute, might not be possible
-            if (walkingSpeedInKilometersPerHour < _client.Settings.WalkingSpeedInKilometerPerHourMax && _client.Settings.EnableSpeedAdjustment)
+            if (walkingSpeedInKilometersPerHour < _client.Settings.MaxSpeed && _client.Settings.EnableSpeedAdjustment)
             {
-                while (seconds > _client.Settings.MaxSecondsBetweenStops && walkingSpeedInKilometersPerHour < _client.Settings.WalkingSpeedInKilometerPerHourMax)
+                while (seconds > _client.Settings.MaxSecondsBetweenStops && walkingSpeedInKilometersPerHour < _client.Settings.MaxSpeed)
                 {
                     walkingSpeedInKilometersPerHour++;
                     speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
@@ -75,7 +75,7 @@ namespace PokemonGo.RocketAPI.Logic
             var requestSendDateTime = DateTime.Now;
             var result =
                 await
-                    _client.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, _client.Settings.DefaultAltitude);
+                    _client.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, _client.Settings.CurrentAltitude);
             do
             {
                 var millisecondsUntilGetUpdatePlayerLocationResponse =
@@ -99,7 +99,7 @@ namespace PokemonGo.RocketAPI.Logic
                 result =
                     await
                         _client.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
-                            _client.Settings.DefaultAltitude);
+                            _client.Settings.CurrentAltitude);
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
                 await Task.Delay(Math.Min((int)(distanceToTarget / speedInMetersPerSecond * 100), 1000));

@@ -29,18 +29,111 @@ namespace PokemonGo.RocketAPI.Logic
             _client = client;
         }
 
+        //public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(ISettings clientSettings)
+        //{
+        //    //bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCP = false, IEnumerable<PokemonId> filter = null
+        //    var myPokemon = await GetPokemons();
+        //    var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0 && p.Cp < clientSettings.KeepAboveCP).ToList();
+        //    if (clientSettings.PokemonsNotToTransfer != null)
+        //        pokemonList = pokemonList.Where(p => !clientSettings.PokemonsNotToTransfer.Contains(p.PokemonId)).ToList();
+
+        //    if (clientSettings.NotTransferPokemonsThatCanEvolve)
+        //    {
+        //        var results = new List<PokemonData>();
+        //        var pokemonsThatCanBeTransfered = pokemonList.GroupBy(p => p.PokemonId)
+        //            .Where(x => x.Count() > 2).ToList();
+
+        //        var myPokemonSettings = await GetPokemonSettings();
+        //        var pokemonSettings = myPokemonSettings.ToList();
+
+        //        var myPokemonFamilies = await GetPokemonFamilies();
+        //        var pokemonFamilies = myPokemonFamilies.ToArray();
+
+        //        foreach (var pokemon in pokemonsThatCanBeTransfered)
+        //        {
+        //            var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.Key);
+        //            var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+        //            var amountToSkip = _client.Settings.KeepDuplicateAmount;
+
+        //            if (settings.CandyToEvolve > 0 && familyCandy.Candy / settings.CandyToEvolve > amountToSkip)
+        //                amountToSkip = familyCandy.Candy / settings.CandyToEvolve;
+
+        //            if (clientSettings.PrioritizeIVOverCP)
+        //            {
+        //                results.AddRange(pokemonList.Where(x => x.PokemonId == pokemon.Key)
+        //                    .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+        //                    .ThenBy(n => n.StaminaMax)
+        //                    .Skip(amountToSkip)
+        //                    .ToList());
+        //            }
+        //            else
+        //            {
+        //                results.AddRange(pokemonList.Where(x => x.PokemonId == pokemon.Key)
+        //                    .OrderByDescending(x => x.Cp)
+        //                    .ThenBy(n => n.StaminaMax)
+        //                    .Skip(amountToSkip)
+        //                    .ToList());
+        //            }
+        //        }
+
+        //        return results;
+        //    }
+        //    if (clientSettings.PrioritizeIVOverCP)
+        //    {
+        //        return pokemonList
+        //        .GroupBy(p => p.PokemonId)
+        //        .Where(x => x.Count() > 1)
+        //        .SelectMany(
+        //            p =>
+        //                p.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+        //                    .ThenBy(n => n.StaminaMax)
+        //                    .Skip(_client.Settings.KeepDuplicateAmount)
+        //                    .ToList());
+        //    }
+        //    else
+        //    {
+        //        return pokemonList
+        //        .GroupBy(p => p.PokemonId)
+        //        .Where(x => x.Count() > 1)
+        //        .SelectMany(
+        //            p =>
+        //                p.OrderByDescending(x => x.Cp)
+        //                    .ThenBy(n => n.StaminaMax)
+        //                    .Skip(_client.Settings.KeepDuplicateAmount)
+        //                    .ToList());
+        //    }
+        //}
+
         public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(ISettings clientSettings)
         {
-            //bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCP = false, IEnumerable<PokemonId> filter = null
-            var myPokemon = await GetPokemons();
-            var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0 && p.Cp < clientSettings.KeepAboveCP).ToList();
-            if (clientSettings.PokemonsNotToTransfer != null)
-                pokemonList = pokemonList.Where(p => !clientSettings.PokemonsNotToTransfer.Contains(p.PokemonId)).ToList();
+            //Not deployed or favorited filter
+            var getTask = await GetPokemons();
+            var query = getTask.Where(p =>
+                 p.DeployedFortId == 0 &&
+                 p.Favorite == 0
+            );
 
+            //Keep By CP filter
+            if (clientSettings.KeepAboveCP > 0)
+                query = query.Where(p => p.Cp < clientSettings.KeepAboveCP);
+
+            //Keep By IV filter
+            if (clientSettings.KeepAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() < clientSettings.KeepAboveIV);
+
+            //Keep By V filter
+            if (clientSettings.KeepAboveV > 0)
+                query = query.Where(p => PokemonInfo.CalculatePokemonValue(p, clientSettings.PokemonMoveDetails.GetMove(p.Move1.ToString()), clientSettings.PokemonMoveDetails.GetMove(p.Move2.ToString())) < clientSettings.KeepAboveV);
+
+            //Not to transfer list filter
+            if (clientSettings.PokemonsNotToTransfer != null)
+                query = query.Where(p => !clientSettings.PokemonsNotToTransfer.Contains(p.PokemonId));
+
+            //Not transfer if they can evolve
             if (clientSettings.NotTransferPokemonsThatCanEvolve)
             {
                 var results = new List<PokemonData>();
-                var pokemonsThatCanBeTransfered = pokemonList.GroupBy(p => p.PokemonId)
+                var pokemonsThatCanBeTransfered = query.GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 2).ToList();
 
                 var myPokemonSettings = await GetPokemonSettings();
@@ -53,54 +146,83 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.Key);
                     var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-                    var amountToSkip = _client.Settings.TransferPokemonKeepDuplicateAmount;
+                    var amountToSkip = _client.Settings.KeepDuplicateAmount;
 
                     if (settings.CandyToEvolve > 0 && familyCandy.Candy / settings.CandyToEvolve > amountToSkip)
                         amountToSkip = familyCandy.Candy / settings.CandyToEvolve;
 
-                    if (clientSettings.PrioritizeIVOverCP)
+                    switch (clientSettings.PriorityType)
                     {
-                        results.AddRange(pokemonList.Where(x => x.PokemonId == pokemon.Key)
-                            .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
-                            .ThenBy(n => n.StaminaMax)
-                            .Skip(amountToSkip)
-                            .ToList());
-                    }
-                    else
-                    {
-                        results.AddRange(pokemonList.Where(x => x.PokemonId == pokemon.Key)
-                            .OrderByDescending(x => x.Cp)
-                            .ThenBy(n => n.StaminaMax)
-                            .Skip(amountToSkip)
-                            .ToList());
+                        case PriorityType.CP:
+                            results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
+                                .OrderByDescending(x => x.Cp)
+                                .ThenBy(n => n.StaminaMax)
+                                .Skip(amountToSkip)
+                                .ToList());
+                            break;
+                        case PriorityType.IV:
+                            results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
+                                .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+                                .ThenBy(n => n.StaminaMax)
+                                .Skip(amountToSkip)
+                                .ToList());
+                            break;
+                        case PriorityType.V:
+                            results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
+                                .OrderByDescending(x => PokemonInfo.CalculatePokemonValue(x, clientSettings.PokemonMoveDetails.GetMove(x.Move1.ToString()), clientSettings.PokemonMoveDetails.GetMove(x.Move2.ToString())))
+                                .ThenBy(n => n.StaminaMax)
+                                .Skip(amountToSkip)
+                                .ToList());
+                            break;
                     }
                 }
-
                 return results;
             }
-            if (clientSettings.PrioritizeIVOverCP)
+
+            switch (clientSettings.PriorityType)
             {
-                return pokemonList
-                .GroupBy(p => p.PokemonId)
-                .Where(x => x.Count() > 1)
-                .SelectMany(
-                    p =>
-                        p.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
-                            .ThenBy(n => n.StaminaMax)
-                            .Skip(_client.Settings.TransferPokemonKeepDuplicateAmount)
-                            .ToList());
-            }
-            else
-            {
-                return pokemonList
-                .GroupBy(p => p.PokemonId)
-                .Where(x => x.Count() > 1)
-                .SelectMany(
-                    p =>
-                        p.OrderByDescending(x => x.Cp)
-                            .ThenBy(n => n.StaminaMax)
-                            .Skip(_client.Settings.TransferPokemonKeepDuplicateAmount)
-                            .ToList());
+                case PriorityType.CP:
+
+                    return query
+                    .GroupBy(p => p.PokemonId)
+                    .Where(x => x.Count() > 1)
+                    .SelectMany(p =>
+                                
+                                p.OrderByDescending(x => x.Cp)
+                                .ThenBy(n => n.StaminaMax)
+                                .Skip(_client.Settings.KeepDuplicateAmount)
+                                .ToList()
+                                
+                                );
+
+                case PriorityType.IV:
+
+                    return query
+                    .GroupBy(p => p.PokemonId)
+                    .Where(x => x.Count() > 1)
+                    .SelectMany(p =>
+
+                                p.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+                                .ThenBy(n => n.StaminaMax)
+                                .Skip(_client.Settings.KeepDuplicateAmount)
+                                .ToList()
+                                
+                                );
+
+                default:
+
+                    return query
+                    .GroupBy(p => p.PokemonId)
+                    .Where(x => x.Count() > 1)
+                    .SelectMany(p =>
+
+                                p.OrderByDescending(x => PokemonInfo.CalculatePokemonValue(x, clientSettings.PokemonMoveDetails.GetMove(x.Move1.ToString()), clientSettings.PokemonMoveDetails.GetMove(x.Move2.ToString())))
+                                .ThenBy(n => n.StaminaMax)
+                                .Skip(_client.Settings.KeepDuplicateAmount)
+                                .ToList()
+
+                                );
+
             }
         }
 
@@ -133,6 +255,15 @@ namespace PokemonGo.RocketAPI.Logic
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
                 .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+                .FirstOrDefault();
+        }
+
+        public async Task<PokemonData> GetHighestPokemonOfTypeByV(PokemonData pokemon)
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
+                .OrderByDescending(x => PokemonInfo.CalculatePokemonValue(x, _client.Settings.PokemonMoveDetails.GetMove(x.Move1.ToString()), _client.Settings.PokemonMoveDetails.GetMove(x.Move2.ToString())))
                 .FirstOrDefault();
         }
 

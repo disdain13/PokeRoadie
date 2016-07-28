@@ -53,9 +53,9 @@ namespace PokemonGo.RocketAPI.Console {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        public double WalkingSpeedInKilometerPerHour {
+        public double MinSpeed {
             get {
-                return ((double)(this["WalkingSpeedInKilometerPerHour"]));
+                return ((double)(this["MinSpeed"]));
             }
         }
         
@@ -115,19 +115,10 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PrioritizeIVOverCP {
-            get {
-                return ((bool)(this["PrioritizeIVOverCP"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10000")]
-        public int MaxTravelDistanceInMeters {
+        public int MaxDistance {
             get {
-                return ((int)(this["MaxTravelDistanceInMeters"]));
+                return ((int)(this["MaxDistance"]));
             }
         }
         
@@ -152,9 +143,9 @@ namespace PokemonGo.RocketAPI.Console {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool useLuckyEggsWhileEvolving {
+        public bool UseLuckyEggs {
             get {
-                return ((bool)(this["useLuckyEggsWhileEvolving"]));
+                return ((bool)(this["UseLuckyEggs"]));
             }
         }
         
@@ -206,9 +197,9 @@ namespace PokemonGo.RocketAPI.Console {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int TransferPokemonKeepDuplicateAmount {
+        public int KeepDuplicateAmount {
             get {
-                return ((int)(this["TransferPokemonKeepDuplicateAmount"]));
+                return ((int)(this["KeepDuplicateAmount"]));
             }
         }
         
@@ -232,16 +223,16 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public int FlyingSpeedInKilometerPerHour {
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int FlyingSpeed {
             get {
-                return ((int)(this["FlyingSpeedInKilometerPerHour"]));
+                return ((int)(this["FlyingSpeed"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool CatchWhileFlying {
             get {
                 return ((bool)(this["CatchWhileFlying"]));
@@ -341,9 +332,9 @@ namespace PokemonGo.RocketAPI.Console {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public int WalkingSpeedInKilometerPerHourMax {
+        public int MaxSpeed {
             get {
-                return ((int)(this["WalkingSpeedInKilometerPerHourMax"]));
+                return ((int)(this["MaxSpeed"]));
             }
         }
         
@@ -365,15 +356,21 @@ namespace PokemonGo.RocketAPI.Console {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("240")]
         public double KeepAboveV {
             get {
                 return ((double)(this["KeepAboveV"]));
             }
-            set {
-                this["KeepAboveV"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayAggregateLog {
+            get {
+                return ((bool)(this["DisplayAggregateLog"]));
             }
         }
     }

@@ -40,13 +40,13 @@ namespace PokemonGo.RocketAPI
             Tuple<double, double> latLngFromFile = GetLatLngFromFile();
             if (latLngFromFile != null && latLngFromFile.Item1 != 0 && latLngFromFile.Item2 != 0)
             {
-                SetCoordinates(latLngFromFile.Item1, latLngFromFile.Item2, Settings.DefaultAltitude);
+                SetCoordinates(latLngFromFile.Item1, latLngFromFile.Item2, Settings.CurrentAltitude);
             }
             else
             {
                 if (!File.Exists(lastcoords_file) || !File.ReadAllText(lastcoords_file).Contains(":"))
                     Logger.Write("Missing \"\\Configs\\LastCoords.ini\", using default settings for coordinates to create a new one...");
-                SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
+                SetCoordinates(Settings.CurrentLatitude, Settings.CurrentLongitude, Settings.CurrentAltitude);
             }
 
             Destinations = GetDestinationListFromFile(settings);
@@ -178,19 +178,19 @@ namespace PokemonGo.RocketAPI
             }
             else
             {
-                if (settings.DefaultLatitude != 0 && settings.DefaultLongitude != 0)
+                if (settings.CurrentLatitude != 0 && settings.CurrentLongitude != 0)
                 {
 
                     using (StreamWriter w = File.CreateText(destinationcoords_file))
                     {
-                        w.Write($"{settings.DefaultLatitude}:{settings.DefaultLongitude}:{settings.DefaultAltitude}:Default Location");
+                        w.Write($"{settings.CurrentLatitude}:{settings.CurrentLongitude}:{settings.CurrentAltitude}:Default Location");
                         w.Close();
                     }
 
                     var d = new Destination();
-                    d.Latitude = settings.DefaultLatitude;
-                    d.Longitude = settings.DefaultLongitude;
-                    d.Altitude = settings.DefaultAltitude;
+                    d.Latitude = settings.CurrentLatitude;
+                    d.Longitude = settings.CurrentLongitude;
+                    d.Altitude = settings.CurrentAltitude;
                     d.Name = "Default Location";
                     list.Add(d);
                 }

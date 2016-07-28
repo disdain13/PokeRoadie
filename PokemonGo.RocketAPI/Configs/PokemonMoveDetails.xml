@@ -331,7 +331,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Baby-Doll Eyes</Name>
+    <Name>Baby Doll Eyes</Name>
     <Type>Fairy</Type>
     <Category>Status</Category>
     <Effect>Always goes first. Lowers the target's attack.</Effect>
@@ -1321,7 +1321,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Double-Edge</Name>
+    <Name>Double Edge</Name>
     <Type>Normal</Type>
     <Category>Physical</Category>
     <Effect>User receives recoil damage.</Effect>
@@ -2168,7 +2168,7 @@
     <Hit>30</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Freeze-Dry</Name>
+    <Name>Freeze Dry</Name>
     <Type>Ice</Type>
     <Category>Special</Category>
     <Effect>May freeze opponent. Super-effective against Water types.</Effect>
@@ -3323,7 +3323,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Lock-On</Name>
+    <Name>Lock On</Name>
     <Type>Normal</Type>
     <Category>Status</Category>
     <Effect>The next move the user uses is guaranteed to hit.</Effect>
@@ -3840,7 +3840,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Mud-Slap</Name>
+    <Name>MudSlap</Name>
     <Type>Ground</Type>
     <Category>Special</Category>
     <Effect>Lowers opponent's Accuracy.</Effect>
@@ -4368,7 +4368,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Power-Up Punch</Name>
+    <Name>Power Up Punch</Name>
     <Type>Fighting</Type>
     <Category>Physical</Category>
     <Effect>Raises Attack.</Effect>
@@ -5127,7 +5127,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Self-Destruct</Name>
+    <Name>Self Destruct</Name>
     <Type>Normal</Type>
     <Category>Physical</Category>
     <Effect>User faints.</Effect>
@@ -5534,7 +5534,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Soft-Boiled</Name>
+    <Name>Soft Boiled</Name>
     <Type>Normal</Type>
     <Category>Status</Category>
     <Effect>User recovers half its max HP.</Effect>
@@ -6271,7 +6271,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Topsy-Turvy</Name>
+    <Name>Topsy Turvy</Name>
     <Type>Dark</Type>
     <Category>Status</Category>
     <Effect>Reverses stat changes of opponent.</Effect>
@@ -6359,7 +6359,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Trick-or-Treat</Name>
+    <Name>Trick or Treat</Name>
     <Type>Ghost</Type>
     <Category>Status</Category>
     <Effect>Adds Ghost type to opponent.</Effect>
@@ -6414,7 +6414,7 @@
     <Hit>20</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>U-turn</Name>
+    <Name>U Turn</Name>
     <Type>Bug</Type>
     <Category>Physical</Category>
     <Effect>User switches out immediately after attacking.</Effect>
@@ -6436,7 +6436,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>V-create</Name>
+    <Name>V Create</Name>
     <Type>Fire</Type>
     <Category>Physical</Category>
     <Effect>Lowers user's Defense, Special Defense and Speed.</Effect>
@@ -6535,7 +6535,7 @@
     <Hit>10</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Wake-Up Slap</Name>
+    <Name>Wake Up Slap</Name>
     <Type>Fighting</Type>
     <Category>Physical</Category>
     <Effect>Power doubles if opponent is asleep, but wakes it up.</Effect>
@@ -6678,7 +6678,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>Will-O-Wisp</Name>
+    <Name>Will O Wisp</Name>
     <Type>Fire</Type>
     <Category>Status</Category>
     <Effect>Burns opponent.</Effect>
@@ -6788,7 +6788,7 @@
     <Hit>0</Hit>
   </PokemonMoveDetail>
   <PokemonMoveDetail>
-    <Name>X-Scissor</Name>
+    <Name>XScissor</Name>
     <Type>Bug</Type>
     <Category>Physical</Category>
     <Effect />

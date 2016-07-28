@@ -47,12 +47,44 @@ namespace PokemonGo.RocketAPI.Extensions
         {
             return PokemonInfo.CalculateCP(pokemon);
         }
-        public static PokemonMoveDetail GetMove(this List<PokemonMoveDetail> list, string name)
+        public static PokemonMoveDetail GetMove(this ICollection<PokemonMoveDetail> list, string name)
         {
-            var move = list.Where(x => x.Name.Replace(" ", "") == name).FirstOrDefault();
+            var filteredName = name.ToLower();
+            var move = list.Where(x => x.Name.Replace(" ", "").ToLower() == filteredName).FirstOrDefault();
             if (move == null)
-                Logging.Logger.Write("Pokemon move '{name}' could not be found in the PokemonMoveDetails.xml file.", Logging.LogLevel.Error);
+            {
+                if (filteredName.EndsWith("fast"))
+                    filteredName = filteredName.Substring(0, filteredName.Length - 4);
+                move = list.Where(x => x.Name.Replace(" ", "").ToLower() == filteredName).FirstOrDefault();
+            }
+            if (move == null)
+            {
+                Logging.Logger.Write($"Pokemon move '{name}' could not be found in the PokemonMoveDetails.xml file, using default move.", Logging.LogLevel.Error);
+                move = new PokemonMoveDetail();
+                move.Name = name;
+                move.Power = 50;
+                move.PP = 25;
+                move.Type = "Normal";
+                move.Category = "Physical";
+                move.Effect = "Unknown";
+                move.Accuracy = 15;
+            }
+                
             return move;
+        }
+        public static string ToString(this PokemonData pokemon, ISettings settings)
+        {
+            return $"{pokemon.PokemonId.ToString().PadRight(19,' ')} {PokemonInfo.CalculatePokemonValue(pokemon, settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move1)), settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move2)))} Total Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {ToString(pokemon.Move1)}/{ToString(pokemon.Move2)}";
+        }
+        public static string ToMinimizedString(this PokemonData pokemon, ISettings settings)
+        {
+            return $"{pokemon.PokemonId.ToString()} {PokemonInfo.CalculatePokemonValue(pokemon, settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move1)), settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move2)))} V | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% | Lvl {pokemon.GetLevel().ToString("00")}";
+        }
+        public static string ToString(this PokemonMove move)
+        {
+            var val = move.ToString();
+            if (val.ToLower().EndsWith("fast")) val = val.Substring(0, val.Length - 4);
+            return val;
         }
     }
 }
