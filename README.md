@@ -5,8 +5,22 @@
 <h1>PokeRoadie</h1>
 <h2>Advanced PokemonGo Bot</h2>
 Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. But, just wait till you can see what else it can do!<br/><br/>
+
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
+
+<h2>Unique Features - Compared to Others</h2>
+ - <b>Pokemon Moves Imported</b><br/>All the move information imported.<br/>Used in NEW pokemon value calculations.
+ - <b>Pokemon True Value</b><br/>Developed a new formula to calculate the <i>True Value</i> of pokemon.<br/>Value is based on CP, Perfect %, Level, Move Power, and Move Accuracy.<br/>Can now use value "V" in <b>PriorityType</b> setting to Transfer based on <i>True Value</i>.<br />Can set <b>KeepAboveV</b> setting to keep any pokemon equal to or above the specified <i>True Value</i>.<br/>
+ - <b>Global Destinations</b><br />Create a list of waypoints around the world.<br />Spend x minutes (60 by default) farming in each location.<br />Fly between global destinations at high speed (no catch).<br />Or, Drive to global destinations while catching!<br />Setup elaborate routes to hotspots everywhere!<br/>Manage destinations through the DestinationCoords.ini file.
+ - <b>Lure Awareness</b><br />Visit stops with lures first.<br />If there are multiple stops with lures, bounce back and forth a little.<br/>Destinations with lures will say "WITH LURE" after the name.
+ - <b>Statistics every x minutes</b><br />Detailed Pokemon stats.<br />Detailed Destination stats.<br />Ability to log all Pokemon.<br />Detailed Inventory Stats.<br/>
+ - <b>Dynamic Speed</b><br />Dynamically Adjust speed between 2-55kmph based upon next waypoint distance, and the time to get there.<br />Randomize Speed slightly to present more realistic simulation.
+ - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.<br/>
+ - <b>Settings Re-Write</b><br/> Have re-written the entire settings system to work out of the "Configs" directory.<br/>No longer using user specific settings stored in the AppData.<br/><br/>
+
+
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_1.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/>
+
 A big thank you goes to Ferox, Necronomicon, Spegeli <3<br/>
 Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
 <br/><br/>
@@ -17,16 +31,6 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>Google Auth</b> (default)<br/>Just run PokeRoadie.exe - When you start the application, it will require you to log into google and approve the application as a "device". We have made this simple as possible. On start, it will pop up a google window. Log in if you are not already. When the google window asks for the code, just hit control-v in the "Enter Code" box. The code will already be on your clipboard. hit submit, and approve the interaction. Once you have done that, the program will continue to run and play the game for you.
  - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/><br/>
  
-<h2>Unique Features</h2>
- - <b>Pokemon Moves Imported</b><br/>All the move information imported.<br/>Used in NEW pokemon value calculations.
- - <b>Pokemon True Value</b><br/>Developed a new formula to calculate the <i>True Value</i> of pokemon.<br/>Value is based on CP, Perfect %, Level, Move Power, and Move Accuracy.<br/>Can now use value "V" in <b>PriorityType</b> setting to Transfer based on <i>True Value</i>.<br />Can set <b>KeepAboveV</b> setting to keep any pokemon equal to or above the specified <i>True Value</i>.<br/>
- - <b>Global Destinations</b><br />Create a list of waypoints around the world.<br />Spend x minutes (60 by default) farming in each location.<br />Fly between global destinations at high speed (no catch).<br />Or, Drive to global destinations while catching!<br />Setup elaborate routes to hotspots everywhere!<br/>Manage destinations through the DestinationCoords.ini file.
- - <b>Lure Awareness</b><br />Visit stops with lures first.<br />If there are multiple stops with lures, bounce back and forth a little.<br/>Destinations with lures will say "WITH LURE" after the name.
- - <b>Statistics every x minutes</b><br />Detailed Pokemon stats.<br />Detailed Destination stats.<br />Ability to log all Pokemon.<br />Detailed Inventory Stats.<br/>
- - <b>Dynamic Speed</b><br />Dynamically Adjust speed between 2-55kmph based upon next waypoint distance, and the time to get there.<br />Randomize Speed slightly to present more realistic simulation.
- - <b>PokeBall Selector</b><br/> Will now substitute a slightly better/worse ball based on inventory availability.<br/>
- - <b>Settings Re-Write</b><br/> Have re-written the entire settings system to work out of the "Configs" directory.<br/>No longer using user specific settings stored in the AppData.<br/><br/>
-
 <h2>Global Destinations</h2>
 PokeRoadie will grind the world for you! Plan global destinations, the bot will simulate flight travel and driving. It will harvest (pokestops/pokemon) at each global destination for a configurable number of minutes, then travel to the next. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file. Within this file, each line should contain the following information and format:<br/><br/>
 <b>latitude:longitude:altitude:name<b/><br/><br/>
@@ -84,6 +88,7 @@ The primary settings file where most configuration will be done. In a few cases,
  - <b>MaxSpeed</b><br/>The maximum speed (in kilometers per hour) your player will walk/drive when exploring a destination for pokestops and pokemon. Setting this above 80 usually results in pokemon fleeing during encounters.<br/>
  - <b>PriorityType</b><br/>Determines how to prioritize pokemon for transfer and evolution. The valid setting values are (default) <b>V</b> for <i>True Value</i>, <b>IV</b> for Perfection %, and <b>CP</b> for Combat Points.<br/>
 <br/><br/>
+
 <h2><a name="features">Spegeli Original Features</a></h2>
  
  - [PTC Login / Google]
