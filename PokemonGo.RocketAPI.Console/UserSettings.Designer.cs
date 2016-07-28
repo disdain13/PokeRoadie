@@ -43,24 +43,6 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int KeepAboveCP {
-            get {
-                return ((int)(this["KeepAboveCP"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public double MinSpeed {
-            get {
-                return ((double)(this["MinSpeed"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("34.0114062")]
         public double DefaultLatitude {
             get {
@@ -115,15 +97,6 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
-        public int MaxDistance {
-            get {
-                return ((int)(this["MaxDistance"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UseGPXPathing {
             get {
@@ -137,15 +110,6 @@ namespace PokemonGo.RocketAPI.Console {
         public string GPXFile {
             get {
                 return ((string)(this["GPXFile"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UseLuckyEggs {
-            get {
-                return ((bool)(this["UseLuckyEggs"]));
             }
         }
         
@@ -169,28 +133,10 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EvolvePokemon {
-            get {
-                return ((bool)(this["EvolvePokemon"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("90")]
         public float EvolveOnlyPokemonAboveIVValue {
             get {
                 return ((float)(this["EvolveOnlyPokemonAboveIVValue"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TransferPokemon {
-            get {
-                return ((bool)(this["TransferPokemon"]));
             }
         }
         
@@ -371,6 +317,87 @@ namespace PokemonGo.RocketAPI.Console {
         public bool DisplayAggregateLog {
             get {
                 return ((bool)(this["DisplayAggregateLog"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
+        public int KeepAboveCP {
+            get {
+                return ((int)(this["KeepAboveCP"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public double MinSpeed {
+            get {
+                return ((double)(this["MinSpeed"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        public int MaxDistance {
+            get {
+                return ((int)(this["MaxDistance"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseLuckyEggs {
+            get {
+                return ((bool)(this["UseLuckyEggs"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EvolvePokemon {
+            get {
+                return ((bool)(this["EvolvePokemon"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TransferPokemon {
+            get {
+                return ((bool)(this["TransferPokemon"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int TransferBelowCP {
+            get {
+                return ((int)(this["TransferBelowCP"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double TransferBelowV {
+            get {
+                return ((double)(this["TransferBelowV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double TransferBelowIV {
+            get {
+                return ((double)(this["TransferBelowIV"]));
             }
         }
     }

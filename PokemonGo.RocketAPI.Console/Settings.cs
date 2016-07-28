@@ -53,6 +53,9 @@ namespace PokemonGo.RocketAPI.Console
         public double KeepAboveIV { get; set; }
         public double KeepAboveV { get; set; }
         public int KeepAboveCP { get; set; }
+        public double TransferBelowIV { get; set; }
+        public double TransferBelowV { get; set; }
+        public int TransferBelowCP { get; set; }
         public bool UseLuckyEggs { get; set; }
         public bool LoiteringActive { get; set; }
         public int MinutesPerDestination { get; set; }
@@ -211,6 +214,9 @@ namespace PokemonGo.RocketAPI.Console
             this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
             this.MinSpeed = UserSettings.Default.MinSpeed;
             this.MaxSpeed = UserSettings.Default.MaxSpeed;
+            this.TransferBelowCP = UserSettings.Default.TransferBelowCP;
+            this.TransferBelowIV = UserSettings.Default.TransferBelowIV;
+            this.TransferBelowV = UserSettings.Default.TransferBelowV;
 
         }
 
@@ -309,6 +315,9 @@ namespace PokemonGo.RocketAPI.Console
                     this.UsePokemonToNotCatchList = obj.UsePokemonToNotCatchList;
                     this.MinSpeed = obj.MinSpeed;
                     this.MaxSpeed = obj.MaxSpeed;
+                    this.TransferBelowCP = obj.TransferBelowCP;
+                    this.TransferBelowIV = obj.TransferBelowIV;
+                    this.TransferBelowV = obj.TransferBelowV;
                 }
             }
         }

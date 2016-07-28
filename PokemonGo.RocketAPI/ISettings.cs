@@ -34,6 +34,9 @@ namespace PokemonGo.RocketAPI
         double KeepAboveIV { get; set; }
         double KeepAboveV { get; set; }
         int KeepAboveCP { get; set; }
+        double TransferBelowIV { get; set; }
+        double TransferBelowV { get; set; }
+        int TransferBelowCP { get; set; }
         bool UseLuckyEggs { get; set; }
         bool LoiteringActive { get; set; }
         int MinutesPerDestination { get; set; }

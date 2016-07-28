@@ -74,7 +74,7 @@ namespace PokemonGo.RocketAPI.Extensions
         }
         public static string ToString(this PokemonData pokemon, ISettings settings)
         {
-            return $"{pokemon.PokemonId.ToString().PadRight(19,' ')} {PokemonInfo.CalculatePokemonValue(pokemon, settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move1)), settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move2)))} Total Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {ToString(pokemon.Move1)}/{ToString(pokemon.Move2)}";
+            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {PokemonInfo.CalculatePokemonValue(pokemon, settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move1)), settings.PokemonMoveDetails.GetMove(ToString(pokemon.Move2)))} Total Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {ToString(pokemon.Move1)}/{ToString(pokemon.Move2)}";
         }
         public static string ToMinimizedString(this PokemonData pokemon, ISettings settings)
         {
