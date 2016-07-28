@@ -98,7 +98,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
             var pokes = await _inventory.GetPokemons();
             TotalPokesInBag = pokes.Count();
 
-            var inventory = await _client.GetInventory();
+            var inventory = await Inventory.getCachedInventory(_client, true);
             TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokedexEntryNumber).ToArray().Length;
             
             CurrentLevelInfos = await _getcurrentLevelInfos(_inventory);

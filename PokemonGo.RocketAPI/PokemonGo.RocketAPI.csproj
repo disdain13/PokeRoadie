@@ -116,6 +116,7 @@
     <Compile Include="Login\GoogleLogin.cs" />
     <Compile Include="Login\GoogleLoginGPSOAuth.cs" />
     <Compile Include="Login\GPSOAuthSharp.cs" />
+    <Compile Include="Login\OAuthLogin.cs" />
     <Compile Include="Login\PtcLogin.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>

@@ -465,6 +465,8 @@ namespace PokemonGo.RocketAPI.Console
             d.Dispose();
             d = null;
 
+            Save();
+
             return result == System.Windows.Forms.DialogResult.OK;
         }
         #endregion

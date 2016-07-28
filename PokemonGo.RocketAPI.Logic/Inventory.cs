@@ -11,6 +11,7 @@ using System;
 using System.Threading;
 using PokemonGo.RocketAPI.Logging;
 using System.IO;
+using PokemonGo.RocketAPI.Exceptions;
 
 #endregion
 
@@ -389,7 +390,26 @@ namespace PokemonGo.RocketAPI.Logic
             try
             {
                 _lastRefresh = now;
-                _cachedInventory = await _client.GetInventory();
+                //_cachedInventory = await _client.GetInventory();
+
+                try
+                {
+                    _cachedInventory = await _client.GetInventory();
+                }
+                catch (InvalidResponseException)
+                {
+                    Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
+                    Logger.Write("Trying again in 15 seconds...");
+                    Thread.Sleep(15000);
+                    _cachedInventory = await _client.GetInventory();
+                }
+                catch (Exception e)
+                {
+                    Logger.Write(e.ToString() + " from " + e.Source);
+                    Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
+                    throw new InvalidResponseException();
+                }
+
                 return _cachedInventory;
             }
             finally

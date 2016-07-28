@@ -57,7 +57,8 @@ namespace PokemonGo.RocketAPI.Logic
                 }
                 await Task.Delay(15000);
                 System.Environment.Exit(1);
-            } else
+            }
+            else
             {
                 Logger.Write($"Make sure Lat & Lng is right. Exit Program if not! Lat: {_client.CurrentLat} Lng: {_client.CurrentLng}", LogLevel.Warning);
                 for (int i = 3; i > 0; i--)
@@ -281,6 +282,7 @@ namespace PokemonGo.RocketAPI.Logic
                                 if (recycleCounter >= 5)
                                     await RecycleItems();
                             }
+
                             Func<Task> del = null;
                             if (_clientSettings.CatchPokemon)
                                 del = ExecuteCatchAllNearbyPokemons;
@@ -461,7 +463,8 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     break;
                 }
-                            await WriteStats();
+
+                await WriteStats();
 
                 if (_clientSettings.CatchPokemon)
                     await ExecuteCatchAllNearbyPokemons();
@@ -738,8 +741,10 @@ namespace PokemonGo.RocketAPI.Logic
                         break;
                 }
 
-                Logger.Write($"{duplicatePokemon.ToMinimizedString(_clientSettings)} | (Best: {bestPokemonOfType.Cp} Cp | {bestPokemonOfType.GetPerfection().ToString("0.00")}% perfect) | Family Candies: {FamilyCandies} | Based on {_clientSettings.PriorityType}", LogLevel.Transfer);
-                await Task.Delay(500);
+                string bestPokemonInfo = "NONE";
+               if (bestPokemonOfType != null)
+                    bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCP(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect";
+                Logger.Write($"{duplicatePokemon.PokemonId} [CP {duplicatePokemon.Cp}/{PokemonInfo.CalculateMaxCP(duplicatePokemon)} | IV: { PokemonInfo.CalculatePokemonPerfection(duplicatePokemon).ToString("0.00")}% perfect] | Best: [{bestPokemonInfo}] | Family Candies: {FamilyCandies}", LogLevel.Transfer);
             }
         }
 
