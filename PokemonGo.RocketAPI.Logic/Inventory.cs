@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.GeneratedCode;
+
 using PokemonGo.RocketAPI.Extensions;
 using System.Collections.Concurrent;
 using System;
@@ -12,7 +12,16 @@ using System.Threading;
 using PokemonGo.RocketAPI.Logging;
 using System.IO;
 using PokemonGo.RocketAPI.Exceptions;
-
+using POGOProtos.Inventory;
+using POGOProtos.Inventory.Item;
+using POGOProtos.Networking.Requests;
+using POGOProtos.Networking.Responses;
+using POGOProtos.Networking.Envelopes;
+using POGOProtos.Data;
+using POGOProtos.Data.Player;
+using POGOProtos.Enums;
+using POGOProtos.Settings;
+using POGOProtos.Settings.Master;
 #endregion
 
 
@@ -110,7 +119,7 @@ namespace PokemonGo.RocketAPI.Logic
             //Not deployed or favorited filter
             var getTask = await GetPokemons();
             var query = getTask.Where(p =>
-                 p.DeployedFortId == 0 &&
+                 string.IsNullOrWhiteSpace(p.DeployedFortId) &&
                  p.Favorite == 0
             );
 
@@ -275,13 +284,13 @@ namespace PokemonGo.RocketAPI.Logic
                 .FirstOrDefault();
         }
 
-        public async Task<int> GetItemAmountByType(MiscEnums.Item type)
+        public async Task<int> GetItemAmountByType(ItemId type)
         {
             var pokeballs = await GetItems();
-            return pokeballs.FirstOrDefault(i => (MiscEnums.Item)i.Item_ == type)?.Count ?? 0;
+            return pokeballs.FirstOrDefault(i => i.ItemId == type)?.Count ?? 0;
         }
 
-        public async Task<IEnumerable<Item>> GetItems()
+        public async Task<IEnumerable<ItemData>> GetItems()
         {
             var inventory = await getCachedInventory(_client);
             return inventory.InventoryDelta.InventoryItems
@@ -289,18 +298,18 @@ namespace PokemonGo.RocketAPI.Logic
                 .Where(p => p != null);
         }
 
-        public async Task<IEnumerable<Item>> GetItemsToRecycle(ISettings settings)
+        public async Task<IEnumerable<ItemData>> GetItemsToRecycle(ISettings settings)
         {
             var myItems = await GetItems();
 
             return myItems
-                .Where(x => settings.ItemRecycleFilter.Any(f => f.Key == (ItemId)x.Item_ && x.Count > f.Value))
+                .Where(x => settings.ItemRecycleFilter.Any(f => f.Key == (ItemId)x.ItemId && x.Count > f.Value))
                 .Select(
                     x =>
-                        new Item
+                        new ItemData
                         {
-                            Item_ = x.Item_,
-                            Count = x.Count - settings.ItemRecycleFilter.Single(f => f.Key == (ItemId)x.Item_).Value,
+                            ItemId = x.ItemId,
+                            Count = x.Count - settings.ItemRecycleFilter.Single(f => f.Key == x.ItemId).Value,
                             Unseen = x.Unseen
                         });
         }
@@ -325,13 +334,13 @@ namespace PokemonGo.RocketAPI.Logic
         {
             var inventory = await getCachedInventory(_client);
             return
-                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon)
+                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
                     .Where(p => p != null && p.PokemonId > 0);
         }
 
         public async Task<IEnumerable<PokemonSettings>> GetPokemonSettings()
         {
-            var templates = await _client.GetItemTemplates();
+            var templates = await _client.Download.GetItemTemplates();
             return
                 templates.ItemTemplates.Select(i => i.PokemonSettings)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
@@ -341,7 +350,7 @@ namespace PokemonGo.RocketAPI.Logic
         public async Task<IEnumerable<PokemonData>> GetPokemonToEvolve(IEnumerable<PokemonId> filter = null)
         {
             var myPokemons = await GetPokemons();
-            myPokemons = myPokemons.Where(p => p.DeployedFortId == 0).OrderByDescending(p => p.Cp); //Don't evolve pokemon in gyms
+            myPokemons = myPokemons.Where(p => String.IsNullOrWhiteSpace(p.DeployedFortId)).OrderByDescending(p => p.Cp); //Don't evolve pokemon in gyms
             if (filter != null)
                 myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));		
 
@@ -394,20 +403,26 @@ namespace PokemonGo.RocketAPI.Logic
 
                 try
                 {
-                    _cachedInventory = await _client.GetInventory();
+                    _cachedInventory = await _client.Inventory.GetInventory();
                 }
                 catch (InvalidResponseException)
                 {
-                    Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
-                    Logger.Write("Trying again in 15 seconds...");
-                    Thread.Sleep(15000);
-                    _cachedInventory = await _client.GetInventory();
+                    if (_cachedInventory == null || !_cachedInventory.Success)
+                    {
+                        Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
+                        Logger.Write("Trying again in 15 seconds...");
+                        Thread.Sleep(15000);
+                        _cachedInventory = await _client.Inventory.GetInventory();
+                    }
                 }
                 catch (Exception e)
                 {
-                    Logger.Write(e.ToString() + " from " + e.Source);
-                    Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
-                    throw new InvalidResponseException();
+                    if (_cachedInventory == null || !_cachedInventory.Success)
+                    {
+                        Logger.Write(e.ToString() + " from " + e.Source);
+                        Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
+                        throw new InvalidResponseException();
+                    }
                 }
 
                 return _cachedInventory;
@@ -418,7 +433,7 @@ namespace PokemonGo.RocketAPI.Logic
             }
         }
 
-        public async Task ExportPokemonToCSV(Profile player, string filename = "PokeList.csv")
+        public async Task ExportPokemonToCSV(PlayerData player, string filename = "PokeList.csv")
         {
             if (player == null)
                 return;

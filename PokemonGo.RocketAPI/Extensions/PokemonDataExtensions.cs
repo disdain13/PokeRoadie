@@ -5,7 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.GeneratedCode;
+using POGOProtos.Inventory.Item;
+using POGOProtos.Networking.Envelopes;
+using POGOProtos.Networking.Requests;
+using POGOProtos.Networking.Responses;
+using POGOProtos.Data;
+using POGOProtos.Enums;
+
 
 namespace PokemonGo.RocketAPI.Extensions
 {

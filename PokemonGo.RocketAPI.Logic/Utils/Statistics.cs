@@ -3,10 +3,18 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using PokemonGo.RocketAPI.GeneratedCode;
-using PokemonGo.RocketAPI.Enums;
 using System.Globalization;
 
+using PokemonGo.RocketAPI.Enums;
+
+using POGOProtos.Data;
+using POGOProtos.Enums;
+using POGOProtos.Inventory;
+using POGOProtos.Inventory.Item;
+using POGOProtos.Networking.Envelopes;
+using POGOProtos.Networking.Requests;
+using POGOProtos.Networking.Requests.Messages;
+using POGOProtos.Networking.Responses;
 #endregion
 
 
@@ -54,7 +62,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
 
         public static string GetUsername(Client client, GetPlayerResponse profile)
         {
-            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.Username : profile.Profile.Username;
+            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.Username : profile.PlayerData.Username;
         }
 
         public static double _getSessionRuntime()
@@ -99,7 +107,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
             TotalPokesInBag = pokes.Count();
 
             var inventory = await Inventory.getCachedInventory(_client, true);
-            TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokedexEntryNumber).ToArray().Length;
+            TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokemonId).ToArray().Length;
             
             CurrentLevelInfos = await _getcurrentLevelInfos(_inventory);
             Console.Title = ToString();

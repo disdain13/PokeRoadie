@@ -42,7 +42,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Protobuf.3.0.0-beta3\lib\dotnet\Google.Protobuf.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\Google.Protobuf.3.0.0-beta4\lib\net45\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -57,8 +57,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
+    <Reference Include="POGOProtos, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\POGOProtos.1.3.0\lib\net45\POGOProtos.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="S2Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -90,7 +90,6 @@
     <Compile Include="Enums\AuthType.cs" />
     <Compile Include="Enums\MiscEnums.cs" />
     <Compile Include="Enums\PriorityType.cs" />
-    <Compile Include="Enums\RequestType.cs" />
     <Compile Include="Exceptions\AccessTokenExpiredException.cs" />
     <Compile Include="Exceptions\AccountNotVerifiedException.cs" />
     <Compile Include="Exceptions\GoogleException.cs" />
@@ -99,56 +98,54 @@
     <Compile Include="Exceptions\PtcOfflineException.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\PokemonDataExtensions.cs" />
-    <Compile Include="GeneratedCode\AllEnum.cs" />
-    <Compile Include="GeneratedCode\Payloads.cs" />
-    <Compile Include="GeneratedCode\Request.cs" />
-    <Compile Include="GeneratedCode\Response.cs" />
     <Compile Include="Helpers\GeoCoordinate.cs" />
     <Compile Include="Helpers\Git.cs" />
     <Compile Include="Helpers\HttpClientHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\ProtoHelper.cs" />
+    <Compile Include="Helpers\RequestBuilder.cs" />
     <Compile Include="Helpers\RetryHandler.cs" />
     <Compile Include="Helpers\S2Helper.cs" />
     <Compile Include="Helpers\Utils.cs" />
+    <Compile Include="HttpClient\PokemonClient.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Login\GoogleLogin.cs" />
     <Compile Include="Login\GoogleLoginGPSOAuth.cs" />
-    <Compile Include="Login\GPSOAuthSharp.cs" />
-    <Compile Include="Login\OAuthLogin.cs" />
+    <Compile Include="Login\GPSOAuthClient.cs" />
     <Compile Include="Login\PtcLogin.cs" />
+    <Compile Include="Rpc\BaseRpc.cs" />
+    <Compile Include="Rpc\Download.cs" />
+    <Compile Include="Rpc\Encounter.cs" />
+    <Compile Include="Rpc\Fort.cs" />
+    <Compile Include="Rpc\Inventory.cs" />
+    <Compile Include="Rpc\Login.cs" />
+    <Compile Include="Rpc\Map.cs" />
+    <Compile Include="Rpc\Misc.cs" />
+    <Compile Include="Rpc\Player.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
     <Compile Include="Client.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
-    <Compile Include="Helpers\RequestBuilder.cs" />
     <Compile Include="PokemonInfo.cs" />
     <Compile Include="PokemonMoveDetail.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Proto\AllEnum.proto">
-      <Generator>ProtoBufTool</Generator>
-    </None>
-    <None Include="Proto\Payloads.proto">
-      <Generator>ProtoBufTool</Generator>
-    </None>
-    <None Include="Proto\Request.proto">
-      <Generator>ProtoBufTool</Generator>
-    </None>
-    <None Include="Proto\Response.proto">
-      <Generator>ProtoBufTool</Generator>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Configs\PokemonMoveDetails.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GeneratedCode\" />
+    <Folder Include="Proto\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

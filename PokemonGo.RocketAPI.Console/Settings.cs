@@ -5,9 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.GeneratedCode;
 using PokemonGo.RocketAPI.Logging;
 using PokemonGo.RocketAPI.Extensions;
+using POGOProtos.Inventory.Item;
+using POGOProtos.Networking.Requests;
+using POGOProtos.Networking.Responses;
+using POGOProtos.Networking.Envelopes;
+using POGOProtos.Data;
+using POGOProtos.Data.Player;
+using POGOProtos.Enums;
 
 #endregion
 
