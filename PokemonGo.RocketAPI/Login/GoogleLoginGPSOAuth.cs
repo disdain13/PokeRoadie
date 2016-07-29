@@ -10,7 +10,7 @@ namespace PokemonGo.RocketAPI.Login
 {
     public static class GoogleLoginGPSOAuth
     {
-        public static async Task<string> DoLogin(string username, string password)
+        public static string DoLogin(string username, string password)
         {
             GPSOAuthClient client = new GPSOAuthClient(username, password);
             Dictionary<string, string> response = client.PerformMasterLogin();

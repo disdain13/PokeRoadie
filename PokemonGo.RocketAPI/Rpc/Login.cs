@@ -27,7 +27,7 @@ namespace PokemonGo.RocketAPI.Rpc
         {
             _client.AuthType = AuthType.Google;
 
-            _client.AuthToken = await GoogleLoginGPSOAuth.DoLogin(username, password);
+            _client.AuthToken = GoogleLoginGPSOAuth.DoLogin(username, password);
             await SetServer();
 
             /*
