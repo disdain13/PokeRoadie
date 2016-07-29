@@ -123,6 +123,15 @@ namespace PokemonGo.RocketAPI.Logic
                  p.Favorite == 0
             );
 
+            //Build Transfer Below List. These will always transfer, and overrides
+            //the Keep list.
+            var results1 = query.Where(x=>
+                (clientSettings.TransferBelowCP > 0 && x.Cp < clientSettings.TransferBelowCP) ||
+                (clientSettings.TransferBelowIV > 0 && x.GetPerfection() < clientSettings.TransferBelowIV) ||
+                (clientSettings.TransferBelowV > 0 && PokemonInfo.CalculatePokemonValue(x, clientSettings.PokemonMoveDetails.GetMove(x.Move1.ToString()), clientSettings.PokemonMoveDetails.GetMove(x.Move2.ToString())) < clientSettings.TransferBelowV)
+            );
+
+
             //Keep By CP filter
             if (clientSettings.KeepAboveCP > 0)
                 query = query.Where(p => p.Cp < clientSettings.KeepAboveCP);
@@ -158,8 +167,8 @@ namespace PokemonGo.RocketAPI.Logic
                     var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
                     var amountToSkip = _client.Settings.KeepDuplicateAmount;
 
-                    if (settings.CandyToEvolve > 0 && familyCandy.Candy / settings.CandyToEvolve > amountToSkip)
-                        amountToSkip = familyCandy.Candy / settings.CandyToEvolve;
+                    if (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip)
+                        amountToSkip = familyCandy.Candy_ / settings.CandyToEvolve;
 
                     switch (clientSettings.PriorityType)
                     {
@@ -189,11 +198,12 @@ namespace PokemonGo.RocketAPI.Logic
                 return results;
             }
 
+            List<PokemonData> results2 = null;
             switch (clientSettings.PriorityType)
             {
                 case PriorityType.CP:
 
-                    return query
+                    results2 = query
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
                     .SelectMany(p =>
@@ -203,11 +213,11 @@ namespace PokemonGo.RocketAPI.Logic
                                 .Skip(_client.Settings.KeepDuplicateAmount)
                                 .ToList()
                                 
-                                );
-
+                                ).ToList();
+                    break;
                 case PriorityType.IV:
 
-                    return query
+                    results2 = query
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
                     .SelectMany(p =>
@@ -217,11 +227,11 @@ namespace PokemonGo.RocketAPI.Logic
                                 .Skip(_client.Settings.KeepDuplicateAmount)
                                 .ToList()
                                 
-                                );
-
+                                ).ToList();
+                    break;
                 default:
 
-                    return query
+                    results2 = query
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
                     .SelectMany(p =>
@@ -231,9 +241,20 @@ namespace PokemonGo.RocketAPI.Logic
                                 .Skip(_client.Settings.KeepDuplicateAmount)
                                 .ToList()
 
-                                );
-
+                                ).ToList();
+                    break;
             }
+
+            //merge together the two lists
+            foreach (var result in results1)
+            {
+                if (!results2.Contains(result))
+                {
+                    results2.Add(result);
+                }
+            }
+
+            return results2;
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsV(int limit)
@@ -322,11 +343,11 @@ namespace PokemonGo.RocketAPI.Logic
                 .Where(p => p != null);
         }
 
-        public async Task<IEnumerable<PokemonFamily>> GetPokemonFamilies()
+        public async Task<IEnumerable<Candy>> GetPokemonFamilies()
         {
             var inventory = await getCachedInventory(_client);
             return
-                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonFamily)
+                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Candy)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
         }
 
@@ -379,7 +400,7 @@ namespace PokemonGo.RocketAPI.Logic
                     pokemonToEvolve.Count(
                         p => pokemonSettings.Single(x => x.PokemonId == p.PokemonId).FamilyId == settings.FamilyId) *
                     settings.CandyToEvolve;
-                if (familyCandy.Candy - pokemonCandyNeededAlready > settings.CandyToEvolve)
+                if (familyCandy.Candy_ - pokemonCandyNeededAlready > settings.CandyToEvolve)
                     pokemonToEvolve.Add(pokemon);
             }
 
@@ -473,7 +494,7 @@ namespace PokemonGo.RocketAPI.Logic
                             //Generate base64 code to make it viewable here https://jackhumbert.github.io/poke-rater/#MTUwLDIzLDE3LDE5MDIsMTE4
                             var encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(toEncode));
                             var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
-                            var familiecandies = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId).Candy;
+                            var familiecandies = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId).Candy_;
                             string perfection = pokemon.GetPerfection().ToString("0.00");
                             perfection = perfection.Replace(",", ls == "," ? "." : ",");
                             string content_part1 = $"{(int)pokemon.PokemonId},{pokemon.PokemonId},{pokemon.Nickname},{pokemon.Cp}/{PokemonInfo.CalculateMaxCP(pokemon)},";

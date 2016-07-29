@@ -30,6 +30,10 @@ namespace PokemonGo.RocketAPI.Helpers
         {
             await Task.Delay(_random.Next(min, max));
         }
+        public static async Task RandomDelay(int min, int max, CancellationToken cancellationToken)
+        {
+            await Task.Delay(_random.Next(min, max), cancellationToken);
+        }
 
         public static void RandomSleep(int min, int max)
         {

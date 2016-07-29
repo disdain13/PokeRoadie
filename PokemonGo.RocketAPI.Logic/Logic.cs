@@ -102,7 +102,7 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     if (e.Message.Contains("NeedsBrowser"))
                     {
-                        Logger.Write("Please login to your google account and turn off 'Two-Step Authentication' under security settings (temporarily). If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.LoginError);
+                        Logger.Write("Please login to your google account and turn off 'Two-Step Authentication' under security settings. If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.LoginError);
                         await Task.Delay(15000);
                     }
                     else if (e.Message.Contains("BadAuthentication"))
@@ -113,19 +113,19 @@ namespace PokemonGo.RocketAPI.Logic
                             var result = ShowEditCredentials.Invoke();
                             if (!result)
                             {
-
+                                Logger.Write("Username and password for login not provided. Login screen closed.");
+                                Environment.Exit(0);
                             }
                         }
-                        await Task.Delay(2000);
                     }
                     else
                     {
-                        Logger.Write(e.Message + " from " + e.Source);
-                        Logger.Write("Got an exception, trying automatic restart..", LogLevel.Error);
+                        Logger.Write($"Unhandled exception encountered: {e.Message.ToString()}.");
+                        Logger.Write("Restarting the application due to error...", LogLevel.Warning);
                     }
                     await Execute();
                 }
-                await Task.Delay(10000);
+                
             }
         }
 
@@ -181,7 +181,7 @@ namespace PokemonGo.RocketAPI.Logic
                     if (_clientSettings.TransferPokemon) await TransferPokemon();
 
                     //export
-                    //await _inventory.ExportPokemonToCSV(_playerProfile.PlayerData);
+                    await _inventory.ExportPokemonToCSV(_playerProfile.PlayerData);
 
                     //recycle
                     await RecycleItems();
@@ -199,7 +199,7 @@ namespace PokemonGo.RocketAPI.Logic
                 var pokemons = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon).Where(p => p != null && p?.PokemonId > 0);
                 */
 
-                await Task.Delay(10000);
+                await Task.Delay(500);
             }
         }
 
@@ -337,7 +337,6 @@ namespace PokemonGo.RocketAPI.Logic
                     Logger.Write("Hopped in car", LogLevel.Navigation, ConsoleColor.White);
                 }
 
-                await Task.Delay(500);
                 Func<Task> del = null;
                 if (_clientSettings.CatchPokemon && !softBan && !_clientSettings.FlyingEnabled || (_clientSettings.FlyingEnabled && _clientSettings.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
                 var ToStart = await _navigation.HumanLikeWalking(
@@ -765,7 +764,8 @@ namespace PokemonGo.RocketAPI.Logic
             foreach (var pokemon in pokemons)
             {
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
-                await Task.Delay(distance > 100 ? 1000 : 100);
+
+                await RandomHelper.RandomDelay(220, 320);
 
                 var encounter = await _client.Encounter.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnPointId);
 
@@ -775,7 +775,7 @@ namespace PokemonGo.RocketAPI.Logic
                     Logger.Write($"Encounter problem: {encounter.Status}", LogLevel.Warning);
                 if (!Equals(pokemons.ElementAtOrDefault(pokemons.Count() - 1), pokemon))
                     // If pokemon is not last pokemon in list, create delay between catches, else keep moving.
-                    await RandomHelper.RandomDelay(50, 200);
+                    await RandomHelper.RandomDelay(220, 320);
             }
 
             if (_clientSettings.EvolvePokemon || _clientSettings.EvolveOnlyPokemonAboveIV) await EvolvePokemon(_clientSettings.PokemonsToEvolve);
@@ -803,7 +803,7 @@ namespace PokemonGo.RocketAPI.Logic
                         : $"Failed: {pokemon.PokemonId}. EvolvePokemonOutProto.Result was {evolvePokemonOutProto.Result}, stopping evolving {pokemon.PokemonId}"
                     , LogLevel.Evolve);
 
-                await Task.Delay(1000);
+                await RandomHelper.RandomDelay(220, 320);
             }
         }
 
@@ -825,7 +825,7 @@ namespace PokemonGo.RocketAPI.Logic
                 var pokemonFamilies = myPokemonFamilies.ToArray();
                 var settings = pokemonSettings.Single(x => x.PokemonId == duplicatePokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-                var FamilyCandies = $"{familyCandy.Candy}";
+                var FamilyCandies = $"{familyCandy.Candy_}";
 
                 _stats.IncreasePokemonsTransfered();
                 _stats.UpdateConsoleTitle(_client, _inventory);
@@ -866,7 +866,7 @@ namespace PokemonGo.RocketAPI.Logic
                 _stats.AddItemsRemoved(item.Count);
                 _stats.UpdateConsoleTitle(_client, _inventory);
 
-                await Task.Delay(100);
+                //await RandomHelper.RandomDelay(220, 320);
             }
             recycleCounter = 0;
         }
@@ -1100,26 +1100,6 @@ namespace PokemonGo.RocketAPI.Logic
             var readgpx = new GpxReader(xmlString);
             return readgpx.Tracks;
         }
-
-        /*
-        private async Task DisplayPlayerLevelInTitle(bool updateOnly = false)
-        {
-            _playerProfile = _playerProfile.Profile != null ? _playerProfile : await _client.GetProfile();
-            var playerName = _playerProfile.Profile.Username ?? "";
-            var playrStats = await _inventory.GetPlayerStats();
-            var playerStat = playerStats.FirstOrDefault();
-            if (playerStat != null)
-            {
-                var message =
-                    $" {playerName} | Level {playerStat.Level:0} - ({playerStat.Experience - playerStat.PrevLevelXp:0} / {playerStat.NextLevelXp - playerStat.PrevLevelXp:0} XP)";
-                Console.Title = message;
-                if (updateOnly == false)
-                    Logger.Write(message);
-            }
-            if (updateOnly == false)
-                await Task.Delay(5000);
-        }
-        */
 
         public async Task UseLuckyEgg()
         {

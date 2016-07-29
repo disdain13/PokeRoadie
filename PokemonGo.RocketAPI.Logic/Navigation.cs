@@ -109,7 +109,7 @@ namespace PokemonGo.RocketAPI.Logic
                             _client.Settings.CurrentAltitude);
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
-                await Task.Delay(Math.Min((int)(distanceToTarget / speedInMetersPerSecond * 100) , 1000));
+                await Task.Delay(Math.Min((int)(distanceToTarget / speedInMetersPerSecond * 100) , 900));
             } while (LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30);
 
             return result;
