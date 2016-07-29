@@ -34,7 +34,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        [global::System.Configuration.DefaultSettingValueAttribute("95")]
         public double KeepAboveIV {
             get {
                 return ((double)(this["KeepAboveIV"]));
@@ -286,7 +286,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
         public int MaxSecondsBetweenStops {
             get {
                 return ((int)(this["MaxSecondsBetweenStops"]));
@@ -304,7 +304,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("240")]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
         public double KeepAboveV {
             get {
                 return ((double)(this["KeepAboveV"]));
@@ -322,7 +322,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1300")]
         public int KeepAboveCP {
             get {
                 return ((int)(this["KeepAboveCP"]));
@@ -331,7 +331,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public double MinSpeed {
             get {
                 return ((double)(this["MinSpeed"]));
@@ -376,7 +376,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int TransferBelowCP {
             get {
                 return ((int)(this["TransferBelowCP"]));
@@ -385,7 +385,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double TransferBelowV {
             get {
                 return ((double)(this["TransferBelowV"]));
@@ -394,7 +394,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double TransferBelowIV {
             get {
                 return ((double)(this["TransferBelowIV"]));
