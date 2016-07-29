@@ -23,6 +23,6 @@ Extremely easy to use fully featured bot which will play the game for you when y
  forked Necronomicon's bot, and put in work to add new features. He started digging into configuration possibilities, and advanced logic. PokieRoadie was forked from his bot, and it is nice to start with a well done piece of code. 
 
 *[Disdain](https://github.com/disdain13/PokeRoadie/)*
-That's Me! I am a rapper... but, I program a little too. I just found this fun, and decided to help out by throwing in my 2 cents. I forked it, but it will never be done. 
+That's Me! <a href="https://www.reverbnation.com/disdainrap" title="go ahead, you know you want to...">I am a rapper...</a> but, I program a little too. I just found this fun, and decided to help out by throwing in my 2 cents. I forked it, but it will never be done. 
 
 
