@@ -35,9 +35,12 @@ namespace PokemonGo.RocketAPI.Logic
         private readonly Navigation _navigation;
         private GetPlayerResponse _playerProfile;
         private string configs_path = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
-
         private int recycleCounter = 0;
         private bool IsInitialized = false;
+
+        private int fleeCounter = 0;
+        private DateTime? fleeLast;
+        private bool softBan = false;
 
         public Logic(ISettings clientSettings)
         {
@@ -99,7 +102,7 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     if (e.Message.Contains("NeedsBrowser"))
                     {
-                        Logger.Write("Please login to your google account and turn off 'Two-Step Authentication' under security settings (temporarily). We are working on fixing this bug. " + e.Message + " trying automatic restart in 15 seconds...", LogLevel.LoginError);
+                        Logger.Write("Please login to your google account and turn off 'Two-Step Authentication' under security settings (temporarily). If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.LoginError);
                         await Task.Delay(15000);
                     }
                     else if (e.Message.Contains("BadAuthentication"))
@@ -113,7 +116,6 @@ namespace PokemonGo.RocketAPI.Logic
 
                             }
                         }
-
                         await Task.Delay(2000);
                     }
                     else
@@ -286,7 +288,7 @@ namespace PokemonGo.RocketAPI.Logic
                             }
 
                             Func<Task> del = null;
-                            if (_clientSettings.CatchPokemon)
+                            if (_clientSettings.CatchPokemon && !softBan)
                                 del = ExecuteCatchAllNearbyPokemons;
                             await
                                 _navigation.HumanPathWalking(trackPoints.ElementAt(curTrkPt),
@@ -337,7 +339,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                 await Task.Delay(500);
                 Func<Task> del = null;
-                if (_clientSettings.CatchPokemon && !_clientSettings.FlyingEnabled || (_clientSettings.FlyingEnabled && _clientSettings.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
+                if (_clientSettings.CatchPokemon && !softBan && !_clientSettings.FlyingEnabled || (_clientSettings.FlyingEnabled && _clientSettings.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
                 var ToStart = await _navigation.HumanLikeWalking(
                     new GeoCoordinate(_client.StartLat, _client.StartLng,_client.StartAltitude),
                     _clientSettings.FlyingEnabled ? _clientSettings.FlyingSpeed: _clientSettings.MinSpeed, del);
@@ -382,7 +384,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                             //fly to location
                             Func<Task> del = null;
-                            if (_clientSettings.CatchPokemon && !_clientSettings.FlyingEnabled || (_clientSettings.FlyingEnabled && _clientSettings.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
+                            if (_clientSettings.CatchPokemon && !softBan && !_clientSettings.FlyingEnabled || (_clientSettings.FlyingEnabled && _clientSettings.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
                             var ToStart = await _navigation.HumanLikeWalking(
                                 new GeoCoordinate(_client.StartLat, _client.StartLng, _client.StartAltitude),
                                 _clientSettings.FlyingEnabled ? _clientSettings.FlyingSpeed : _clientSettings.MinSpeed, del);
@@ -468,7 +470,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                 await WriteStats();
 
-                if (_clientSettings.CatchPokemon)
+                if (_clientSettings.CatchPokemon && !softBan)
                     await ExecuteCatchAllNearbyPokemons();
 
                 var pokeStop = pokestopList[0];
@@ -511,7 +513,7 @@ namespace PokemonGo.RocketAPI.Logic
                     Logger.Write(name, LogLevel.Pokestop);
 
                     Func<Task> del = null;
-                    if (_clientSettings.CatchPokemon) del = ExecuteCatchAllNearbyPokemons;
+                    if (_clientSettings.CatchPokemon && !softBan) del = ExecuteCatchAllNearbyPokemons;
                     var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _clientSettings.MinSpeed, del);
 
                     var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
@@ -520,28 +522,93 @@ namespace PokemonGo.RocketAPI.Logic
                         _stats.AddExperience(fortSearch.ExperienceAwarded);
                         _stats.UpdateConsoleTitle(_client, _inventory);
                         string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-                        Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                        if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
                         recycleCounter++;
+
+                        //reset ban
+                        if (softBan)
+                        {
+                            softBan = false;
+                            fleeCounter = 0;
+                            fleeLast = null;
+                            Logger.Write("The ban was lifted!", LogLevel.SoftBan);
+                        }
+
                     }
+                    else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
+                    {
+                        fleeCounter++;
+                        if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                        {
+                            softBan = true;
+                            Logger.Write("Detected a soft ban, let's walk it off!", LogLevel.SoftBan);
+                        }
+
+                        fleeLast = DateTime.Now;
+                        fleeLast = DateTime.Now;
+                    }
+
+                    //do
+                    //{
+                    //    var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                    //    if (fortSearch.ExperienceAwarded > 0)
+                    //    {
+                    //        _stats.AddExperience(fortSearch.ExperienceAwarded);
+                    //        _stats.UpdateConsoleTitle(_client, _inventory);
+                    //        string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+                    //        if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                    //        recycleCounter++;
+
+                    //        //reset ban
+                    //        if (softBan)
+                    //        {
+                    //            softBan = false;
+                    //            fleeCounter = 0;
+                    //            fleeLast = null;
+                    //            break;
+                    //        }
+
+                    //    }
+                    //    else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
+                    //    {
+                    //        fleeCounter++;
+                    //        if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                    //        {
+                    //            softBan = true;
+                    //            Logger.Write("Detected a soft ban, let's walk it off!", LogLevel.SoftBan);
+                    //        }
+
+                    //        fleeLast = DateTime.Now;
+                    //        fleeLast = DateTime.Now;
+                    //    }
+                    //    if (softBan)
+                    //    {
+                    //        for (int x = 0; x < 15; x++)
+                    //        {
+                    //            Console.Write(".");
+                    //            await RandomHelper.RandomDelay(800, 1200);
+                    //        }
+                    //    }
+                    //}
+                    //while (softBan);
 
                     if (_clientSettings.LoiteringActive && pokeStop.LureInfo != null)
                     {
                         Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
                         while (_clientSettings.LoiteringActive && pokeStop.LureInfo != null)
                         {
-                            if (_clientSettings.CatchPokemon)
+                            if (_clientSettings.CatchPokemon && !softBan)
                                 await ExecuteCatchAllNearbyPokemons();
 
-                            fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                            if (fortSearch.ExperienceAwarded > 0)
+                            var fortSearch2 = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                            if (fortSearch2.ExperienceAwarded > 0)
                             {
-                                _stats.AddExperience(fortSearch.ExperienceAwarded);
+                                _stats.AddExperience(fortSearch2.ExperienceAwarded);
                                 _stats.UpdateConsoleTitle(_client, _inventory);
-                                string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-                                Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                                string EggReward = fortSearch2.PokemonDataEgg != null ? "1" : "0";
+                                Logger.Write($"XP: {fortSearch2.ExperienceAwarded}, Gems: {fortSearch2.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch2.ItemsAwarded)}", LogLevel.Pokestop);
                                 recycleCounter++;
                             }
-
 
                             if (recycleCounter >= 5)
                                 await RecycleItems();
@@ -574,6 +641,14 @@ namespace PokemonGo.RocketAPI.Logic
             var attemptCounter = 1;
             do
             {
+
+                //if there has not been a consistent flee, reset
+                if (fleeCounter > 0 && fleeLast.HasValue && fleeLast.Value.AddMinutes(3) < DateTime.Now && !softBan)
+                {
+                    fleeCounter = 0;
+                    fleeLast = null;
+                }
+
                 var probability = encounter?.CaptureProbability?.CaptureProbability_?.FirstOrDefault();
                 var bestPokeball = await GetBestBall(encounter);
                 if (bestPokeball == ItemId.ItemUnknown)
@@ -581,15 +656,23 @@ namespace PokemonGo.RocketAPI.Logic
                     Logger.Write($"You don't own any Pokeballs :( - We missed a {pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp}", LogLevel.Warning);
                     return;
                 }
+
+                //only use crappy pokeballs when they are fleeing
+                if (fleeCounter > 1) bestPokeball = ItemId.ItemPokeBall;
+
                 var bestBerry = await GetBestBerry(encounter);
-                var inventoryBerries = await _inventory.GetItems();
-                var berries = inventoryBerries.Where(p => p.ItemId == bestBerry).FirstOrDefault();
-                if (bestBerry != ItemId.ItemUnknown && probability.HasValue && probability.Value < 0.35)
+                //only use berries when they are fleeing
+                if (fleeCounter == 0)
                 {
-                    await _client.Encounter.UseCaptureItem(pokemon.EncounterId, bestBerry, pokemon.SpawnPointId);
-                    berries.Count--;
-                    Logger.Write($"{bestBerry} used, remaining: {berries.Count}", LogLevel.Berry);
-                    await RandomHelper.RandomDelay(50, 200);
+                    var inventoryBerries = await _inventory.GetItems();
+                    var berries = inventoryBerries.Where(p => p.ItemId == bestBerry).FirstOrDefault();
+                    if (bestBerry != ItemId.ItemUnknown && probability.HasValue && probability.Value < 0.35)
+                    {
+                        await _client.Encounter.UseCaptureItem(pokemon.EncounterId, bestBerry, pokemon.SpawnPointId);
+                        berries.Count--;
+                        Logger.Write($"{bestBerry} used, remaining: {berries.Count}", LogLevel.Berry);
+                        await RandomHelper.RandomDelay(50, 200);
+                    }
                 }
 
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
@@ -597,6 +680,11 @@ namespace PokemonGo.RocketAPI.Logic
 
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
+                    //reset soft ban info
+                    fleeCounter = 0;
+                    fleeLast = null;
+                    softBan = false;
+
                     foreach (var xp in caughtPokemonResponse.CaptureAward.Xp)
                         _stats.AddExperience(xp);
                     _stats.IncreasePokemons();
@@ -604,6 +692,19 @@ namespace PokemonGo.RocketAPI.Logic
                     _stats.GetStardust(profile.PlayerData.Currencies.ToArray()[1].Amount);
                 }
                 _stats.UpdateConsoleTitle(_client, _inventory);
+
+                //calculate if we are in a soft ban
+                if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
+                {
+                    fleeCounter++;
+                    if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                    {
+                        softBan = true;
+                        Logger.Write("Detected a soft ban, let's walk it off!", LogLevel.SoftBan);
+                        
+                    }    
+                    fleeLast = DateTime.Now; 
+                }
 
                 if (encounter?.CaptureProbability?.CaptureProbability_ != null)
                 {

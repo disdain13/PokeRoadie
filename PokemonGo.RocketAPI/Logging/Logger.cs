@@ -98,6 +98,10 @@ namespace PokemonGo.RocketAPI.Logging
                     System.Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] (RECYCLING) {message}");
                     break;
+                case LogLevel.SoftBan:
+                    System.Console.ForegroundColor = ConsoleColor.DarkRed;
+                    System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] (SOFT BAN) {message}");
+                    break;
                 case LogLevel.None:
                     System.Console.ForegroundColor = color;
                     System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {message}");
@@ -136,6 +140,7 @@ namespace PokemonGo.RocketAPI.Logging
         Berry = 10,
         Egg = 11,
         Recycling = 12,
-        LoginError = 13
+        LoginError = 13,
+        SoftBan = 14
     }
 }
