@@ -238,6 +238,7 @@ namespace PokemonGo.RocketAPI.Console
                 string filePath = Path.Combine(configs_path, fileName);
                 lock (syncRoot)
                 {
+                    if (File.Exists(filePath)) File.Delete(filePath);
                     using (FileStream s = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         var x = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
