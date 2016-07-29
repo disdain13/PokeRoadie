@@ -32,7 +32,8 @@ Based on Spegeli Version : https://github.com/Spegeli/Pokemon-Go-Rocket-API
  - <b>Ptc Auth</b><br/>Open <i>Configs\Settings.xml</i>. Change <b>AuthType</b> from "Google" to "Ptc". Replace value of <b>PtcUsername</b> and <b>PtcPassword</b> values with your login credentials from the PokemonGo site. Save the file, run PokeRoadie.exe<br/><br/>
  
 <h2>Global Destinations</h2>
-PokeRoadie will grind the world for you! Plan global destinations, the bot will simulate flight travel and driving. It will harvest (pokestops/pokemon) at each <i>Global Destination</i> for a configurable number of minutes, then travel to the next. Global destinations can be setup in the <b>Configs\DestinationCoords.ini</b> file. Within this file, each line should contain the following information and format:<br/><br/>
+PokeRoadie will grind the world for you, harvesting pokestops/pokemon at each <i>Global Destination</i> for <i>x</i> minutes. Enable <i>Global Destinations</i> by setting the <b>DestinationsEnabled</b> value to <i>true</i> in the <b>Configs\Settings.xml</b> file. The time spent at each destination can be configured by setting the <b>MinutesPerDestination</b> value in the <b>Configs\Settings.xml</b>. Destination locations can be configured through the <b>Configs\DestinationCoords.ini</b> file. In <b>Configs\DestinationCoords.ini</b>, each destination line should be in the following format:<br/><br/>
+
 <b>latitude:longitude:altitude:name</b><br/><br/>
 For example, the following contents would lead you on a tour of Southern California:<br/><br/>
 34.0114062:-118.495009:18.82:California, Santa Monica Beach<br/>
