@@ -95,7 +95,7 @@ namespace PokeRoadie.Extensions
         public static double CalculatePokemonValue(this PokemonData pokemon)
         {
             const double twoThousand = 2000;
-            const double twoHundred = 2000;
+            const double twoHundred = 200;
             var move1 = PokeRoadieSettings.Current.PokemonMoves.GetMove(pokemon.Move1.GetMoveName());
             var move2 = PokeRoadieSettings.Current.PokemonMoves.GetMove(pokemon.Move2.GetMoveName());
             var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon));

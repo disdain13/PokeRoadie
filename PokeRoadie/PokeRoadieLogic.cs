@@ -495,60 +495,19 @@ namespace PokeRoadie
             var fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
             if (fortInfo != null)
             {
-                var fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
+                bool inRange = false;
+                int attempts = 0;
+
+                do
                 {
-                    var fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+                    var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
+                    var fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
                     {
-                        var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
-                        if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team &&
-                            ((pokeStop.GymPoints < 3001 && fortDetails.GymState.Memberships.Count < 2) ||
-                            (pokeStop.GymPoints > 3000 && pokeStop.GymPoints < 7001 && fortDetails.GymState.Memberships.Count < 2) ||
-                            (pokeStop.GymPoints > 6000 && pokeStop.GymPoints < 10001 && fortDetails.GymState.Memberships.Count < 3) ||
-                            (pokeStop.GymPoints > 10000 && fortDetails.GymState.Memberships.Count < 4)))
+                        inRange = true;
+                        var fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+                        if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
                         {
-
-                            Logger.Write($"(GYM) Casing out {fortDetails.Name} in {distance:0.##} m distance", LogLevel.None, ConsoleColor.Cyan);
-
-                            //var gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
-                            //try
-                            //{
-                            //    var fortFile = Path.Combine(gymDir, pokeStop.Id + ".txt");
-                            //    if (!File.Exists(fortFile))
-                            //    {
-                            //        using (StreamWriter w = File.CreateText(fortFile))
-                            //        {
-                            //            w.WriteLine(fortInfo.FortId.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                            //            w.WriteLine(fortInfo.Type);
-                            //            w.WriteLine(fortInfo.Latitude);
-                            //            w.WriteLine(fortInfo.Longitude);
-                            //            w.WriteLine(fortInfo.Name.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                            //            w.WriteLine(fortInfo.Description.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                            //            w.WriteLine();
-                            //            foreach (var img in fortInfo.ImageUrls)
-                            //            {
-                            //                w.WriteLine(img);
-                            //            }
-                            //            w.Close();
-                            //        }
-                            //    }
-                            //}
-                            //catch (Exception e)
-                            //{
-                            //    Logger.Write("Could not save the pokestop information file. " + e.ToString(), LogLevel.Error);
-                            //}
-
-
-                            Func<Task> del = null;
-                            if (PokeRoadieSettings.Current.CatchPokemon && !softBan) del = ExecuteCatchAllNearbyPokemons;
-                            var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), PokeRoadieSettings.Current.MinSpeed, del);
-
-                            fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                            fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                            fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
-
-
                             if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team &&
                                 ((pokeStop.GymPoints < 3001 && fortDetails.GymState.Memberships.Count < 2) ||
                                 (pokeStop.GymPoints > 3000 && pokeStop.GymPoints < 7001 && fortDetails.GymState.Memberships.Count < 2) ||
@@ -556,41 +515,99 @@ namespace PokeRoadie
                                 (pokeStop.GymPoints > 10000 && fortDetails.GymState.Memberships.Count < 4)))
                             {
 
-                                await PokeRoadieInventory.getCachedInventory(_client, true);
-                                var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
-                                var pokemon = pokemonList.FirstOrDefault();
-                                if (pokemon != null)
+                                Logger.Write($"(GYM) Casing out {fortDetails.Name} in {distance:0.##} m distance", LogLevel.None, ConsoleColor.Cyan);
+
+                                //var gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
+                                //try
+                                //{
+                                //    var fortFile = Path.Combine(gymDir, pokeStop.Id + ".txt");
+                                //    if (!File.Exists(fortFile))
+                                //    {
+                                //        using (StreamWriter w = File.CreateText(fortFile))
+                                //        {
+                                //            w.WriteLine(fortInfo.FortId.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
+                                //            w.WriteLine(fortInfo.Type);
+                                //            w.WriteLine(fortInfo.Latitude);
+                                //            w.WriteLine(fortInfo.Longitude);
+                                //            w.WriteLine(fortInfo.Name.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
+                                //            w.WriteLine(fortInfo.Description.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
+                                //            w.WriteLine();
+                                //            foreach (var img in fortInfo.ImageUrls)
+                                //            {
+                                //                w.WriteLine(img);
+                                //            }
+                                //            w.Close();
+                                //        }
+                                //    }
+                                //}
+                                //catch (Exception e)
+                                //{
+                                //    Logger.Write("Could not save the pokestop information file. " + e.ToString(), LogLevel.Error);
+                                //}
+
+
+                                Func<Task> del = null;
+                                if (PokeRoadieSettings.Current.CatchPokemon && !softBan) del = ExecuteCatchAllNearbyPokemons;
+                                var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), PokeRoadieSettings.Current.MinSpeed, del);
+
+                                fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                                fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                                fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+
+
+                                if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team &&
+                                    ((pokeStop.GymPoints < 3001 && fortDetails.GymState.Memberships.Count < 2) ||
+                                    (pokeStop.GymPoints > 3000 && pokeStop.GymPoints < 7001 && fortDetails.GymState.Memberships.Count < 2) ||
+                                    (pokeStop.GymPoints > 6000 && pokeStop.GymPoints < 10001 && fortDetails.GymState.Memberships.Count < 3) ||
+                                    (pokeStop.GymPoints > 10000 && fortDetails.GymState.Memberships.Count < 4)))
                                 {
 
-                                    var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
-                                    if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                    await PokeRoadieInventory.getCachedInventory(_client, true);
+                                    var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
+                                    var pokemon = pokemonList.FirstOrDefault();
+                                    if (pokemon != null)
                                     {
-                                        Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
-                                    }
-                                    else
-                                    {
-                                        Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
-                                    }
 
+                                        var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
+                                        if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                        {
+                                            Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+                                        }
+                                        else
+                                        {
+                                            Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
                                 }
                             }
                             else
                             {
-                                Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
-
+                                Logger.Write($"(GYM) Ignoring {fortString}", LogLevel.None, ConsoleColor.Cyan);
                             }
                         }
-                        else
-                        {
-                            Logger.Write($"(GYM) Ignoring {fortString}", LogLevel.None, ConsoleColor.Cyan);
-
-                        }
                     }
-                }
-                else
-                {
-                    Logger.Write($"(GYM) Ignoring {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
-                }
+                    else if (fortDetails.Result == GetGymDetailsResponse.Types.Result.ErrorNotInRange)
+                    {
+                        attempts++;
+                        Func<Task> del = null;
+                        if (PokeRoadieSettings.Current.CatchPokemon && !softBan && !PokeRoadieSettings.Current.FlyingEnabled || (PokeRoadieSettings.Current.FlyingEnabled && PokeRoadieSettings.Current.CatchWhileFlying)) del = ExecuteCatchAllNearbyPokemons;
+                        Logger.Write($"(GYM) Moving closer to {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
+                        var ToStart = await _navigation.HumanLikeWalkingGetCloser(
+                            new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude),
+                            PokeRoadieSettings.Current.FlyingEnabled ? PokeRoadieSettings.Current.FlyingSpeed : PokeRoadieSettings.Current.MinSpeed, del, 0.20);
+
+                    }
+                    else
+                    {
+                        Logger.Write($"(GYM) Ignoring {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
+                        inRange = true;
+                    }
+
+                } while (!inRange && attempts < 6);
             }
         }
         private async Task ProcessPokeStop(FortData pokeStop, GetMapObjectsResponse mapObjects)
@@ -879,7 +896,27 @@ namespace PokeRoadie
             await PokeRoadieInventory.getCachedInventory(_client, true);
             var duplicatePokemons = await _inventory.GetPokemonToTransfer();
             if (duplicatePokemons != null && duplicatePokemons.Any())
-                Logger.Write($"Found {duplicatePokemons.Count()} Pokemon for Transfer:", LogLevel.Info);
+            {
+                Logger.Write("====== Transfer ======", LogLevel.None, ConsoleColor.Yellow);
+                Logger.Write($"Found {duplicatePokemons.Count()} Pokemon for Transfer, the current settings are:", LogLevel.Info);
+                Logger.Write($"{("Keep Above CP:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveCP}", LogLevel.Info);
+                Logger.Write($"{("Keep Above IV:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveIV}", LogLevel.Info);
+                Logger.Write($"{("Keep Above V:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveV}", LogLevel.Info);
+                Logger.Write($"{("Transfer Below CP:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowCP}", LogLevel.Info);
+                Logger.Write($"{("Transfer Below IV:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowIV}", LogLevel.Info);
+                Logger.Write($"{("Transfer Below V:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowV}", LogLevel.Info);
+                Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!PokeRoadieSettings.Current.NotTransferPokemonsThatCanEvolve}", LogLevel.Info);
+                if (PokeRoadieSettings.Current.PokemonsNotToTransfer.Count > 0)
+                {
+                    Logger.Write("======================", LogLevel.None, ConsoleColor.Yellow);
+                    Logger.Write($"{("PokemonsNotToTransfer:").PadRight(25)} {PokeRoadieSettings.Current.PokemonsNotToTransfer.Count}", LogLevel.Info);
+                    foreach (PokemonId i in PokeRoadieSettings.Current.PokemonsNotToTransfer)
+                    {
+                        Logger.Write(i.ToString(), LogLevel.Info);
+                    }
+                }
+                Logger.Write("======================", LogLevel.None, ConsoleColor.Yellow);
+            }
 
             foreach (var duplicatePokemon in duplicatePokemons)
             {

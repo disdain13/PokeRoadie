@@ -27,6 +27,56 @@ namespace PokeRoadie
             _client = client;
         }
 
+        public async Task<PlayerUpdateResponse> HumanLikeWalkingGetCloser(GeoCoordinate targetLocation,
+            double walkingSpeedInKilometersPerHour, Func<Task> functionExecutedWhileWalking, double fraction)
+        {
+
+            //randomize speed for less detection
+            if (PokeRoadieSettings.Current.EnableSpeedRandomizer)
+            {
+                if (walkingSpeedInKilometersPerHour > 3)
+                {
+                    walkingSpeedInKilometersPerHour += RandomHelper.RandomNumber(-2, 3);
+                }
+                else
+                {
+                    walkingSpeedInKilometersPerHour += RandomHelper.RandomNumber(0, 2);
+                }
+            }
+
+            var speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
+            var sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
+            var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
+            if (distanceToTarget > 4) distanceToTarget = distanceToTarget * fraction;
+            var seconds = distanceToTarget / speedInMetersPerSecond;
+
+            //adjust speed to try and keep the trip under a minute, might not be possible
+            if (walkingSpeedInKilometersPerHour < PokeRoadieSettings.Current.MaxSpeed && PokeRoadieSettings.Current.EnableSpeedAdjustment)
+            {
+                while (seconds > PokeRoadieSettings.Current.MaxSecondsBetweenStops && walkingSpeedInKilometersPerHour < PokeRoadieSettings.Current.MaxSpeed)
+                {
+                    walkingSpeedInKilometersPerHour++;
+                    speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
+                    seconds = distanceToTarget / speedInMetersPerSecond;
+                }
+            }
+
+            //log distance and time
+            if (seconds > 60)
+            {
+                Logger.Write($"(NAVIGATION) Waypoint closer to target: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour, PokeRoadieSettings.Current.FlyingEnabled)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.None, ConsoleColor.Red);
+            }
+            else
+            {
+                Logger.Write($"Waypoint closer to target: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour, PokeRoadieSettings.Current.FlyingEnabled)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.Navigation);
+            }
+
+            var nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);
+            var waypoint = LocationUtils.CreateWaypoint(sourceLocation, distanceToTarget, nextWaypointBearing);
+
+            return await HumanLikeWalking(waypoint, walkingSpeedInKilometersPerHour, functionExecutedWhileWalking);
+        }
+
         public async Task<PlayerUpdateResponse> HumanLikeWalking(GeoCoordinate targetLocation,
             double walkingSpeedInKilometersPerHour, Func<Task> functionExecutedWhileWalking)
         {
