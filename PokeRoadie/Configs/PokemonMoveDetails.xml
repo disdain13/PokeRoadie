@@ -1,0 +1,6834 @@
+<?xml version="1.0"?>
+<ArrayOfMoveData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MoveData>
+    <Name>Absorb</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Acid</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Acid Armor</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Acid Spray</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>Sharply lowers opponent's Special Defense.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Acrobatics</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Stronger when the user does not have a held item.</Effect>
+    <Power>55</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM62</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Acupressure</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises a random stat.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aerial Ace</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM40</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aeroblast</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>100</Power>
+    <Accuracy>95</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>After You</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Gives target priority in the next turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Agility</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Air Cutter</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>60</Power>
+    <Accuracy>95</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Air Slash</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>75</Power>
+    <Accuracy>95</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ally Switch</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>User switches with opposite teammate.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Amnesia</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ancient Power</Name>
+    <Type>Rock</Type>
+    <Category>Special</Category>
+    <Effect>May raise all user's stats at once.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aqua Jet</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aqua Ring</Name>
+    <Type>Water</Type>
+    <Category>Status</Category>
+    <Effect>Restores a little HP each turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aqua Tail</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>90</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Arm Thrust</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>15</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aromatherapy</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Cures all status problems in your party.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aromatic Mist</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Raises Special Defense of allies.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Assist</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>In a Double Battle, user randomly attacks with a partner's move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Assurance</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Power doubles if opponent already took damage in the same turn.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Astonish</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>30</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Attack Order</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Attract</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>If opponent is the opposite gender, it's less likely to attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM45</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aura Sphere</Name>
+    <Type>Fighting</Type>
+    <Category>Special</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Aurora Beam</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Attack.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Autotomize</Name>
+    <Type>Steel</Type>
+    <Category>Status</Category>
+    <Effect>Halves weight and sharply raises Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Avalanche</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>Power doubles if user took damage first.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Baby Doll Eyes</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Always goes first. Lowers the target's attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Barrage</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>15</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Barrier</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Baton Pass</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User switches out and gives stat changes to the incoming Pokémon.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Beat Up</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Each Pokémon in your party attacks.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Belch</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>User must have consumed a Berry.</Effect>
+    <Power>120</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Belly Drum</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User loses 50% of its max HP, but Attack raises to maximum.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bestow</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Gives the user's held item to the target.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bide</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User takes damage for two turns then strikes back double.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bind</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>15</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bite</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Blast Burn</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Blaze Kick</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio. May burn opponent.</Effect>
+    <Power>85</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Blizzard</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>May freeze opponent.</Effect>
+    <Power>110</Power>
+    <Accuracy>70</Accuracy>
+    <PP>5</PP>
+    <TM>TM14</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Block</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Opponent cannot flee or switch.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Blue Flare</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>130</Power>
+    <Accuracy>85</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Body Slam</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>85</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bolt Strike</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>130</Power>
+    <Accuracy>85</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bone Club</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>65</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bone Rush</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>25</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bonemerang</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Hits twice in one turn.</Effect>
+    <Power>50</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Boomburst</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Hits all adjacent Pokémon.</Effect>
+    <Power>140</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bounce</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Springs up on first turn, attacks on second. May paralyze opponent.</Effect>
+    <Power>85</Power>
+    <Accuracy>85</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Brave Bird</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Brick Break</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Breaks through Reflect and Light Screen barriers.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM31</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Brine</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>Power doubles if opponent's HP is less than 50%.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bubble</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Speed.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bubble Beam</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Speed.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bug Bite</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>Receives the effect from the opponent's held berry.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bug Buzz</Name>
+    <Type>Bug</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bulk Up</Name>
+    <Type>Fighting</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack and Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM08</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bulldoze</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM78</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bullet Punch</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Bullet Seed</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>25</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Calm Mind</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Special Attack and Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM04</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Camouflage</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Changes user's type according to the location.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Captivate</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Special Attack if opposite gender.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Celebrate</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>The Pokémon congratulates you on your special day. No battle effect.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Charge</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Special Defense and next Electric move's power increases.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Charge Beam</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>May raise user's Special Attack.</Effect>
+    <Power>50</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM>TM57</TM>
+    <Hit>70</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Charm</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Chatter</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>Confuses opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Chip Away</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Ignores opponent's stat changes.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Circle Throw</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>In battles, the opponent switches. In the wild, the Pokémon runs.</Effect>
+    <Power>60</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Clamp</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>35</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Clear Smog</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>Removes all of the target's stat changes.</Effect>
+    <Power>50</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Close Combat</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers user's Defense and Special Defense.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Coil</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack, Defense and Accuracy.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Comet Punch</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>18</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Confide</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM100</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Confuse Ray</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>Confuses opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Confusion</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Constrict</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Speed by one stage.</Effect>
+    <Power>10</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Conversion</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Changes user's type to that of its first move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Conversion 2</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User changes type to become resistant to opponent's last move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Copycat</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Copies opponent's last move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Cosmic Power</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Defense and Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Cotton Guard</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Drastically raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Cotton Spore</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Counter</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>When hit by a Physical Attack, user strikes back with 2x power.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Covet</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Opponent's item is stolen by the user.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Crabhammer</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>100</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Crafty Shield</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Protects the Pokémon from status moves.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Cross Chop</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>100</Power>
+    <Accuracy>80</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Cross Poison</Name>
+    <Type>Poison</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio. May poison opponent.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Crunch</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Defense.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Crush Claw</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Defense.</Effect>
+    <Power>75</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Crush Grip</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>More powerful when opponent has higher HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Curse</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>Ghosts lose 50% of max HP and curse the opponent; Non-Ghosts raise Attack, Defense and lower Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Cut</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>50</Power>
+    <Accuracy>95</Accuracy>
+    <PP>30</PP>
+    <TM>HM01</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dark Pulse</Name>
+    <Type>Dark</Type>
+    <Category>Special</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM97</TM>
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dark Void</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Puts all adjacent opponents to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>80</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dazzling Gleam</Name>
+    <Type>Fairy</Type>
+    <Category>Special</Category>
+    <Effect>Hits all adjacent opponents.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM99</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Defend Order</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Defense and Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Defense Curl</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Defog</Name>
+    <Type>Flying</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Evasiveness and clears fog.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Destiny Bond</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>If the user faints, the opponent also faints.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Detect</Name>
+    <Type>Fighting</Type>
+    <Category>Status</Category>
+    <Effect>Opponent's attack doesn't affect you, but may fail if used often.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Diamond Storm</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>May raise user's Defense</Effect>
+    <Power>100</Power>
+    <Accuracy>95</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dig</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Digs underground on first turn, attacks on second. Can also escape from caves.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM28</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Disable</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Opponent can't use its last attack for a few turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Disarming Voice</Name>
+    <Type>Fairy</Type>
+    <Category>Special</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Discharge</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dive</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>Dives underwater on first turn, attacks on second turn.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>HM07</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dizzy Punch</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Doom Desire</Name>
+    <Type>Steel</Type>
+    <Category>Special</Category>
+    <Effect>Damage occurs 2 turns later.</Effect>
+    <Power>140</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Double Hit</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits twice in one turn.</Effect>
+    <Power>35</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Double Kick</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Hits twice in one turn.</Effect>
+    <Power>30</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Double Slap</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>15</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Double Team</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Evasiveness.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM>TM32</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Double Edge</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Draco Meteor</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect>Sharply lowers user's Special Attack.</Effect>
+    <Power>130</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Ascent</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers user's Defense and Special Defense.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Breath</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Claw</Name>
+    <Type>Dragon</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM02</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Dance</Name>
+    <Type>Dragon</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack and Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Pulse</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect />
+    <Power>85</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Rage</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect>Always inflicts 40 HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Rush</Name>
+    <Type>Dragon</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>100</Power>
+    <Accuracy>75</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dragon Tail</Name>
+    <Type>Dragon</Type>
+    <Category>Physical</Category>
+    <Effect>In battles, the opponent switches. In the wild, the Pokémon runs.</Effect>
+    <Power>60</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM>TM82</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Drain Punch</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Draining Kiss</Name>
+    <Type>Fairy</Type>
+    <Category>Special</Category>
+    <Effect>User recovers most the HP inflicted on opponent.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dream Eater</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>User recovers half the HP inflicted on a sleeping opponent.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM85</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Drill Peck</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Drill Run</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>80</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dual Chop</Name>
+    <Type>Dragon</Type>
+    <Category>Physical</Category>
+    <Effect>Hits twice in one turn.</Effect>
+    <Power>40</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Dynamic Punch</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Confuses opponent.</Effect>
+    <Power>100</Power>
+    <Accuracy>50</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Earth Power</Name>
+    <Type>Ground</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Earthquake</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Power is doubled if opponent is underground from using Dig.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM26</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Echoed Voice</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Power increases each turn.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM49</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Eerie Impulse</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Egg Bomb</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>100</Power>
+    <Accuracy>75</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Electric Terrain</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Prevents all Pokémon from falling asleep for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Electrify</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Changes the target's move to Electric type.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Electro Ball</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>The faster the user, the stronger the attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Electroweb</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>55</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Embargo</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Opponent cannot use items.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM63</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ember</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Encore</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Forces opponent to keep using its last move for 3 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Endeavor</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Reduces opponent's HP to same as user's.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Endure</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Always left with at least 1 HP, but may fail if used consecutively.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Energy Ball</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM53</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Entrainment</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Makes target's ability same as user's.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Eruption</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Stronger when the user's HP is higher.</Effect>
+    <Power>150</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Explosion</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User faints.</Effect>
+    <Power>250</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM>TM64</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Extrasensory</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Extreme Speed</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Facade</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Power doubles if user is burned, poisoned, or paralyzed.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM42</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fairy Lock</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Prevents fleeing in the next turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fairy Wind</Name>
+    <Type>Fairy</Type>
+    <Category>Special</Category>
+    <Effect />
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fake Out</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first, foe flinches. Only usable on first turn.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fake Tears</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>False Swipe</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Always leaves opponent with at least 1 HP.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>40</PP>
+    <TM>TM54</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Feather Dance</Name>
+    <Type>Flying</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Feint</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Only hits if opponent uses Protect or Detect in the same turn.</Effect>
+    <Power>30</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Feint Attack</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fell Stinger</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>Sharply raises user's Attack if target is KO'd.</Effect>
+    <Power>30</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fiery Dance</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May raise user's Special Attack.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Final Gambit</Name>
+    <Type>Fighting</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts damage equal to the user's remaining HP. User faints.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fire Blast</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>110</Power>
+    <Accuracy>85</Accuracy>
+    <PP>5</PP>
+    <TM>TM38</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fire Fang</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching and/or burn opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fire Pledge</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Added effects appear if combined with Grass Pledge or Water Pledge.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fire Punch</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fire Spin</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>35</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fissure</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>One-Hit-KO, if it hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flail</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>The lower the user's HP, the higher the power.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flame Burst</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May also injure nearby Pokémon.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flame Charge</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>Raises user's Speed.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM43</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flame Wheel</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flamethrower</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM35</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flare Blitz</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage. May burn opponent.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flash</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Accuracy.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM70</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flash Cannon</Name>
+    <Type>Steel</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM91</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flatter</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Confuses opponent, but raises its Special Attack by two stages.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fling</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Power depends on held item.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM56</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flower Shield</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises Defense of all Grass-type Pokémon on the field.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fly</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Flies up on first turn, attacks on second turn.</Effect>
+    <Power>90</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM>HM02</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Flying Press</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Deals Fighting and Flying type damage.</Effect>
+    <Power>80</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Focus Blast</Name>
+    <Type>Fighting</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>120</Power>
+    <Accuracy>70</Accuracy>
+    <PP>5</PP>
+    <TM>TM52</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Focus Energy</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Increases critical hit ratio.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Focus Punch</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>If the user is hit before attacking, it flinches instead.</Effect>
+    <Power>150</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Follow Me</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>In Double Battle, the user takes all the attacks.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Force Palm</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Foresight</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Resets opponent's Evasiveness, Normal-type and Fighting-type attacks can now hit Ghosts, and Ghost-type attacks hit Normal.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Forest's Curse</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Adds Grass type to opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Foul Play</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Uses the opponent's Attack stat.</Effect>
+    <Power>95</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Freeze Shock</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>Charges on first turn, attacks on second. May paralyze opponent.</Effect>
+    <Power>140</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Freeze Dry</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>May freeze opponent. Super-effective against Water types.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Frenzy Plant</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Frost Breath</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>Always results in a critical hit.</Effect>
+    <Power>60</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM>TM79</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Frustration</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Power decreases with higher Happiness.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM21</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fury Attack</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>15</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fury Cutter</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>Power increases each turn.</Effect>
+    <Power>40</Power>
+    <Accuracy>95</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fury Swipes</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>18</Power>
+    <Accuracy>80</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fusion Bolt</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>Power increases if Fusion Flare is used in the same turn.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Fusion Flare</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Power increases if Fusion Bolt is used in the same turn.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Future Sight</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Damage occurs 2 turns later.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Gastro Acid</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Cancels out the effect of the opponent's Ability.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Gear Grind</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>Hits twice in one turn.</Effect>
+    <Power>50</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Geomancy</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Charges on first turn, sharply raises user's Sp. Attack, Sp. Defense and Speed on the second.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Giga Drain</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Giga Impact</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM>TM68</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Glaciate</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>65</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Glare</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Paralyzes opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Grass Knot</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>The heavier the opponent, the stronger the attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM86</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Grass Pledge</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>Added effects appear if preceded by Water Pledge or succeeded by Fire Pledge.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Grass Whistle</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>55</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Grassy Terrain</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Restores a little HP of all Pokémon for 5 turns. </Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Gravity</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Prevents moves like Fly and Bounce and the Ability Levitate for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Growl</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Growth</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack and Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Grudge</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>If the users faints after using this move, the PP for the opponent's last move is depleted.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Guard Split</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Averages Defense and Special Defense with the target.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Guard Swap</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>User and opponent swap Defense and Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Guillotine</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>One-Hit-KO, if it hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Gunk Shot</Name>
+    <Type>Poison</Type>
+    <Category>Physical</Category>
+    <Effect>May poison opponent.</Effect>
+    <Power>120</Power>
+    <Accuracy>80</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Gust</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>Hits Pokémon using Fly/Bounce with double power.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Gyro Ball</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>The slower the user, the stronger the attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM>TM74</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hail</Name>
+    <Type>Ice</Type>
+    <Category>Status</Category>
+    <Effect>Non-Ice types are damaged for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM07</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hammer Arm</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers user's Speed.</Effect>
+    <Power>100</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Happy Hour</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Doubles prize money from trainer battles.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Harden</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Haze</Name>
+    <Type>Ice</Type>
+    <Category>Status</Category>
+    <Effect>Resets all stat changes.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Head Charge</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Head Smash</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>150</Power>
+    <Accuracy>80</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Headbutt</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heal Bell</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Heals the user's party's status conditions.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heal Block</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Prevents the opponent from restoring HP for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heal Order</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>User recovers half its max HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heal Pulse</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Restores half the target's max HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Healing Wish</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>The user faints and the next Pokémon released is fully healed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heart Stamp</Name>
+    <Type>Psychic</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heart Swap</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Stat changes are swapped with the opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heat Crash</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>The heavier the user, the stronger the attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heat Wave</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>95</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Heavy Slam</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>The heavier the user, the stronger the attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Helping Hand</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>In Double Battles, boosts the power of the partner's move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hex</Name>
+    <Type>Ghost</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts more damage if the target has a status condition.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hidden Power</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Type and power depends on user's IVs.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM10</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>High Jump Kick</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>If it misses, the user loses half their HP.</Effect>
+    <Power>130</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hold Back</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Always leaves opponent with at least 1 HP.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hold Hands</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Makes the user and an ally very happy.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hone Claws</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack and Accuracy.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM>TM01</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Horn Attack</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Horn Drill</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>One-Hit-KO, if it hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Horn Leech</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Howl</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hurricane</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>110</Power>
+    <Accuracy>70</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hydro Cannon</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hydro Pump</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect />
+    <Power>110</Power>
+    <Accuracy>80</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hyper Beam</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM>TM15</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hyper Fang</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>80</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hyper Voice</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect />
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hyperspace Fury</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers user's Defense. Can strike through Protect/Detect.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hyperspace Hole</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Can strike through Protect/Detect.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Hypnosis</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>60</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ice Ball</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>Doubles in power each turn for 5 turns.</Effect>
+    <Power>30</Power>
+    <Accuracy>90</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ice Beam</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>May freeze opponent.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM13</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ice Burn</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>Charges on first turn, attacks on second. May burn opponent.</Effect>
+    <Power>140</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ice Fang</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching and/or freeze opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ice Punch</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>May freeze opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ice Shard</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Icicle Crash</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>85</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Icicle Spear</Name>
+    <Type>Ice</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>25</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Icy Wind</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>55</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Imprison</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Opponent is unable to use moves that the user also knows.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Incinerate</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Destroys the target's held berry.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM59</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Inferno</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Burns opponent.</Effect>
+    <Power>100</Power>
+    <Accuracy>50</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Infestation</Name>
+    <Type>Bug</Type>
+    <Category>Special</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM83</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ingrain</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>User restores HP each turn. User cannot escape/switch.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ion Deluge</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Changes Normal-type moves to Electric-type.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Iron Defense</Name>
+    <Type>Steel</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Iron Head</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Iron Tail</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Defense.</Effect>
+    <Power>100</Power>
+    <Accuracy>75</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Judgment</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Type depends on the Arceus Plate being held.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Jump Kick</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>If it misses, the user loses half their HP.</Effect>
+    <Power>100</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Karate Chop</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Kinesis</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Accuracy.</Effect>
+    <Power>0</Power>
+    <Accuracy>80</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>King's Shield</Name>
+    <Type>Steel</Type>
+    <Category>Status</Category>
+    <Effect>Protects against attacks, and lowers opponent's Attack on contact.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Knock Off</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Removes opponent's held item for the rest of the battle.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Land's Wrath</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Last Resort</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Can only be used after all other moves are used.</Effect>
+    <Power>140</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Lava Plume</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Leaf Blade</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Leaf Storm</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>Sharply lowers user's Special Attack.</Effect>
+    <Power>130</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Leaf Tornado</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Accuracy.</Effect>
+    <Power>65</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Leech Life</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Leech Seed</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>User steals HP from opponent each turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Leer</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Lick</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>30</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Light of Ruin</Name>
+    <Type>Fairy</Type>
+    <Category>Special</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>140</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Light Screen</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Halves damage from Special attacks for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM>TM16</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Lock On</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>The next move the user uses is guaranteed to hit.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Lovely Kiss</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>75</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Low Kick</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>The heavier the opponent, the stronger the attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Low Sweep</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM47</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Lucky Chant</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Opponent cannot land critical hits for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Lunar Dance</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>The user faints but the next Pokémon released is fully healed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Luster Purge</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mach Punch</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magic Coat</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Reflects moves that cause status conditions back to the attacker.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magic Room</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Suppresses the effects of held items for five turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magical Leaf</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magma Storm</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>120</Power>
+    <Accuracy>75</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magnet Bomb</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magnet Rise</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>User becomes immune to Ground-type moves for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magnetic Flux</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Raises Defense and Sp. Defense of Plus/Minus Pokémon.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Magnitude</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Hits with random power.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mat Block</Name>
+    <Type>Fighting</Type>
+    <Category>Status</Category>
+    <Effect>Protects teammates from damaging moves.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Me First</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User copies the opponent's attack with 1.5× power.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mean Look</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Opponent cannot flee or switch.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Meditate</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mega Drain</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mega Kick</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>120</Power>
+    <Accuracy>75</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mega Punch</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Megahorn</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>120</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Memento</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>User faints, sharply lowers opponent's Attack and Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Metal Burst</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>Deals damage equal to 1.5x opponent's attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Metal Claw</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>May raise user's Attack.</Effect>
+    <Power>50</Power>
+    <Accuracy>95</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Metal Sound</Name>
+    <Type>Steel</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>85</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Meteor Mash</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>May raise user's Attack.</Effect>
+    <Power>90</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Metronome</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User performs any move in the game at random.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Milk Drink</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User recovers half its max HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mimic</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Copies the opponent's last move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mind Reader</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User's next attack is guaranteed to hit.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Minimize</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Evasiveness.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Miracle Eye</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Resets opponent's Evasiveness, removes Dark's Psychic immunity.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mirror Coat</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>When hit by a Special Attack, user strikes back with 2x power.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mirror Move</Name>
+    <Type>Flying</Type>
+    <Category>Status</Category>
+    <Effect>User performs the opponent's last move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mirror Shot</Name>
+    <Type>Steel</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Accuracy.</Effect>
+    <Power>65</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mist</Name>
+    <Type>Ice</Type>
+    <Category>Status</Category>
+    <Effect>User's stats cannot be changed for a period of time.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mist Ball</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Attack.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Misty Terrain</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Protects the field from status conditions for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Moonblast</Name>
+    <Type>Fairy</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Attack.</Effect>
+    <Power>95</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Moonlight</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>User recovers HP. Amount varies with the weather.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Morning Sun</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User recovers HP. Amount varies with the weather.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mud Bomb</Name>
+    <Type>Ground</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Accuracy.</Effect>
+    <Power>65</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mud Shot</Name>
+    <Type>Ground</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>55</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mud Sport</Name>
+    <Type>Ground</Type>
+    <Category>Status</Category>
+    <Effect>Weakens the power of Electric-type moves.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>MudSlap</Name>
+    <Type>Ground</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Accuracy.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Muddy Water</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Accuracy.</Effect>
+    <Power>90</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Mystical Fire</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Special Attack.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Nasty Plot</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Natural Gift</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Power and type depend on the user's held berry.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Nature Power</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Uses a certain move based on the current terrain.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM96</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Needle Arm</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Night Daze</Name>
+    <Type>Dark</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Accuracy.</Effect>
+    <Power>85</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>40</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Night Shade</Name>
+    <Type>Ghost</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts damage equal to user's level.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Night Slash</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Nightmare</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>The sleeping opponent loses 25% of its max HP each turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Noble Roar</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Attack and Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Nuzzle</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>Paralyzes opponent.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Oblivion Wing</Name>
+    <Type>Flying</Type>
+    <Category>Special</Category>
+    <Effect>User recovers most of the HP inflicted on opponent.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Octazooka</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Accuracy.</Effect>
+    <Power>65</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Odor Sleuth</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Resets opponent's Evasiveness, Normal-type and Fighting-type attacks can now hit Ghosts, and Ghost-type attacks hit Normal.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Ominous Wind</Name>
+    <Type>Ghost</Type>
+    <Category>Special</Category>
+    <Effect>May raise all user's stats at once.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Origin Pulse</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>Hits all adjacent opponents.</Effect>
+    <Power>110</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Outrage</Name>
+    <Type>Dragon</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks for 2-3 turns but then becomes confused.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Overheat</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>Sharply lowers user's Special Attack.</Effect>
+    <Power>130</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM>TM50</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Pain Split</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>The user's and opponent's HP becomes the average of both.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Parabolic Charge</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>User recovers half the HP inflicted on opponent.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Parting Shot</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Attack and Special Attack then switches out. </Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Pay Day</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>A small amount of money is gained after the battle resolves.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Payback</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Power doubles if the user was attacked first.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM66</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Peck</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>35</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Perish Song</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Any Pokémon in play when this attack is used faints in 3 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Petal Blizzard</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>Hits all adjacent Pokémon.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Petal Dance</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>User attacks for 2-3 turns but then becomes confused.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Phantom Force</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>Disappears on first turn, attacks on second. Can strike through Protect/Detect.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Pin Missile</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>25</Power>
+    <Accuracy>95</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Play Nice</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Attack. Always hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Play Rough</Name>
+    <Type>Fairy</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Attack.</Effect>
+    <Power>90</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Pluck</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>If the opponent is holding a berry, its effect is stolen by user.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Poison Fang</Name>
+    <Type>Poison</Type>
+    <Category>Physical</Category>
+    <Effect>May badly poison opponent.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Poison Gas</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Poisons opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Poison Jab</Name>
+    <Type>Poison</Type>
+    <Category>Physical</Category>
+    <Effect>May poison the opponent.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM84</TM>
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Poison Powder</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Poisons opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>75</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Poison Sting</Name>
+    <Type>Poison</Type>
+    <Category>Physical</Category>
+    <Effect>May poison the opponent.</Effect>
+    <Power>15</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Poison Tail</Name>
+    <Type>Poison</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio. May poison opponent.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Pound</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Powder</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Damages Pokémon using Fire type moves.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Powder Snow</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>May freeze opponent.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Power Gem</Name>
+    <Type>Rock</Type>
+    <Category>Special</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Power Split</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Averages Attack and Special Attack with the target.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Power Swap</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>User and opponent swap Attack and Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Power Trick</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>User's own Attack and Defense switch.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Power Whip</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>120</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Power Up Punch</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Raises Attack.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM98</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Precipice Blades</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Hits all adjacent opponents.</Effect>
+    <Power>120</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Present</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Either deals damage or heals.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Protect</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User is not affected by opponent's move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM17</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psybeam</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psych Up</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Copies the opponent's stat changes.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM77</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psychic</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM29</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psycho Boost</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Sharply lowers user's Special Attack.</Effect>
+    <Power>140</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psycho Cut</Name>
+    <Type>Psychic</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psycho Shift</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Gives the opponent the user's status condition, if it hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psyshock</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts damage based on the target's Defense, not Special Defense.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM03</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psystrike</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts damage based on the target's Defense, not Special Defense.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Psywave</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts damage 50-150% of user's level.</Effect>
+    <Power>0</Power>
+    <Accuracy>80</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Punishment</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Power increases when opponent's stats have been raised.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Pursuit</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Double power if the opponent is switching out.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Quash</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Makes the target act last this turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM60</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Quick Attack</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Quick Guard</Name>
+    <Type>Fighting</Type>
+    <Category>Status</Category>
+    <Effect>Fast moves won't damage the user or its teammates.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Quiver Dance</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Special Attack, Special Defense and Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rage</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Raises user's Attack when hit.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rage Powder</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Forces attacks to hit user, not team-mates.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rain Dance</Name>
+    <Type>Water</Type>
+    <Category>Status</Category>
+    <Effect>Makes it rain for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM>TM18</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rapid Spin</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Removes effects of trap moves.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Razor Leaf</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>55</Power>
+    <Accuracy>95</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Razor Shell</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Defense.</Effect>
+    <Power>75</Power>
+    <Accuracy>95</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Razor Wind</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Charges on first turn, attacks on second. High critical hit ratio.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Recover</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User recovers half its max HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Recycle</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User's used hold item is restored.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Reflect</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Halves damage from Physical attacks for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM33</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Reflect Type</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User becomes the target's type.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Refresh</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Cures paralysis, poison, and burns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Relic Song</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>May put the target to sleep.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rest</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>User sleeps for 2 turns, but user is fully healed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM44</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Retaliate</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Inflicts double damage if a teammate fainted on the last turn.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM>TM67</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Return</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Power increases with user's Happiness.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM27</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Revenge</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Power increases if user was hit first.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Reversal</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>The lower the user's HP, the higher the power.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Roar</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>In battles, the opponent switches. In the wild, the Pokémon runs.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM05</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Roar of Time</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Blast</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>25</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Climb</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>90</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Polish</Name>
+    <Type>Rock</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM69</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Slide</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>75</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM>TM80</TM>
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Smash</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>May lower opponent's Defense.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>HM06</TM>
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Throw</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>50</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Tomb</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers opponent's Speed.</Effect>
+    <Power>60</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM>TM39</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rock Wrecker</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>User must recharge next turn.</Effect>
+    <Power>150</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Role Play</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>User copies the opponent's Ability.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rolling Kick</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>60</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rollout</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>Doubles in power each turn for 5 turns.</Effect>
+    <Power>30</Power>
+    <Accuracy>90</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Roost</Name>
+    <Type>Flying</Type>
+    <Category>Status</Category>
+    <Effect>User recovers half of its max HP and loses the Flying type temporarily.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM19</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Rototiller</Name>
+    <Type>Ground</Type>
+    <Category>Status</Category>
+    <Effect>Raises Attack and Special Attack of Grass-types.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Round</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Power increases if teammates use it in the same turn.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM48</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sacred Fire</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>100</Power>
+    <Accuracy>95</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>50</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sacred Sword</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Ignores opponent's stat changes.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Safeguard</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>The user's party is protected from status conditions.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>25</PP>
+    <TM>TM20</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sand Attack</Name>
+    <Type>Ground</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Accuracy.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sand Tomb</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>35</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sandstorm</Name>
+    <Type>Rock</Type>
+    <Category>Status</Category>
+    <Effect>Creates a sandstorm for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM37</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Scald</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM55</TM>
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Scary Face</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Scratch</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Screech</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>85</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Searing Shot</Name>
+    <Type>Fire</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>100</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Secret Power</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Effects of the attack vary with the location.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM94</TM>
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Secret Sword</Name>
+    <Type>Fighting</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts damage based on the target's Defense, not Special Defense.</Effect>
+    <Power>85</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Seed Bomb</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Seed Flare</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>120</Power>
+    <Accuracy>85</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>40</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Seismic Toss</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Inflicts damage equal to user's level.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Self Destruct</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User faints.</Effect>
+    <Power>200</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shadow Ball</Name>
+    <Type>Ghost</Type>
+    <Category>Special</Category>
+    <Effect>May lower opponent's Special Defense.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM30</TM>
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shadow Claw</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM65</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shadow Force</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>Disappears on first turn, attacks on second. Can strike through Protect/Detect.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shadow Punch</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shadow Sneak</Name>
+    <Type>Ghost</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sharpen</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sheer Cold</Name>
+    <Type>Ice</Type>
+    <Category>Special</Category>
+    <Effect>One-Hit-KO, if it hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shell Smash</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Attack, Special Attack and Speed but lowers Defense and Special Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shift Gear</Name>
+    <Type>Steel</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack and sharply raises Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Shock Wave</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Signal Beam</Name>
+    <Type>Bug</Type>
+    <Category>Special</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Silver Wind</Name>
+    <Type>Bug</Type>
+    <Category>Special</Category>
+    <Effect>May raise all stats of user at once.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Simple Beam</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Changes target's ability to Simple.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sing</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>55</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sketch</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Permanently copies the opponent's last move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>1</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Skill Swap</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>The user swaps Abilities with the opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Skull Bash</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Raises Defense on first turn, attacks on second.</Effect>
+    <Power>130</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sky Attack</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Charges on first turn, attacks on second. May cause flinching.</Effect>
+    <Power>140</Power>
+    <Accuracy>90</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sky Drop</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect>Takes opponent into the air on first turn, drops them on second turn.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM58</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sky Uppercut</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Hits the opponent, even during Fly.</Effect>
+    <Power>85</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Slack Off</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User recovers half its max HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Slam</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>75</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Slash</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sleep Powder</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>75</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sleep Talk</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User performs one of its own moves while sleeping.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM88</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sludge</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>May poison opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sludge Bomb</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>May poison opponent.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM36</TM>
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sludge Wave</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>May poison opponent.</Effect>
+    <Power>95</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM34</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Smack Down</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>Makes Flying-type Pokémon vulnerable to Ground moves.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM23</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Smelling Salts</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Power doubles if opponent is paralyzed, but cures it.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Smog</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>May poison opponent.</Effect>
+    <Power>30</Power>
+    <Accuracy>70</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>40</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Smokescreen</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Accuracy.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Snarl</Name>
+    <Type>Dark</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Special Attack.</Effect>
+    <Power>55</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM>TM95</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Snatch</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Steals the effects of the opponent's next move.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Snore</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Can only be used if asleep. May cause flinching.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Soak</Name>
+    <Type>Water</Type>
+    <Category>Status</Category>
+    <Effect>Changes the target's type to water.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Soft Boiled</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User recovers half its max HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Solar Beam</Name>
+    <Type>Grass</Type>
+    <Category>Special</Category>
+    <Effect>Charges on first turn, attacks on second.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM22</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sonic Boom</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Always inflicts 20 HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spacial Rend</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>100</Power>
+    <Accuracy>95</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spark</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spider Web</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Opponent cannot escape/switch.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spike Cannon</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spikes</Name>
+    <Type>Ground</Type>
+    <Category>Status</Category>
+    <Effect>Hurts opponents when they switch into battle.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spiky Shield</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Protects user and inflicts damage on contact moves.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spit Up</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Power depends on how many times the user performed Stockpile.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spite</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>The opponent's last move loses 2-5 PP.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Splash</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Doesn't do ANYTHING.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Spore</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Stealth Rock</Name>
+    <Type>Rock</Type>
+    <Category>Status</Category>
+    <Effect>Damages opponent switching into battle.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Steam Eruption</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May burn opponent.</Effect>
+    <Power>110</Power>
+    <Accuracy>95</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Steamroller</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Steel Wing</Name>
+    <Type>Steel</Type>
+    <Category>Physical</Category>
+    <Effect>May raise user's Defense.</Effect>
+    <Power>70</Power>
+    <Accuracy>90</Accuracy>
+    <PP>25</PP>
+    <TM>TM51</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sticky Web</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Speed when switching into battle.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Stockpile</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Stores energy for use with Spit Up and Swallow.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Stomp</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Stone Edge</Name>
+    <Type>Rock</Type>
+    <Category>Physical</Category>
+    <Effect>High critical hit ratio.</Effect>
+    <Power>100</Power>
+    <Accuracy>80</Accuracy>
+    <PP>5</PP>
+    <TM>TM71</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Stored Power</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Power increases when user's stats have been raised.</Effect>
+    <Power>20</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Storm Throw</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Always results in a critical hit.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Strength</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>HM04</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>String Shot</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Sharply lowers opponent's Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>95</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Struggle</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Only usable when all PP are gone. Hurts the user.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>0</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Struggle Bug</Name>
+    <Type>Bug</Type>
+    <Category>Special</Category>
+    <Effect>Lowers opponent's Special Attack.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM76</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Stun Spore</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Paralyzes opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>75</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Submission</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>80</Power>
+    <Accuracy>80</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Substitute</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Uses HP to creates a decoy that takes hits.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM>TM90</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sucker Punch</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks first, but only works if opponent is readying an attack.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sunny Day</Name>
+    <Type>Fire</Type>
+    <Category>Status</Category>
+    <Effect>Makes it sunny for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM>TM11</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Super Fang</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Always takes off half of the opponent's HP.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Superpower</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers user's Attack and Defense.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Supersonic</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Confuses opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>55</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Surf</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>Hits all adjacent Pokémon.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>HM03</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Swagger</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Opponent becomes confused, but its Attack is raised two stages.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM>TM87</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Swallow</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>The more times the user has performed Stockpile, the more HP is recovered.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sweet Kiss</Name>
+    <Type>Fairy</Type>
+    <Category>Status</Category>
+    <Effect>Confuses opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>75</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Sweet Scent</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Evasiveness.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Swift</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Ignores Accuracy and Evasiveness.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Switcheroo</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Swaps held items with the opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Swords Dance</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Sharply raises user's Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM>TM75</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Synchronoise</Name>
+    <Type>Psychic</Type>
+    <Category>Special</Category>
+    <Effect>Hits any Pokémon that shares a type with the user.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Synthesis</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>User recovers HP. Amount varies with the weather.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tackle</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tail Glow</Name>
+    <Type>Bug</Type>
+    <Category>Status</Category>
+    <Effect>Drastically raises user's Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tail Slap</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>25</Power>
+    <Accuracy>85</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tail Whip</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tailwind</Name>
+    <Type>Flying</Type>
+    <Category>Status</Category>
+    <Effect>Doubles Speed for 4 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Take Down</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>90</Power>
+    <Accuracy>85</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Taunt</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Opponent can only use moves that attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM12</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Techno Blast</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Type depends on the Drive being held.</Effect>
+    <Power>85</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Teeter Dance</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Confuses all Pokémon.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Telekinesis</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Ignores opponent's Evasiveness for three turns, add Ground immunity.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Teleport</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Allows user to flee wild battles; also warps player to last PokéCenter.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thief</Name>
+    <Type>Dark</Type>
+    <Category>Physical</Category>
+    <Effect>Also steals opponent's held item.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM>TM46</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thousand Arrows</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Makes Flying-type Pokémon vulnerable to Ground moves.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thousand Waves</Name>
+    <Type>Ground</Type>
+    <Category>Physical</Category>
+    <Effect>Opponent cannot flee or switch.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thrash</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks for 2-3 turns but then becomes confused.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thunder</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>110</Power>
+    <Accuracy>70</Accuracy>
+    <PP>10</PP>
+    <TM>TM25</TM>
+    <Hit>30</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thunder Fang</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching and/or paralyze opponent.</Effect>
+    <Power>65</Power>
+    <Accuracy>95</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thunder Punch</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>75</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thunder Shock</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thunder Wave</Name>
+    <Type>Electric</Type>
+    <Category>Status</Category>
+    <Effect>Paralyzes opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM73</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Thunderbolt</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>May paralyze opponent.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM24</TM>
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tickle</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Lowers opponent's Attack and Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Topsy Turvy</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Reverses stat changes of opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Torment</Name>
+    <Type>Dark</Type>
+    <Category>Status</Category>
+    <Effect>Opponent cannot use the same move in a row.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM41</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Toxic</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Badly poisons opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM>TM06</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Toxic Spikes</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Poisons opponents when they switch into battle.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Transform</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>User takes on the form and attacks of the opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Tri Attack</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>May paralyze, burn or freeze opponent.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Trick</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Swaps held items with the opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Trick Room</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Slower Pokémon move first in the turn for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>5</PP>
+    <TM>TM92</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Trick or Treat</Name>
+    <Type>Ghost</Type>
+    <Category>Status</Category>
+    <Effect>Adds Ghost type to opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Triple Kick</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Hits thrice in one turn at increasing power.</Effect>
+    <Power>10</Power>
+    <Accuracy>90</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Trump Card</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>The lower the PP, the higher the power.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Twineedle</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>Hits twice in one turn. May poison opponent.</Effect>
+    <Power>25</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Twister</Name>
+    <Type>Dragon</Type>
+    <Category>Special</Category>
+    <Effect>May cause flinching. Hits Pokémon using Fly/Bounce with double power.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>U Turn</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect>User switches out immediately after attacking.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM89</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Uproar</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>User attacks for 3 turns and prevents sleep.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>V Create</Name>
+    <Type>Fire</Type>
+    <Category>Physical</Category>
+    <Effect>Lowers user's Defense, Special Defense and Speed.</Effect>
+    <Power>180</Power>
+    <Accuracy>95</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Vacuum Wave</Name>
+    <Type>Fighting</Type>
+    <Category>Special</Category>
+    <Effect>User attacks first.</Effect>
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Venom Drench</Name>
+    <Type>Poison</Type>
+    <Category>Status</Category>
+    <Effect>Lowers poisoned opponent's Special Attack and Speed.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Venoshock</Name>
+    <Type>Poison</Type>
+    <Category>Special</Category>
+    <Effect>Inflicts double damage if the target is poisoned.</Effect>
+    <Power>65</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM>TM09</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Vice Grip</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>55</Power>
+    <Accuracy>100</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Vine Whip</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>45</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Vital Throw</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>User attacks last, but ignores Accuracy and Evasiveness.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Volt Switch</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>User must switch out after attacking.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM>TM72</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Volt Tackle</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage. May paralyze opponent.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>10</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wake Up Slap</Name>
+    <Type>Fighting</Type>
+    <Category>Physical</Category>
+    <Effect>Power doubles if opponent is asleep, but wakes it up.</Effect>
+    <Power>70</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Water Gun</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect />
+    <Power>40</Power>
+    <Accuracy>100</Accuracy>
+    <PP>25</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Water Pledge</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>Added effects appear if preceded by Fire Pledge or succeeded by Grass Pledge.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Water Pulse</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>May confuse opponent.</Effect>
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Water Shuriken</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>Hits 2-5 times in one turn.</Effect>
+    <Power>15</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Water Sport</Name>
+    <Type>Water</Type>
+    <Category>Status</Category>
+    <Effect>Weakens the power of Fire-type moves.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Water Spout</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>The higher the user's HP, the higher the damage caused.</Effect>
+    <Power>150</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Waterfall</Name>
+    <Type>Water</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>HM05</TM>
+    <Hit>20</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Weather Ball</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>Move's power and type changes with the weather.</Effect>
+    <Power>50</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Whirlpool</Name>
+    <Type>Water</Type>
+    <Category>Special</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>35</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Whirlwind</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>In battles, the opponent switches. In the wild, the Pokémon runs.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wide Guard</Name>
+    <Type>Rock</Type>
+    <Category>Status</Category>
+    <Effect>Protects the user's team from multi-target attacks.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wild Charge</Name>
+    <Type>Electric</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>90</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM93</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Will O Wisp</Name>
+    <Type>Fire</Type>
+    <Category>Status</Category>
+    <Effect>Burns opponent.</Effect>
+    <Power>0</Power>
+    <Accuracy>85</Accuracy>
+    <PP>15</PP>
+    <TM>TM61</TM>
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wing Attack</Name>
+    <Type>Flying</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>60</Power>
+    <Accuracy>100</Accuracy>
+    <PP>35</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wish</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>The user recovers HP in the following turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Withdraw</Name>
+    <Type>Water</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Defense.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>40</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wonder Room</Name>
+    <Type>Psychic</Type>
+    <Category>Status</Category>
+    <Effect>Swaps every Pokémon's Defense and Special Defense for 5 turns.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wood Hammer</Name>
+    <Type>Grass</Type>
+    <Category>Physical</Category>
+    <Effect>User receives recoil damage.</Effect>
+    <Power>120</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Work Up</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Raises user's Attack and Special Attack.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>30</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Worry Seed</Name>
+    <Type>Grass</Type>
+    <Category>Status</Category>
+    <Effect>Changes the opponent's Ability to Insomnia.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wrap</Name>
+    <Type>Normal</Type>
+    <Category>Physical</Category>
+    <Effect>Traps opponent, damaging them for 4-5 turns.</Effect>
+    <Power>15</Power>
+    <Accuracy>90</Accuracy>
+    <PP>20</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Wring Out</Name>
+    <Type>Normal</Type>
+    <Category>Special</Category>
+    <Effect>The higher the opponent's HP, the higher the damage.</Effect>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>XScissor</Name>
+    <Type>Bug</Type>
+    <Category>Physical</Category>
+    <Effect />
+    <Power>80</Power>
+    <Accuracy>100</Accuracy>
+    <PP>15</PP>
+    <TM>TM81</TM>
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Yawn</Name>
+    <Type>Normal</Type>
+    <Category>Status</Category>
+    <Effect>Puts opponent to sleep in the next turn.</Effect>
+    <Power>0</Power>
+    <Accuracy>0</Accuracy>
+    <PP>10</PP>
+    <TM />
+    <Hit>0</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Zap Cannon</Name>
+    <Type>Electric</Type>
+    <Category>Special</Category>
+    <Effect>Paralyzes opponent.</Effect>
+    <Power>120</Power>
+    <Accuracy>50</Accuracy>
+    <PP>5</PP>
+    <TM />
+    <Hit>100</Hit>
+  </MoveData>
+  <MoveData>
+    <Name>Zen Headbutt</Name>
+    <Type>Psychic</Type>
+    <Category>Physical</Category>
+    <Effect>May cause flinching.</Effect>
+    <Power>80</Power>
+    <Accuracy>90</Accuracy>
+    <PP>15</PP>
+    <TM />
+    <Hit>20</Hit>
+  </MoveData>
+</ArrayOfMoveData>

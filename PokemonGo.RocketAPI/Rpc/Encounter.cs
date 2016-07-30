@@ -21,8 +21,8 @@ namespace PokemonGo.RocketAPI.Rpc
             {
                 EncounterId = encounterId,
                 SpawnPointId = spawnPointGuid,
-                PlayerLatitude = _client.Settings.CurrentLatitude,
-                PlayerLongitude = _client.Settings.CurrentLongitude
+                PlayerLatitude = _client.Settings.DefaultLatitude,
+                PlayerLongitude = _client.Settings.DefaultLongitude
             };
             
             return await PostProtoPayload<Request, EncounterResponse>(RequestType.Encounter, message);
