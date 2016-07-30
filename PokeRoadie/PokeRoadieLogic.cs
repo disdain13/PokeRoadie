@@ -43,6 +43,7 @@ namespace PokeRoadie
         private int fleeCounter = 0;
         private DateTime? fleeLast;
         private bool softBan = false;
+        private bool hasDisplayedTransferSettings;
 
         public PokeRoadieLogic()
         {
@@ -897,62 +898,44 @@ namespace PokeRoadie
             var duplicatePokemons = await _inventory.GetPokemonToTransfer();
             if (duplicatePokemons != null && duplicatePokemons.Any())
             {
-                Logger.Write("====== Transfer ======", LogLevel.None, ConsoleColor.Yellow);
-                Logger.Write($"Found {duplicatePokemons.Count()} Pokemon for Transfer, the current settings are:", LogLevel.Info);
-                Logger.Write($"{("Keep Above CP:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveCP}", LogLevel.Info);
-                Logger.Write($"{("Keep Above IV:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveIV}", LogLevel.Info);
-                Logger.Write($"{("Keep Above V:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveV}", LogLevel.Info);
-                Logger.Write($"{("Transfer Below CP:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowCP}", LogLevel.Info);
-                Logger.Write($"{("Transfer Below IV:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowIV}", LogLevel.Info);
-                Logger.Write($"{("Transfer Below V:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowV}", LogLevel.Info);
-                Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!PokeRoadieSettings.Current.NotTransferPokemonsThatCanEvolve}", LogLevel.Info);
-                if (PokeRoadieSettings.Current.PokemonsNotToTransfer.Count > 0)
+                Logger.Write($"Found {duplicatePokemons.Count()} pokemon to transfer...", LogLevel.Info);
+               foreach (var duplicatePokemon in duplicatePokemons)
                 {
-                    Logger.Write("======================", LogLevel.None, ConsoleColor.Yellow);
-                    Logger.Write($"{("PokemonsNotToTransfer:").PadRight(25)} {PokeRoadieSettings.Current.PokemonsNotToTransfer.Count}", LogLevel.Info);
-                    foreach (PokemonId i in PokeRoadieSettings.Current.PokemonsNotToTransfer)
+                    await _client.Inventory.TransferPokemon(duplicatePokemon.Id);
+
+                    await PokeRoadieInventory.getCachedInventory(_client, true);
+                    var myPokemonSettings = await _inventory.GetPokemonSettings();
+                    var pokemonSettings = myPokemonSettings.ToList();
+                    var myPokemonFamilies = await _inventory.GetPokemonFamilies();
+                    var pokemonFamilies = myPokemonFamilies.ToArray();
+                    var settings = pokemonSettings.Single(x => x.PokemonId == duplicatePokemon.PokemonId);
+                    var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+                    var FamilyCandies = $"{familyCandy.Candy_}";
+
+                    _stats.IncreasePokemonsTransfered();
+                    _stats.UpdateConsoleTitle(_client, _inventory);
+
+                    PokemonData bestPokemonOfType = null;
+                    switch(PokeRoadieSettings.Current.PriorityType)
                     {
-                        Logger.Write(i.ToString(), LogLevel.Info);
+                        case PriorityTypes.CP:
+                            bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(duplicatePokemon);
+                            break;
+                        case PriorityTypes.IV:
+                            bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(duplicatePokemon);
+                            break;
+                        default:
+                            bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(duplicatePokemon);
+                            break;
                     }
+
+                    string bestPokemonInfo = "NONE";
+                   if (bestPokemonOfType != null)
+                        bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCP(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect";
+                    Logger.Write($"{duplicatePokemon.PokemonId} [CP {duplicatePokemon.Cp}/{PokemonInfo.CalculateMaxCP(duplicatePokemon)} | IV: { PokemonInfo.CalculatePokemonPerfection(duplicatePokemon).ToString("0.00")}% perfect] | Best: [{bestPokemonInfo}] | Family Candies: {FamilyCandies}", LogLevel.Transfer);
                 }
-                Logger.Write("======================", LogLevel.None, ConsoleColor.Yellow);
             }
 
-            foreach (var duplicatePokemon in duplicatePokemons)
-            {
-                await _client.Inventory.TransferPokemon(duplicatePokemon.Id);
-
-                await PokeRoadieInventory.getCachedInventory(_client, true);
-                var myPokemonSettings = await _inventory.GetPokemonSettings();
-                var pokemonSettings = myPokemonSettings.ToList();
-                var myPokemonFamilies = await _inventory.GetPokemonFamilies();
-                var pokemonFamilies = myPokemonFamilies.ToArray();
-                var settings = pokemonSettings.Single(x => x.PokemonId == duplicatePokemon.PokemonId);
-                var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-                var FamilyCandies = $"{familyCandy.Candy_}";
-
-                _stats.IncreasePokemonsTransfered();
-                _stats.UpdateConsoleTitle(_client, _inventory);
-
-                PokemonData bestPokemonOfType = null;
-                switch(PokeRoadieSettings.Current.PriorityType)
-                {
-                    case PriorityTypes.CP:
-                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(duplicatePokemon);
-                        break;
-                    case PriorityTypes.IV:
-                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(duplicatePokemon);
-                        break;
-                    default:
-                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(duplicatePokemon);
-                        break;
-                }
-
-                string bestPokemonInfo = "NONE";
-               if (bestPokemonOfType != null)
-                    bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCP(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect";
-                Logger.Write($"{duplicatePokemon.PokemonId} [CP {duplicatePokemon.Cp}/{PokemonInfo.CalculateMaxCP(duplicatePokemon)} | IV: { PokemonInfo.CalculatePokemonPerfection(duplicatePokemon).ToString("0.00")}% perfect] | Best: [{bestPokemonInfo}] | Family Candies: {FamilyCandies}", LogLevel.Transfer);
-            }
         }
 
         private async Task RecycleItems()
@@ -1087,6 +1070,29 @@ namespace PokeRoadie
 
         private async Task DisplayHighests()
         {
+
+            //write transfer settings
+            if (!hasDisplayedTransferSettings)
+            {
+                hasDisplayedTransferSettings = true;
+                Logger.Write("====== Transfer Settings ======", LogLevel.None, ConsoleColor.Yellow);
+                Logger.Write($"{("Keep Above CP:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveCP}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{("Keep Above IV:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveIV}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{("Keep Above V:").PadRight(25)}{PokeRoadieSettings.Current.KeepAboveV}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{("Transfer Below CP:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowCP}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{("Transfer Below IV:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowIV}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{("Transfer Below V:").PadRight(25)}{PokeRoadieSettings.Current.TransferBelowV}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!PokeRoadieSettings.Current.NotTransferPokemonsThatCanEvolve}", LogLevel.None, ConsoleColor.White);
+                if (PokeRoadieSettings.Current.PokemonsNotToTransfer.Count > 0)
+                {
+                    Logger.Write($"{("PokemonsNotToTransfer:").PadRight(25)} {PokeRoadieSettings.Current.PokemonsNotToTransfer.Count}", LogLevel.None, ConsoleColor.White);
+                    foreach (PokemonId i in PokeRoadieSettings.Current.PokemonsNotToTransfer)
+                    {
+                        Logger.Write(i.ToString(), LogLevel.None, ConsoleColor.White);
+                    }
+                }
+            }
+ 
             //get all ordered by id, then cp
             var allPokemon = (await _inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
 
