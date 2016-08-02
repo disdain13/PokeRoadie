@@ -23,7 +23,7 @@ namespace PokemonGo.RocketAPI.Extensions
         {
             Debug.WriteLine($"Requesting {typeof(TResponsePayload).Name}");
 
-            Helpers.RandomHelper.RandomSleep(200, 230);
+            Helpers.RandomHelper.RandomSleep(270, 320);
 
             var response = await PostProto<TRequest>(client, url, requestEnvelope);
 

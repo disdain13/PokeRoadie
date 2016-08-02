@@ -1002,7 +1002,7 @@ namespace PokeRoadie
                             break;
                     }
 
-                    await TransferPokemon(query.ToList());
+                    await TransferPokemon(query.Take(10).ToList());
 
                 }
                
