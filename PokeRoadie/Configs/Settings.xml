@@ -50,6 +50,7 @@
   <UseRevives>false</UseRevives>
   <UsePotions>false</UsePotions>
   <UsePokemonToNotCatchList>false</UsePokemonToNotCatchList>
+  <PokeBallBalancing>true</PokeBallBalancing>
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
