@@ -237,7 +237,7 @@ namespace PokeRoadie
                 var pokemons = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon).Where(p => p != null && p?.PokemonId > 0);
                 */
 
-                await Task.Delay(100);
+                //await Task.Delay(100);
             }
         }
 
@@ -351,7 +351,7 @@ namespace PokeRoadie
                     {
                         Logger.Write($"Preparing for long distance travel - Boarded flight #{RandomHelper.RandomNumber(101, 501)}", LogLevel.Navigation, ConsoleColor.White);
                         inFlight = true;
-                        await _navigation.HumanLikeWalking(wayPointGeo, PokeRoadieSettings.Current.FlyingSpeed, GetFlyingTask(), true);
+                        await _navigation.HumanLikeWalking(wayPointGeo, PokeRoadieSettings.Current.FlyingSpeed, GetFlyingTask());
                         inFlight = false;
                     }
 
@@ -402,7 +402,7 @@ namespace PokeRoadie
                                 {
                                     Logger.Write($"Preparing for long distance travel - Boarded flight #{RandomHelper.RandomNumber(101, 501)}", LogLevel.Navigation, ConsoleColor.White);
                                     inFlight = true;
-                                    await _navigation.HumanLikeWalking(destination.GetGeo(), PokeRoadieSettings.Current.FlyingSpeed, GetFlyingTask(), true);
+                                    await _navigation.HumanLikeWalking(destination.GetGeo(), PokeRoadieSettings.Current.FlyingSpeed, GetFlyingTask());
                                     inFlight = false;
                                 }
 
