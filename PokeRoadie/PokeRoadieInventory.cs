@@ -18,7 +18,8 @@ using POGOProtos.Data;
 using POGOProtos.Data.Player;
 using POGOProtos.Enums;
 using POGOProtos.Settings.Master;
-
+using PokemonGo.RocketAPI.Extensions;
+using POGOProtos.Map.Fort;
 using PokeRoadie.Extensions;
 
 #endregion
@@ -125,15 +126,15 @@ namespace PokeRoadie
             //Build Transfer Below List. These will always transfer, and overrides
             //the Keep list.
             var results1 = query.Where(x=>
-                (PokeRoadieSettings.Current.TransferBelowCP > 0 && x.Cp < PokeRoadieSettings.Current.TransferBelowCP) ||
+                (PokeRoadieSettings.Current.TransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.TransferBelowCp) ||
                 (PokeRoadieSettings.Current.TransferBelowIV > 0 && x.GetPerfection() < PokeRoadieSettings.Current.TransferBelowIV) ||
                 (PokeRoadieSettings.Current.TransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.TransferBelowV)
             );
 
 
             //Keep By CP filter
-            if (PokeRoadieSettings.Current.KeepAboveCP > 0)
-                query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCP);
+            if (PokeRoadieSettings.Current.KeepAboveCp > 0)
+                query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCp);
 
             //Keep By IV filter
             if (PokeRoadieSettings.Current.KeepAboveIV > 0)
@@ -169,7 +170,7 @@ namespace PokeRoadie
                     if (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip)
                         amountToSkip = familyCandy.Candy_ / settings.CandyToEvolve;
 
-                    switch (PokeRoadieSettings.Current.PriorityType)
+                    switch (PokeRoadieSettings.Current.TransferPriorityType)
                     {
                         case PriorityTypes.CP:
                             results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
@@ -198,7 +199,7 @@ namespace PokeRoadie
             }
 
             List<PokemonData> results2 = null;
-            switch (PokeRoadieSettings.Current.PriorityType)
+            switch (PokeRoadieSettings.Current.TransferPriorityType)
             {
                 case PriorityTypes.CP:
 
@@ -262,11 +263,25 @@ namespace PokeRoadie
             var pokemons = myPokemon.ToList();
             return pokemons.OrderByDescending(x => x.CalculatePokemonValue()).ThenBy(n => n.StaminaMax).Take(limit);
         }
+
+        public async Task<IEnumerable<PokemonData>> GetPokemonToHeal()
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina > 0 && x.Stamina < x.StaminaMax).OrderByDescending(n => n.CalculatePokemonValue()).ThenBy(n => n.Stamina);
+        }
+        public async Task<IEnumerable<PokemonData>> GetPokemonToRevive()
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == 0).OrderByDescending(n => n.CalculatePokemonValue());
+        }
+
         public async Task<IEnumerable<PokemonData>> GetHighestsVNotDeployed(int limit)
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.Where(x=> string.IsNullOrWhiteSpace(x.DeployedFortId)).OrderByDescending(x => x.CalculatePokemonValue()).ThenBy(n => n.StaminaMax).Take(limit);
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax).OrderByDescending(x => x.CalculatePokemonValue()).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsCP(int limit)
@@ -371,19 +386,56 @@ namespace PokeRoadie
                 templates.ItemTemplates.Select(i => i.PokemonSettings)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
         }
+    
 
-
-        public async Task<IEnumerable<PokemonData>> GetPokemonToEvolve(IEnumerable<PokemonId> filter = null)
+        public async Task<IEnumerable<PokemonData>> GetPokemonToEvolve()
         {
-            var myPokemons = await GetPokemons();
-            myPokemons = myPokemons.Where(p => String.IsNullOrWhiteSpace(p.DeployedFortId)).OrderByDescending(p => p.Cp); //Don't evolve pokemon in gyms
-            if (filter != null)
-                myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));		
+            var query = (await GetPokemons()).Where(p =>
+            String.IsNullOrWhiteSpace(p.DeployedFortId));
 
-            if (PokeRoadieSettings.Current.EvolveOnlyPokemonAboveIV)
-                myPokemons = myPokemons.Where(p => p.GetPerfection() >= PokeRoadieSettings.Current.EvolveOnlyPokemonAboveIVValue);
+            //list filter
+            if (PokeRoadieSettings.Current.UsePokemonsToEvolveList)
+            {
+                if (PokeRoadieSettings.Current.PokemonsToEvolve.Count() == 0)
+                    return new List<PokemonData>();
 
-            var pokemons = myPokemons.ToList();
+                query = query.Where(x => PokeRoadieSettings.Current.PokemonsToEvolve.Contains(x.PokemonId));
+                if (query.Count() == 0) return new List<PokemonData>();
+            }
+
+            //Evolve By CP filter
+            if (PokeRoadieSettings.Current.EvolveAboveCp > 0)
+                query = query.Where(p => p.Cp > PokeRoadieSettings.Current.EvolveAboveCp);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //Evolve By IV filter
+            if (PokeRoadieSettings.Current.EvolveAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() > PokeRoadieSettings.Current.EvolveAboveIV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //Evolve By V filter
+            if (PokeRoadieSettings.Current.EvolveAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.EvolveAboveV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //ordering
+            switch (PokeRoadieSettings.Current.EvolvePriorityType)
+            {
+                case PriorityTypes.CP:
+                    query = query.OrderByDescending(x => x.Cp)
+                                 .ThenBy(x => x.Stamina);
+                    break;
+                case PriorityTypes.IV:
+                    query = query.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+                                 .ThenBy(n => n.StaminaMax);
+                    break;
+                default:
+                    query = query.OrderByDescending(x => x.CalculatePokemonValue())
+                                 .ThenBy(n => n.StaminaMax);
+                    break;
+            }
+
+            var pokemons = query.ToList();
 
             var myPokemonSettings = await GetPokemonSettings();
             var pokemonSettings = myPokemonSettings.ToList();
@@ -510,7 +562,7 @@ namespace PokeRoadie
                         }
                         w.Close();
                     }
-                    Logger.Write($"Export Player Infos and all Pokemon to \"\\Export\\{filename}\"", LogLevel.Info);
+                    //Logger.Write($"Export Player Infos and all Pokemon to \"\\Export\\{filename}\"", LogLevel.Info);
                 }
                 catch
                 {

@@ -6,7 +6,7 @@
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="KeepAboveIV" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">95</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="DefaultLatitude" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">34.0114062</Value>
@@ -35,12 +35,6 @@
     <Setting Name="NotTransferPokemonsThatCanEvolve" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EvolveOnlyPokemonAboveIV" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="EvolveOnlyPokemonAboveIVValue" Type="System.Single" Scope="Application">
-      <Value Profile="(Default)">90</Value>
-    </Setting>
     <Setting Name="KeepDuplicateAmount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
     </Setting>
@@ -48,19 +42,16 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="MinutesPerDestination" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="FlyingSpeed" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">250</Value>
     </Setting>
-    <Setting Name="CatchWhileFlying" Type="System.Boolean" Scope="Application">
+    <Setting Name="FlyingEnabled" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="FlyingEnabled" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="MoveWhenNoStops" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PrioritizeStopsWithLures" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
@@ -87,28 +78,22 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MaxSpeed" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">70</Value>
     </Setting>
     <Setting Name="MaxSecondsBetweenStops" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">20</Value>
     </Setting>
-    <Setting Name="PriorityType" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">V</Value>
-    </Setting>
     <Setting Name="KeepAboveV" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">300</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="DisplayAggregateLog" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="KeepAboveCP" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1300</Value>
-    </Setting>
-    <Setting Name="MinSpeed" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="MaxDistance" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">3000</Value>
+      <Value Profile="(Default)">5000</Value>
     </Setting>
     <Setting Name="UseLuckyEggs" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
@@ -136,6 +121,51 @@
     </Setting>
     <Setting Name="VisitPokestops" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PingStopsWhileFlying" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TransferPriorityType" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">V</Value>
+    </Setting>
+    <Setting Name="MinSpeed" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">55</Value>
+    </Setting>
+    <Setting Name="EvolveAboveCp" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EvolveAboveIV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EvolveAboveV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EvolvePriorityType" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">V</Value>
+    </Setting>
+    <Setting Name="UsePokemonsToEvolveList" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UseIncense" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UseRevives" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UsePotions" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WaypointLatitude" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WaypointLongitude" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WaypointAltitude" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FlyLikeCaptKirk" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

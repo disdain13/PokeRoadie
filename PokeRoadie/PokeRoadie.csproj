@@ -101,6 +101,9 @@
     <None Include="Configs\DestinationCoords.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Configs\Tours\DestinationCoords-Florida.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configs\PokemonsNotToCatch.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -108,6 +111,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Configs\PokemonsToEvolve.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Configs\Tours\DestinationCoords-California.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

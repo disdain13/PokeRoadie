@@ -3,46 +3,56 @@
   <AuthType>Google</AuthType>
   <Username></Username>
   <Password></Password>
+  <DestinationsEnabled>false</DestinationsEnabled>
+  <MinutesPerDestination>30</MinutesPerDestination>
+  <DestinationIndex>0</DestinationIndex>
   <CurrentLatitude>0</CurrentLatitude>
   <CurrentLongitude>0</CurrentLongitude>
-  <CurrentAltitude>10</CurrentAltitude>
-  <DestinationIndex>0</DestinationIndex>
-  <CatchPokemon>true</CatchPokemon>
+  <CurrentAltitude>0</CurrentAltitude>
+  <MinSpeed>55</MinSpeed>
+  <MaxSpeed>70</MaxSpeed>
+  <MaxDistance>5000</MaxDistance>
+  <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
+  <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
+  <MaxSecondsBetweenStops>20</MaxSecondsBetweenStops>
+  <FlyingEnabled>false</FlyingEnabled>
+  <FlyLikeCaptKirk>false</FlyLikeCaptKirk>
+  <FlyingSpeed>250</FlyingSpeed>
+  <PingStopsWhileFlying>false</PingStopsWhileFlying>
   <UseGPXPathing>false</UseGPXPathing>
   <GPXFile>GPXFILE.gpx</GPXFile>
-  <MinSpeed>15</MinSpeed>
-  <MaxDistance>3000</MaxDistance>
-  <UsePokemonToNotCatchList>false</UsePokemonToNotCatchList>
   <EvolvePokemon>false</EvolvePokemon>
-  <EvolveOnlyPokemonAboveIV>true</EvolveOnlyPokemonAboveIV>
-  <EvolveOnlyPokemonAboveIVValue>90</EvolveOnlyPokemonAboveIVValue>
+  <EvolvePriorityType>V</EvolvePriorityType>
+  <EvolveAboveIV>0</EvolveAboveIV>
+  <EvolveAboveV>0</EvolveAboveV>
+  <EvolveAboveCp>0</EvolveAboveCp>
+  <UsePokemonsToEvolveList>false</UsePokemonsToEvolveList>
   <TransferPokemon>false</TransferPokemon>
+  <TransferPriorityType>V</TransferPriorityType>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
-  <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
-  <KeepAboveIV>95</KeepAboveIV>
-  <KeepAboveV>300</KeepAboveV>
-  <KeepAboveCP>1300</KeepAboveCP>
+  <KeepAboveIV>0</KeepAboveIV>
+  <KeepAboveV>0</KeepAboveV>
+  <KeepAboveCp>0</KeepAboveCp>
   <TransferBelowIV>0</TransferBelowIV>
   <TransferBelowV>0</TransferBelowV>
-  <TransferBelowCP>0</TransferBelowCP>
-  <UseLuckyEggs>false</UseLuckyEggs>
-  <LoiteringActive>false</LoiteringActive>
-  <MinutesPerDestination>60</MinutesPerDestination>
-  <FlyingSpeed>250</FlyingSpeed>
-  <CatchWhileFlying>false</CatchWhileFlying>
-  <FlyingEnabled>true</FlyingEnabled>
-  <MoveWhenNoStops>true</MoveWhenNoStops>
+  <TransferBelowCp>0</TransferBelowCp>
+  <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
+  <CatchPokemon>true</CatchPokemon>
+  <VisitPokestops>true</VisitPokestops>
+  <MoveWhenNoStops>false</MoveWhenNoStops>
   <PrioritizeStopsWithLures>false</PrioritizeStopsWithLures>
-  <DestinationsEnabled>false</DestinationsEnabled>
+  <LoiteringActive>false</LoiteringActive>
+  <VisitGyms>false</VisitGyms>
+  <AutoDeployAtTeamGyms>false</AutoDeployAtTeamGyms>
+  <UseLuckyEggs>false</UseLuckyEggs>
+  <UseIncense>false</UseIncense>
+  <UseRevives>false</UseRevives>
+  <UsePotions>false</UsePotions>
+  <UsePokemonToNotCatchList>false</UsePokemonToNotCatchList>
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
-  <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
-  <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
-  <MaxSpeed>60</MaxSpeed>
-  <MaxSecondsBetweenStops>20</MaxSecondsBetweenStops>
-  <PriorityType>V</PriorityType>
-  <AutoDeployAtTeamGyms>false</AutoDeployAtTeamGyms>
-  <VisitGyms>false</VisitGyms>
-  <VisitPokestops>true</VisitPokestops>
+  <WaypointLatitude>0</WaypointLatitude>
+  <WaypointLongitude>0</WaypointLongitude>
+  <WaypointAltitude>0</WaypointAltitude>
 </PokeRoadieSettings>

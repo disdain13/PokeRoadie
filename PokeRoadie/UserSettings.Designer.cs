@@ -34,7 +34,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("95")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double KeepAboveIV {
             get {
                 return ((double)(this["KeepAboveIV"]));
@@ -124,24 +124,6 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EvolveOnlyPokemonAboveIV {
-            get {
-                return ((bool)(this["EvolveOnlyPokemonAboveIV"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("90")]
-        public float EvolveOnlyPokemonAboveIVValue {
-            get {
-                return ((float)(this["EvolveOnlyPokemonAboveIVValue"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int KeepDuplicateAmount {
             get {
@@ -160,7 +142,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int MinutesPerDestination {
             get {
                 return ((int)(this["MinutesPerDestination"]));
@@ -179,15 +161,6 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CatchWhileFlying {
-            get {
-                return ((bool)(this["CatchWhileFlying"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool FlyingEnabled {
             get {
                 return ((bool)(this["FlyingEnabled"]));
@@ -196,7 +169,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool MoveWhenNoStops {
             get {
                 return ((bool)(this["MoveWhenNoStops"]));
@@ -277,7 +250,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
         public int MaxSpeed {
             get {
                 return ((int)(this["MaxSpeed"]));
@@ -295,16 +268,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("V")]
-        public string PriorityType {
-            get {
-                return ((string)(this["PriorityType"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double KeepAboveV {
             get {
                 return ((double)(this["KeepAboveV"]));
@@ -322,7 +286,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1300")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int KeepAboveCP {
             get {
                 return ((int)(this["KeepAboveCP"]));
@@ -331,16 +295,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public double MinSpeed {
-            get {
-                return ((double)(this["MinSpeed"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
         public int MaxDistance {
             get {
                 return ((int)(this["MaxDistance"]));
@@ -425,6 +380,141 @@ namespace PokeRoadie {
         public bool VisitPokestops {
             get {
                 return ((bool)(this["VisitPokestops"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PingStopsWhileFlying {
+            get {
+                return ((bool)(this["PingStopsWhileFlying"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("V")]
+        public string TransferPriorityType {
+            get {
+                return ((string)(this["TransferPriorityType"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("55")]
+        public double MinSpeed {
+            get {
+                return ((double)(this["MinSpeed"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int EvolveAboveCp {
+            get {
+                return ((int)(this["EvolveAboveCp"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double EvolveAboveIV {
+            get {
+                return ((double)(this["EvolveAboveIV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double EvolveAboveV {
+            get {
+                return ((double)(this["EvolveAboveV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("V")]
+        public string EvolvePriorityType {
+            get {
+                return ((string)(this["EvolvePriorityType"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UsePokemonsToEvolveList {
+            get {
+                return ((bool)(this["UsePokemonsToEvolveList"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseIncense {
+            get {
+                return ((bool)(this["UseIncense"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseRevives {
+            get {
+                return ((bool)(this["UseRevives"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UsePotions {
+            get {
+                return ((bool)(this["UsePotions"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WaypointLatitude {
+            get {
+                return ((double)(this["WaypointLatitude"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WaypointLongitude {
+            get {
+                return ((double)(this["WaypointLongitude"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WaypointAltitude {
+            get {
+                return ((double)(this["WaypointAltitude"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlyLikeCaptKirk {
+            get {
+                return ((bool)(this["FlyLikeCaptKirk"]));
             }
         }
     }

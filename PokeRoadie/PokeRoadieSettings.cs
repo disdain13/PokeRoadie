@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
@@ -40,54 +41,87 @@ namespace PokeRoadie
         #endregion
         #region " General Properties "
 
+        //auth related
         public virtual AuthType AuthType { get; set; }
-        public virtual string GoogleRefreshToken { get; set; }
         public virtual string Username { get; set; }
         public virtual string Password { get; set; }
+        public virtual string GoogleRefreshToken { get; set; }
+
+        //destinations/travel
+        public virtual bool DestinationsEnabled { get; set; }
+        public virtual int MinutesPerDestination { get; set; }
+        public virtual int DestinationIndex { get; set; }
+
+        //location related
         public virtual double CurrentLatitude { get; set; }
         public virtual double CurrentLongitude { get; set; }
         public virtual double CurrentAltitude { get; set; }
-        public virtual int DestinationIndex { get; set; }
-        public virtual bool CatchPokemon { get; set; }
+
+        //movement related
+        public virtual double MinSpeed { get; set; }
+        public virtual int MaxSpeed { get; set; }
+        public virtual int MaxDistance { get; set; }
+        public virtual bool EnableSpeedAdjustment { get; set; }
+        public virtual bool EnableSpeedRandomizer { get; set; }
+        public virtual int MaxSecondsBetweenStops { get; set; }
+        public virtual bool FlyingEnabled { get; set; }
+        public virtual bool FlyLikeCaptKirk { get; set; }
+        public virtual int FlyingSpeed { get; set; }
+        public virtual bool PingStopsWhileFlying { get; set; }
         public virtual bool UseGPXPathing { get; set; }
         public virtual string GPXFile { get; set; }
-        public virtual double MinSpeed { get; set; }
-        public virtual int MaxDistance { get; set; }
-        public virtual bool UsePokemonToNotCatchList { get; set; }
+
+        //evolution
         public virtual bool EvolvePokemon { get; set; }
-        public virtual bool EvolveOnlyPokemonAboveIV { get; set; }
-        public virtual double EvolveOnlyPokemonAboveIVValue { get; set; }
+        public PriorityTypes EvolvePriorityType { get; set; }
+        public virtual double EvolveAboveIV { get; set; }
+        public virtual double EvolveAboveV { get; set; }
+        public virtual int EvolveAboveCp { get; set; }
+        public virtual bool UsePokemonsToEvolveList { get; set; }
+
+        //transfers
         public virtual bool TransferPokemon { get; set; }
+        public virtual PriorityTypes TransferPriorityType { get; set; }
         public virtual int KeepDuplicateAmount { get; set; }
-        public virtual bool NotTransferPokemonsThatCanEvolve { get; set; }
         public virtual double KeepAboveIV { get; set; }
         public virtual double KeepAboveV { get; set; }
-        public virtual int KeepAboveCP { get; set; }
+        public virtual int KeepAboveCp { get; set; }
         public virtual double TransferBelowIV { get; set; }
         public virtual double TransferBelowV { get; set; }
-        public virtual int TransferBelowCP { get; set; }
-        public virtual bool UseLuckyEggs { get; set; }
-        public virtual bool LoiteringActive { get; set; }
-        public virtual int MinutesPerDestination { get; set; }
-        public virtual int FlyingSpeed { get; set; }
-        public virtual bool CatchWhileFlying { get; set; }
-        public virtual bool FlyingEnabled { get; set; }
+        public virtual int TransferBelowCp { get; set; }
+        public virtual bool NotTransferPokemonsThatCanEvolve { get; set; }
+
+        //player behavior
+        public virtual bool CatchPokemon { get; set; }
+        public virtual bool VisitPokestops { get; set; }
         public virtual bool MoveWhenNoStops { get; set; }
         public virtual bool PrioritizeStopsWithLures { get; set; }
-        public virtual bool DestinationsEnabled { get; set; }
+        public virtual bool LoiteringActive { get; set; }
+        public virtual bool VisitGyms { get; set; }
+        public virtual bool AutoDeployAtTeamGyms { get; set; }
+
+        //inventory
+        public virtual bool UseLuckyEggs { get; set; }
+        public virtual bool UseIncense { get; set; }
+        public virtual bool UseRevives { get; set; }
+        public virtual bool UsePotions { get; set; }
+
+        //config options
+        public virtual bool UsePokemonToNotCatchList { get; set; }
+
+        //logging
         public virtual int DisplayRefreshMinutes { get; set; }
         public virtual bool DisplayAggregateLog { get; set; }
         public virtual bool DisplayAllPokemonInLog { get; set; }
-        public virtual bool EnableSpeedAdjustment { get; set; }
-        public virtual bool EnableSpeedRandomizer { get; set; }
-        public virtual int MaxSpeed { get; set; }
-        public virtual int MaxSecondsBetweenStops { get; set; }
-        public virtual PriorityTypes PriorityType { get; set; }
-        public virtual bool AutoDeployAtTeamGyms { get; set; }
-        public virtual bool VisitGyms { get; set; }
-        public virtual bool VisitPokestops { get; set; }
+
+        //system
+        public virtual double WaypointLatitude { get; set; }
+        public virtual double WaypointLongitude { get; set; }
+        public virtual double WaypointAltitude { get; set; }
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
+
 
         #endregion
         #region " Collection Properties "
@@ -307,7 +341,7 @@ namespace PokeRoadie
             if (Enum.TryParse<AuthType>(UserSettings.Default.AuthType, true, out parserValue))
                 this.AuthType = parserValue;
             this.CatchPokemon = UserSettings.Default.CatchPokemon;
-            this.CatchWhileFlying = UserSettings.Default.CatchWhileFlying;
+            this.PingStopsWhileFlying = UserSettings.Default.PingStopsWhileFlying;
             this.CurrentAltitude = UserSettings.Default.DefaultAltitude;
             this.CurrentLatitude = UserSettings.Default.DefaultLatitude;
             this.CurrentLongitude = UserSettings.Default.DefaultLongitude;
@@ -318,13 +352,13 @@ namespace PokeRoadie
             this.DisplayRefreshMinutes = UserSettings.Default.DisplayRefreshMinutes;
             this.EnableSpeedAdjustment = UserSettings.Default.EnableSpeedAdjustment;
             this.EnableSpeedRandomizer = UserSettings.Default.EnableSpeedRandomizer;
-            this.EvolveOnlyPokemonAboveIV = UserSettings.Default.EvolveOnlyPokemonAboveIV;
-            this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
+            //this.EvolveOnlyPokemonAboveIV = UserSettings.Default.EvolveOnlyPokemonAboveIV;
+            //this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
             this.EvolvePokemon = UserSettings.Default.EvolvePokemon;
             this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
             this.FlyingSpeed = UserSettings.Default.FlyingSpeed;
             this.GPXFile = UserSettings.Default.GPXFile;
-            this.KeepAboveCP = UserSettings.Default.KeepAboveCP;
+            this.KeepAboveCp = UserSettings.Default.KeepAboveCP;
             this.KeepAboveIV = UserSettings.Default.KeepAboveIV;
             this.KeepAboveV = UserSettings.Default.KeepAboveV;
             this.LoiteringActive = UserSettings.Default.LoiteringActive;
@@ -335,8 +369,8 @@ namespace PokeRoadie
             this.NotTransferPokemonsThatCanEvolve = UserSettings.Default.NotTransferPokemonsThatCanEvolve;
             this.PrioritizeStopsWithLures = UserSettings.Default.PrioritizeStopsWithLures;
             PriorityTypes outValue = PriorityTypes.V;
-            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PriorityType, true, out outValue))
-                this.PriorityType = outValue;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.TransferPriorityType, true, out outValue))
+                this.TransferPriorityType = outValue;
             this.Password = UserSettings.Default.Password;
             this.Username = UserSettings.Default.Username;
             this.TransferPokemon = UserSettings.Default.TransferPokemon;
@@ -346,12 +380,30 @@ namespace PokeRoadie
             this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
             this.MinSpeed = UserSettings.Default.MinSpeed;
             this.MaxSpeed = UserSettings.Default.MaxSpeed;
-            this.TransferBelowCP = UserSettings.Default.TransferBelowCP;
+            this.TransferBelowCp = UserSettings.Default.TransferBelowCP;
             this.TransferBelowIV = UserSettings.Default.TransferBelowIV;
             this.TransferBelowV = UserSettings.Default.TransferBelowV;
             this.AutoDeployAtTeamGyms = UserSettings.Default.AutoDeployAtTeamGyms;
             this.VisitGyms = UserSettings.Default.VisitGyms;
             this.VisitPokestops = UserSettings.Default.VisitPokestops;
+
+
+            PriorityTypes outValue2 = PriorityTypes.V;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType, true, out outValue2))
+                this.EvolvePriorityType = outValue;
+            this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
+            this.EvolveAboveIV = UserSettings.Default.EvolveAboveIV;
+            this.EvolveAboveV = UserSettings.Default.EvolveAboveV;
+            this.UsePokemonsToEvolveList = UserSettings.Default.UsePokemonsToEvolveList;
+            this.UseIncense = UserSettings.Default.UseIncense;
+            this.UseRevives = UserSettings.Default.UseRevives;
+            this.UsePotions = UserSettings.Default.UsePotions;
+
+            this.WaypointLatitude = UserSettings.Default.WaypointLatitude;
+            this.WaypointLongitude = UserSettings.Default.WaypointLongitude;
+            this.WaypointAltitude = UserSettings.Default.WaypointAltitude;
+            this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
+   
         }
 
         #endregion
@@ -416,7 +468,7 @@ namespace PokeRoadie
                 {
                     this.AuthType = obj.AuthType;
                     this.CatchPokemon = obj.CatchPokemon;
-                    this.CatchWhileFlying = obj.CatchWhileFlying;
+                    this.PingStopsWhileFlying = obj.PingStopsWhileFlying;
                     this.CurrentAltitude = obj.CurrentAltitude;
                     this.CurrentLatitude = obj.CurrentLatitude;
                     this.CurrentLongitude = obj.CurrentLongitude;
@@ -427,13 +479,13 @@ namespace PokeRoadie
                     this.DisplayRefreshMinutes = obj.DisplayRefreshMinutes;
                     this.EnableSpeedAdjustment = obj.EnableSpeedAdjustment;
                     this.EnableSpeedRandomizer = obj.EnableSpeedRandomizer;
-                    this.EvolveOnlyPokemonAboveIV = obj.EvolveOnlyPokemonAboveIV;
-                    this.EvolveOnlyPokemonAboveIVValue = obj.EvolveOnlyPokemonAboveIVValue;
+                    //this.EvolveOnlyPokemonAboveIV = obj.EvolveOnlyPokemonAboveIV;
+                    //this.EvolveOnlyPokemonAboveIVValue = obj.EvolveOnlyPokemonAboveIVValue;
                     this.EvolvePokemon = obj.EvolvePokemon;
                     this.FlyingEnabled = obj.FlyingEnabled;
                     this.FlyingSpeed = obj.FlyingSpeed;
                     this.GPXFile = obj.GPXFile;
-                    this.KeepAboveCP = obj.KeepAboveCP;
+                    this.KeepAboveCp = obj.KeepAboveCp;
                     this.KeepAboveIV = obj.KeepAboveIV;
                     this.KeepAboveV = obj.KeepAboveV;
                     this.LoiteringActive = obj.LoiteringActive;
@@ -443,7 +495,7 @@ namespace PokeRoadie
                     this.MoveWhenNoStops = obj.MoveWhenNoStops;
                     this.NotTransferPokemonsThatCanEvolve = obj.NotTransferPokemonsThatCanEvolve;
                     this.PrioritizeStopsWithLures = obj.PrioritizeStopsWithLures;
-                    this.PriorityType = obj.PriorityType;
+                    this.TransferPriorityType = obj.TransferPriorityType;
                     this.Password = obj.Password;
                     this.Username = obj.Username;
                     this.TransferPokemon = obj.TransferPokemon;
@@ -453,42 +505,100 @@ namespace PokeRoadie
                     this.UsePokemonToNotCatchList = obj.UsePokemonToNotCatchList;
                     this.MinSpeed = obj.MinSpeed;
                     this.MaxSpeed = obj.MaxSpeed;
-                    this.TransferBelowCP = obj.TransferBelowCP;
+                    this.TransferBelowCp = obj.TransferBelowCp;
                     this.TransferBelowIV = obj.TransferBelowIV;
                     this.TransferBelowV = obj.TransferBelowV;
                     this.AutoDeployAtTeamGyms = obj.AutoDeployAtTeamGyms;
                     this.VisitGyms = obj.VisitGyms;
                     this.VisitPokestops = obj.VisitPokestops;
-                }
 
+                    this.EvolvePriorityType = obj.EvolvePriorityType;
+                    this.EvolveAboveCp = obj.EvolveAboveCp;
+                    this.EvolveAboveIV = obj.EvolveAboveIV;
+                    this.EvolveAboveV = obj.EvolveAboveV;
+                    this.UsePokemonsToEvolveList = obj.UsePokemonsToEvolveList;
+                    this.UseIncense = obj.UseIncense;
+                    this.UseRevives = obj.UseRevives;
+                    this.UsePotions = obj.UsePotions;
+                    this.WaypointLatitude = obj.WaypointLatitude;
+                    this.WaypointLongitude = obj.WaypointLongitude;
+                    this.WaypointAltitude = obj.WaypointAltitude;
+                    this.FlyLikeCaptKirk = obj.FlyLikeCaptKirk;
+                }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
                     createNew = true;
-                }
-
-                if (CurrentLongitude == 0 && CurrentLatitude == 0)
-                {
-                    CurrentLongitude = UserSettings.Default.DefaultLongitude;
-                    CurrentLatitude = UserSettings.Default.DefaultLatitude;
-                    CurrentAltitude = UserSettings.Default.DefaultAltitude;
-                    Save();
                 }
             }
             else
             {
                 createNew = true;
-                Logger.Write($"The {fileName} file could not be found, it will be recreated.", LogLevel.Warning);
             }
-               
+
+
+            //resolve unknown location
+            if (CurrentLongitude == 0 && CurrentLatitude == 0 && CurrentAltitude == 0) 
+            {
+                if (DestinationsEnabled && Destinations.Any())
+                {
+                    var index = DestinationIndex < Destinations.Count ? DestinationIndex : 0;
+                    var destination = Destinations[index];
+                    CurrentLatitude = destination.Latitude;
+                    CurrentLongitude = destination.Longitude;
+                    CurrentAltitude = destination.Altitude;
+                }
+                else if (WaypointLatitude != 0 && WaypointLongitude != 0 && WaypointAltitude != 0)
+                {
+                    CurrentLatitude = WaypointLatitude;
+                    CurrentLongitude = WaypointLongitude;
+                    CurrentAltitude = WaypointAltitude;
+                }
+                else
+                {
+                    CurrentLatitude = UserSettings.Default.DefaultLatitude;
+                    CurrentLongitude = UserSettings.Default.DefaultLongitude;
+                    CurrentAltitude = UserSettings.Default.DefaultAltitude;
+                }
+            }
+
+            //resolve unknown waypoint
+            if (WaypointLatitude == 0 && WaypointLongitude == 0 && WaypointAltitude == 0)
+            {
+                if (DestinationsEnabled && Destinations.Any())
+                {
+                    var index = DestinationIndex < Destinations.Count ? DestinationIndex : 0;
+                    var destination = Destinations[index];
+                    WaypointLatitude = destination.Latitude;
+                    WaypointLongitude = destination.Longitude;
+                    WaypointAltitude = destination.Altitude;
+                }
+                else if (CurrentLatitude != 0 && CurrentLongitude != 0 && CurrentAltitude != 0)
+                {
+                    WaypointLatitude = CurrentLatitude;
+                    WaypointLongitude = CurrentLongitude;
+                    WaypointAltitude = CurrentAltitude;
+                }
+                else
+                {
+                    WaypointLatitude = UserSettings.Default.DefaultLatitude;
+                    WaypointLongitude = UserSettings.Default.DefaultLongitude;
+                    WaypointAltitude = UserSettings.Default.DefaultAltitude;
+                }
+            }
 
             if (createNew)
             {
+                Logger.Write($"The {fileName} file could not be found, it will be recreated.", LogLevel.Warning);
                 var result = PromptForCredentials();
                 if (!result)
                 {
                     Logger.Write($"Quit before providing login credentials.", LogLevel.Warning);
                     Program.ExitApplication(1);
                 }
+            }
+            else
+            {
+                Save();
             }
 
             return this;

@@ -21,10 +21,34 @@ namespace PokeRoadie
 
         private const double SpeedDownTo = 10 / 3.6;
         private readonly Client _client;
+        private DateTime? _lastSaveDate;
 
         public PokeRoadieNavigation(Client client)
         {
             _client = client;
+        }
+
+        private async Task<PlayerUpdateResponse> UpdatePlayerLocation(DestinationData destination)
+        {
+            return await UpdatePlayerLocation(destination.Latitude,destination.Longitude,destination.Altitude);
+        }
+        private async Task<PlayerUpdateResponse> UpdatePlayerLocation(GeoCoordinate geo)
+        {
+            return await UpdatePlayerLocation(geo.Latitude, geo.Longitude, geo.Altitude);
+        }
+        private async Task<PlayerUpdateResponse> UpdatePlayerLocation(double lat, double lng, double alt)
+        {
+            PokeRoadieSettings.Current.CurrentLatitude = lat;
+            PokeRoadieSettings.Current.CurrentLongitude = lng;
+            PokeRoadieSettings.Current.CurrentAltitude = alt;
+            if (!_lastSaveDate.HasValue || _lastSaveDate.Value < DateTime.Now)
+            {
+                PokeRoadieSettings.Current.Save();
+                _lastSaveDate = DateTime.Now.AddSeconds(10);
+            }
+
+            return await _client.Player.UpdatePlayerLocation(lat, lng, alt);
+
         }
 
         public async Task<PlayerUpdateResponse> HumanLikeWalkingGetCloser(GeoCoordinate targetLocation,
@@ -78,7 +102,7 @@ namespace PokeRoadie
         }
 
         public async Task<PlayerUpdateResponse> HumanLikeWalking(GeoCoordinate targetLocation,
-            double walkingSpeedInKilometersPerHour, Func<Task> functionExecutedWhileWalking)
+            double walkingSpeedInKilometersPerHour, Func<Task> functionExecutedWhileWalking, bool inFlight = false)
         {
 
             //randomize speed for less detection
@@ -127,7 +151,7 @@ namespace PokeRoadie
             var requestSendDateTime = DateTime.Now;
             var result =
                 await
-                    _client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, PokeRoadieSettings.Current.CurrentAltitude);
+                    UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, PokeRoadieSettings.Current.CurrentAltitude);
             do
             {
                 var millisecondsUntilGetUpdatePlayerLocationResponse =
@@ -138,6 +162,7 @@ namespace PokeRoadie
 
                 if (currentDistanceToTarget < 30 && speedInMetersPerSecond > SpeedDownTo)
                 {
+                    
                     //Logger.Write($"We are within 40 meters of the target. Speeding down to 10 km/h to not pass the target.", LogLevel.Navigation);
                     speedInMetersPerSecond = SpeedDownTo;
                 }
@@ -150,7 +175,7 @@ namespace PokeRoadie
                 requestSendDateTime = DateTime.Now;
                 result =
                     await
-                        _client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
+                        UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
                             PokeRoadieSettings.Current.CurrentAltitude);
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
@@ -182,7 +207,7 @@ namespace PokeRoadie
             var requestSendDateTime = DateTime.Now;
             var result =
                 await
-                    _client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, waypoint.Altitude);
+                    UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, waypoint.Altitude);
 
             do
             {
@@ -209,7 +234,7 @@ namespace PokeRoadie
                 requestSendDateTime = DateTime.Now;
                 result =
                     await
-                        _client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
+                        UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
                             waypoint.Altitude);
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
