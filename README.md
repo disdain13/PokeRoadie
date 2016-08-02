@@ -6,7 +6,7 @@
 <h2>Advanced PokemonGo Bot</h2>
 Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. <a href="https://github.com/disdain13/PokeRoadie/wiki" title="goto the WIKI, just do it!">Checkout the full list of new features in our WIKI</a><br/><br/>
 
-<img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_1.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
+<img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_2.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
 
 ###In the beginning, There was a game which many felt the need to exploit and pillage in a programmatic fashion.###
 
@@ -24,5 +24,8 @@ Extremely easy to use fully featured bot which will play the game for you when y
 
 *[Disdain](https://github.com/disdain13/PokeRoadie/)*
 That's Me! <a href="https://www.reverbnation.com/disdainrap" title="go ahead, you know you want to...">I am a rapper...</a> but, I program a little too. I just found this fun, and decided to help out by throwing in my 2 cents. I forked it, but it will never be done. 
-
+<br/><br/><br/>
+**I Like What I'm Seeing!**<br/>
+There is no denying science, and that is the reason the <i>True Value</i> calculation works. Need proof? It has organically grown this inventory over 1 week, evolved them, and transferred ones it deemed unfit based on <i>True Value</i>. It seems to be bubbling up some pretty nice stuff.<br/><br/>
+<img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_3.png?raw=true" alt="PokemonGo_Bot_Screenshot_3.png" title="No shiz..."><br/><br/>
 
