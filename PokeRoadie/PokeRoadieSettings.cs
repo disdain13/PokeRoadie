@@ -89,6 +89,7 @@ namespace PokeRoadie
         public virtual double TransferBelowIV { get; set; }
         public virtual double TransferBelowV { get; set; }
         public virtual int TransferBelowCp { get; set; }
+        public virtual int TransferTrimFatCount { get; set; }
         public virtual bool NotTransferPokemonsThatCanEvolve { get; set; }
 
         //player behavior
@@ -403,7 +404,8 @@ namespace PokeRoadie
             this.WaypointLongitude = UserSettings.Default.WaypointLongitude;
             this.WaypointAltitude = UserSettings.Default.WaypointAltitude;
             this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
-   
+            this.TransferTrimFatCount = UserSettings.Default.TransferTrimFatCount;
+
         }
 
         #endregion
@@ -524,6 +526,7 @@ namespace PokeRoadie
                     this.WaypointLongitude = obj.WaypointLongitude;
                     this.WaypointAltitude = obj.WaypointAltitude;
                     this.FlyLikeCaptKirk = obj.FlyLikeCaptKirk;
+                    this.TransferTrimFatCount = obj.TransferTrimFatCount;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

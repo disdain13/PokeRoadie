@@ -36,6 +36,7 @@
   <TransferBelowIV>0</TransferBelowIV>
   <TransferBelowV>0</TransferBelowV>
   <TransferBelowCp>0</TransferBelowCp>
+  <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
   <CatchPokemon>true</CatchPokemon>
   <VisitPokestops>true</VisitPokestops>

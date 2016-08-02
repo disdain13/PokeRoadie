@@ -982,28 +982,31 @@ namespace PokeRoadie
                     await CatchEncounter(encounter, pokemon);
                 else if (encounter.Status == EncounterResponse.Types.Status.PokemonInventoryFull)
                 {
-                    Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId));
 
-                    //ordering
-                    switch (PokeRoadieSettings.Current.TransferPriorityType)
+                    if (PokeRoadieSettings.Current.TransferPokemon && PokeRoadieSettings.Current.TransferTrimFatCount > 0)
                     {
-                        case PriorityTypes.CP:
-                            query = query.OrderBy(x => x.Cp)
-                                         .ThenBy(x => x.Stamina);
-                            break;
-                        case PriorityTypes.IV:
-                            query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
-                                         .ThenBy(n => n.StaminaMax);
-                            break;
-                        default:
-                            query = query.OrderBy(x => x.CalculatePokemonValue())
-                                         .ThenBy(n => n.StaminaMax);
-                            break;
+                        Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
+                        var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId));
+
+                        //ordering
+                        switch (PokeRoadieSettings.Current.TransferPriorityType)
+                        {
+                            case PriorityTypes.CP:
+                                query = query.OrderBy(x => x.Cp)
+                                             .ThenBy(x => x.Stamina);
+                                break;
+                            case PriorityTypes.IV:
+                                query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
+                                             .ThenBy(n => n.StaminaMax);
+                                break;
+                            default:
+                                query = query.OrderBy(x => x.CalculatePokemonValue())
+                                             .ThenBy(n => n.StaminaMax);
+                                break;
+                        }
+
+                        await TransferPokemon(query.Take(PokeRoadieSettings.Current.TransferTrimFatCount).ToList());
                     }
-
-                    await TransferPokemon(query.Take(10).ToList());
-
                 }
                
                 else if (encounter.Status == EncounterResponse.Types.Status.EncounterPokemonFled)
