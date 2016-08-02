@@ -1234,6 +1234,7 @@ namespace PokeRoadie
             var pokemonCp = encounter?.WildPokemon?.PokemonData?.Cp;
             var iV = Math.Round(PokemonInfo.CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData));
             var proba = encounter?.CaptureProbability?.CaptureProbability_.First();
+            var balance = PokeRoadieSettings.Current.PokeBallBalancing;
 
             var items = await _inventory.GetItems();
             var pokeBalls = items.Where(x => x.ItemId == ItemId.ItemPokeBall).FirstOrDefault();
@@ -1256,7 +1257,7 @@ namespace PokeRoadie
             if (masterBalls != null && pokemonCp >= 1500)
             {
                 //substitute when low (Downgrade)
-                if (ultraBalls != null && masterBalls.Count * 3 < ultraBalls.Count)
+                if (balance && ultraBalls != null && masterBalls.Count * 3 < ultraBalls.Count)
                     return ItemId.ItemUltraBall;
                 //return the default
                 return ItemId.ItemMasterBall;
@@ -1264,10 +1265,10 @@ namespace PokeRoadie
             if (ultraBalls != null && (pokemonCp >= 1000 || (iV >= PokeRoadieSettings.Current.KeepAboveIV && proba < 0.40)))
             {
                 //substitute when low (Upgrade)
-                if (masterBalls != null && ultraBalls.Count * 3 < masterBalls.Count)
+                if (balance && masterBalls != null && ultraBalls.Count * 3 < masterBalls.Count)
                     return ItemId.ItemMasterBall;
                 //substitute when low (Downgrade)
-                if (greatBalls != null && ultraBalls.Count * 3 < greatBalls.Count)
+                if (balance && greatBalls != null && ultraBalls.Count * 3 < greatBalls.Count)
                     return ItemId.ItemGreatBall;
                 //return the default
                 return ItemId.ItemUltraBall;
@@ -1275,10 +1276,10 @@ namespace PokeRoadie
             if (greatBalls != null && (pokemonCp >= 300 || (iV >= PokeRoadieSettings.Current.KeepAboveIV && proba < 0.50)))
             {
                 //substitute when low (Upgrade)
-                if (ultraBalls != null && greatBalls.Count * 3 < ultraBalls.Count)
+                if (balance && ultraBalls != null && greatBalls.Count * 3 < ultraBalls.Count)
                     return ItemId.ItemUltraBall;
                 //substitute when low (Downgrade)
-                if (pokeBalls != null && greatBalls.Count * 3 < pokeBalls.Count)
+                if (balance && pokeBalls != null && greatBalls.Count * 3 < pokeBalls.Count)
                     return ItemId.ItemPokeBall;
                 //return the default
                 return ItemId.ItemGreatBall;
@@ -1286,16 +1287,16 @@ namespace PokeRoadie
             if (pokeBalls != null)
             {
                 //substitute when low (Upgrade)
-                if (greatBalls != null && pokeBalls.Count * 3 < greatBalls.Count)
+                if (balance && greatBalls != null && pokeBalls.Count * 3 < greatBalls.Count)
                     return ItemId.ItemGreatBall;
                 //return the default
                 return ItemId.ItemPokeBall;
             }
             //default to highest possible
-            if (masterBalls != null) return ItemId.ItemMasterBall;
-            if (ultraBalls != null) return ItemId.ItemUltraBall;
-            if (greatBalls != null) return ItemId.ItemGreatBall;
             if (pokeBalls != null) return ItemId.ItemPokeBall;
+            if (greatBalls != null) return ItemId.ItemGreatBall;
+            if (ultraBalls != null) return ItemId.ItemUltraBall;
+            if (masterBalls != null) return ItemId.ItemMasterBall;
 
             return ItemId.ItemUnknown;
         }

@@ -526,5 +526,14 @@ namespace PokeRoadie {
                 return ((int)(this["TransferTrimFatCount"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PokeBallBalancing {
+            get {
+                return ((bool)(this["PokeBallBalancing"]));
+            }
+        }
     }
 }

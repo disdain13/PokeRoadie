@@ -100,6 +100,7 @@ namespace PokeRoadie
         public virtual bool LoiteringActive { get; set; }
         public virtual bool VisitGyms { get; set; }
         public virtual bool AutoDeployAtTeamGyms { get; set; }
+        public virtual bool PokeBallBalancing { get; set; }
 
         //inventory
         public virtual bool UseLuckyEggs { get; set; }
@@ -405,6 +406,7 @@ namespace PokeRoadie
             this.WaypointAltitude = UserSettings.Default.WaypointAltitude;
             this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
             this.TransferTrimFatCount = UserSettings.Default.TransferTrimFatCount;
+            this.PokeBallBalancing = UserSettings.Default.PokeBallBalancing;
 
         }
 
@@ -527,6 +529,7 @@ namespace PokeRoadie
                     this.WaypointAltitude = obj.WaypointAltitude;
                     this.FlyLikeCaptKirk = obj.FlyLikeCaptKirk;
                     this.TransferTrimFatCount = obj.TransferTrimFatCount;
+                    this.PokeBallBalancing = obj.PokeBallBalancing;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
