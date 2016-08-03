@@ -32,9 +32,15 @@ namespace PokeRoadie
         #region " Events "
 
         public event Func<bool> OnPromptForCredentials;
+
         public event Action<MapPokemon, double> OnEncounter;
         public event Action<MapPokemon, CatchPokemonResponse, double> OnCatchAttempt;
-        public event Action<MapPokemon, double> OnCatch;
+        public event Action<MapPokemon, CatchPokemonResponse, double> OnCatch;
+
+        public event Action<LocationData, PokemonData, DiskEncounterResponse> OnLureEncounter;
+        public event Action<LocationData, PokemonData, CatchPokemonResponse> OnLureCatchAttempt;
+        public event Action<LocationData, PokemonData, CatchPokemonResponse> OnLureCatch;
+
         public event Action<LocationData, int> OnChangeDestination;
         public event Action<LocationData> OnChangeWaypoint;
         public event Action<LocationData> OnChangeLocation;
@@ -501,22 +507,33 @@ namespace PokeRoadie
                 }
             }
             //await CheckDestinations();
+            var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
 
             var mapObjects = await _client.Map.GetMapObjects();
-            var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-            var fullPokestopList = PokeRoadieNavigation.pathByNearestNeighbour(
+
+            var pokeStopList =
+                PokeRoadieNavigation.pathByNearestNeighbour(
                 mapObjects.MapCells.SelectMany(i => i.Forts)
-                    .Where(i => 
+                    .Where(i =>
+                        i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() &&
                         (PokeRoadieSettings.Current.MaxDistance == 0 ||
                         LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude) < PokeRoadieSettings.Current.MaxDistance))
                     .OrderBy(i =>
                         LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude)).ToArray()).ToList();
 
-            OnGetAllNearbyPokestops?.Invoke(location, fullPokestopList.Where(x => x.Type != FortType.Gym).ToList());
-            OnGetAllNearbyGyms?.Invoke(location, fullPokestopList.Where(x => x.Type == FortType.Gym).ToList());
+            //var fullPokestopList = PokeRoadieNavigation.pathByNearestNeighbour(
+            //    mapObjects.MapCells.SelectMany(i => i.Forts)
+            //        .Where(i => 
+            //            (PokeRoadieSettings.Current.MaxDistance == 0 ||
+            //            LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude) < PokeRoadieSettings.Current.MaxDistance))
+            //        .OrderBy(i =>
+            //            LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude)).ToArray()).ToList();
 
-            var pokeStopList = fullPokestopList
-                    .Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).ToList();
+            //OnGetAllNearbyPokestops?.Invoke(location, fullPokestopList.Where(x => x.Type != FortType.Gym).ToList());
+            //OnGetAllNearbyGyms?.Invoke(location, fullPokestopList.Where(x => x.Type == FortType.Gym).ToList());
+
+            //var pokeStopList = fullPokestopList
+            //        .Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).ToList();
 
             if (!PokeRoadieSettings.Current.VisitGyms)
                 pokeStopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
@@ -605,8 +622,8 @@ namespace PokeRoadie
                 }
                 if (pokestopCount == 0 && gymCount > 0)
                     await RandomHelper.RandomDelay(1000, 2000);
-                else
-                    await RandomHelper.RandomDelay(50, 200);
+                //else
+                    //await RandomHelper.RandomDelay(50, 200);
             }
 
         }
@@ -803,13 +820,13 @@ namespace PokeRoadie
                 fleeLast = DateTime.Now;
             }
 
-            ////catch lure pokemon
-            //if (PokeRoadieSettings.Current.LoiteringActive && pokeStop.LureInfo != null)
-            //{
-            //    var encounter = await _client.Encounter.EncounterLurePokemon(pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId);
-            //    if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
-            //        CatchEncounter(encounter, )
-            //}
+            //catch lure pokemon 8)
+            if (PokeRoadieSettings.Current.LoiteringActive && pokeStop.LureInfo != null)
+            {
+                var encounter = await _client.Encounter.EncounterLurePokemon(pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId);
+                if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
+                    await LureCatchEncounter(pokeStop.LureInfo, encounter, pokeStop.LureInfo.EncounterId);
+            }
 
             if (PokeRoadieSettings.Current.LoiteringActive && pokeStop.LureInfo != null)
             {
@@ -818,7 +835,15 @@ namespace PokeRoadie
                 {
                     if (PokeRoadieSettings.Current.CatchPokemon && !softBan)
                         await CatchNearbyPokemons();
-                  
+
+                    //catch lure pokemon 8)
+                    if (PokeRoadieSettings.Current.LoiteringActive && pokeStop.LureInfo != null)
+                    {
+                        var encounter = await _client.Encounter.EncounterLurePokemon(pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId);
+                        if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
+                            await LureCatchEncounter(pokeStop.LureInfo, encounter, pokeStop.LureInfo.EncounterId);
+                    }
+
                     var fortSearch2 = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     if (fortSearch2.ExperienceAwarded > 0)
                     {
@@ -838,7 +863,7 @@ namespace PokeRoadie
                 }
             }
 
-            await RandomHelper.RandomDelay(50, 200);
+            //await RandomHelper.RandomDelay(50, 200);
             if (recycleCounter >= 5)
                 await RecycleItems();
         }
@@ -909,7 +934,7 @@ namespace PokeRoadie
 
                     if (OnCatch != null)
                     {
-                        OnCatch(pokemon, _client.CurrentAltitude);
+                        OnCatch(pokemon, caughtPokemonResponse, _client.CurrentAltitude);
                     }
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
@@ -966,130 +991,128 @@ namespace PokeRoadie
             while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
         }
 
+        private async Task LureCatchEncounter(FortLureInfo lureInfo, DiskEncounterResponse encounter, ulong encounterId)
+        {
+            CatchPokemonResponse caughtPokemonResponse;
+            var attemptCounter = 1;
+            var pokemon = encounter.PokemonData;
+            OnLureEncounter?.Invoke(new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude), pokemon, encounter);
+            do
+            {
+                if (!isRunning) break;
+                //if there has not been a consistent flee, reset
+                if (fleeCounter > 0 && fleeLast.HasValue && fleeLast.Value.AddMinutes(3) < DateTime.Now && !softBan)
+                {
+                    fleeStart = null;
+                    fleeCounter = 0;
+                    fleeLast = null;
+                }
 
-        //private async Task DiskCatchEncounter(DiskEncounterResponse encounter)
-        //{
-        //    CatchPokemonResponse caughtPokemonResponse;
-        //    var attemptCounter = 1;
-        //    var pokemon = encounter.PokemonData;
-        //    OnEncounter?.Invoke(pokemon, _client.CurrentAltitude);
-        //    do
-        //    {
-        //        if (!isRunning) break;
-        //        //if there has not been a consistent flee, reset
-        //        if (fleeCounter > 0 && fleeLast.HasValue && fleeLast.Value.AddMinutes(3) < DateTime.Now && !softBan)
-        //        {
-        //            fleeStart = null;
-        //            fleeCounter = 0;
-        //            fleeLast = null;
-        //        }
+                var probability = encounter?.CaptureProbability?.CaptureProbability_?.FirstOrDefault();
+                var bestPokeball = await GetBestBall(encounter?.PokemonData, encounter?.CaptureProbability?.CaptureProbability_?.First());
+                if (bestPokeball == ItemId.ItemUnknown)
+                {
+                    Logger.Write($"You don't own any Pokeballs :( - We missed a {pokemon.PokemonId} with CP {encounter?.PokemonData?.Cp}", LogLevel.Warning);
+                    return;
+                }
 
-        //        var probability = encounter?.CaptureProbability?.CaptureProbability_?.FirstOrDefault();
-        //        var bestPokeball = await GetBestBall(encounter);
-        //        if (bestPokeball == ItemId.ItemUnknown)
-        //        {
-        //            Logger.Write($"You don't own any Pokeballs :( - We missed a {pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp}", LogLevel.Warning);
-        //            return;
-        //        }
+                //only use crappy pokeballs when they are fleeing
+                if (fleeCounter > 1) bestPokeball = ItemId.ItemPokeBall;
 
-        //        //only use crappy pokeballs when they are fleeing
-        //        if (fleeCounter > 1) bestPokeball = ItemId.ItemPokeBall;
+                var bestBerry = await GetBestBerry(encounter?.PokemonData, encounter?.CaptureProbability?.CaptureProbability_?.First());
+                //only use berries when they are fleeing
+                if (fleeCounter == 0)
+                {
+                    var inventoryBerries = await _inventory.GetItems();
+                    var berries = inventoryBerries.Where(p => p.ItemId == bestBerry).FirstOrDefault();
+                    if (bestBerry != ItemId.ItemUnknown && probability.HasValue && probability.Value < 0.35)
+                    {
+                        await _client.Encounter.UseCaptureItem(encounterId, bestBerry, lureInfo.FortId);
+                        berries.Count--;
+                        Logger.Write($"{bestBerry} used, remaining: {berries.Count}", LogLevel.Berry);
+                        await RandomHelper.RandomDelay(50, 200);
+                    }
+                }
 
-        //        var bestBerry = await GetBestBerry(encounter);
-        //        //only use berries when they are fleeing
-        //        if (fleeCounter == 0)
-        //        {
-        //            var inventoryBerries = await _inventory.GetItems();
-        //            var berries = inventoryBerries.Where(p => p.ItemId == bestBerry).FirstOrDefault();
-        //            if (bestBerry != ItemId.ItemUnknown && probability.HasValue && probability.Value < 0.35)
-        //            {
-        //                await _client.Encounter.UseCaptureItem(encounter.EncounterId, bestBerry, pokemon.SpawnPointId);
-        //                berries.Count--;
-        //                Logger.Write($"{bestBerry} used, remaining: {berries.Count}", LogLevel.Berry);
-        //                await RandomHelper.RandomDelay(50, 200);
-        //            }
-        //        }
+                caughtPokemonResponse = await _client.Encounter.CatchPokemon(encounterId, lureInfo.FortId, bestPokeball);
 
-        //        var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
-        //        caughtPokemonResponse = await _client.Encounter.CatchPokemon(pokemon.EncounterId, pokemon.SpawnPointId, bestPokeball);
+                if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
+                {
+                    fleeCounter = 0;
+                    fleeLast = null;
+                    fleeStart = null;
+                    //reset soft ban info
+                    if (softBan)
+                    {
+                        var diff = DateTime.Now.Subtract(fleeStart.Value).ToString();
+                        softBan = false;
+                        Logger.Write($"(SOFT BAN) The ban was lifted after {diff}!", LogLevel.None, ConsoleColor.DarkRed);
+                    }
 
-        //        if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
-        //        {
-        //            fleeCounter = 0;
-        //            fleeLast = null;
-        //            fleeStart = null;
-        //            //reset soft ban info
-        //            if (softBan)
-        //            {
-        //                var diff = DateTime.Now.Subtract(fleeStart.Value).ToString();
-        //                softBan = false;
-        //                Logger.Write($"(SOFT BAN) The ban was lifted after {diff}!", LogLevel.None, ConsoleColor.DarkRed);
-        //            }
+                    foreach (var xp in caughtPokemonResponse.CaptureAward.Xp)
+                        _stats.AddExperience(xp);
+                    _stats.IncreasePokemons();
+                    var profile = await _client.Player.GetPlayer();
+                    _stats.GetStardust(profile.PlayerData.Currencies.ToArray()[1].Amount);
 
-        //            foreach (var xp in caughtPokemonResponse.CaptureAward.Xp)
-        //                _stats.AddExperience(xp);
-        //            _stats.IncreasePokemons();
-        //            var profile = await _client.Player.GetPlayer();
-        //            _stats.GetStardust(profile.PlayerData.Currencies.ToArray()[1].Amount);
+                    if (OnCatch != null)
+                    {
+                        OnLureCatch(new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude), pokemon, caughtPokemonResponse);
+                    }
+                }
+                else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
+                {
+                    fleeCounter++;
+                    if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                    {
+                        softBan = true;
+                        fleeStart = DateTime.Now;
+                        Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
 
-        //            if (OnCatch != null)
-        //            {
-        //                OnCatch(pokemon, _client.CurrentAltitude);
-        //            }
-        //        }
-        //        else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
-        //        {
-        //            fleeCounter++;
-        //            if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
-        //            {
-        //                softBan = true;
-        //                fleeStart = DateTime.Now;
-        //                Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
-
-        //            }
-        //            fleeLast = DateTime.Now;
-        //            OnCatchAttempt?.Invoke(pokemon, caughtPokemonResponse, _client.CurrentAltitude);
-        //        }
-        //        else
-        //        {
-        //            OnCatchAttempt?.Invoke(pokemon, caughtPokemonResponse, _client.CurrentAltitude);
-        //        }
+                    }
+                    fleeLast = DateTime.Now;
+                    OnLureCatchAttempt?.Invoke(new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude), pokemon, caughtPokemonResponse);
+                }
+                else
+                {
+                    OnLureCatchAttempt?.Invoke(new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude), pokemon, caughtPokemonResponse);
+                }
 
 
-        //        if (encounter?.CaptureProbability?.CaptureProbability_ != null)
-        //        {
-        //            Func<ItemId, string> returnRealBallName = a =>
-        //            {
-        //                switch (a)
-        //                {
-        //                    case ItemId.ItemPokeBall:
-        //                        return "Poke";
-        //                    case ItemId.ItemGreatBall:
-        //                        return "Great";
-        //                    case ItemId.ItemUltraBall:
-        //                        return "Ultra";
-        //                    case ItemId.ItemMasterBall:
-        //                        return "Master";
-        //                    default:
-        //                        return "Unknown";
-        //                }
-        //            };
-        //            var catchStatus = attemptCounter > 1
-        //                ? $"{caughtPokemonResponse.Status} Attempt #{attemptCounter}"
-        //                : $"{caughtPokemonResponse.Status}";
+                if (encounter?.CaptureProbability?.CaptureProbability_ != null)
+                {
+                    Func<ItemId, string> returnRealBallName = a =>
+                    {
+                        switch (a)
+                        {
+                            case ItemId.ItemPokeBall:
+                                return "Poke";
+                            case ItemId.ItemGreatBall:
+                                return "Great";
+                            case ItemId.ItemUltraBall:
+                                return "Ultra";
+                            case ItemId.ItemMasterBall:
+                                return "Master";
+                            default:
+                                return "Unknown";
+                        }
+                    };
+                    var catchStatus = attemptCounter > 1
+                        ? $"{caughtPokemonResponse.Status} Attempt #{attemptCounter}"
+                        : $"{caughtPokemonResponse.Status}";
 
-        //            string receivedXP = catchStatus == "CatchSuccess"
-        //                ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}"
-        //                : $"";
+                    string receivedXP = catchStatus == "CatchSuccess"
+                        ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}"
+                        : $"";
 
-        //            Logger.Write($"({catchStatus}) | {encounter?.PokemonData.GetMinStats()} | Chance: {(float)((int)(encounter?.CaptureProbability?.CaptureProbability_.First() * 100)) / 100} | {Math.Round(distance)}m dist | with a {returnRealBallName(bestPokeball)}Ball {receivedXP}", LogLevel.Pokemon);
-        //        }
+                    Logger.Write($"({catchStatus}) | {encounter?.PokemonData.GetMinStats()} | Chance: {(float)((int)(encounter?.CaptureProbability?.CaptureProbability_.First() * 100)) / 100} | with a {returnRealBallName(bestPokeball)}Ball {receivedXP}", LogLevel.Pokemon);
+                }
 
-        //        attemptCounter++;
-        //        await RandomHelper.RandomDelay(300, 400);
-        //    }
-        //    while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
-        //}
+                attemptCounter++;
+                await RandomHelper.RandomDelay(300, 400);
+            }
+            while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
+        }
 
         private async Task CatchNearbyPokemonsAndStops()
         {
@@ -1426,11 +1449,11 @@ namespace PokeRoadie
 
         }
 
-        private async Task<ItemId> GetBestBall(EncounterResponse encounter)
+        private async Task<ItemId> GetBestBall(PokemonData pokemon, float? captureProbability)
         {
-            var pokemonCp = encounter?.WildPokemon?.PokemonData?.Cp;
-            var iV = Math.Round(PokemonInfo.CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData));
-            var proba = encounter?.CaptureProbability?.CaptureProbability_.First();
+            var pokemonCp = pokemon.Cp;
+            var iV = Math.Round(PokemonInfo.CalculatePokemonPerfection(pokemon));
+            var proba = captureProbability; // encounter?.CaptureProbability?.CaptureProbability_.First();
             var balance = PokeRoadieSettings.Current.PokeBallBalancing;
 
             var items = await _inventory.GetItems();
@@ -1498,6 +1521,11 @@ namespace PokeRoadie
             return ItemId.ItemUnknown;
         }
 
+        private async Task<ItemId> GetBestBall(EncounterResponse encounter)
+        {
+            return await GetBestBall(encounter?.WildPokemon?.PokemonData, encounter?.CaptureProbability?.CaptureProbability_.First());
+        }
+
         private async Task<ItemId> GetBestBerry(EncounterResponse encounter)
         {
             var pokemonCp = encounter?.WildPokemon?.PokemonData?.Cp;
@@ -1536,6 +1564,46 @@ namespace PokeRoadie
             return ItemId.ItemUnknown;
             //return berries.OrderBy(g => g.Key).First().Key;
         }
+
+        private async Task<ItemId> GetBestBerry(PokemonData pokemon, float? captureProbability)
+        {
+            var pokemonCp = pokemon.Cp;
+            var iV = Math.Round(PokemonInfo.CalculatePokemonPerfection(pokemon));
+            var proba = captureProbability;
+
+            var items = await _inventory.GetItems();
+            var berries = items.Where(i => (i.ItemId == ItemId.ItemRazzBerry
+                                        || i.ItemId == ItemId.ItemBlukBerry
+                                        || i.ItemId == ItemId.ItemNanabBerry
+                                        || i.ItemId == ItemId.ItemWeparBerry
+                                        || i.ItemId == ItemId.ItemPinapBerry) && i.Count > 0).GroupBy(i => (i.ItemId)).ToList();
+            if (berries.Count == 0 || pokemonCp <= 350) return ItemId.ItemUnknown;
+
+            var razzBerryCount = await _inventory.GetItemAmountByType(ItemId.ItemRazzBerry);
+            var blukBerryCount = await _inventory.GetItemAmountByType(ItemId.ItemBlukBerry);
+            var nanabBerryCount = await _inventory.GetItemAmountByType(ItemId.ItemNanabBerry);
+            var weparBerryCount = await _inventory.GetItemAmountByType(ItemId.ItemWeparBerry);
+            var pinapBerryCount = await _inventory.GetItemAmountByType(ItemId.ItemPinapBerry);
+
+            if (pinapBerryCount > 0 && pokemonCp >= 2000)
+                return ItemId.ItemPinapBerry;
+
+            if (weparBerryCount > 0 && pokemonCp >= 1500)
+                return ItemId.ItemWeparBerry;
+
+            if (nanabBerryCount > 0 && (pokemonCp >= 1000 || (iV >= PokeRoadieSettings.Current.KeepAboveIV && proba < 0.40)))
+                return ItemId.ItemNanabBerry;
+
+            if (blukBerryCount > 0 && (pokemonCp >= 500 || (iV >= PokeRoadieSettings.Current.KeepAboveIV && proba < 0.50)))
+                return ItemId.ItemBlukBerry;
+
+            if (razzBerryCount > 0 && pokemonCp >= 150)
+                return ItemId.ItemRazzBerry;
+
+            return ItemId.ItemUnknown;
+            //return berries.OrderBy(g => g.Key).First().Key;
+        }
+
 
         private async Task DisplayHighests()
         {
