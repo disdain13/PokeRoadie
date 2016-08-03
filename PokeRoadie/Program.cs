@@ -74,5 +74,7 @@ namespace PokeRoadie
         }
 
         public static bool Validator(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
+
+
     }
 }

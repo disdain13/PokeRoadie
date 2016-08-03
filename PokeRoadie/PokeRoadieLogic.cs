@@ -29,26 +29,44 @@ namespace PokeRoadie
 {
     public class PokeRoadieLogic
     {
+        #region " Events "
+
         public event Func<bool> ShowEditCredentials;
+
+        #endregion
+        #region " Static Members "
+
+        private static string configsDir = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
+        private static string pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Pokestops");
+        private static string gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
+        private static object xloLock = new object();
+        private static bool inFlight = false;
+        private static bool isRunning;
+
+        #endregion
+        #region " Future Singleton "
 
         private readonly PokeRoadieClient _client;
         private readonly PokeRoadieInventory _inventory;
         private readonly Statistics _stats;
         private readonly PokeRoadieNavigation _navigation;
+
+        #endregion
+        #region " Members "
+
         private DateTime? _lastLuckyEggTime;
         private DateTime? _lastIncenseTime;
         private DateTime? _lastExportTime;
         private GetPlayerResponse _playerProfile;
-        private string configs_path = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
         private int recycleCounter = 0;
         private bool IsInitialized = false;
-        private static bool inFlight = false;
-
         private int fleeCounter = 0;
         private DateTime? fleeLast;
         private DateTime? fleeStart;
         private bool softBan = false;
         private bool hasDisplayedTransferSettings;
+
+        #endregion
 
         public PokeRoadieLogic()
         {
@@ -58,6 +76,10 @@ namespace PokeRoadie
             _navigation = new PokeRoadieNavigation(_client);
         }
 
+        public void Stop()
+        {
+            isRunning = false;
+        }
         public async Task CloseApplication(int exitCode)
         {
             for (int i = 3; i > 0; i--)
@@ -69,17 +91,36 @@ namespace PokeRoadie
             System.Environment.Exit(exitCode);
         }
 
+        private void DeleteOldFiles(string dir)
+        {
+            if (!Directory.Exists(dir)) return;
+            var files = Directory.GetFiles(dir).Where(x=>x.EndsWith(".txt")).ToList();
+            foreach (var file in files)
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    //ignore
+                }
+        }
+
+
         public async Task Execute()
         {
             Git.CheckVersion();
 
-            //check pokestop dir
-            var pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Pokestops");
-            if (!Directory.Exists(pokestopsDir)) Directory.CreateDirectory(pokestopsDir);
+            if (!isRunning)
+                isRunning = true;
 
             //check pokestop dir
-            var gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
             if (!Directory.Exists(pokestopsDir)) Directory.CreateDirectory(pokestopsDir);
+            DeleteOldFiles(pokestopsDir);
+
+            //check pokestop dir
+            if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
+            DeleteOldFiles(gymDir);
 
 
             if (PokeRoadieSettings.Current.CurrentLatitude == 0 || PokeRoadieSettings.Current.CurrentLongitude == 0)
@@ -97,7 +138,7 @@ namespace PokeRoadie
             }
 
             Logger.Write($"Logging in via: {PokeRoadieSettings.Current.AuthType}", LogLevel.Info);
-            while (true)
+            while (isRunning)
             {
                 try
                 {
@@ -119,20 +160,19 @@ namespace PokeRoadie
                 }
                 catch(PtcOfflineException e)
                 {
-                    Logger.Write("(LOGIN ERROR) The Ptc servers are currently offline. Please try again later. " + e.Message, LogLevel.Info, ConsoleColor.Red);
-                    await Task.Delay(15000);
-                    Environment.Exit(2);
+                    Logger.Write("(LOGIN ERROR) The Ptc servers are currently offline. Waiting 30 seconds... ", LogLevel.None, ConsoleColor.Red);
+                    await Task.Delay(30000);;
                 }
                 catch (Exception e)
                 {
                     if (e.Message.Contains("NeedsBrowser"))
                     {
-                        Logger.Write("(LOGIN ERROR) Please login to your google account and turn off 'Two-Step Authentication' under security settings. If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.Info, ConsoleColor.Red);
+                        Logger.Write("(LOGIN ERROR) Please login to your google account and turn off 'Two-Step Authentication' under security settings. If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.None, ConsoleColor.Red);
                         await Task.Delay(15000);
                     }
                     else if (e.Message.Contains("BadAuthentication"))
                     {
-                        Logger.Write("(LOGIN ERROR) The username and password provided failed. " + e.Message, LogLevel.Info, ConsoleColor.Red);
+                        Logger.Write("(LOGIN ERROR) The username and password provided failed. " + e.Message, LogLevel.None, ConsoleColor.Red);
                         if (ShowEditCredentials != null)
                         {
                             var result = ShowEditCredentials.Invoke();
@@ -145,7 +185,7 @@ namespace PokeRoadie
                     }
                     else
                     {
-                        Logger.Write($"(FATAL ERROR) Unhandled exception encountered: {e.Message.ToString()}.");
+                        Logger.Write($"(FATAL ERROR) Unhandled exception encountered: {e.Message.ToString()}.", LogLevel.Error);
                         Logger.Write("Restarting the application due to error...", LogLevel.Warning);
                     }
                     await Execute();
@@ -189,11 +229,16 @@ namespace PokeRoadie
 
             while (true)
             {
+
+                if (!isRunning) break;
+
                 if (!IsInitialized)
                 {
-
                     //write stats
                     await WriteStats();
+
+                    //fire
+                    //Xlo().Start();
 
                     //get ignore lists
                     var PokemonsNotToTransfer = PokeRoadieSettings.Current.PokemonsNotToTransfer;
@@ -255,15 +300,18 @@ namespace PokeRoadie
                 var curTrkSeg = 0;
                 while (curTrk <= maxTrk)
                 {
+                    if (!isRunning) break;
                     var track = tracks.ElementAt(curTrk);
                     var trackSegments = track.Segments;
                     var maxTrkSeg = trackSegments.Count - 1;
                     while (curTrkSeg <= maxTrkSeg)
                     {
+                        if (!isRunning) break;
                         var trackPoints = track.Segments.ElementAt(0).TrackPoints;
                         var maxTrkPt = trackPoints.Count - 1;
                         while (curTrkPt <= maxTrkPt)
                         {
+                            if (!isRunning) break;
                             var nextPoint = trackPoints.ElementAt(curTrkPt);
                             var distance_check = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude,
                                 _client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat), Convert.ToDouble(nextPoint.Lon));
@@ -339,13 +387,13 @@ namespace PokeRoadie
                         PokeRoadieSettings.Current.CurrentLatitude = wayPointGeo.Latitude;
                         PokeRoadieSettings.Current.CurrentLongitude = wayPointGeo.Longitude;
                         PokeRoadieSettings.Current.CurrentAltitude = wayPointGeo.Altitude;
+                        PokeRoadieSettings.Current.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (PokeRoadieSettings.Current.MinSpeed / 3.6));
                         PokeRoadieSettings.Current.Save();
 
                         _client.SetLocation(wayPointGeo.Latitude, wayPointGeo.Longitude, wayPointGeo.Altitude);
                         await _client.Player.UpdatePlayerLocation(wayPointGeo.Latitude, wayPointGeo.Longitude, wayPointGeo.Altitude);
-
                         Logger.Write($"(WARP) You've been beamed! ({distanceFromStart}m instantly) ", LogLevel.None, ConsoleColor.Green);
-
+                        gymTries.Clear();
                     }
                     else
                     {
@@ -353,6 +401,7 @@ namespace PokeRoadie
                         inFlight = true;
                         await _navigation.HumanLikeWalking(wayPointGeo, PokeRoadieSettings.Current.FlyingSpeed, GetFlyingTask());
                         inFlight = false;
+                        gymTries.Clear();
                     }
 
                 }
@@ -360,6 +409,7 @@ namespace PokeRoadie
                 {
                     Logger.Write("Preparing for long distance travel...", LogLevel.Navigation, ConsoleColor.White);
                     await _navigation.HumanLikeWalking(wayPointGeo, PokeRoadieSettings.Current.MinSpeed, GetLongWalkingTask());
+                    gymTries.Clear();
                 }
                 Logger.Write($"Arrived at destination.", LogLevel.Navigation);
             }
@@ -384,6 +434,7 @@ namespace PokeRoadie
                             PokeRoadieSettings.Current.CurrentLatitude = destination.Latitude;
                             PokeRoadieSettings.Current.CurrentLongitude = destination.Longitude;
                             PokeRoadieSettings.Current.CurrentAltitude = destination.Altitude;
+                            PokeRoadieSettings.Current.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (PokeRoadieSettings.Current.MinSpeed / 3.6));
                             PokeRoadieSettings.Current.Save();
 
                             if (PokeRoadieSettings.Current.FlyingEnabled)
@@ -391,19 +442,19 @@ namespace PokeRoadie
                                 if (PokeRoadieSettings.Current.FlyLikeCaptKirk)
                                 {
                                     Logger.Write($"Scotty, warm up the engines, were headed back...", LogLevel.Info);
-
                                     _client.SetLocation(wayPointGeo.Latitude, destination.Longitude, destination.Altitude);
                                     await _client.Player.UpdatePlayerLocation(destination.Latitude, destination.Longitude, destination.Altitude);
-
                                     Logger.Write($"(WARP) You've been beamed! ({distanceFromStart}m instantly) ", LogLevel.None, ConsoleColor.Green);
-
+                                    gymTries.Clear();
                                 }
                                 else
                                 {
                                     Logger.Write($"Preparing for long distance travel - Boarded flight #{RandomHelper.RandomNumber(101, 501)}", LogLevel.Navigation, ConsoleColor.White);
+
                                     inFlight = true;
                                     await _navigation.HumanLikeWalking(destination.GetGeo(), PokeRoadieSettings.Current.FlyingSpeed, GetFlyingTask());
                                     inFlight = false;
+                                    gymTries.Clear();
                                 }
 
                             } 
@@ -411,6 +462,7 @@ namespace PokeRoadie
                             {
                                 Logger.Write("Preparing for long distance travel...", LogLevel.None, ConsoleColor.White);
                                 await _navigation.HumanLikeWalking(destination.GetGeo(), PokeRoadieSettings.Current.MinSpeed, GetLongWalkingTask());
+                                gymTries.Clear();
                             }
                             Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
 
@@ -450,16 +502,25 @@ namespace PokeRoadie
             if (!PokeRoadieSettings.Current.VisitPokestops)
                 pokeStopList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
 
-            if (pokeStopList.Count <= 0)
+            if (pokeStopList.Where(x => x.Type != FortType.Gym).Count() == 0) 
             {
-                 Logger.Write("No usable PokeStops found in your area. Is your maximum distance too small?",
+                    if (pokeStopList.Where(x => x.Type == FortType.Gym).Count() > 0)
+                    {
+                        await ProcessPokeStopList(pokeStopList, mapObjects);
+                     }
+                    Logger.Write("No usable PokeStops found in your area.",
                                     LogLevel.Warning);
+                    await Task.Delay(5000);
 
                 if (PokeRoadieSettings.Current.MoveWhenNoStops && _client != null && PokeRoadieSettings.Current.DestinationEndDate.HasValue && PokeRoadieSettings.Current.DestinationEndDate.Value > DateTime.Now)
                     PokeRoadieSettings.Current.DestinationEndDate = DateTime.Now;
             }
+            else
+            {
+                await ProcessPokeStopList(pokeStopList, mapObjects);
+            }
 
-            await ProcessPokeStopList(pokeStopList, mapObjects);
+            
         }
 
         private async Task ProcessPokeStopList(List<FortData> pokeStopList, GetMapObjectsResponse mapObjects)
@@ -497,6 +558,8 @@ namespace PokeRoadie
 
             while (pokeStopList.Any())
             {
+                if (!isRunning) break;
+
                 if (!inFlight && PokeRoadieSettings.Current.DestinationsEnabled && PokeRoadieSettings.Current.DestinationEndDate.HasValue && DateTime.Now > PokeRoadieSettings.Current.DestinationEndDate.Value)
                 {
                     break;
@@ -523,125 +586,102 @@ namespace PokeRoadie
 
         }
 
+        private static List<string> gymTries = new List<string>();
 
         private async Task ProcessGym(FortData pokeStop, GetMapObjectsResponse mapObjects)
         {
-            var fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-            if (fortInfo != null)
+            if (!gymTries.Contains(pokeStop.Id))
             {
-                bool inRange = false;
-                int attempts = 0;
-
-                do
+                var fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                if (fortInfo != null)
                 {
-                    var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
-                    var fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                    if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
+                    bool inRange = false;
+                    int attempts = 0;
+
+                    do
                     {
-                        inRange = true;
-                        var fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+                        if (!isRunning) break;
+                        var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
+                        var fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                         if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
                         {
-                            if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team &&
-                                ((pokeStop.GymPoints < 3001 && fortDetails.GymState.Memberships.Count < 2) ||
-                                (pokeStop.GymPoints > 3000 && pokeStop.GymPoints < 7001 && fortDetails.GymState.Memberships.Count < 2) ||
-                                (pokeStop.GymPoints > 6000 && pokeStop.GymPoints < 10001 && fortDetails.GymState.Memberships.Count < 3) ||
-                                (pokeStop.GymPoints > 10000 && fortDetails.GymState.Memberships.Count < 4)))
+                            inRange = true;
+                            var fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+                            if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
                             {
-
-                                Logger.Write($"(GYM) Casing out {fortDetails.Name} in {distance:0.##} m distance", LogLevel.None, ConsoleColor.Cyan);
-
-                                //var gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
-                                //try
-                                //{
-                                //    var fortFile = Path.Combine(gymDir, pokeStop.Id + ".txt");
-                                //    if (!File.Exists(fortFile))
-                                //    {
-                                //        using (StreamWriter w = File.CreateText(fortFile))
-                                //        {
-                                //            w.WriteLine(fortInfo.FortId.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                                //            w.WriteLine(fortInfo.Type);
-                                //            w.WriteLine(fortInfo.Latitude);
-                                //            w.WriteLine(fortInfo.Longitude);
-                                //            w.WriteLine(fortInfo.Name.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                                //            w.WriteLine(fortInfo.Description.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                                //            w.WriteLine();
-                                //            foreach (var img in fortInfo.ImageUrls)
-                                //            {
-                                //                w.WriteLine(img);
-                                //            }
-                                //            w.Close();
-                                //        }
-                                //    }
-                                //}
-                                //catch (Exception e)
-                                //{
-                                //    Logger.Write("Could not save the pokestop information file. " + e.ToString(), LogLevel.Error);
-                                //}
-
-                                var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), PokeRoadieSettings.Current.MinSpeed, GetShortWalkingTask());
-
-                                fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                                fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                                fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
-
+                                var gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
+                                fortDetails.Save(fortInfo, Path.Combine(gymDir, fortInfo.FortId + ".xml"));
 
                                 if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team &&
-                                    ((pokeStop.GymPoints < 3001 && fortDetails.GymState.Memberships.Count < 2) ||
-                                    (pokeStop.GymPoints > 3000 && pokeStop.GymPoints < 7001 && fortDetails.GymState.Memberships.Count < 2) ||
-                                    (pokeStop.GymPoints > 6000 && pokeStop.GymPoints < 10001 && fortDetails.GymState.Memberships.Count < 3) ||
+                                    ((pokeStop.GymPoints < 2001 && fortDetails.GymState.Memberships.Count < 2) ||
+                                    (pokeStop.GymPoints > 2000 && pokeStop.GymPoints < 7001 && fortDetails.GymState.Memberships.Count < 2) ||
+                                    (pokeStop.GymPoints > 7000 && pokeStop.GymPoints < 10001 && fortDetails.GymState.Memberships.Count < 3) ||
                                     (pokeStop.GymPoints > 10000 && fortDetails.GymState.Memberships.Count < 4)))
                                 {
 
-                                    await PokeRoadieInventory.getCachedInventory(_client, true);
-                                    var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
-                                    var pokemon = pokemonList.FirstOrDefault();
-                                    if (pokemon != null)
+                                    Logger.Write($"(GYM) Casing out {fortDetails.Name} in {distance:0.##} m distance", LogLevel.None, ConsoleColor.Cyan);
+                                    var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), PokeRoadieSettings.Current.MinSpeed, GetShortWalkingTask());
+
+                                    fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                                    fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                                    fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+
+
+                                    if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
                                     {
 
-                                        var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
-                                        if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                        await PokeRoadieInventory.getCachedInventory(_client, true);
+                                        var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
+                                        var pokemon = pokemonList.FirstOrDefault();
+                                        if (pokemon != null)
                                         {
-                                            Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+
+                                            var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
+                                            if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                            {
+                                                Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+                                            }
+                                            else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)
+                                            {
+                                                var figureThisShitOut = pokemon;
+                                            }
+                                            else
+                                            {
+                                                //Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
+                                            }
                                         }
-                                        else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)
-                                        {
-                                            var figureThisShitOut = pokemon;
-                                        }
-                                        else
-                                        {
-                                            Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
-                                        }
+                                    }
+                                    else
+                                    {
+                                        Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
                                     }
                                 }
                                 else
                                 {
-                                    Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
+                                    Logger.Write($"(GYM) Ignoring {fortString}", LogLevel.None, ConsoleColor.Cyan);
                                 }
                             }
-                            else
-                            {
-                                Logger.Write($"(GYM) Ignoring {fortString}", LogLevel.None, ConsoleColor.Cyan);
-                            }
                         }
-                    }
-                    else if (fortDetails.Result == GetGymDetailsResponse.Types.Result.ErrorNotInRange)
-                    {
-                        attempts++;
-                        Logger.Write($"(GYM) Moving closer to {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
-                        var ToStart = await _navigation.HumanLikeWalkingGetCloser(
-                            new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude),
-                            PokeRoadieSettings.Current.FlyingEnabled ? PokeRoadieSettings.Current.FlyingSpeed : PokeRoadieSettings.Current.MinSpeed, GetShortWalkingTask(), 0.20);
+                        else if (fortDetails.Result == GetGymDetailsResponse.Types.Result.ErrorNotInRange)
+                        {
+                            attempts++;
+                            Logger.Write($"(GYM) Moving closer to {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
+                            var ToStart = await _navigation.HumanLikeWalkingGetCloser(
+                                new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude),
+                                PokeRoadieSettings.Current.FlyingEnabled ? PokeRoadieSettings.Current.FlyingSpeed : PokeRoadieSettings.Current.MinSpeed, GetShortWalkingTask(), 0.20);
 
-                    }
-                    else
-                    {
-                        Logger.Write($"(GYM) Ignoring {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
-                        inRange = true;
-                    }
+                        }
+                        else
+                        {
+                            Logger.Write($"(GYM) Ignoring {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
+                            inRange = true;
+                        }
 
-                } while (!inRange && attempts < 6);
+                    } while (!inRange && attempts < 6);
+                }
+                gymTries.Add(pokeStop.Id);
             }
+           
         }
 
         private async Task ProcessPokeStop(FortData pokeStop, GetMapObjectsResponse mapObjects)
@@ -652,32 +692,10 @@ namespace PokeRoadie
                 await CatchNearbyPokemons();
 
             var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
+            
+            //get fort info
             var fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-
-            try
-            {
-                var fortFile = Path.Combine(pokestopsDir, pokeStop.Id + ".txt");
-                if (File.Exists(fortFile)) File.Delete(fortFile);
-                using (StreamWriter w = File.CreateText(fortFile))
-                {
-                    w.WriteLine(fortInfo.FortId.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                    w.WriteLine(fortInfo.Type);
-                    w.WriteLine(fortInfo.Latitude);
-                    w.WriteLine(fortInfo.Longitude);
-                    w.WriteLine(fortInfo.Name.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                    w.WriteLine(fortInfo.Description.Replace((char)13, ' ').Replace((char)10, ' ').Replace("  ", " "));
-                    w.WriteLine();
-                    foreach (var img in fortInfo.ImageUrls)
-                    {
-                        w.WriteLine(img);
-                    }
-                    w.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                //Logger.Write("Could not save the pokestop information file. " + e.ToString(), LogLevel.Error);
-            }
+            fortInfo.Save(Path.Combine(pokestopsDir, pokeStop.Id + ".xml"));
 
             var name = $"{(inFlight ? "Set target lock on " : "")}{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
             Logger.Write(name, LogLevel.Pokestop);
@@ -793,7 +811,7 @@ namespace PokeRoadie
             var attemptCounter = 1;
             do
             {
-
+                if (!isRunning) break;
                 //if there has not been a consistent flee, reset
                 if (fleeCounter > 0 && fleeLast.HasValue && fleeLast.Value.AddMinutes(3) < DateTime.Now && !softBan)
                 {
@@ -913,7 +931,7 @@ namespace PokeRoadie
         private async Task CatchNearbyPokemonsAndStops(bool path)
         {
             await CatchNearbyPokemons();
-            await CatchNearbyStops(false);
+            await CatchNearbyStops(path);
         }
         private async Task CatchNearbyStops()
         {
@@ -925,6 +943,10 @@ namespace PokeRoadie
         }
         private async Task CatchNearbyStops(bool path)
         {
+            //if (path)
+            //{
+            //    var i = 1;
+            //}
             var mapObjects = await _client.Map.GetMapObjects();
 
             var pokeStopList =
@@ -972,6 +994,7 @@ namespace PokeRoadie
 
             foreach (var pokemon in pokemons)
             {
+                if (!isRunning) break;
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
 
                 await RandomHelper.RandomDelay(220, 320);
@@ -1073,6 +1096,7 @@ namespace PokeRoadie
                 Logger.Write($"Found {duplicatePokemons.Count()} pokemon to transfer...", LogLevel.Info);
                 foreach (var duplicatePokemon in duplicatePokemons)
                 {
+                    if (!isRunning) break;
                     await _client.Inventory.TransferPokemon(duplicatePokemon.Id);
 
                     await PokeRoadieInventory.getCachedInventory(_client, true);
@@ -1126,6 +1150,7 @@ namespace PokeRoadie
 
             foreach (var item in items)
             {
+                if (!isRunning) break;
                 await _client.Inventory.RecycleItem(item.ItemId, item.Count);
                 Logger.Write($"{(item.ItemId).ToString().Replace("Item", "")} x {item.Count}", LogLevel.Recycling);
 
@@ -1526,6 +1551,7 @@ namespace PokeRoadie
             bool stopHealing = false;
             foreach (var pokemon in pokemonList)
             {
+                if (!isRunning) break;
                 var potion = await GetBestPotion(pokemon);
                 var hp = 0;
                 while (potion != ItemId.ItemUnknown && hp < pokemon.StaminaMax)
@@ -1566,6 +1592,7 @@ namespace PokeRoadie
 
             foreach (var pokemon in pokemonList)
             {
+                if (!isRunning) break;
                 var potion = await GetBestPotion(pokemon);
                 if (potion == ItemId.ItemUnknown)
                 {
@@ -1810,48 +1837,65 @@ namespace PokeRoadie
 
         #endregion
 
-
-        ///// <summary>
-        ///// Resets coords if someone could realistically get back to the default coords points since they were last updated (program was last run)
-        ///// </summary>
-        //private void ResetCoords(string filename = "LastCoords.ini")
+        //public async Task Xlo()
         //{
-
-        //    var lat = PokeRoadieSettings.Current.CurrentLatitude;
-        //    var lng = PokeRoadieSettings.Current.CurrentLongitude;
-        //    var alt = PokeRoadieSettings.Current.CurrentAltitude;
-
-        //    if (_client != null)
+        //    if (!isRunning) return;
+        //    if (Directory.Exists(pokestopsDir))
         //    {
-        //        if (_client.StartLat > 0 && _client.StartLng > 0)
+        //        var files = Directory.GetFiles(pokestopsDir)
+        //                        .Where(x => x.EndsWith(".xml")).ToList();
+        //        foreach (var filePath in files)
         //        {
-        //            lat = _client.StartLat;
-        //            lng = _client.StartLng;
-        //            alt = _client.StartAltitude;
+        //            if (!isRunning) break;
+        //            var info = new FileInfo(filePath);
+        //            if (info.CreationTime.AddSeconds(60) < DateTime.Now)
+        //            {
+        //                try
+        //                {
+        //                    //pull the file
+        //                    var pokestop = (Xml.Pokestop)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Pokestop));
+        //                    if (await Xml.Serializer.Xlo(pokestop)) File.Delete(filePath);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    //do nothing
+        //                    Logger.Write($"Pokestop {info.Name} failed xlo. {ex.ToString()}");
+        //                }
+        //            }
         //        }
-        //        else
+        //    }
+
+        //    if (Directory.Exists(gymDir))
+        //    {
+        //        var files = Directory.GetFiles(gymDir)
+        //                        .Where(x => x.EndsWith(".xml")).ToList();
+        //        foreach (var filePath in files)
         //        {
-        //            _client.StartLat = PokeRoadieSettings.Current.CurrentLatitude;
-        //            _client.StartLng = PokeRoadieSettings.Current.CurrentLongitude;
-        //            _client.StartAltitude = PokeRoadieSettings.Current.CurrentAltitude;
+        //            if (!isRunning) break;
+        //            var info = new FileInfo(filePath);
+        //            if (info.CreationTime.AddSeconds(60) < DateTime.Now)
+        //            {
+        //                try
+        //                {
+        //                    //pull the file
+        //                    var gym = (Xml.Gym)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Pokestop));
+        //                    if (await Xml.Serializer.Xlo(gym, info.CreationTime)) File.Delete(filePath);
+
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    //do nothing
+        //                    Logger.Write($"Gym {info.Name} failed xlo. {ex.ToString()}" );
+        //                }
+        //            }
         //        }
         //    }
-        //    double distance = LocationUtils.CalculateDistanceInMeters(latLngFromFile.Item1, latLngFromFile.Item2, lat, lng);
-        //    DateTime? lastModified = File.Exists(lastcoords_file) ? (DateTime?)File.GetLastWriteTime(lastcoords_file) : null;
-        //    if (lastModified == null) return;
-        //    double? hoursSinceModified = (DateTime.Now - lastModified).HasValue ? (double?)((DateTime.Now - lastModified).Value.Minutes / 60.0) : null;
-        //    if (hoursSinceModified == null || hoursSinceModified < 1) return; // Shouldn't really be null, but can be 0 and that's bad for division.
-        //    var kmph = (distance / 1000) / (hoursSinceModified ?? .1);
-        //    if (kmph < 80) // If speed required to get to the default location is < 80km/hr
-        //    {
-        //        File.Delete(lastcoords_file);
-        //        Logger.Write("Detected realistic Traveling , using UserSettings.settings", LogLevel.Warning);
-        //    }
-        //    else
-        //    {
-        //        Logger.Write("Not realistic Traveling at " + kmph + ", using last saved Coords.ini", LogLevel.Warning);
-        //    }
+
+        //    await Task.Delay(10000);
+        //    if (!isRunning) return;
+        //    Xlo().Start();
         //}
+        
     }
 }
  

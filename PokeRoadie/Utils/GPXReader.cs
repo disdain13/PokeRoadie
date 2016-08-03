@@ -677,8 +677,11 @@ namespace PokeRoadie
 
             public Trkpt(XmlNode node)
             {
-                Lat = node.Attributes?["lat"].Value;
-                Lon = node.Attributes?["lon"].Value;
+                string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+                Lat = node.Attributes?["lat"].Value.Replace(".", ls == "," ? "." : ",");
+                Lon = node.Attributes?["lon"].Value.Replace(".", ls == "," ? "." : ",");
+                //Lat = node.Attributes?["lat"].Value;
+                //Lon = node.Attributes?["lon"].Value;
                 foreach (XmlNode childNode in node)
                 {
                     switch (childNode.Name)

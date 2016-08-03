@@ -1,11 +1,13 @@
 ﻿#region " Imports "
 
+using System;
 using PokemonGo.RocketAPI.Helpers;
 
 #endregion
 
 namespace PokeRoadie
 {
+    [Serializable]
     public class DestinationData
     {
         public string Name { get; set; }

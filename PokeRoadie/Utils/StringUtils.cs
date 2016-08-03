@@ -55,7 +55,6 @@ namespace PokeRoadie
                 return $"{Math.Round(seconds, 2).ToString():0.##} seconds";
             }
         }
-
         public static string GetTravelActionString(double speed, bool flyingEnabled)
         {
             var action = "rocking";

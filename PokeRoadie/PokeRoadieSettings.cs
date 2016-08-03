@@ -6,6 +6,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using System.Threading.Tasks;
+
 using PokemonGo.RocketAPI;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Logging;
