@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PokeRoadie
+namespace PokeRoadie.Forms
 {
     public partial class UsernamePasswordForm : Form
     {

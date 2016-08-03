@@ -15,6 +15,8 @@ using PokemonGo.RocketAPI.Logging;
 using POGOProtos.Inventory.Item;
 using POGOProtos.Enums;
 
+using PokeRoadie.Forms;
+
 #endregion
 
 namespace PokeRoadie
@@ -35,7 +37,7 @@ namespace PokeRoadie
         private ICollection<PokemonId> _pokemonsNotToTransfer;
         private ICollection<PokemonId> _pokemonsToEvolve;
         private ICollection<PokemonId> _pokemonsNotToCatch;
-        private IList<DestinationData> _destinations;
+        private IList<LocationData> _destinations;
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
@@ -182,7 +184,7 @@ namespace PokeRoadie
         }
 
         [XmlIgnore()]
-        public IList<DestinationData> Destinations
+        public IList<LocationData> Destinations
         {
             get
             {
@@ -742,9 +744,9 @@ namespace PokeRoadie
         /// Gets a list of target destinations.
         /// </summary>
         /// <returns>list of target destinations</returns>
-        private IList<DestinationData> LoadDestinations()
+        private IList<LocationData> LoadDestinations()
         {
-            var list = new List<DestinationData>();
+            var list = new List<LocationData>();
             if (!Directory.Exists(configs_path))
                 Directory.CreateDirectory(configs_path);
             if (File.Exists(destinationcoords_file))
@@ -769,7 +771,7 @@ namespace PokeRoadie
                                     if (temp_lat >= -90 && temp_lat <= 90 && temp_long >= -180 && temp_long <= 180)
                                     {
                                         //SetCoordinates(Convert.ToDouble(latlng[0]), Convert.ToDouble(latlng[1]), Settings.DefaultAltitude);
-                                        var newDestination = new DestinationData();
+                                        var newDestination = new LocationData();
                                         newDestination.Latitude = temp_lat;
                                         newDestination.Longitude = temp_long;
                                         newDestination.Altitude = temp_alt;
@@ -817,7 +819,7 @@ namespace PokeRoadie
                         w.Close();
                     }
 
-                    var d = new DestinationData();
+                    var d = new LocationData();
                     d.Latitude = CurrentLatitude;
                     d.Longitude = CurrentLongitude;
                     d.Altitude = CurrentAltitude;

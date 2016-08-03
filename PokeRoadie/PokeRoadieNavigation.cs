@@ -22,13 +22,14 @@ namespace PokeRoadie
         private const double SpeedDownTo = 10 / 3.6;
         private readonly Client _client;
         private DateTime? _lastSaveDate;
+        public event Action<LocationData> OnChangeLocation;
 
         public PokeRoadieNavigation(Client client)
         {
             _client = client;
         }
 
-        private async Task<PlayerUpdateResponse> UpdatePlayerLocation(DestinationData destination)
+        private async Task<PlayerUpdateResponse> UpdatePlayerLocation(LocationData destination)
         {
             return await UpdatePlayerLocation(destination.Latitude,destination.Longitude,destination.Altitude);
         }
@@ -47,8 +48,9 @@ namespace PokeRoadie
                 _lastSaveDate = DateTime.Now.AddSeconds(10);
             }
 
-            return await _client.Player.UpdatePlayerLocation(lat, lng, alt);
-
+            var r = await _client.Player.UpdatePlayerLocation(lat, lng, alt);
+            OnChangeLocation?.Invoke(new LocationData(lat, lng, alt));
+            return r;
         }
 
         public async Task<PlayerUpdateResponse> HumanLikeWalkingGetCloser(GeoCoordinate targetLocation,

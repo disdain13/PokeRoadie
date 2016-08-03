@@ -119,84 +119,83 @@ namespace PokeRoadie.Extensions
 
         public static void Save(this FortDetailsResponse fortInfo, string filePath)
         {
-            //try
-            //{
-            //    var data = new Xml.Pokestop();
-            //    data.Id = fortInfo.FortId;
-            //    data.Latitude = fortInfo.Latitude;
-            //    data.Longitude = fortInfo.Longitude;
-            //    data.Altitude = PokeRoadieClient.Current.CurrentLatitude;
-            //    data.Name = fortInfo.Name;
-            //    data.Description = fortInfo.Description;
-            //    data.Fp = fortInfo.Fp;
-            //    foreach (var img in fortInfo.ImageUrls)
-            //    {
-            //        data.ImageUrls.Add(img);
-            //    }
-            //    Xml.Serializer.SerializeToFile(data, filePath);
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.Write($"Could not save the pokestop information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
-            //}
+            try
+            {
+                var data = new Xml.Pokestop();
+                data.Id = fortInfo.FortId;
+                data.Latitude = fortInfo.Latitude;
+                data.Longitude = fortInfo.Longitude;
+                data.Altitude = PokeRoadieClient.Current.CurrentLatitude;
+                data.Name = fortInfo.Name;
+                data.Description = fortInfo.Description;
+                data.Fp = fortInfo.Fp;
+                foreach (var img in fortInfo.ImageUrls)
+                {
+                    data.ImageUrls.Add(img);
+                }
+                Xml.Serializer.SerializeToFile(data, filePath);
+            }
+            catch (Exception e)
+            {
+                Logger.Write($"Could not save the pokestop information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+            }
         }
 
         public static void Save(this GetGymDetailsResponse fortDetails, FortDetailsResponse fortInfo, string filePath)
         {
+            //write data file
+            try
+            {
+                var data = new Xml.Gym();
+                data.Id = fortInfo.FortId;
+                data.Latitude = fortDetails.GymState.FortData.Latitude;
+                data.Longitude = fortDetails.GymState.FortData.Longitude;
+                data.Altitude = PokeRoadieClient.Current.CurrentAltitude;
+                data.Name = fortDetails.Name;
+                data.Description = fortDetails.Description;
+                data.Fp = fortInfo.Fp;
+                data.CooldownCompleteTimestampMs = fortDetails.GymState.FortData.CooldownCompleteTimestampMs;
+                data.GymPoints = fortDetails.GymState.FortData.GymPoints;
+                data.LastModifiedTimestampMs = fortDetails.GymState.FortData.LastModifiedTimestampMs;
+                data.Sponsor = fortDetails.GymState.FortData.Sponsor.ToString();
+                data.Team = fortDetails.GymState.FortData.OwnedByTeam.ToString();
+                if (fortDetails.GymState.Memberships != null && fortDetails.GymState.Memberships.Count() > 0)
+                {
+                    foreach (var membership in fortDetails.GymState.Memberships)
+                    {
+                        var m = new Xml.Membership();
+                        m.Player.Name = membership.TrainerPublicProfile.Name;
+                        m.Player.Level = membership.TrainerPublicProfile.Level;
+                        m.Pokemon.BattlesAttacked = membership.PokemonData.BattlesAttacked;
+                        m.Pokemon.BattlesDefended = membership.PokemonData.BattlesDefended;
+                        m.Pokemon.Cp = membership.PokemonData.Cp;
+                        m.Pokemon.Favorite = membership.PokemonData.Favorite;
+                        m.Pokemon.HeightM = membership.PokemonData.HeightM;
+                        m.Pokemon.Id = membership.PokemonData.Id;
+                        m.Pokemon.IndividualAttack = membership.PokemonData.IndividualAttack;
+                        m.Pokemon.IndividualDefense = membership.PokemonData.IndividualDefense;
+                        m.Pokemon.IndividualStamina = membership.PokemonData.IndividualStamina;
+                        m.Pokemon.IsEgg = membership.PokemonData.IsEgg;
+                        m.Pokemon.Move1 = membership.PokemonData.Move1.ToString();
+                        m.Pokemon.Move2 = membership.PokemonData.Move2.ToString();
+                        m.Pokemon.Nickname = membership.PokemonData.Nickname;
+                        m.Pokemon.NumUpgrades = membership.PokemonData.NumUpgrades;
+                        m.Pokemon.BattlesAttacked = membership.PokemonData.BattlesAttacked;
+                        data.Memberships.Add(m);
+                    }
+                }
 
-        //    //write data file
-        //    try
-        //    {
-        //        var data = new Xml.Gym();
-        //        data.Id = fortInfo.FortId;
-        //        data.Latitude = fortDetails.GymState.FortData.Latitude;
-        //        data.Longitude = fortDetails.GymState.FortData.Longitude;
-        //        data.Altitude = PokeRoadieClient.Current.CurrentAltitude;
-        //        data.Name = fortDetails.Name;
-        //        data.Description = fortDetails.Description;
-        //        data.Fp = fortInfo.Fp;
-        //        data.CooldownCompleteTimestampMs = fortDetails.GymState.FortData.CooldownCompleteTimestampMs;
-        //        data.GymPoints = fortDetails.GymState.FortData.GymPoints;
-        //        data.LastModifiedTimestampMs = fortDetails.GymState.FortData.LastModifiedTimestampMs;
-        //        data.Sponsor = fortDetails.GymState.FortData.Sponsor.ToString();
-        //        data.Team = fortDetails.GymState.FortData.OwnedByTeam.ToString();
-        //        if (fortDetails.GymState.Memberships != null && fortDetails.GymState.Memberships.Count() > 0)
-        //        {
-        //            foreach (var membership in fortDetails.GymState.Memberships)
-        //            {
-        //                var m = new Xml.Membership();
-        //                m.Player.Name = membership.TrainerPublicProfile.Name;
-        //                m.Player.Level = membership.TrainerPublicProfile.Level;
-        //                m.Pokemon.BattlesAttacked = membership.PokemonData.BattlesAttacked;
-        //                m.Pokemon.BattlesDefended = membership.PokemonData.BattlesDefended;
-        //                m.Pokemon.Cp = membership.PokemonData.Cp;
-        //                m.Pokemon.Favorite = membership.PokemonData.Favorite;
-        //                m.Pokemon.HeightM = membership.PokemonData.HeightM;
-        //                m.Pokemon.Id = membership.PokemonData.Id;
-        //                m.Pokemon.IndividualAttack = membership.PokemonData.IndividualAttack;
-        //                m.Pokemon.IndividualDefense = membership.PokemonData.IndividualDefense;
-        //                m.Pokemon.IndividualStamina = membership.PokemonData.IndividualStamina;
-        //                m.Pokemon.IsEgg = membership.PokemonData.IsEgg;
-        //                m.Pokemon.Move1 = membership.PokemonData.Move1.ToString();
-        //                m.Pokemon.Move2 = membership.PokemonData.Move2.ToString();
-        //                m.Pokemon.Nickname = membership.PokemonData.Nickname;
-        //                m.Pokemon.NumUpgrades = membership.PokemonData.NumUpgrades;
-        //                m.Pokemon.BattlesAttacked = membership.PokemonData.BattlesAttacked;
-        //                data.Memberships.Add(m);
-        //            }
-        //        }
+                foreach (var img in fortInfo.ImageUrls)
+                {
+                    data.ImageUrls.Add(img);
+                }
+                Xml.Serializer.SerializeToFile(data, filePath);
 
-        //        foreach (var img in fortInfo.ImageUrls)
-        //        {
-        //            data.ImageUrls.Add(img);
-        //        }
-        //        Xml.Serializer.SerializeToFile(data, filePath);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Logger.Write($"Could not save the gym information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
-        //    }
+            }
+            catch (Exception e)
+            {
+                Logger.Write($"Could not save the gym information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+            }
         }
     }
 }

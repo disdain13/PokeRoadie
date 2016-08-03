@@ -38,6 +38,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GMap.NET.Core, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\Google.Protobuf.3.0.0-beta4\lib\net45\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
@@ -72,16 +80,16 @@
     <Compile Include="PokeRoadieNavigation.cs" />
     <Compile Include="PokeRoadieSettings.cs" />
     <Compile Include="PokeRoadieClient.cs" />
-    <Compile Include="Data\DestinationData.cs" />
+    <Compile Include="Data\LocationData.cs" />
     <Compile Include="Data\PriorityTypes.cs" />
     <Compile Include="PokeRoadieExtensions.cs" />
     <Compile Include="Data\MoveData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UsernamePasswordForm.cs">
+    <Compile Include="Forms\UsernamePasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UsernamePasswordForm.Designer.cs">
+    <Compile Include="Forms\UsernamePasswordForm.Designer.cs">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UserSettings.cs" />
@@ -92,6 +100,7 @@
     </Compile>
     <Compile Include="Utils\GPXReader.cs" />
     <Compile Include="Utils\LocationUtils.cs" />
+    <Compile Include="Utils\RouteUtils.cs" />
     <Compile Include="Utils\Statistics.cs" />
     <Compile Include="Utils\StringUtils.cs" />
   </ItemGroup>
@@ -133,7 +142,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UsernamePasswordForm.resx">
+    <EmbeddedResource Include="Forms\UsernamePasswordForm.resx">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

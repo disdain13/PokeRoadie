@@ -29,7 +29,7 @@ namespace PokeRoadie
         private static PokeRoadieLogic CreateLogic()
         {
             var logic = new PokeRoadieLogic();
-            logic.ShowEditCredentials += PokeRoadieSettings.Current.PromptForCredentials;
+            logic.OnPromptForCredentials += PokeRoadieSettings.Current.PromptForCredentials;
             return logic;
         }
 

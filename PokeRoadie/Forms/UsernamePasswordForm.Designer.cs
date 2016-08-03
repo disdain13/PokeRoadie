@@ -1,4 +1,4 @@
-﻿namespace PokeRoadie
+﻿namespace PokeRoadie.Forms
 {
     partial class UsernamePasswordForm
     {
