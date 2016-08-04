@@ -32,24 +32,41 @@ namespace PokeRoadie
     {
         #region " Events "
 
+        //system events
         public event Func<bool> OnPromptForCredentials;
 
+        //encounter events
         public event Action<EncounterData> OnEncounter;
         public event Action<EncounterData, CatchPokemonResponse> OnCatchAttempt;
         public event Action<EncounterData, CatchPokemonResponse> OnCatch;
 
+        //geo events
         public event Action<LocationData, int> OnChangeDestination;
         public event Action<LocationData> OnChangeWaypoint;
         public event Action<LocationData> OnChangeLocation;
 
+        //fort events
+        public event Action<LocationData, List<FortData>> OnVisitForts;
+
+        //pokestop events
         public event Action<LocationData, List<FortData>> OnGetAllNearbyPokestops;
-        public event Action<LocationData, List<FortData>> OnGetAllNearbyGyms;
-        public event Action<LocationData, List<FortData>> OnVisitPokestops;
         public event Action<LocationData, FortDetailsResponse> OnTravelingToPokestop;
         public event Action<LocationData, FortDetailsResponse, FortSearchResponse> OnVisitPokestop;
+
+        //gym events
+        public event Action<LocationData, List<FortData>> OnGetAllNearbyGyms;
         public event Action<LocationData, FortDetailsResponse> OnTravelingToGym;
         public event Action<LocationData, FortDetailsResponse, GetGymDetailsResponse> OnVisitGym;
         public event Action<LocationData, GetGymDetailsResponse, PokemonData> OnPokemonDeployedToGym;
+
+        //inventory events
+
+
+
+
+
+
+
 
         #endregion
         #region " Static Members "
@@ -131,6 +148,8 @@ namespace PokeRoadie
 
             //run xlo on own thread
             Task.Run(new Action(Xlo));
+
+
         }
 
         private void DeleteOldFiles(string dir)
@@ -154,26 +173,34 @@ namespace PokeRoadie
 
         public async Task Execute()
         {
+
+            //check version
             Git.CheckVersion();
 
+            //flag as running
             if (!isRunning)
                 isRunning = true;
 
+            //do maint
             Maintenance();
 
-            //if (_settings.CurrentLatitude == 0 || _settings.CurrentLongitude == 0)
-            //{
-            //    Logger.Write($"Please change first Latitude and/or Longitude because currently your using default values!", LogLevel.Error);
-            //}
-            //else
-            //{
-            //    Logger.Write($"Make sure Lat & Lng is right. Exit Program if not! Lat: {_client.CurrentLatitude} Lng: {_client.CurrentLongitude}", LogLevel.Warning);
-            //    for (int i = 3; i > 0; i--)
-            //    {
-            //        Logger.Write($"Script will continue in {i * 5} seconds!", LogLevel.Warning);
-            //        await Task.Delay(5000);
-            //    }
-            //}
+            //Wait Message
+            if (_settings.WaitOnStart)
+            {
+                if (_settings.CurrentLatitude == 0 || _settings.CurrentLongitude == 0)
+                {
+                    Logger.Write($"Please change first Latitude and/or Longitude because currently your using default values!", LogLevel.Error);
+                }
+                else
+                {
+                    Logger.Write($"Make sure Lat & Lng is right. Exit Program if not! Lat: {_client.CurrentLatitude} Lng: {_client.CurrentLongitude}", LogLevel.Warning);
+                    for (int i = 3; i > 0; i--)
+                    {
+                        Logger.Write($"Script will continue in {i * 5} seconds!", LogLevel.Warning);
+                        await Task.Delay(5000);
+                    }
+                }
+            }
 
             Logger.Write($"Logging in via: {_settings.AuthType}", LogLevel.Info);
             while (isRunning)
@@ -671,7 +698,7 @@ namespace PokeRoadie
             }
 
 
-            OnVisitPokestops?.Invoke(new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude), pokeStopList);
+            OnVisitForts?.Invoke(new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude), pokeStopList);
 
             while (pokeStopList.Any())
             {

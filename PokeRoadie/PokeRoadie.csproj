@@ -102,7 +102,6 @@
     <Compile Include="Forms\UsernamePasswordForm.Designer.cs">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserSettings.cs" />
     <Compile Include="UserSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

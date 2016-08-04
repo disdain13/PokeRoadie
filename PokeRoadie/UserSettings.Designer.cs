@@ -535,5 +535,14 @@ namespace PokeRoadie {
                 return ((bool)(this["PokeBallBalancing"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WaitOnStart {
+            get {
+                return ((bool)(this["WaitOnStart"]));
+            }
+        }
     }
 }

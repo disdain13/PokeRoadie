@@ -121,6 +121,7 @@ namespace PokeRoadie
         public virtual bool DisplayAllPokemonInLog { get; set; }
 
         //system
+        public virtual bool WaitOnStart { get; set; }
         public virtual double WaypointLatitude { get; set; }
         public virtual double WaypointLongitude { get; set; }
         public virtual double WaypointAltitude { get; set; }
@@ -412,6 +413,8 @@ namespace PokeRoadie
             this.TransferTrimFatCount = UserSettings.Default.TransferTrimFatCount;
             this.PokeBallBalancing = UserSettings.Default.PokeBallBalancing;
 
+            this.WaitOnStart = UserSettings.Default.WaitOnStart;
+
         }
 
         #endregion
@@ -534,6 +537,8 @@ namespace PokeRoadie
                     this.FlyLikeCaptKirk = obj.FlyLikeCaptKirk;
                     this.TransferTrimFatCount = obj.TransferTrimFatCount;
                     this.PokeBallBalancing = obj.PokeBallBalancing;
+
+                    this.WaitOnStart = obj.WaitOnStart;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
