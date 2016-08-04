@@ -37,6 +37,7 @@ namespace PokeRoadie
         private ICollection<PokemonId> _pokemonsNotToTransfer;
         private ICollection<PokemonId> _pokemonsToEvolve;
         private ICollection<PokemonId> _pokemonsNotToCatch;
+        private ICollection<PokemonId> _pokemonsToPowerUp;
         private IList<LocationData> _destinations;
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
@@ -96,6 +97,17 @@ namespace PokeRoadie
         public virtual int TransferTrimFatCount { get; set; }
         public virtual bool NotTransferPokemonsThatCanEvolve { get; set; }
 
+        //power-ups
+        public virtual bool PowerUpPokemon { get; set; }
+        public virtual PriorityTypes PowerUpPriorityType { get; set; }
+        public virtual double PowerUpAboveIV { get; set; }
+        public virtual double PowerUpAboveV { get; set; }
+        public virtual int PowerUpAboveCp { get; set; }
+        public virtual int MinStarDustForPowerUps { get; set; }
+        public virtual bool UsePokemonsToPowerUpList { get; set; }
+        public virtual int MinCandyForPowerUps { get; set; }
+        public virtual int MaxPowerUpsPerRound { get; set; }
+
         //player behavior
         public virtual bool CatchPokemon { get; set; }
         public virtual bool VisitPokestops { get; set; }
@@ -128,7 +140,6 @@ namespace PokeRoadie
 
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
-
 
         #endregion
         #region " Collection Properties "
@@ -218,6 +229,19 @@ namespace PokeRoadie
                     PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
                 });
                 return _pokemonsNotToTransfer;
+            }
+        }
+
+        [XmlIgnore()]
+        public ICollection<PokemonId> PokemonsToPowerUp
+        {
+            get
+            {
+                //Type of pokemons not to transfer
+                _pokemonsToPowerUp = _pokemonsToPowerUp ?? LoadPokemonList("PokemonsToPowerUp.ini", new List<PokemonId> {
+                    PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
+                });
+                return _pokemonsToPowerUp;
             }
         }
 
@@ -414,6 +438,17 @@ namespace PokeRoadie
             this.PokeBallBalancing = UserSettings.Default.PokeBallBalancing;
 
             this.WaitOnStart = UserSettings.Default.WaitOnStart;
+            this.PowerUpPokemon = UserSettings.Default.PowerUpPokemon;
+            PriorityTypes outValue3 = PriorityTypes.V;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType, true, out outValue3))
+                this.PowerUpPriorityType = outValue;
+            this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
+            this.PowerUpAboveIV = UserSettings.Default.PowerUpAboveIV;
+            this.PowerUpAboveV = UserSettings.Default.PowerUpAboveV;
+            this.MinStarDustForPowerUps = UserSettings.Default.MinStarDustForPowerUps;
+            this.UsePokemonsToPowerUpList = UserSettings.Default.UsePokemonsToPowerUpList;
+            this.MinCandyForPowerUps = UserSettings.Default.MinCandyForPowerUps;
+            this.MaxPowerUpsPerRound = UserSettings.Default.MaxPowerUpsPerRound;
 
         }
 
@@ -539,6 +574,17 @@ namespace PokeRoadie
                     this.PokeBallBalancing = obj.PokeBallBalancing;
 
                     this.WaitOnStart = obj.WaitOnStart;
+                    this.WaitOnStart = obj.WaitOnStart;
+                    this.PowerUpPokemon = obj.PowerUpPokemon;
+                    this.PowerUpPriorityType = obj.PowerUpPriorityType;
+                    this.PowerUpAboveCp = obj.PowerUpAboveCp;
+                    this.PowerUpAboveIV = obj.PowerUpAboveIV;
+                    this.PowerUpAboveV = obj.PowerUpAboveV;
+                    this.MinStarDustForPowerUps = obj.MinStarDustForPowerUps;
+                    this.UsePokemonsToPowerUpList = obj.UsePokemonsToPowerUpList;
+                    this.MinCandyForPowerUps = obj.MinCandyForPowerUps;
+                    this.MaxPowerUpsPerRound = obj.MaxPowerUpsPerRound;
+
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

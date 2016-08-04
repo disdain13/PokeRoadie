@@ -109,7 +109,7 @@ namespace PokeRoadie
             _settings = PokeRoadieSettings.Current;
             _apiFailureStrategy = new ApiFailureStrategy();
             _client = new PokeRoadieClient(_settings,_apiFailureStrategy);
-            _inventory = new PokeRoadieInventory(_client);
+            _inventory = new PokeRoadieInventory(_client, _settings);
             _stats = new Statistics();
             _navigation = new PokeRoadieNavigation(_client);
             _navigation.OnChangeLocation += RelayLocation;
@@ -506,6 +506,9 @@ namespace PokeRoadie
                     //evolve
                     if (_settings.EvolvePokemon) await EvolvePokemon();
 
+                    //power up
+                    if (_settings.PowerUpPokemon) await PowerUpPokemon();
+
                     //transfer
                     if (_settings.TransferPokemon) await TransferPokemon();
 
@@ -516,7 +519,7 @@ namespace PokeRoadie
                     if (_settings.UseIncense) await UseIncense();
 
                     //incense
-                    if (_settings.UseIncense) await UseLuckyEgg();
+                    if (_settings.UseLuckyEggs) await UseLuckyEgg();
 
                     //recycle
                     await RecycleItems();
@@ -852,6 +855,9 @@ namespace PokeRoadie
 
             //evolve
             if (_settings.EvolvePokemon) await EvolvePokemon();
+
+            //power up
+            if (_settings.PowerUpPokemon) await PowerUpPokemon();
 
             //trasnfer
             if (_settings.TransferPokemon) await TransferPokemon();
@@ -1338,6 +1344,38 @@ namespace PokeRoadie
             }
             while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
         }
+
+        //private async Task ProcessEggsList()
+        //{
+        //    // Refresh inventory so that the player stats are fresh
+        //    await session.Inventory.RefreshCachedInventory();
+
+        //    var playerStats = (await session.Inventory.GetPlayerStats()).FirstOrDefault();
+        //    if (playerStats == null)
+        //        return;
+
+        //    var kmWalked = playerStats.KmWalked;
+
+        //    var incubators = (await session.Inventory.GetEggIncubators())
+        //        .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+        //        .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+        //        .ToList();
+
+        //    var unusedEggs = (await session.Inventory.GetEggs())
+        //        .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
+        //        .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
+        //        .ToList();
+
+        //    session.EventDispatcher.Send(
+        //        new EggsListEvent
+        //        {
+        //            PlayerKmWalked = kmWalked,
+        //            Incubators = incubators,
+        //            UnusedEggs = unusedEggs
+        //        });
+
+        //    DelayingUtils.Delay(session.LogicSettings.DelayBetweenPlayerActions, 0);
+        //}
 
         #endregion
         #region " Travel & Destination Methods "
@@ -1937,6 +1975,52 @@ namespace PokeRoadie
                     if (!isRunning) break;
                     await TransferPokemon(pokemon);
                 }
+            }
+        }
+
+        #endregion
+        #region " Power Up Methods "
+
+        public async Task PowerUpPokemon()
+        {
+
+            if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps)
+            return;
+
+            var pokemons = await _inventory.GetPokemonToPowerUp();
+            if (pokemons.Count == 0) return;
+
+
+        }
+
+        public async Task PowerUpPokemons(List<PokemonData> pokemons)
+        {
+            var myPokemonSettings = await _inventory.GetPokemonSettings();
+            var pokemonSettings = myPokemonSettings.ToList();
+
+            var myPokemonFamilies = await _inventory.GetPokemonFamilies();
+            var pokemonFamilies = myPokemonFamilies.ToArray();
+
+            var upgradedNumber = 0;
+            foreach (var pokemon in pokemons)
+            {
+                if (pokemon.GetMaxCP() == pokemon.Cp) continue;
+
+                var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+                var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+
+                if (familyCandy.Candy_ <= 0) continue;
+                if (_settings.MinCandyForPowerUps != 0 || familyCandy.Candy_ < _settings.MinCandyForPowerUps) continue;
+
+                var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
+                if (upgradeResult.Result.ToString().ToLower().Contains("success"))
+                {
+                    Logger.Write($"(POWER) Pokemon was powered up! {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.White);
+                    upgradedNumber++;
+                }
+
+                if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
+                    break;
             }
         }
 

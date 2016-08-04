@@ -30,13 +30,15 @@ namespace PokeRoadie
     public class PokeRoadieInventory
     {
         private readonly PokeRoadieClient _client;
+        private readonly PokeRoadieSettings _settings;
         public static DateTime _lastRefresh;
         public static GetInventoryResponse _cachedInventory;
         private string export_path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
 
-        public PokeRoadieInventory(PokeRoadieClient client)
+        public PokeRoadieInventory(PokeRoadieClient client, PokeRoadieSettings settings)
         {
             _client = client;
+            _settings = settings;
         }
 
         //public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(ISettings clientSettings)
@@ -528,6 +530,91 @@ namespace PokeRoadie
                 ss.Release();
             }
         }
+
+        public async Task<int> GetStarDust()
+        {
+            var StarDust = await _client.Player.GetPlayer();
+            var gdrfds = StarDust.PlayerData.Currencies;
+            var SplitStar = gdrfds[1].Amount;
+            return SplitStar;
+
+        }
+
+
+        public async Task<List<PokemonData>> GetPokemonToPowerUp()
+        {
+            var query = (await GetPokemons()).Where(p =>
+                  String.IsNullOrWhiteSpace(p.DeployedFortId));
+
+            //list filter
+            if (PokeRoadieSettings.Current.UsePokemonsToPowerUpList)
+            {
+                if (PokeRoadieSettings.Current.PokemonsToPowerUp.Count() == 0)
+                    return new List<PokemonData>();
+
+                query = query.Where(x => PokeRoadieSettings.Current.PokemonsToPowerUp.Contains(x.PokemonId));
+                if (query.Count() == 0) return new List<PokemonData>();
+            }
+
+            //PowerUp By CP filter
+            if (PokeRoadieSettings.Current.PowerUpAboveCp > 0)
+                query = query.Where(p => p.Cp > PokeRoadieSettings.Current.PowerUpAboveCp);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //PowerUp By IV filter
+            if (PokeRoadieSettings.Current.PowerUpAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() > PokeRoadieSettings.Current.PowerUpAboveIV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //PowerUp By V filter
+            if (PokeRoadieSettings.Current.PowerUpAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.PowerUpAboveV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //ordering
+            switch (PokeRoadieSettings.Current.PowerUpPriorityType)
+            {
+                case PriorityTypes.CP:
+                    query = query.OrderByDescending(x => x.Cp)
+                                 .ThenBy(x => x.Stamina);
+                    break;
+                case PriorityTypes.IV:
+                    query = query.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+                                 .ThenBy(n => n.StaminaMax);
+                    break;
+                default:
+                    query = query.OrderByDescending(x => x.CalculatePokemonValue())
+                                 .ThenBy(n => n.StaminaMax);
+                    break;
+            }
+
+            return query.ToList();
+
+        }
+
+        public async Task<GetInventoryResponse> RefreshCachedInventory()
+        {
+            var now = DateTime.UtcNow;
+            var ss = new SemaphoreSlim(10);
+
+            await ss.WaitAsync();
+            try
+            {
+                _lastRefresh = now;
+                _cachedInventory = await _client.Inventory.GetInventory();
+                return _cachedInventory;
+            }
+            finally
+            {
+                ss.Release();
+            }
+        }
+
+        //public async Task<UpgradePokemonResponse> UpgradePokemon(ulong pokemonid)
+        //{
+        //    var upgradeResult = await _client.Inventory.UpgradePokemon(pokemonid);
+        //    return upgradeResult;
+        //}
 
         public async Task ExportPokemonToCSV(PlayerData player, string filename = "PokeList.csv")
         {
