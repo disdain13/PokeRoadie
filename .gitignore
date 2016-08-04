@@ -5,6 +5,5 @@
 packages
 bin/
 obj/
-/PokemonGo/RocketAPI/Proto/google/protobuf
 .vs/
 *.user
