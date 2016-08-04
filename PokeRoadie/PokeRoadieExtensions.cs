@@ -117,7 +117,7 @@ namespace PokeRoadie.Extensions
             return p + cp + m1 + m2;
         }
 
-        public static void Save(this FortDetailsResponse fortInfo, string filePath)
+        public static void Save(this FortDetailsResponse fortInfo, string filePath, double currentAltitude)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace PokeRoadie.Extensions
                 data.Id = fortInfo.FortId;
                 data.Latitude = fortInfo.Latitude;
                 data.Longitude = fortInfo.Longitude;
-                data.Altitude = PokeRoadieClient.Current.CurrentLatitude;
+                data.Altitude = currentAltitude;
                 data.Name = fortInfo.Name;
                 data.Description = fortInfo.Description;
                 data.Fp = fortInfo.Fp;
@@ -141,7 +141,7 @@ namespace PokeRoadie.Extensions
             }
         }
 
-        public static void Save(this GetGymDetailsResponse fortDetails, FortDetailsResponse fortInfo, string filePath)
+        public static void Save(this GetGymDetailsResponse fortDetails, FortDetailsResponse fortInfo, string filePath, double currentAltitude)
         {
             //write data file
             try
@@ -150,7 +150,7 @@ namespace PokeRoadie.Extensions
                 data.Id = fortInfo.FortId;
                 data.Latitude = fortDetails.GymState.FortData.Latitude;
                 data.Longitude = fortDetails.GymState.FortData.Longitude;
-                data.Altitude = PokeRoadieClient.Current.CurrentAltitude;
+                data.Altitude = currentAltitude;
                 data.Name = fortDetails.Name;
                 data.Description = fortDetails.Description;
                 data.Fp = fortInfo.Fp;

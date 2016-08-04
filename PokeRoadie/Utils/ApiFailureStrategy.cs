@@ -30,7 +30,8 @@ namespace PokeRoadie.Utils
 {
     public class ApiFailureStrategy : IApiFailureStrategy
     {
-         private int _retryCount;
+        private int _retryCount;
+        public PokeRoadieClient Client { get; set; }
 
         public ApiFailureStrategy()
         {
@@ -40,7 +41,7 @@ namespace PokeRoadie.Utils
         {
             try
             {
-                await PokeRoadieClient.Current.Login.DoLogin();
+                await Client.Login.DoLogin();
             }
             catch (AggregateException ae)
             {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokeRoadie
 {
+    [Serializable]
     public enum LoginResultTypes
     {   Unset,
         Success,

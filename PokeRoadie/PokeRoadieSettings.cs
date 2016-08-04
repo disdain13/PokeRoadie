@@ -340,7 +340,7 @@ namespace PokeRoadie
         #endregion
         #region " Constructors "
 
-        private PokeRoadieSettings()
+        public PokeRoadieSettings()
         {
             
             AuthType parserValue = AuthType.Google;
