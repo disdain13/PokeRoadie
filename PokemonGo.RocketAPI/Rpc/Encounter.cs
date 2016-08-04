@@ -21,20 +21,20 @@ namespace PokemonGo.RocketAPI.Rpc
             {
                 EncounterId = encounterId,
                 SpawnPointId = spawnPointGuid,
-                PlayerLatitude = _client.Settings.DefaultLatitude,
-                PlayerLongitude = _client.Settings.DefaultLongitude
+                PlayerLatitude = _client.CurrentLatitude,
+                PlayerLongitude = _client.CurrentLongitude
             };
             
             return await PostProtoPayload<Request, EncounterResponse>(RequestType.Encounter, message);
         }
 
-        public async Task<UseItemCaptureResponse> UseCaptureItem(ulong encounterId, ItemId itemId, string spawnPointGuid)
+        public async Task<UseItemCaptureResponse> UseCaptureItem(ulong encounterId, ItemId itemId, string spawnPointId)
         {
             var message = new UseItemCaptureMessage
             {
                 EncounterId = encounterId,
                 ItemId = itemId,
-                SpawnPointId = spawnPointGuid
+                SpawnPointId = spawnPointId
             };
             
             return await PostProtoPayload<Request, UseItemCaptureResponse>(RequestType.UseItemCapture, message);

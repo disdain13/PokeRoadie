@@ -54,9 +54,9 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="POGOProtos, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\POGOProtos.1.4.0\lib\net45\POGOProtos.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="POGOProtos, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\POGOProtos.1.5.0\lib\net45\POGOProtos.dll</HintPath>
     </Reference>
     <Reference Include="PokeRoadie.Xml">
       <HintPath>..\components\PokeRoadie.Xml.dll</HintPath>
@@ -75,6 +75,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\IncubatorData.cs" />
+    <Compile Include="Data\LoginResultTypes.cs" />
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PokeRoadieInventory.cs" />
     <Compile Include="PokeRoadieLogic.cs" />
     <Compile Include="PokeRoadieNavigation.cs" />
@@ -98,6 +106,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>UserSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ApiFailureStrategy.cs" />
     <Compile Include="Utils\GPXReader.cs" />
     <Compile Include="Utils\LocationUtils.cs" />
     <Compile Include="Utils\RouteUtils.cs" />
@@ -142,6 +151,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UsernamePasswordForm.resx">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -4,8 +4,10 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Reflection;
-
+using PokemonGo.RocketAPI.Extensions;
 using PokemonGo.RocketAPI;
+using POGOProtos.Networking.Envelopes;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -14,12 +16,13 @@ namespace PokeRoadie
     public class PokeRoadieClient : Client
     {
 
+        
         private static PokeRoadieClient _current;
         public static PokeRoadieClient Current { get { _current = _current ?? new PokeRoadieClient(); return _current; } }
 
         public DateTime? RefreshEndDate { get; set; }
 
-        private PokeRoadieClient() : base(PokeRoadieSettings.Current)
+        private PokeRoadieClient() : base(PokeRoadieSettings.Current, new Utils.ApiFailureStrategy())
         {
         }
 
@@ -43,6 +46,14 @@ namespace PokeRoadie
             }
         }
 
+        public Task<ApiOperation> HandleApiFailure(RequestEnvelope request, ResponseEnvelope response)
+        {
+            throw new NotImplementedException();
+        }
 
+        public void HandleApiSuccess(RequestEnvelope request, ResponseEnvelope response)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

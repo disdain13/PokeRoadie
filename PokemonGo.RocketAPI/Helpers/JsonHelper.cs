@@ -1,8 +1,4 @@
-﻿#region
-
-using Newtonsoft.Json.Linq;
-
-#endregion
+﻿using Newtonsoft.Json.Linq;
 
 namespace PokemonGo.RocketAPI.Helpers
 {

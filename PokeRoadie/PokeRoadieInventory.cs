@@ -355,6 +355,24 @@ namespace PokeRoadie
                         });
         }
 
+        public async Task<IEnumerable<EggIncubator>> GetEggIncubators()
+        {
+            var inventory = await getCachedInventory(_client);
+            return
+                inventory.InventoryDelta.InventoryItems
+                    .Where(x => x.InventoryItemData.EggIncubators != null)
+                    .SelectMany(i => i.InventoryItemData.EggIncubators.EggIncubator)
+                    .Where(i => i != null);
+        }
+
+        public async Task<IEnumerable<PokemonData>> GetEggs()
+        {
+            var inventory = await getCachedInventory(_client);
+            return
+                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
+                    .Where(p => p != null && p.IsEgg);
+        }
+
         public async Task<IEnumerable<PlayerStats>> GetPlayerStats()
         {
             var inventory = await getCachedInventory(_client);
