@@ -611,38 +611,8 @@ namespace PokeRoadie
             }
             //await CheckDestinations();
             var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-
             var mapObjects = await _client.Map.GetMapObjects();
-
-            //var pokeStopList = 
-            //    PokeRoadieNavigation.pathByNearestNeighbour(
-            //    mapObjects.Item1.MapCells.SelectMany(i => i.Forts)
-            //        .Where(i =>
-            //            i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() &&
-            //            (PokeRoadieSettings.Current.MaxDistance == 0 ||
-            //            LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude) < PokeRoadieSettings.Current.MaxDistance))
-            //        .OrderBy(i =>
-            //            LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude)).ToArray()).ToList();
-
-            var fullPokestopList = PokeRoadieNavigation.pathByNearestNeighbour(
-                mapObjects.Item1.MapCells.SelectMany(i => i.Forts)
-                    .Where(i =>
-                        (PokeRoadieSettings.Current.MaxDistance == 0 ||
-                        LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude) < PokeRoadieSettings.Current.MaxDistance))
-                    .OrderBy(i =>
-                        LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude)).ToArray()).ToList();
-
-            OnGetAllNearbyPokestops?.Invoke(location, fullPokestopList.Where(x => x.Type != FortType.Gym).ToList());
-            OnGetAllNearbyGyms?.Invoke(location, fullPokestopList.Where(x => x.Type == FortType.Gym).ToList());
-
-            var pokeStopList = fullPokestopList
-                    .Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).ToList();
-
-            if (!PokeRoadieSettings.Current.VisitGyms)
-                pokeStopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
-
-            if (!PokeRoadieSettings.Current.VisitPokestops)
-                pokeStopList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+            var  pokeStopList = GetPokestops(PokeRoadieSettings.Current.MaxDistance, mapObjects.Item1);
 
             if (pokeStopList.Where(x => x.Type != FortType.Gym).Count() == 0) 
             {
@@ -662,7 +632,6 @@ namespace PokeRoadie
                 await ProcessPokeStopList(pokeStopList, mapObjects.Item1);
             }
 
-            
         }
 
         private async Task ProcessPokeStopList(List<FortData> pokeStopList, GetMapObjectsResponse mapObjects)
@@ -927,9 +896,10 @@ namespace PokeRoadie
             //catch lure pokemon 8)
             if (PokeRoadieSettings.Current.CatchPokemon && pokeStop.LureInfo != null)
             {
-                var encounter = await _client.Encounter.EncounterLurePokemon(pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId);
-                if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
-                    await CatchEncounter(GetCurrentLocationData(), pokeStop.LureInfo.EncounterId, encounter.PokemonData, encounter?.CaptureProbability?.CaptureProbability_?.First(), pokeStop.LureInfo.FortId,"Lure");
+                if (!PokeRoadieSettings.Current.UsePokemonToNotCatchList || !PokeRoadieSettings.Current.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
+                    await HandleEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId, "Lure");
+                else
+                    Logger.Write($"Wild encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
             }
 
             if (PokeRoadieSettings.Current.LoiteringActive && pokeStop.LureInfo != null)
@@ -940,14 +910,11 @@ namespace PokeRoadie
                     if (PokeRoadieSettings.Current.CatchPokemon && !softBan)
                         await CatchNearbyPokemons();
 
-                    //catch lure pokemon 8)
-                    if (PokeRoadieSettings.Current.LoiteringActive && pokeStop.LureInfo != null)
-                    {
-                        var encounter = await _client.Encounter.EncounterLurePokemon(pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId);
-                        if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
-                            await CatchEncounter(GetCurrentLocationData(),pokeStop.LureInfo.EncounterId, encounter.PokemonData, encounter?.CaptureProbability?.CaptureProbability_?.First(), pokeStop.LureInfo.FortId, "Lure");
-                    }
-
+                    if (!PokeRoadieSettings.Current.UsePokemonToNotCatchList || !PokeRoadieSettings.Current.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
+                        await HandleEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId, "Lure");
+                    else
+                        Logger.Write($"Wild encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
+               
                     var fortSearch2 = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     if (fortSearch2.ExperienceAwarded > 0)
                     {
@@ -1397,10 +1364,11 @@ namespace PokeRoadie
             if (pokeStopList.Count > 0) await ProcessPokeStopList(pokeStopList, mapObjects.Item1);
         }
 
-        private async Task HandleEncounter(LocationData location, ulong encounterId, float? probability, string spawnPointId, string source)
+        private async Task HandleEncounter(LocationData location, ulong encounterId, string spawnPointId, string source)
         {
 
             var encounter = await _client.Encounter.EncounterPokemon(encounterId, spawnPointId);
+            var probability = encounter?.CaptureProbability?.CaptureProbability_?.First();
 
             if (encounter.Status == EncounterResponse.Types.Status.EncounterSuccess)
                 await CatchEncounter(location, encounterId, encounter?.WildPokemon?.PokemonData, probability, spawnPointId, source);
@@ -1469,9 +1437,8 @@ namespace PokeRoadie
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
                 {
-                    var encounter = await _client.Encounter.EncounterPokemon(incenseRequest.EncounterId, incenseRequest.EncounterLocation);
                     if (!PokeRoadieSettings.Current.UsePokemonToNotCatchList || !PokeRoadieSettings.Current.PokemonsNotToCatch.Contains(incenseRequest.PokemonId))
-                        await HandleEncounter(new LocationData(incenseRequest.Latitude, incenseRequest.Longitude, _client.CurrentAltitude), incenseRequest.EncounterId, encounter?.CaptureProbability?.CaptureProbability_?.First(), incenseRequest.EncounterLocation, "Incense");
+                        await HandleEncounter(new LocationData(incenseRequest.Latitude, incenseRequest.Longitude, _client.CurrentAltitude), incenseRequest.EncounterId, incenseRequest.EncounterLocation, "Incense");
                     else
                         Logger.Write($"Incense encounter with {incenseRequest.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
                 }
@@ -1493,8 +1460,10 @@ namespace PokeRoadie
                 if (!isRunning) break;
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
 
-                var encounter = await _client.Encounter.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnPointId);
-                await HandleEncounter(new LocationData(pokemon.Latitude, pokemon.Longitude, _client.CurrentAltitude), pokemon.EncounterId, encounter?.CaptureProbability?.CaptureProbability_?.First(), pokemon.SpawnPointId, "Wild");
+                if (!PokeRoadieSettings.Current.UsePokemonToNotCatchList || !PokeRoadieSettings.Current.PokemonsNotToCatch.Contains(pokemon.PokemonId))
+                    await HandleEncounter(new LocationData(pokemon.Latitude, pokemon.Longitude, _client.CurrentAltitude), pokemon.EncounterId, pokemon.SpawnPointId, "Wild");
+                else
+                    Logger.Write($"Wild encounter with {pokemon.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
 
                 await RandomHelper.RandomDelay(220, 320);
 
