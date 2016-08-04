@@ -123,6 +123,7 @@ namespace PokeRoadie
         public virtual bool UseIncense { get; set; }
         public virtual bool UseRevives { get; set; }
         public virtual bool UsePotions { get; set; }
+        public virtual bool UseEggIncubators { get; set; }
 
         //config options
         public virtual bool UsePokemonToNotCatchList { get; set; }
@@ -449,6 +450,7 @@ namespace PokeRoadie
             this.UsePokemonsToPowerUpList = UserSettings.Default.UsePokemonsToPowerUpList;
             this.MinCandyForPowerUps = UserSettings.Default.MinCandyForPowerUps;
             this.MaxPowerUpsPerRound = UserSettings.Default.MaxPowerUpsPerRound;
+            this.UseEggIncubators = UserSettings.Default.UseEggIncubators;
 
         }
 
@@ -584,6 +586,7 @@ namespace PokeRoadie
                     this.UsePokemonsToPowerUpList = obj.UsePokemonsToPowerUpList;
                     this.MinCandyForPowerUps = obj.MinCandyForPowerUps;
                     this.MaxPowerUpsPerRound = obj.MaxPowerUpsPerRound;
+                    this.UseEggIncubators = obj.UseEggIncubators;
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))

@@ -625,5 +625,14 @@ namespace PokeRoadie {
                 return ((int)(this["MaxPowerUpsPerRound"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseEggIncubators {
+            get {
+                return ((bool)(this["UseEggIncubators"]));
+            }
+        }
     }
 }

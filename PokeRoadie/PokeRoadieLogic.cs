@@ -503,6 +503,9 @@ namespace PokeRoadie
                     //heal
                     if (_settings.UsePotions) await UsePotions();
 
+                    //egg incubators
+                    if (_settings.UseEggIncubators) await UseIncubators();
+
                     //evolve
                     if (_settings.EvolvePokemon) await EvolvePokemon();
 
@@ -853,6 +856,9 @@ namespace PokeRoadie
             //heal
             if (_settings.UsePotions) await UsePotions();
 
+            //egg incubators
+            if (_settings.UseEggIncubators) await UseIncubators();
+
             //evolve
             if (_settings.EvolvePokemon) await EvolvePokemon();
 
@@ -1151,7 +1157,12 @@ namespace PokeRoadie
                     }
 
                     if (recycleCounter >= 5)
+                    {
                         await RecycleItems();
+                        //egg incubators
+                        if (_settings.UseEggIncubators) await UseIncubators();
+                    }
+                        
 
                     await RandomHelper.RandomDelay(15000, 30000);
                     pokeStop = mapObjects.MapCells.SelectMany(i => i.Forts).Where(x => x.Id == pokeStop.Id).FirstOrDefault();
@@ -1161,7 +1172,12 @@ namespace PokeRoadie
 
             //await RandomHelper.RandomDelay(50, 200);
             if (recycleCounter >= 5)
+            {
                 await RecycleItems();
+                //egg incubators
+                if (_settings.UseEggIncubators) await UseIncubators();
+            }
+
         }
 
         private async Task ProcessEncounter(LocationData location, ulong encounterId, string spawnPointId, EncounterSourceTypes source)
@@ -1344,38 +1360,6 @@ namespace PokeRoadie
             }
             while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
         }
-
-        //private async Task ProcessEggsList()
-        //{
-        //    // Refresh inventory so that the player stats are fresh
-        //    await session.Inventory.RefreshCachedInventory();
-
-        //    var playerStats = (await session.Inventory.GetPlayerStats()).FirstOrDefault();
-        //    if (playerStats == null)
-        //        return;
-
-        //    var kmWalked = playerStats.KmWalked;
-
-        //    var incubators = (await session.Inventory.GetEggIncubators())
-        //        .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-        //        .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-        //        .ToList();
-
-        //    var unusedEggs = (await session.Inventory.GetEggs())
-        //        .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
-        //        .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
-        //        .ToList();
-
-        //    session.EventDispatcher.Send(
-        //        new EggsListEvent
-        //        {
-        //            PlayerKmWalked = kmWalked,
-        //            Incubators = incubators,
-        //            UnusedEggs = unusedEggs
-        //        });
-
-        //    DelayingUtils.Delay(session.LogicSettings.DelayBetweenPlayerActions, 0);
-        //}
 
         #endregion
         #region " Travel & Destination Methods "
@@ -2100,6 +2084,38 @@ namespace PokeRoadie
             recycleCounter = 0;
         }
 
+        //private async Task UseIncubators()
+        //{
+        //    // Refresh inventory so that the player stats are fresh
+        //    await _inventory.RefreshCachedInventory();
+
+        //    var playerStats = (await _inventory.GetPlayerStats()).FirstOrDefault();
+        //    if (playerStats == null)
+        //        return;
+
+        //    var kmWalked = playerStats.KmWalked;
+
+        //    var incubators = (await _inventory.GetEggIncubators())
+        //        .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+        //        .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+        //        .ToList();
+
+        //    var unusedEggs = (await _inventory.GetEggs())
+        //        .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
+        //        .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
+        //        .ToList();
+
+        //    //session.EventDispatcher.Send(
+        //    //    new EggsListEvent
+        //    //    {
+        //    //        PlayerKmWalked = kmWalked,
+        //    //        Incubators = incubators,
+        //    //        UnusedEggs = unusedEggs
+        //    //    });
+
+        //    //DelayingUtils.Delay(session.LogicSettings.DelayBetweenPlayerActions, 0);
+        //}
+
         public async Task UseLuckyEgg()
         {
             if (_settings.UseLuckyEggs && (!_lastLuckyEggTime.HasValue || _lastLuckyEggTime.Value < DateTime.Now))
@@ -2154,7 +2170,7 @@ namespace PokeRoadie
                 var hatched = pokemons.FirstOrDefault(x => !x.IsEgg && x.Id == incubator.PokemonId);
                 if (hatched == null) continue;
 
-                Logger.Write($"Hatched {hatched.GetStats()}", LogLevel.Egg);
+                Logger.Write($"Hatched egg! {hatched.GetStats()}", LogLevel.Egg);
                 //session.EventDispatcher.Send(new EggHatchedEvent
                 //{
                 //    Id = hatched.Id,
