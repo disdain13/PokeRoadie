@@ -92,7 +92,7 @@ namespace PokeRoadie.Extensions
         }
         public static string GetStats(this PokemonData pokemon)
         {
-            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} Total Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Move1.GetMoveName()}/{pokemon.Move2.GetMoveName()}";
+            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} True Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Move1.GetMoveName()}/{pokemon.Move2.GetMoveName()}";
         }
         public static string GetMinStats(this PokemonData pokemon)
         {

@@ -139,6 +139,14 @@ namespace PokeRoadie
         public virtual double WaypointLongitude { get; set; }
         public virtual double WaypointAltitude { get; set; }
 
+        //proxy
+        public bool UseProxy { get; set; }
+        public string UseProxyHost { get; set; }
+        public string UseProxyPort { get; set; }
+        public bool UseProxyAuthentication { get; set; }
+        public string UseProxyUsername { get; set; }
+        public string UseProxyPassword { get; set; }
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -227,7 +235,7 @@ namespace PokeRoadie
             {
                 //Type of pokemons not to transfer
                 _pokemonsNotToTransfer = _pokemonsNotToTransfer ?? LoadPokemonList("PokemonsNotToTransfer.ini", new List<PokemonId> {
-                    PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
+                    PokemonId.Farfetchd, PokemonId.Kangaskhan, PokemonId.Tauros, PokemonId.MrMime , PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
                 });
                 return _pokemonsNotToTransfer;
             }
@@ -240,7 +248,7 @@ namespace PokeRoadie
             {
                 //Type of pokemons not to transfer
                 _pokemonsToPowerUp = _pokemonsToPowerUp ?? LoadPokemonList("PokemonsToPowerUp.ini", new List<PokemonId> {
-                    PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
+                    PokemonId.Farfetchd, PokemonId.Kangaskhan, PokemonId.Tauros, PokemonId.MrMime , PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
                 });
                 return _pokemonsToPowerUp;
             }
