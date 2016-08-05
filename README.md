@@ -4,6 +4,12 @@
 <!-- title -->
 <h1>PokeRoadie</h1>
 <h2>Advanced PokemonGo Bot</h2>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="6W76RMGWM2Q38">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
 Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. <a href="https://github.com/disdain13/PokeRoadie/wiki" title="goto the WIKI, just do it!">Checkout the full list of new features in our WIKI</a><br/><br/>
 
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_2.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
