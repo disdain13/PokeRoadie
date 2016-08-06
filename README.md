@@ -11,7 +11,7 @@ Extremely easy to use fully featured bot which will play the game for you when y
 
 ###In the beginning, There was a game which many felt the need to exploit and pillage in a programmatic fashion.###
 
-*[Ferox](https://github.com/FeroxRev/Pokemon-Go-Rocket-API)*
+*[FeroxRev](https://github.com/FeroxRev/Pokemon-Go-Rocket-API)*
  wrote the .Net wrapper for talking to the PokemonGo servers. This included generation of classes which represented the data, and the foundation for communicating using them. PokeRoadie uses a 99% pure FeroxRev API implementation, so he is responsible for quite a bit of the code.
 
 *[Necronomicon](https://github.com/NecronomiconCoding/NecroBot)*
