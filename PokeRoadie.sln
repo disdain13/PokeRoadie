@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonGo.RocketAPI", "Poke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeRoadie", "PokeRoadie\PokeRoadie.csproj", "{1FEA147E-F704-497B-A538-00B053B5F672}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeRoadie.TestForms", "PokeRoadie.TestForms\PokeRoadie.TestForms.csproj", "{DF023218-873C-464E-93DD-7A54401AAA74}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{1FEA147E-F704-497B-A538-00B053B5F672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FEA147E-F704-497B-A538-00B053B5F672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FEA147E-F704-497B-A538-00B053B5F672}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF023218-873C-464E-93DD-7A54401AAA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF023218-873C-464E-93DD-7A54401AAA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF023218-873C-464E-93DD-7A54401AAA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF023218-873C-464E-93DD-7A54401AAA74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
