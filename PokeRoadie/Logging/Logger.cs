@@ -32,10 +32,10 @@ namespace PokeRoadie.Logging
                 if (provider != null)
                     provider.Initialize();
         }
-        public void Write(string message, PokemonGo.RocketAPI.Logging.LogLevel level = PokemonGo.RocketAPI.Logging.LogLevel.None, ConsoleColor color = ConsoleColor.White)
+        public static void Write(string message, PokemonGo.RocketAPI.Logging.LogLevel level = PokemonGo.RocketAPI.Logging.LogLevel.None, ConsoleColor color = ConsoleColor.White)
         {
             //create new log entry
-            Write(
+            Logger.Current.Write(
                 new LogEntry()
                 {
                     Date = DateTime.Now,
