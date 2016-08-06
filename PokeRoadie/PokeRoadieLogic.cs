@@ -109,15 +109,16 @@ namespace PokeRoadie
         #region " Members "
 
         private ISynchronizeInvoke _invoker;
-        private DateTime? _lastLuckyEggTime;
-        private DateTime? _lastIncenseTime;
-        private DateTime? _lastExportTime;
+        private DateTime? _nextLuckyEggTime;
+        private DateTime? _nextIncenseTime;
+        private DateTime? _nextExportTime;
+        public DateTime? _nextWriteStatsTime;
         private GetPlayerResponse _playerProfile;
         private int recycleCounter = 0;
         private bool IsInitialized = false;
         private int fleeCounter = 0;
-        private DateTime? fleeLast;
-        private DateTime? fleeStart;
+        private DateTime? fleeEndTime;
+        private DateTime? fleeStartTime;
         private bool softBan = false;
         private bool hasDisplayedTransferSettings;
         private ApiFailureStrategy _apiFailureStrategy;
@@ -200,16 +201,16 @@ namespace PokeRoadie
 
         private async Task Export()
         {
-            if (!_lastExportTime.HasValue || _lastExportTime.Value < DateTime.Now)
+            if (!_nextExportTime.HasValue || _nextExportTime.Value < DateTime.Now)
             {
-                _lastExportTime = DateTime.Now.AddMinutes(5);
+                _nextExportTime = DateTime.Now.AddMinutes(5);
                 await _inventory.ExportPokemonToCSV(_playerProfile.PlayerData);
             }
         }
 
         private async Task WriteStats()
         {
-            if (!_client.RefreshEndDate.HasValue || _client.RefreshEndDate.Value <= DateTime.Now)
+            if (!_nextWriteStatsTime.HasValue || _nextWriteStatsTime.Value <= DateTime.Now)
             {
                 await PokeRoadieInventory.getCachedInventory(_client);
                 _playerProfile = await _client.Player.GetPlayer();
@@ -335,7 +336,7 @@ namespace PokeRoadie
                     Logger.Write($"90%-100%: {allPokemon.Where(x => x.GetPerfection() > 89).Count()}", LogLevel.None, ConsoleColor.White);
                 }
 
-                _client.RefreshEndDate = DateTime.Now.AddMinutes(_settings.DisplayRefreshMinutes);
+                _nextWriteStatsTime = DateTime.Now.AddMinutes(_settings.DisplayRefreshMinutes);
             }
 
         }
@@ -873,7 +874,7 @@ namespace PokeRoadie
                     LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //incense pokemon
-            if (_settings.CatchPokemon && _settings.UseIncense && (!_lastIncenseTime.HasValue && _lastIncenseTime.Value >= DateTime.Now))
+            if (_settings.CatchPokemon && _settings.UseIncense && (!_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
             {
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
@@ -1195,11 +1196,11 @@ namespace PokeRoadie
                 //reset ban
                 if (softBan)
                 {
-                    var diff = DateTime.Now.Subtract(fleeStart.Value).ToString();
+                    var diff = DateTime.Now.Subtract(fleeStartTime.Value).ToString();
                     softBan = false;
                     fleeCounter = 0;
-                    fleeLast = null;
-                    fleeStart = null;
+                    fleeEndTime = null;
+                    fleeStartTime = null;
                     Logger.Write($"(SOFT BAN) The ban was lifted after {diff}!", LogLevel.None, ConsoleColor.DarkRed);
                 }
 
@@ -1207,15 +1208,15 @@ namespace PokeRoadie
             else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
             {
                 fleeCounter++;
-                if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
                 {
                     softBan = true;
-                    fleeStart = DateTime.Now;
+                    fleeStartTime = DateTime.Now;
                     Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
                 }
 
-                fleeLast = DateTime.Now;
-                fleeLast = DateTime.Now;
+                fleeEndTime = DateTime.Now;
+                fleeEndTime = DateTime.Now;
             }
 
             //catch lure pokemon 8)
@@ -1319,14 +1320,14 @@ namespace PokeRoadie
             else if (encounter.Status == EncounterResponse.Types.Status.EncounterPokemonFled)
             {
                 fleeCounter++;
-                if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
                 {
                     softBan = true;
-                    fleeStart = DateTime.Now;
+                    fleeStartTime = DateTime.Now;
                     Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
 
                 }
-                fleeLast = DateTime.Now;
+                fleeEndTime = DateTime.Now;
             }
             else Logger.Write($"Encounter problem: {encounter.Status}", LogLevel.Warning);
 
@@ -1349,11 +1350,11 @@ namespace PokeRoadie
             {
                 if (!isRunning) break;
                 //if there has not been a consistent flee, reset
-                if (fleeCounter > 0 && fleeLast.HasValue && fleeLast.Value.AddMinutes(3) < DateTime.Now && !softBan)
+                if (fleeCounter > 0 && fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) < DateTime.Now && !softBan)
                 {
-                    fleeStart = null;
+                    fleeStartTime = null;
                     fleeCounter = 0;
-                    fleeLast = null;
+                    fleeEndTime = null;
                 }
 
                 var bestPokeball = await GetBestBall(encounter.PokemonData, encounter.Probability);
@@ -1386,12 +1387,12 @@ namespace PokeRoadie
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
                     fleeCounter = 0;
-                    fleeLast = null;
-                    fleeStart = null;
+                    fleeEndTime = null;
+                    fleeStartTime = null;
                     //reset soft ban info
                     if (softBan)
                     {
-                        var diff = DateTime.Now.Subtract(fleeStart.Value).ToString();
+                        var diff = DateTime.Now.Subtract(fleeStartTime.Value).ToString();
                         softBan = false;
                         Logger.Write($"(SOFT BAN) The ban was lifted after {diff}!", LogLevel.None, ConsoleColor.DarkRed);
                     }
@@ -1413,14 +1414,14 @@ namespace PokeRoadie
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
                 {
                     fleeCounter++;
-                    if (fleeLast.HasValue && fleeLast.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                    if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
                     {
                         softBan = true;
-                        fleeStart = DateTime.Now;
+                        fleeStartTime = DateTime.Now;
                         Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
 
                     }
-                    fleeLast = DateTime.Now;
+                    fleeEndTime = DateTime.Now;
 
                     //raise event
                     if (OnCatchAttempt != null)
@@ -2260,7 +2261,7 @@ namespace PokeRoadie
 
         public async Task UseLuckyEgg()
         {
-            if (_settings.UseLuckyEggs && (!_lastLuckyEggTime.HasValue || _lastLuckyEggTime.Value < DateTime.Now))
+            if (_settings.UseLuckyEggs && (!_nextLuckyEggTime.HasValue || _nextLuckyEggTime.Value < DateTime.Now))
             {
                 var inventory = await _inventory.GetItems();
                 var LuckyEgg = inventory.Where(p => p.ItemId == ItemId.ItemLuckyEgg).FirstOrDefault();
@@ -2269,7 +2270,7 @@ namespace PokeRoadie
                 var response = await _client.Inventory.UseItemXpBoost();
                 if (response.Result == UseItemXpBoostResponse.Types.Result.Success)
                 {
-                    _lastLuckyEggTime = DateTime.Now.AddMinutes(30);
+                    _nextLuckyEggTime = DateTime.Now.AddMinutes(30);
                     Logger.Write($"(EGG) Used Lucky Egg, remaining: {LuckyEgg.Count - 1}", LogLevel.None, ConsoleColor.Magenta);
 
                     //raise event
@@ -2281,7 +2282,7 @@ namespace PokeRoadie
                 }
                 else if (response.Result == UseItemXpBoostResponse.Types.Result.ErrorXpBoostAlreadyActive || response.Result == UseItemXpBoostResponse.Types.Result.Unset)
                 {
-                    _lastLuckyEggTime = DateTime.Now.AddMinutes(30);
+                    _nextLuckyEggTime = DateTime.Now.AddMinutes(30);
                     Logger.Write($"(EGG) Egg Active", LogLevel.None, ConsoleColor.Magenta);
 
                     //raise event
@@ -2438,7 +2439,7 @@ namespace PokeRoadie
 
         public async Task UseIncense()
         {
-            if (_settings.CatchPokemon && _settings.UseIncense && (!_lastIncenseTime.HasValue || _lastIncenseTime.Value < DateTime.Now))
+            if (_settings.CatchPokemon && _settings.UseIncense && (!_nextIncenseTime.HasValue || _nextIncenseTime.Value < DateTime.Now))
             {
                 var inventory = await _inventory.GetItems();
                 var WorstIncense = inventory.FirstOrDefault(p => p.ItemId == ItemId.ItemIncenseOrdinary);
@@ -2447,12 +2448,12 @@ namespace PokeRoadie
                 var response = await _client.Inventory.UseIncense(ItemId.ItemIncenseOrdinary);
                 if (response.Result == UseIncenseResponse.Types.Result.Success)
                 {
-                    _lastIncenseTime = DateTime.Now.AddMinutes(30);
+                    _nextIncenseTime = DateTime.Now.AddMinutes(30);
                     Logger.Write($"(INCENSE) Used Ordinary Incense, remaining: {WorstIncense.Count - 1}", LogLevel.None, ConsoleColor.Magenta);
                 }
                 else if (response.Result == UseIncenseResponse.Types.Result.IncenseAlreadyActive)
                 {
-                    _lastIncenseTime = DateTime.Now.AddTicks(response.AppliedIncense.ExpireMs);
+                    _nextIncenseTime = DateTime.Now.AddTicks(response.AppliedIncense.ExpireMs);
                     Logger.Write($"(INCENSE) Incense Active", LogLevel.None, ConsoleColor.Magenta);
                 }
             }
