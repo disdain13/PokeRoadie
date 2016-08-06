@@ -13,6 +13,14 @@ namespace PokeRoadie.Logging.Providers
         string _currentFile = string.Empty;
         string path = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
 
+        public FlatFileLogProvider()
+        {
+        }
+        public FlatFileLogProvider(string directoryPath)
+        {
+            path = directoryPath;
+        }
+
         public void Initialize()
         {
             if (!Directory.Exists(path))
