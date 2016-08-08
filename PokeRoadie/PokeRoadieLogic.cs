@@ -65,12 +65,11 @@ namespace PokeRoadie
         public event Action<PokemonData> OnEvolve;
         public event Action<PokemonData> OnPowerUp;
         public event Action<PokemonData> OnTransfer;
-        public event Action<LocationData, GetGymDetailsResponse, PokemonData> OnDeploy;
 
         //inventory events
         public event Action<ItemId,int> OnRecycleItems;
         public event Action OnLuckyEggActive;
-        public event Action OnUseIncense;
+        public event Action OnIncenseActive;
         public event Action<ItemId,PokemonData> OnUsePotion;
         public event Action<ItemId, PokemonData> OnUseRevive;
         public event Action<IncubatorData, PokemonData> OnEggHatched;
@@ -137,6 +136,7 @@ namespace PokeRoadie
             _settings = PokeRoadieSettings.Current;
             _apiFailureStrategy = new ApiFailureStrategy();
             _client = new PokeRoadieClient(_settings, _apiFailureStrategy);
+            _apiFailureStrategy.Client = _client;
             _inventory = new PokeRoadieInventory(_client, _settings);
             _stats = new Statistics();
             _navigation = new PokeRoadieNavigation(_client);
@@ -2069,6 +2069,14 @@ namespace PokeRoadie
             if (evolvePokemonOutProto.Result == EvolvePokemonResponse.Types.Result.Success)
             {
                 Logger.Write($"{pokemon.GetMinStats()} for {evolvePokemonOutProto.ExperienceAwarded} xp", LogLevel.Evolve);
+                
+                //raise event
+                if (OnEvolve != null)
+                {
+                    if (!RaiseSyncEvent(OnEvolve, pokemon))
+                        OnEvolve(pokemon);
+                }
+
             }
             else
             {
@@ -2089,38 +2097,49 @@ namespace PokeRoadie
         }
         private async Task TransferPokemon(PokemonData pokemon)
         {
-            await _client.Inventory.TransferPokemon(pokemon.Id);
-
-            await PokeRoadieInventory.getCachedInventory(_client, true);
-            var myPokemonSettings = await _inventory.GetPokemonSettings();
-            var pokemonSettings = myPokemonSettings.ToList();
-            var myPokemonFamilies = await _inventory.GetPokemonFamilies();
-            var pokemonFamilies = myPokemonFamilies.ToArray();
-            var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
-            var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-            var FamilyCandies = $"{familyCandy.Candy_}";
-
-            _stats.IncreasePokemonsTransfered();
-            _stats.UpdateConsoleTitle(_client, _inventory);
-
-            PokemonData bestPokemonOfType = null;
-            switch (_settings.TransferPriorityType)
+            var response = await _client.Inventory.TransferPokemon(pokemon.Id);
+            if (response.Result == ReleasePokemonResponse.Types.Result.Success)
             {
-                case PriorityTypes.CP:
-                    bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
-                    break;
-                case PriorityTypes.IV:
-                    bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
-                    break;
-                default:
-                    bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
-                    break;
-            }
+                await PokeRoadieInventory.getCachedInventory(_client, true);
+                var myPokemonSettings = await _inventory.GetPokemonSettings();
+                var pokemonSettings = myPokemonSettings.ToList();
+                var myPokemonFamilies = await _inventory.GetPokemonFamilies();
+                var pokemonFamilies = myPokemonFamilies.ToArray();
+                var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+                var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+                var FamilyCandies = $"{familyCandy.Candy_}";
 
-            string bestPokemonInfo = "NONE";
-            if (bestPokemonOfType != null)
-                bestPokemonInfo = bestPokemonOfType.GetMinStats();
-            Logger.Write($"{pokemon.GetMinStats()} | Best: [{bestPokemonInfo}] | Candy: {FamilyCandies}", LogLevel.Transfer);
+                _stats.IncreasePokemonsTransfered();
+                _stats.UpdateConsoleTitle(_client, _inventory);
+
+                PokemonData bestPokemonOfType = null;
+                switch (_settings.TransferPriorityType)
+                {
+                    case PriorityTypes.CP:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+                        break;
+                    case PriorityTypes.IV:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
+                        break;
+                    default:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                        break;
+                }
+
+                string bestPokemonInfo = "NONE";
+                if (bestPokemonOfType != null)
+                    bestPokemonInfo = bestPokemonOfType.GetMinStats();
+                Logger.Write($"{pokemon.GetMinStats()} | Best: [{bestPokemonInfo}] | Candy: {FamilyCandies}", LogLevel.Transfer);
+
+                //raise event
+                if (OnTransfer != null)
+                {
+                    if (!RaiseSyncEvent(OnTransfer, pokemon))
+                        OnTransfer(pokemon);
+                }
+            }
+            else Logger.Write($"Transfer Error - {response.Result}", LogLevel.Error);
+
         }
         private async Task TransferPokemon(IEnumerable<PokemonData> pokemons)
         {
@@ -2170,10 +2189,17 @@ namespace PokeRoadie
                 if (_settings.MinCandyForPowerUps != 0 || familyCandy.Candy_ < _settings.MinCandyForPowerUps) continue;
 
                 var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
-                if (upgradeResult.Result.ToString().ToLower().Contains("success"))
+                if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
                     Logger.Write($"(POWER) Pokemon was powered up! {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.White);
                     upgradedNumber++;
+
+                    //raise event
+                    if (OnPowerUp != null)
+                    {
+                        if (!RaiseSyncEvent(OnPowerUp, pokemon))
+                            OnPowerUp(pokemon);
+                    }
                 }
 
                 if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
@@ -2426,6 +2452,13 @@ namespace PokeRoadie
                         PokemonId = incubator.PokemonId
                     });
 
+                    //raise event
+                    if (OnIncubatorStatus != null)
+                    {
+                        if (!RaiseSyncEvent(OnIncubatorStatus, incubator))
+                            OnIncubatorStatus(incubator);
+                    }
+
                     //session.EventDispatcher.Send(new EggIncubatorStatusEvent
                     //{
                     //    IncubatorId = incubator.Id,
@@ -2475,6 +2508,13 @@ namespace PokeRoadie
                     if (response.Result == UseItemPotionResponse.Types.Result.Success)
                     {
                         Logger.Write($"Revived {pokemon.GetMinStats()} with {potion} ", LogLevel.Pokemon);
+
+                        //raise event
+                        if (OnUseRevive != null)
+                        {
+                            if (!RaiseSyncEvent(OnUseRevive, potion, pokemon))
+                                OnUseRevive(potion, pokemon);
+                        }
                     }
                     else
                     {
@@ -2497,11 +2537,26 @@ namespace PokeRoadie
                 {
                     _nextIncenseTime = DateTime.Now.AddMinutes(30);
                     Logger.Write($"(INCENSE) Used Ordinary Incense, remaining: {WorstIncense.Count - 1}", LogLevel.None, ConsoleColor.Magenta);
+
+                    //raise event
+                    if (OnIncenseActive != null)
+                    {
+                        if (!RaiseSyncEvent(OnIncenseActive))
+                            OnIncenseActive();
+                    }
                 }
                 else if (response.Result == UseIncenseResponse.Types.Result.IncenseAlreadyActive)
                 {
                     _nextIncenseTime = DateTime.Now.AddTicks(response.AppliedIncense.ExpireMs);
                     Logger.Write($"(INCENSE) Incense Active", LogLevel.None, ConsoleColor.Magenta);
+
+
+                    //raise event
+                    if (OnIncenseActive != null)
+                    {
+                        if (!RaiseSyncEvent(OnIncenseActive))
+                            OnIncenseActive();
+                    }
                 }
             }
         }
