@@ -162,18 +162,18 @@ namespace PokeRoadie
                 _itemRecycleFilter = _itemRecycleFilter ?? LoadItemList("Configs\\ConfigItemList.ini", new List<KeyValuePair<ItemId, int>>
                 {
                     new KeyValuePair<ItemId, int>(ItemId.ItemUnknown, 0),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 100),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 100),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 100),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 50),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 75),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 75),
                     new KeyValuePair<ItemId, int>(ItemId.ItemMasterBall, 100),
 
-                    new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 10),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 10),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 25),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 25),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 30),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 50),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 75),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 100),
 
-                    new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 10),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 25),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 25),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 50),
 
                     new KeyValuePair<ItemId, int>(ItemId.ItemLuckyEgg, 200),
 
@@ -460,6 +460,13 @@ namespace PokeRoadie
             this.MaxPowerUpsPerRound = UserSettings.Default.MaxPowerUpsPerRound;
             this.UseEggIncubators = UserSettings.Default.UseEggIncubators;
 
+            this.UseProxy = UserSettings.Default.UseProxy;
+            this.UseProxyAuthentication = UserSettings.Default.UseProxyAuthentication;
+            this.UseProxyHost = UserSettings.Default.UseProxyHost;
+            this.UseProxyPassword = UserSettings.Default.UseProxyPassword;
+            this.UseProxyPort = UserSettings.Default.UseProxyPort;
+            this.UseProxyUsername = UserSettings.Default.UseProxyUsername;
+
         }
 
         #endregion
@@ -595,6 +602,13 @@ namespace PokeRoadie
                     this.MinCandyForPowerUps = obj.MinCandyForPowerUps;
                     this.MaxPowerUpsPerRound = obj.MaxPowerUpsPerRound;
                     this.UseEggIncubators = obj.UseEggIncubators;
+
+                    this.UseProxy = obj.UseProxy;
+                    this.UseProxyAuthentication = obj.UseProxyAuthentication;
+                    this.UseProxyHost = obj.UseProxyHost;
+                    this.UseProxyPassword = obj.UseProxyPassword;
+                    this.UseProxyPort = obj.UseProxyPort;
+                    this.UseProxyUsername = obj.UseProxyUsername;
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))

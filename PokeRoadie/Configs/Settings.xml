@@ -14,7 +14,7 @@
   <MaxDistance>5000</MaxDistance>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
-  <MaxSecondsBetweenStops>20</MaxSecondsBetweenStops>
+  <MaxSecondsBetweenStops>30</MaxSecondsBetweenStops>
   <FlyingEnabled>false</FlyingEnabled>
   <FlyLikeCaptKirk>false</FlyLikeCaptKirk>
   <FlyingSpeed>250</FlyingSpeed>
@@ -38,6 +38,15 @@
   <TransferBelowCp>0</TransferBelowCp>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
+  <PowerUpPokemon>false</PowerUpPokemon>
+  <PowerUpPriorityType>V</PowerUpPriorityType>
+  <PowerUpAboveIV>0</PowerUpAboveIV>
+  <PowerUpAboveV>0</PowerUpAboveV>
+  <PowerUpAboveCp>0</PowerUpAboveCp>
+  <MinStarDustForPowerUps>0</MinStarDustForPowerUps>
+  <UsePokemonsToPowerUpList>false</UsePokemonsToPowerUpList>
+  <MinCandyForPowerUps>0</MinCandyForPowerUps>
+  <MaxPowerUpsPerRound>0</MaxPowerUpsPerRound>
   <CatchPokemon>true</CatchPokemon>
   <VisitPokestops>true</VisitPokestops>
   <MoveWhenNoStops>false</MoveWhenNoStops>
@@ -49,6 +58,7 @@
   <UseIncense>false</UseIncense>
   <UseRevives>false</UseRevives>
   <UsePotions>false</UsePotions>
+  <UseEggIncubators>false</UseEggIncubators>
   <UsePokemonToNotCatchList>false</UsePokemonToNotCatchList>
   <PokeBallBalancing>true</PokeBallBalancing>
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
@@ -57,4 +67,7 @@
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
   <WaypointAltitude>0</WaypointAltitude>
+  <WaitOnStart>false</WaitOnStart>
+  <UseProxy>false</UseProxy>
+  <UseProxyAuthentication>false</UseProxyAuthentication>
 </PokeRoadieSettings>
