@@ -13,5 +13,6 @@ namespace PokemonGo.RocketAPI
         string PtcUsername { get; set; }
         string GoogleUsername { get; set; }
         string GooglePassword { get; set; }
+        //int MinMsBetweenRequests { get; set; }
     }
 }

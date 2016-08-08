@@ -609,6 +609,7 @@ namespace PokeRoadie
                     this.UseProxyPassword = obj.UseProxyPassword;
                     this.UseProxyPort = obj.UseProxyPort;
                     this.UseProxyUsername = obj.UseProxyUsername;
+  
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))

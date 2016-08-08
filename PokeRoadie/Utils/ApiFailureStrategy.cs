@@ -28,71 +28,6 @@ using PokeRoadie.Extensions;
 
 namespace PokeRoadie.Utils
 {
-    //public class ApiFailureStrategy : IApiFailureStrategy
-    //{
-    //    private int _retryCount;
-    //    public PokeRoadieClient Client { get; set; }
-
-    //    public ApiFailureStrategy()
-    //    {
-    //    }
-
-    //    private async void DoLogin()
-    //    {
-    //        try
-    //        {
-    //            await Client.Login.DoLogin();
-    //        }
-    //        catch (AggregateException ae)
-    //        {
-    //            throw ae.Flatten().InnerException;
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            throw ex.InnerException;
-    //        }
-    //    }
-
-    //    public async Task<ApiOperation> HandleApiFailure(RequestEnvelope request, ResponseEnvelope response)
-    //    {
-    //        if (_retryCount == 11)
-    //            return ApiOperation.Abort;
-
-    //        await Task.Delay(RandomHelper.RandomNumber(350, 500));
-    //        _retryCount++;
-
-    //        if (_retryCount % 5 == 0)
-    //        {
-    //            try
-    //            {
-    //                DoLogin();
-    //            }
-    //            catch (PtcOfflineException)
-    //            {
-    //                Logger.Write("(API ERROR) The Ptc servers are currently offline. Waiting 30 seconds... ", LogLevel.None, ConsoleColor.Red);
-    //                await Task.Delay(20000);
-    //            }
-    //            catch (AccessTokenExpiredException)
-    //            {
-    //                Logger.Write("(API ERROR) Access Token Expired. Waiting a couple seconds... ", LogLevel.None, ConsoleColor.Red);
-    //                await Task.Delay(2000);
-
-    //            }
-    //            catch (Exception ex) when (ex is InvalidResponseException || ex is TaskCanceledException)
-    //            {
-    //                Logger.Write("(API ERROR) They don't like us pushing it... ", LogLevel.None, ConsoleColor.Red);
-    //                await Task.Delay(350);
-    //            }
-    //        }
-
-    //        return ApiOperation.Retry;
-    //    }
-
-    //    public void HandleApiSuccess(RequestEnvelope request, ResponseEnvelope response)
-    //    {
-    //        _retryCount = 0;
-    //    }
-    //}
     public class ApiFailureStrategy : IApiFailureStrategy
     {
         private int _retryCount;
@@ -140,7 +75,6 @@ namespace PokeRoadie.Utils
             {
                 Logger.Write("(API ERROR) Access Token Expired. Waiting a couple seconds... ", LogLevel.None, ConsoleColor.Red);
                 await Task.Delay(2000);
-
             }
             catch (Exception ex) when (ex is InvalidResponseException || ex is TaskCanceledException)
             {

@@ -59,7 +59,7 @@ namespace PokeRoadie
         public event Action<LocationData, List<FortData>> OnGetAllNearbyGyms;
         public event Action<LocationData, FortDetailsResponse> OnTravelingToGym;
         public event Action<LocationData, FortDetailsResponse, GetGymDetailsResponse> OnVisitGym;
-        public event Action<LocationData, GetGymDetailsResponse, PokemonData> OnPokemonDeployedToGym;
+        public event Action<LocationData, GetGymDetailsResponse, PokemonData> OnDeployToGym;
 
         //pokemon events
         public event Action<PokemonData> OnEvolve;
@@ -1070,10 +1070,10 @@ namespace PokeRoadie
                                         Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
 
                                         //raise event
-                                        if (OnPokemonDeployedToGym != null)
+                                        if (OnDeployToGym != null)
                                         {
-                                            if (!RaiseSyncEvent(OnPokemonDeployedToGym, location, fortDetails, pokemon))
-                                                OnPokemonDeployedToGym(location, fortDetails, pokemon);
+                                            if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
+                                                OnDeployToGym(location, fortDetails, pokemon);
                                         }
                                     }
                                     //else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)

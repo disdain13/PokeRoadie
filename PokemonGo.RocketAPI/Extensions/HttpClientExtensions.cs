@@ -23,6 +23,8 @@ namespace PokemonGo.RocketAPI.Extensions
 
     public static class HttpClientExtensions
     {
+        private static DateTime? _delayTime;
+
         public static async Task<IMessage[]> PostProtoPayload<TRequest>(this System.Net.Http.HttpClient client,
             string url, RequestEnvelope requestEnvelope,
             IApiFailureStrategy strategy,
@@ -38,6 +40,13 @@ namespace PokemonGo.RocketAPI.Extensions
                 }
             }
 
+            //check if the last request was sent less than 350ms ago
+            if (_delayTime.HasValue && _delayTime.Value > DateTime.Now)
+            {
+                //delay as needed
+                await Task.Delay(_delayTime.Value.Subtract(DateTime.Now));
+            }
+
             ResponseEnvelope response;
             while ((response = await PostProto<TRequest>(client, url, requestEnvelope)).Returns.Count != responseTypes.Length)
             {
@@ -47,6 +56,9 @@ namespace PokemonGo.RocketAPI.Extensions
                     throw new InvalidResponseException($"Expected {responseTypes.Length} responses, but got {response.Returns.Count} responses");
                 }
             }
+
+            //set _delay time ahed 350ms
+            _delayTime = DateTime.Now.AddMilliseconds(350);
 
             strategy.HandleApiSuccess(requestEnvelope, response);
 
