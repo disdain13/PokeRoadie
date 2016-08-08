@@ -173,7 +173,7 @@ namespace PokeRoadie
             if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
 
             //check egg dir
-            if (!Directory.Exists(eggDir)) Directory.CreateDirectory(gymDir);
+            if (!Directory.Exists(eggDir)) Directory.CreateDirectory(eggDir);
 
             //clear old temp files
             DeleteOldFiles(gymDir);
@@ -1045,7 +1045,6 @@ namespace PokeRoadie
                         if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
                         {
                             var location = new LocationData(fortInfo.Latitude, fortInfo.Longitude, _client.CurrentAltitude);
-                            var gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Gyms");
                             fortDetails.Save(fortInfo, Path.Combine(gymDir, fortInfo.FortId + ".xml"), _client.CurrentAltitude);
 
                             //raise event
@@ -1114,8 +1113,6 @@ namespace PokeRoadie
 
         private async Task ProcessPokeStop(FortData pokeStop, GetMapObjectsResponse mapObjects)
         {
-
-            var pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Pokestops");
 
             if (_settings.CatchPokemon && !softBan)
                 await CatchNearbyPokemons();
