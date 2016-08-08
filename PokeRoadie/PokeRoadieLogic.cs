@@ -1312,6 +1312,10 @@ namespace PokeRoadie
                     if (encounter2.Status == EncounterResponse.Types.Status.EncounterSuccess)
                         await ProcessCatch(new EncounterData(location, encounterId, encounter2?.WildPokemon?.PokemonData, probability, spawnPointId, source));
                 }
+                else
+                {
+                    Logger.Write($"Pokemon inventory full. You should consider turning on TransferPokemon, and set a value for TransferTrimFatCount. This will prevent the inventory from filling up.", LogLevel.Warning);
+                }
             }
 
             else if (encounter.Status == EncounterResponse.Types.Status.EncounterPokemonFled)
