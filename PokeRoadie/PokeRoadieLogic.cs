@@ -123,7 +123,7 @@ namespace PokeRoadie
         private bool hasDisplayedTransferSettings;
         private ApiFailureStrategy _apiFailureStrategy;
         private List<string> gymTries = new List<string>();
-
+        private ulong lastEnconterId = 0;
         #endregion
         #region " Constructors "
 
@@ -1233,7 +1233,7 @@ namespace PokeRoadie
             }
 
             //catch lure pokemon 8)
-            if (_settings.CatchPokemon && pokeStop.LureInfo != null)
+            if (_settings.CatchPokemon && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
             {
                 if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
                     await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
@@ -1249,11 +1249,15 @@ namespace PokeRoadie
                     if (_settings.CatchPokemon && !softBan)
                         await CatchNearbyPokemons();
 
-                    if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
-                        await ProcessEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop.LureInfo.EncounterId, pokeStop.LureInfo.FortId, EncounterSourceTypes.Lure);
-                    else
-                        Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
+                    if (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId)
+                    {
+                        if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
+                            await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
+                        else
+                            Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
                
+                    }
+
                     var fortSearch2 = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     if (fortSearch2.ExperienceAwarded > 0)
                     {
@@ -1272,9 +1276,15 @@ namespace PokeRoadie
                     }
                         
 
-                    await RandomHelper.RandomDelay(15000, 30000);
+                    await RandomHelper.RandomDelay(25000, 30000);
+                    var mapObjectsTuple = await _client.Map.GetMapObjects();
+                    mapObjects = mapObjectsTuple.Item1;
                     pokeStop = mapObjects.MapCells.SelectMany(i => i.Forts).Where(x => x.Id == pokeStop.Id).FirstOrDefault();
-                    if (pokeStop.LureInfo != null) Logger.Write($"Loitering: {fortInfo.Name} still has a lure, chillin out!", LogLevel.Info);
+                    if (pokeStop.LureInfo == null || DateTime.Now.ToUnixTime() < pokeStop.LureInfo.LureExpiresTimestampMs)
+                        break;
+                    else
+                        Logger.Write($"Loitering: {fortInfo.Name} still has a lure, chillin out!", LogLevel.Info);
+
                 }
             }
 
@@ -1357,7 +1367,10 @@ namespace PokeRoadie
             var probability = encounter?.CaptureProbability?.CaptureProbability_?.First();
 
             if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
+            {
                 await ProcessCatch(new EncounterData(location, fortData.LureInfo.EncounterId, encounter?.PokemonData, probability, fortData.Id, EncounterSourceTypes.Lure));
+            }
+             
             else if (encounter.Result == DiskEncounterResponse.Types.Result.PokemonInventoryFull)
             {
 
@@ -1453,6 +1466,7 @@ namespace PokeRoadie
                 
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
+                    if (encounter.Source == EncounterSourceTypes.Lure) lastEnconterId = encounter.EncounterId;
                     fleeCounter = 0;
                     fleeEndTime = null;
                     fleeStartTime = null;
