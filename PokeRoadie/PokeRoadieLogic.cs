@@ -2206,7 +2206,7 @@ namespace PokeRoadie
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
                 if (familyCandy.Candy_ <= 0) continue;
-                if (_settings.MinCandyForPowerUps != 0 || familyCandy.Candy_ < _settings.MinCandyForPowerUps) continue;
+                if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps) continue;
 
                 var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
