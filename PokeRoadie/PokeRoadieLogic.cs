@@ -545,7 +545,7 @@ namespace PokeRoadie
                     if (_settings.UsePotions) await UsePotions();
 
                     //egg incubators
-                    if (_settings.UseEggIncubators) await UseIncubators();
+                    await UseIncubators(!_settings.UseEggIncubators);
 
                     //evolve
                     if (_settings.EvolvePokemon) await EvolvePokemon();
@@ -921,7 +921,7 @@ namespace PokeRoadie
             if (_settings.UsePotions) await UsePotions();
 
             //egg incubators
-            if (_settings.UseEggIncubators) await UseIncubators();
+            await UseIncubators(!_settings.UseEggIncubators);
 
             //evolve
             if (_settings.EvolvePokemon) await EvolvePokemon();
@@ -1252,7 +1252,7 @@ namespace PokeRoadie
                     {
                         await RecycleItems();
                         //egg incubators
-                        if (_settings.UseEggIncubators) await UseIncubators();
+                        await UseIncubators(!_settings.UseEggIncubators);
                     }
                         
 
@@ -1267,7 +1267,7 @@ namespace PokeRoadie
             {
                 await RecycleItems();
                 //egg incubators
-                if (_settings.UseEggIncubators) await UseIncubators();
+                await UseIncubators(!_settings.UseEggIncubators);
             }
 
         }
@@ -2372,7 +2372,7 @@ namespace PokeRoadie
             }
         }
 
-        public async Task UseIncubators()
+        public async Task UseIncubators(bool checkOnly)
         {
             await PokeRoadieInventory.getCachedInventory(_client, true);
 
@@ -2380,19 +2380,6 @@ namespace PokeRoadie
             if (playerStats == null)
                 return;
 
-            //var kmWalked = playerStats.kmWalked;
-
-            var incubators = (await _inventory.GetEggIncubators())
-                .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-                .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-                .ToList();
-
-            var unusedEggs = (await _inventory.GetEggs())
-                .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
-                .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
-                .ToList();
-
-            
             var rememberedIncubators = GetIncubators();
             var pokemons = (await _inventory.GetPokemons()).ToList();
 
@@ -2412,6 +2399,20 @@ namespace PokeRoadie
                 }
 
             }
+
+            if (checkOnly) return;
+
+            //var kmWalked = playerStats.
+
+            var incubators = (await _inventory.GetEggIncubators())
+                .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+                .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+                .ToList();
+
+            var unusedEggs = (await _inventory.GetEggs())
+                .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
+                .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
+                .ToList();
 
             var newRememberedIncubators = new List<IncubatorData>();
 
