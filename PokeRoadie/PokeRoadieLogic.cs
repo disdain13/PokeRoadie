@@ -91,7 +91,8 @@ namespace PokeRoadie
         private static string pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pokestops");
         private static string gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Gyms");
         private static string eggDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Eggs");
-        
+        private static object xloLock = new object();
+        private static int xloCount = 0;
         private volatile static bool isRunning;
         private volatile static bool inFlight = false;
 
@@ -343,73 +344,83 @@ namespace PokeRoadie
 
         public void Xlo()
         {
-            if (!isRunning) return;
-            if (Directory.Exists(pokestopsDir))
+            if (xloCount > 0) return;
+            lock (xloLock)
             {
-                var files = Directory.GetFiles(pokestopsDir)
-                                .Where(x => x.EndsWith(".xml")).ToList();
-                foreach (var filePath in files)
-                {
-                    if (!isRunning) break;
-                    var info = new FileInfo(filePath);
-                    if (info.CreationTime.AddSeconds(60) < DateTime.Now)
-                    {
-                        try
-                        {
-                            //pull the file
-                            var pokestop = (Xml.Pokestop)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Pokestop));
-                            var f = Xml.Serializer.Xlo(pokestop);
-                            f.Wait();
-                            if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Threading.Thread.Sleep(1500);
-                            //do nothing
-                            Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
-                        }
-                    }
-                    System.Threading.Thread.Sleep(500);
-                }
-            }
-
-            if (Directory.Exists(gymDir))
-            {
-                var files = Directory.GetFiles(gymDir)
-                                .Where(x => x.EndsWith(".xml")).ToList();
-                foreach (var filePath in files)
-                {
-                    if (!isRunning) break;
-                    var info = new FileInfo(filePath);
-                    if (info.CreationTime.AddSeconds(60) < DateTime.Now)
-                    {
-                        try
-                        {
-                            //pull the file
-                            var gym = (Xml.Gym)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Gym));
-                            var f = Xml.Serializer.Xlo(gym, info.CreationTime);
-                            f.Wait();
-                            if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Write($"Gym {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
-                            System.Threading.Thread.Sleep(1500);
-                            //do nothing
-
-                        }
-                    }
-                    System.Threading.Thread.Sleep(500);
-                }
-            }
-
-            for (int i = 0; i < 20; i++)
-            {
+                xloCount++;
                 if (!isRunning) return;
-                System.Threading.Thread.Sleep(1000);
-            }
+                if (Directory.Exists(pokestopsDir))
+                {
+                    var files = Directory.GetFiles(pokestopsDir)
+                                    .Where(x => x.EndsWith(".xml")).ToList();
+                    foreach (var filePath in files)
+                    {
+                        if (!isRunning) break;
+                        if (File.Exists(filePath))
+                        {
+                            var info = new FileInfo(filePath);
+                            if (info.CreationTime.AddSeconds(60) < DateTime.Now)
+                            {
+                                try
+                                {
+                                    //pull the file
 
-            Task.Run(new Action(Xlo));
+                                    var pokestop = (Xml.Pokestop)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Pokestop));
+                                    var f = Xml.Serializer.Xlo(pokestop);
+                                    f.Wait();
+                                    if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
+                                }
+                                catch //(Exception ex)
+                                {
+                                    //System.Threading.Thread.Sleep(500);
+                                    //do nothing
+                                    //Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                }
+                            }
+                            System.Threading.Thread.Sleep(500);
+                        }
+                    }
+                }
+
+                if (Directory.Exists(gymDir))
+                {
+                    var files = Directory.GetFiles(gymDir)
+                                    .Where(x => x.EndsWith(".xml")).ToList();
+                    foreach (var filePath in files)
+                    {
+                        if (!isRunning) break;
+                        if (File.Exists(filePath))
+                        {
+                            var info = new FileInfo(filePath);
+                            if (info.CreationTime.AddSeconds(60) < DateTime.Now)
+                            {
+                                try
+                                {
+                                    //pull the file
+                                    var gym = (Xml.Gym)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Gym));
+                                    var f = Xml.Serializer.Xlo(gym, info.CreationTime);
+                                    f.Wait();
+                                    if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
+                                }
+                                catch //(Exception ex)
+                                {
+                                    //Logger.Write($"Gym {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                }
+                            }
+                            System.Threading.Thread.Sleep(500);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < 20; i++)
+                {
+                    if (!isRunning) return;
+                    System.Threading.Thread.Sleep(1000);
+                }
+                Task.Run(new Action(Xlo));
+                xloCount--;
+            }
+            
         }
 
         #endregion
@@ -2464,13 +2475,6 @@ namespace PokeRoadie
                             OnIncubatorStatus(incubator);
                     }
 
-                    //session.EventDispatcher.Send(new EggIncubatorStatusEvent
-                    //{
-                    //    IncubatorId = incubator.Id,
-                    //    PokemonId = incubator.PokemonId,
-                    //    KmToWalk = incubator.TargetKmWalked - incubator.StartKmWalked,
-                    //    KmRemaining = incubator.TargetKmWalked - kmWalked
-                    //});
                 }
             }
 
