@@ -520,9 +520,14 @@ namespace PokeRoadie
                             }
                         }
                     }
+                    else if (e.StackTrace != null &&  e.Message.Contains("Object reference"))
+                    {
+                        Logger.Write($"(PGO SERVER) It appears the PokemonGo servers are down...", LogLevel.None, ConsoleColor.Red);
+                        await Task.Delay(15000);
+                    }
                     else
                     {
-                        Logger.Write($"(FATAL ERROR) Unhandled exception encountered: {e.Message.ToString()}.", LogLevel.Error);
+                        Logger.Write($"(FATAL ERROR) Unhandled exception encountered: {e.Message.ToString()}.", LogLevel.None, ConsoleColor.Red);
                         Logger.Write("Restarting the application due to error...", LogLevel.Warning);
                     }
                     await Execute();

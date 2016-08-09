@@ -51,7 +51,7 @@ namespace PokeRoadie
                 {
                     Exception exception = (Exception)eargs.ExceptionObject;
                     System.Console.WriteLine("Unhandled exception: " + exception);
-                    Environment.Exit(1);
+                    //Environment.Exit(1);
                 };
 
             ServicePointManager.ServerCertificateValidationCallback = Validator;
