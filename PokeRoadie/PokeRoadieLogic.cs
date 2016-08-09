@@ -2078,6 +2078,7 @@ namespace PokeRoadie
         {
             await PokeRoadieInventory.getCachedInventory(_client, true);
             var pokemonToEvolve = await _inventory.GetPokemonToEvolve();
+            await EvolvePokemon(pokemonToEvolve.ToList());
         }
 
         private async Task EvolvePokemon(List<PokemonData> pokemonToEvolve)
