@@ -55,9 +55,10 @@ namespace PokeRoadie
             return output;
         }
 
-        public static string GetUsername(Client client, GetPlayerResponse profile)
+        public static string GetUsername(PokeRoadieClient client, GetPlayerResponse profile)
         {
-            return PlayerName = PokeRoadieSettings.Current.AuthType == AuthType.Ptc ? PokeRoadieSettings.Current.Username : profile.PlayerData.Username;
+           
+            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.PtcUsername : (profile == null || profile.PlayerData  == null ? client.Settings.GoogleUsername : profile.PlayerData.Username);
         }
 
         public static double _getSessionRuntime()

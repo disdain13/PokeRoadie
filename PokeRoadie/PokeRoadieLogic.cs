@@ -126,6 +126,8 @@ namespace PokeRoadie
         private ApiFailureStrategy _apiFailureStrategy;
         private List<string> gymTries = new List<string>();
         private ulong lastEnconterId = 0;
+        //private DateTime? _lastLoginTime;
+
         #endregion
         #region " Constructors "
 
@@ -896,13 +898,13 @@ namespace PokeRoadie
                     LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //incense pokemon
-            if (_settings.CatchPokemon && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
+            if (!softBan && _settings.CatchPokemon && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
             {
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
                 {
                     if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(incenseRequest.PokemonId))
-                        await ProcessEncounter(new LocationData(incenseRequest.Latitude, incenseRequest.Longitude, _client.CurrentAltitude), incenseRequest.EncounterId, incenseRequest.EncounterLocation, EncounterSourceTypes.Incense);
+                        await ProcessIncenseEncounter(new LocationData(incenseRequest.Latitude, incenseRequest.Longitude, _client.CurrentAltitude), incenseRequest.EncounterId, incenseRequest.EncounterLocation);
                     else
                         Logger.Write($"Incense encounter with {incenseRequest.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
                 }
@@ -1359,58 +1361,38 @@ namespace PokeRoadie
 
         }
 
-        //private async Task ProcessIncenseEncounter(LocationData location, FortData fortData)
-        //{
+        private async Task ProcessIncenseEncounter(LocationData location, ulong encounterId, string spawnPointId)
+        {
 
-        //    var encounter = await _client.Encounter.EncounterLurePokemon(fortData.LureInfo.EncounterId, fortData.Id);
-        //    var probability = encounter?.CaptureProbability?.CaptureProbability_?.First();
+            var encounter = await _client.Encounter.EncounterIncensePokemon(encounterId, spawnPointId);
+            var probability = encounter?.CaptureProbability?.CaptureProbability_?.First();
 
-        //    if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
-        //    {
-        //        await ProcessCatch(new EncounterData(location, fortData.LureInfo.EncounterId, encounter?.PokemonData, probability, fortData.Id, EncounterSourceTypes.Lure));
-        //    }
+            if (encounter.Result == IncenseEncounterResponse.Types.Result.IncenseEncounterSuccess)
+            {
+                await ProcessCatch(new EncounterData(location, encounterId, encounter?.PokemonData, probability, spawnPointId, EncounterSourceTypes.Incense));
+            }
 
-        //    else if (encounter.Result == DiskEncounterResponse.Types.Result.PokemonInventoryFull)
-        //    {
+            else if (encounter.Result == IncenseEncounterResponse.Types.Result.PokemonInventoryFull)
+            {
 
-        //        if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
-        //        {
-        //            Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-        //            var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
+                if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
+                {
+                    //trim the fat
+                    await TransferTrimTheFat();
+                    //try again after trimming the fat
+                    var encounter2 = await _client.Encounter.EncounterIncensePokemon(encounterId, spawnPointId);
+                    if (encounter2.Result == IncenseEncounterResponse.Types.Result.IncenseEncounterSuccess)
+                        await ProcessCatch(new EncounterData(location, Convert.ToUInt64(encounterId), encounter2?.PokemonData, probability, spawnPointId, EncounterSourceTypes.Incense));
+                }
+            }
 
-        //            //ordering
-        //            switch (_settings.TransferPriorityType)
-        //            {
-        //                case PriorityTypes.CP:
-        //                    query = query.OrderBy(x => x.Cp)
-        //                                 .ThenBy(x => x.Stamina);
-        //                    break;
-        //                case PriorityTypes.IV:
-        //                    query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
-        //                                 .ThenBy(n => n.StaminaMax);
-        //                    break;
-        //                default:
-        //                    query = query.OrderBy(x => x.CalculatePokemonValue())
-        //                                 .ThenBy(n => n.StaminaMax);
-        //                    break;
-        //            }
+            else if (encounter.Result == IncenseEncounterResponse.Types.Result.IncenseEncounterNotAvailable)
+            {
+                //do nothing
+            }
+            else Logger.Write($"Incense Encounter problem: {encounter.Result}", LogLevel.Warning);
 
-        //            await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
-
-        //            //try again after trimming the fat
-        //            var encounter2 = await _client.Encounter.EncounterLurePokemon(fortData.LureInfo.EncounterId, fortData.Id);
-        //            if (encounter2.Result == DiskEncounterResponse.Types.Result.Success)
-        //                await ProcessCatch(new EncounterData(location, fortData.LureInfo.EncounterId, encounter2?.PokemonData, probability, fortData.Id, EncounterSourceTypes.Lure));
-        //        }
-        //    }
-
-        //    else if (encounter.Result == DiskEncounterResponse.Types.Result.EncounterAlreadyFinished || encounter.Result == DiskEncounterResponse.Types.Result.NotAvailable)
-        //    {
-        //        //do nothing
-        //    }
-        //    else Logger.Write($"Lure Encounter problem: {encounter.Result}", LogLevel.Warning);
-
-        //}
+        }
 
         private async Task ProcessLureEncounter(LocationData location, FortData fortData)
         {
@@ -1428,27 +1410,8 @@ namespace PokeRoadie
 
                 if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
                 {
-                    Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
-
-                    //ordering
-                    switch (_settings.TransferPriorityType)
-                    {
-                        case PriorityTypes.CP:
-                            query = query.OrderBy(x => x.Cp)
-                                         .ThenBy(x => x.Stamina);
-                            break;
-                        case PriorityTypes.IV:
-                            query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
-                                         .ThenBy(n => n.StaminaMax);
-                            break;
-                        default:
-                            query = query.OrderBy(x => x.CalculatePokemonValue())
-                                         .ThenBy(n => n.StaminaMax);
-                            break;
-                    }
-
-                    await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
+                    //trim the fat
+                    await TransferTrimTheFat();
 
                     //try again after trimming the fat
                     var encounter2 = await _client.Encounter.EncounterLurePokemon(fortData.LureInfo.EncounterId, fortData.Id);
@@ -2243,6 +2206,35 @@ namespace PokeRoadie
                     await TransferPokemon(pokemon);
                     await RandomDelay();
                 }
+            }
+        }
+
+        private async Task TransferTrimTheFat()
+        {
+            if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
+            {
+                Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
+                var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
+
+                //ordering
+                switch (_settings.TransferPriorityType)
+                {
+                    case PriorityTypes.CP:
+                        query = query.OrderBy(x => x.Cp)
+                                     .ThenBy(x => x.Stamina);
+                        break;
+                    case PriorityTypes.IV:
+                        query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
+                                     .ThenBy(n => n.StaminaMax);
+                        break;
+                    default:
+                        query = query.OrderBy(x => x.CalculatePokemonValue())
+                                     .ThenBy(n => n.StaminaMax);
+                        break;
+                }
+
+                await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
+
             }
         }
 
