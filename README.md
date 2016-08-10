@@ -2,14 +2,14 @@
 [1.1]: http://i.imgur.com/M4fJ65n.png (ATTENTION)
 [1.2]: http://i.imgur.com/NNcGs1n.png (BTC)
 <!-- title -->
-<h1>PokeRoadie</h1>
+<img src="https://github.com/disdain13/PokeRoadie/blob/master/marketing//PokeRoadie_Pokemon_Bot_Logo_Small.png?raw=true" alt="PokeRoadie_Pokemon_Bot_Logo_Small.png" title="PokeRoadie PokemonGo Bot"/><br/>
 <h2>Advanced PokemonGo Bot</h2>
 
 Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. <a href="https://github.com/disdain13/PokeRoadie/wiki" title="goto the WIKI, just do it!">Checkout the full list of new features in our WIKI</a><br/><br/>
 
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/marketing/PokemonGo_Bot_Screenshot_2.png?raw=true" alt="PokemonGo_Bot_Screenshot_2.png" title="PokeRoadie PokemonGo Bot"><br/><br/>
 
-###In the beginning, There was a game which many felt the need to exploit and pillage in a programmatic fashion.###
+###In the beginning, There was a game which many felt the need to pillage in a programmatic fashion.###
 
 *[FeroxRev](https://github.com/FeroxRev/Pokemon-Go-Rocket-API)*
  wrote the .Net wrapper for talking to the PokemonGo servers. This included generation of classes which represented the data, and the foundation for communicating using them. PokeRoadie uses a 99% pure FeroxRev API implementation, so he is responsible for quite a bit of the code.
