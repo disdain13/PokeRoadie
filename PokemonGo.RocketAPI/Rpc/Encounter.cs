@@ -60,7 +60,7 @@ namespace PokemonGo.RocketAPI.Rpc
         {
             var message = new IncenseEncounterMessage()
             {
-                EncounterId = System.Convert.ToInt64(encounterId),
+                EncounterId = encounterId,
                 EncounterLocation = encounterLocation
             };
 

@@ -9,8 +9,8 @@
   <CurrentLatitude>0</CurrentLatitude>
   <CurrentLongitude>0</CurrentLongitude>
   <CurrentAltitude>0</CurrentAltitude>
-  <MinSpeed>55</MinSpeed>
-  <MaxSpeed>70</MaxSpeed>
+  <MinSpeed>10</MinSpeed>
+  <MaxSpeed>25</MaxSpeed>
   <MaxDistance>5000</MaxDistance>
   <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
