@@ -892,7 +892,7 @@ namespace PokeRoadie
                     LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //incense pokemon
-            if (_settings.CatchPokemon && _settings.UseIncense && (!_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
+            if (_settings.CatchPokemon && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
             {
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
@@ -1356,6 +1356,59 @@ namespace PokeRoadie
             else Logger.Write($"Encounter problem: {encounter.Status}", LogLevel.Warning);
 
         }
+
+        //private async Task ProcessIncenseEncounter(LocationData location, FortData fortData)
+        //{
+
+        //    var encounter = await _client.Encounter.EncounterLurePokemon(fortData.LureInfo.EncounterId, fortData.Id);
+        //    var probability = encounter?.CaptureProbability?.CaptureProbability_?.First();
+
+        //    if (encounter.Result == DiskEncounterResponse.Types.Result.Success)
+        //    {
+        //        await ProcessCatch(new EncounterData(location, fortData.LureInfo.EncounterId, encounter?.PokemonData, probability, fortData.Id, EncounterSourceTypes.Lure));
+        //    }
+
+        //    else if (encounter.Result == DiskEncounterResponse.Types.Result.PokemonInventoryFull)
+        //    {
+
+        //        if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
+        //        {
+        //            Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
+        //            var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
+
+        //            //ordering
+        //            switch (_settings.TransferPriorityType)
+        //            {
+        //                case PriorityTypes.CP:
+        //                    query = query.OrderBy(x => x.Cp)
+        //                                 .ThenBy(x => x.Stamina);
+        //                    break;
+        //                case PriorityTypes.IV:
+        //                    query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
+        //                                 .ThenBy(n => n.StaminaMax);
+        //                    break;
+        //                default:
+        //                    query = query.OrderBy(x => x.CalculatePokemonValue())
+        //                                 .ThenBy(n => n.StaminaMax);
+        //                    break;
+        //            }
+
+        //            await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
+
+        //            //try again after trimming the fat
+        //            var encounter2 = await _client.Encounter.EncounterLurePokemon(fortData.LureInfo.EncounterId, fortData.Id);
+        //            if (encounter2.Result == DiskEncounterResponse.Types.Result.Success)
+        //                await ProcessCatch(new EncounterData(location, fortData.LureInfo.EncounterId, encounter2?.PokemonData, probability, fortData.Id, EncounterSourceTypes.Lure));
+        //        }
+        //    }
+
+        //    else if (encounter.Result == DiskEncounterResponse.Types.Result.EncounterAlreadyFinished || encounter.Result == DiskEncounterResponse.Types.Result.NotAvailable)
+        //    {
+        //        //do nothing
+        //    }
+        //    else Logger.Write($"Lure Encounter problem: {encounter.Result}", LogLevel.Warning);
+
+        //}
 
         private async Task ProcessLureEncounter(LocationData location, FortData fortData)
         {
@@ -2577,7 +2630,7 @@ namespace PokeRoadie
                 }
                 else if (response.Result == UseIncenseResponse.Types.Result.IncenseAlreadyActive)
                 {
-                    _nextIncenseTime = DateTime.Now.AddTicks(response.AppliedIncense.ExpireMs);
+                    _nextIncenseTime = DateTime.Now.AddMinutes(30);
                     Logger.Write($"(INCENSE) Incense Active", LogLevel.None, ConsoleColor.Magenta);
 
 
