@@ -688,5 +688,14 @@ namespace PokeRoadie {
                 return ((string)(this["UseProxyPassword"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("65")]
+        public int MaxDistanceForLongTravel {
+            get {
+                return ((int)(this["MaxDistanceForLongTravel"]));
+            }
+        }
     }
 }

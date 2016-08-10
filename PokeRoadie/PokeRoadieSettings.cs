@@ -66,6 +66,7 @@ namespace PokeRoadie
         public virtual double MinSpeed { get; set; }
         public virtual int MaxSpeed { get; set; }
         public virtual int MaxDistance { get; set; }
+        public virtual int MaxDistanceForLongTravel { get; set; }
         public virtual bool EnableSpeedAdjustment { get; set; }
         public virtual bool EnableSpeedRandomizer { get; set; }
         public virtual int MaxSecondsBetweenStops { get; set; }
@@ -467,6 +468,8 @@ namespace PokeRoadie
             this.UseProxyPort = UserSettings.Default.UseProxyPort;
             this.UseProxyUsername = UserSettings.Default.UseProxyUsername;
 
+            this.MaxDistanceForLongTravel = UserSettings.Default.MaxDistanceForLongTravel;
+
         }
 
         #endregion
@@ -609,8 +612,8 @@ namespace PokeRoadie
                     this.UseProxyPassword = obj.UseProxyPassword;
                     this.UseProxyPort = obj.UseProxyPort;
                     this.UseProxyUsername = obj.UseProxyUsername;
-  
 
+                    this.MaxDistanceForLongTravel = obj.MaxDistanceForLongTravel;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

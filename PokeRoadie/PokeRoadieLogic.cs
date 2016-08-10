@@ -680,7 +680,6 @@ namespace PokeRoadie
 
                 if (_settings.CatchPokemon && !softBan)
                     await CatchNearbyPokemons();
-
             }
 
             var wayPointGeo = GetWaypointGeo();
@@ -807,22 +806,21 @@ namespace PokeRoadie
                 }
             }
             //await CheckDestinations();
+
+
             var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
             var mapObjects = await _client.Map.GetMapObjects();
-            var  pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
-
-            if (pokeStopList.Where(x => x.Type != FortType.Gym).Count() == 0) 
+            var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
+            var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+            var stopList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+            var totalActivecount = 0;
+            if (_settings.VisitGyms) totalActivecount += gymsList.Count;
+            if (_settings.VisitPokestops) totalActivecount += stopList.Count;
+            if (totalActivecount == 0)
             {
-                    if (pokeStopList.Where(x => x.Type == FortType.Gym).Count() > 0)
-                    {
-                        await ProcessFortList(pokeStopList, mapObjects.Item1);
-                     }
-                    Logger.Write("No usable PokeStops found in your area.",
-                                    LogLevel.Warning);
-                    await Task.Delay(5000);
-
-                if (_settings.MoveWhenNoStops && _client != null && _settings.DestinationEndDate.HasValue && _settings.DestinationEndDate.Value > DateTime.Now)
-                    _settings.DestinationEndDate = DateTime.Now;
+                Logger.Write("No locations in your area...", LogLevel.Warning);
+                if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
+                await Task.Delay(5000);
             }
             else
             {
@@ -996,7 +994,6 @@ namespace PokeRoadie
             while (pokeStopList.Any())
             {
                 if (!isRunning) break;
-
                 if (!inFlight && _settings.DestinationsEnabled && _settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)
                 {
                     break;
@@ -1015,8 +1012,8 @@ namespace PokeRoadie
                 {
                     await ProcessGym(pokeStop, mapObjects);
                 }
-                if (pokestopCount == 0 && gymCount > 0)
-                    await RandomHelper.RandomDelay(1000, 2000);
+                //if (pokestopCount == 0 && gymCount > 0)
+                //    await RandomHelper.RandomDelay(1000, 2000);
                 //else
                     //await RandomHelper.RandomDelay(50, 200);
             }
@@ -2068,7 +2065,7 @@ namespace PokeRoadie
         private async Task CatchNearbyStops(bool path)
         {
             var mapObjects = await _client.Map.GetMapObjects();
-            var pokeStopList = GetPokestops(GetCurrentLocation(), path ? 40 : _settings.MaxDistance, mapObjects.Item1);
+            var pokeStopList = GetPokestops(GetCurrentLocation(), path ? _settings.MaxDistanceForLongTravel : _settings.MaxDistance, mapObjects.Item1);
             if (pokeStopList.Count > 0)
             {
                 if (inTravel) Logger.Write($"Slight course change...", LogLevel.Info);

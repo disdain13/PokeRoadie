@@ -224,5 +224,8 @@
     <Setting Name="UseProxyPassword" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="MaxDistanceForLongTravel" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">65</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

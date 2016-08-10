@@ -12,6 +12,7 @@
   <MinSpeed>55</MinSpeed>
   <MaxSpeed>70</MaxSpeed>
   <MaxDistance>5000</MaxDistance>
+  <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
   <MaxSecondsBetweenStops>30</MaxSecondsBetweenStops>
