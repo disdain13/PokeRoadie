@@ -425,6 +425,10 @@ namespace PokeRoadie
             
         }
 
+        private async Task RandomDelay()
+        {
+            await RandomHelper.RandomDelay(320, 520);
+        }
         #endregion
         #region " Navigation Methods "
 
@@ -925,11 +929,9 @@ namespace PokeRoadie
                 else
                     Logger.Write($"Wild encounter with {pokemon.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
 
-                await RandomHelper.RandomDelay(220, 320);
-
                 if (!Equals(pokemons.ElementAtOrDefault(pokemons.Count() - 1), pokemon))
                     // If pokemon is not last pokemon in list, create delay between catches, else keep moving.
-                    await RandomHelper.RandomDelay(220, 320);
+                    await RandomDelay();
             }
 
             //revive
@@ -2147,6 +2149,7 @@ namespace PokeRoadie
                 {
                     if (!isRunning) break;
                     await EvolvePokemon(pokemon);
+                    await RandomDelay();
                 }
             }
         }
@@ -2171,7 +2174,6 @@ namespace PokeRoadie
             {
                 Logger.Write($"(EVOLVE ERROR) {pokemon.GetMinStats()} - {evolvePokemonOutProto.Result}", LogLevel.None, ConsoleColor.Red);
             }
-            await RandomHelper.RandomDelay(220, 320);
         }
 
         #endregion
@@ -2239,6 +2241,7 @@ namespace PokeRoadie
                 {
                     if (!isRunning) break;
                     await TransferPokemon(pokemon);
+                    await RandomDelay();
                 }
             }
         }
@@ -2293,6 +2296,8 @@ namespace PokeRoadie
 
                 if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
                     break;
+
+                await RandomDelay();
             }
         }
 
@@ -2356,6 +2361,7 @@ namespace PokeRoadie
                     }
                 }
                 if (stopHealing) break;
+                await RandomDelay();
             }
         }
 
@@ -2384,7 +2390,7 @@ namespace PokeRoadie
                             OnRecycleItems(item.ItemId, response.NewCount);
                     }
                  }
-                await RandomHelper.RandomDelay(220, 320);
+                await RandomDelay();
             }
             recycleCounter = 0;
         }
@@ -2482,7 +2488,7 @@ namespace PokeRoadie
                     if (!RaiseSyncEvent(OnEggHatched, incubator, hatched))
                         OnEggHatched(incubator, hatched);
                 }
-
+               
             }
 
             if (checkOnly) return;
@@ -2494,10 +2500,14 @@ namespace PokeRoadie
                 .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
                 .ToList();
 
+            await RandomDelay();
+
             var unusedEggs = (await _inventory.GetEggs())
                 .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
                 .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
                 .ToList();
+
+            await RandomDelay();
 
             var newRememberedIncubators = new List<IncubatorData>();
 
@@ -2533,6 +2543,7 @@ namespace PokeRoadie
                     {
                         Logger.Write($"(EGG ERROR) {egg.EggKmWalkedTarget}km egg failed incubation - {response.Result}", LogLevel.None, ConsoleColor.Red);
                     }
+                    await RandomDelay();
                 }
                 else
                 {
@@ -2603,6 +2614,7 @@ namespace PokeRoadie
                     {
                         Logger.Write($"Failed to revive {pokemon.GetMinStats()} with {potion} - {response.Result}", LogLevel.Error);
                     }
+                    await RandomDelay();
                 }
             }
         }
@@ -2641,6 +2653,7 @@ namespace PokeRoadie
                             OnIncenseActive();
                     }
                 }
+                await RandomDelay();
             }
         }
 

@@ -95,7 +95,7 @@ namespace PokeRoadie
             TotalPokemonsTransfered += 1;
         }
 
-        public async void UpdateConsoleTitle(Client _client, PokeRoadieInventory _inventory)
+        public async void UpdateConsoleTitle(PokeRoadieClient _client, PokeRoadieInventory _inventory)
         {
             //appears to give incorrect info?		
             var pokes = await _inventory.GetPokemons();

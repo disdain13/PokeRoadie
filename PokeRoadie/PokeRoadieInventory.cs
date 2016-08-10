@@ -484,7 +484,7 @@ namespace PokeRoadie
             return pokemonToEvolve;
         }
 
-        public static async Task<GetInventoryResponse> getCachedInventory(Client _client, bool request = false)
+        public static async Task<GetInventoryResponse> getCachedInventory(PokeRoadieClient _client, bool request = false)
         {
             var now = DateTime.UtcNow;
             var ss = new SemaphoreSlim(10);
@@ -503,24 +503,9 @@ namespace PokeRoadie
                 {
                     _cachedInventory = await _client.Inventory.GetInventory();
                 }
-                catch (InvalidResponseException)
+                catch
                 {
-                    if (_cachedInventory == null || !_cachedInventory.Success)
-                    {
-                        Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
-                        Logger.Write("Trying again in 15 seconds...");
-                        Thread.Sleep(15000);
-                        _cachedInventory = await _client.Inventory.GetInventory();
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (_cachedInventory == null || !_cachedInventory.Success)
-                    {
-                        Logger.Write(e.ToString() + " from " + e.Source);
-                        Logger.Write("InvalidResponseException from getCachedInventory", LogLevel.Error);
-                        throw new InvalidResponseException();
-                    }
+                    // ignored
                 }
 
                 return _cachedInventory;
@@ -592,23 +577,6 @@ namespace PokeRoadie
 
         }
 
-        public async Task<GetInventoryResponse> RefreshCachedInventory()
-        {
-            var now = DateTime.UtcNow;
-            var ss = new SemaphoreSlim(10);
-
-            await ss.WaitAsync();
-            try
-            {
-                _lastRefresh = now;
-                _cachedInventory = await _client.Inventory.GetInventory();
-                return _cachedInventory;
-            }
-            finally
-            {
-                ss.Release();
-            }
-        }
 
         //public async Task<UpgradePokemonResponse> UpgradePokemon(ulong pokemonid)
         //{
