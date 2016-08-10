@@ -95,6 +95,7 @@ namespace PokeRoadie
         private static int xloCount = 0;
         private volatile static bool isRunning;
         private volatile static bool inFlight = false;
+        private volatile static bool inTravel = false;
 
         #endregion
         #region " Primary Objects "
@@ -520,7 +521,7 @@ namespace PokeRoadie
                             }
                         }
                     }
-                    else if (e.StackTrace != null &&  e.Message.Contains("Object reference"))
+                    else if (e.Message.Contains("Object reference"))
                     {
                         Logger.Write($"(PGO SERVER) It appears the PokemonGo servers are down...", LogLevel.None, ConsoleColor.Red);
                         await Task.Delay(15000);
@@ -692,7 +693,7 @@ namespace PokeRoadie
             if (_settings.MaxDistance != 0 &&
                 distanceFromStart > _settings.MaxDistance)
             {
-
+                inTravel = true;
                 if (_settings.FlyingEnabled && (distanceFromStart > 2000 || _settings.FlyLikeCaptKirk))
                 { 
                     if (_settings.FlyLikeCaptKirk)
@@ -727,6 +728,7 @@ namespace PokeRoadie
                     gymTries.Clear();
                 }
                 Logger.Write($"Arrived at destination.", LogLevel.Navigation);
+                inTravel = false;
             }
 
             //if destinations are enabled
@@ -957,7 +959,7 @@ namespace PokeRoadie
             var gymCount = pokeStopList.Where(x => x.Type == FortType.Gym).Count();
             var lureCount = pokeStopList.Where(x => x.LureInfo != null).Count();
 
-            Logger.Write($"Found{(inFlight ? " from the sky" : "")} {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")} | {gymCount} {(gymCount == 1 ? "Gym" : "Gyms")}", LogLevel.Info);
+            Logger.Write($"Found{(inFlight ? " from the sky" : "")} {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( _settings.VisitGyms && gymCount > 0 ? " | " + (_settings.AutoDeployAtTeamGyms ? gymTries.Count.ToString() + "\\" : string.Empty) + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") : string.Empty)}", LogLevel.Info);
             if (lureCount > 0) Logger.Write($"(INFO) Found {lureCount} with lure!", LogLevel.None, ConsoleColor.DarkMagenta);
 
             if (lureCount > 0)
@@ -1209,12 +1211,11 @@ namespace PokeRoadie
                 //reset ban
                 if (softBan)
                 {
-                    var diff = DateTime.Now.Subtract(fleeStartTime.Value).ToString();
                     softBan = false;
                     fleeCounter = 0;
                     fleeEndTime = null;
                     fleeStartTime = null;
-                    Logger.Write($"(SOFT BAN) The ban was lifted after {diff}!", LogLevel.None, ConsoleColor.DarkRed);
+                    Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
                 }
 
             }
@@ -1227,8 +1228,6 @@ namespace PokeRoadie
                     fleeStartTime = DateTime.Now;
                     Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
                 }
-
-                fleeEndTime = DateTime.Now;
                 fleeEndTime = DateTime.Now;
             }
 
@@ -1312,7 +1311,7 @@ namespace PokeRoadie
                 if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
                 {
                     Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId));
+                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                     //ordering
                     switch (_settings.TransferPriorityType)
@@ -1352,7 +1351,6 @@ namespace PokeRoadie
                     softBan = true;
                     fleeStartTime = DateTime.Now;
                     Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
-
                 }
                 fleeEndTime = DateTime.Now;
             }
@@ -1377,7 +1375,7 @@ namespace PokeRoadie
                 if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
                 {
                     Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId));
+                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                     //ordering
                     switch (_settings.TransferPriorityType)
@@ -1473,9 +1471,8 @@ namespace PokeRoadie
                     //reset soft ban info
                     if (softBan)
                     {
-                        var diff = DateTime.Now.Subtract(fleeStartTime.Value).ToString();
                         softBan = false;
-                        Logger.Write($"(SOFT BAN) The ban was lifted after {diff}!", LogLevel.None, ConsoleColor.DarkRed);
+                        Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
                     }
 
                     foreach (var xp in caughtPokemonResponse.CaptureAward.Xp)
@@ -1491,6 +1488,10 @@ namespace PokeRoadie
                             OnCatch(encounter, caughtPokemonResponse);
                     }
    
+                }
+                else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
+                {
+                
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
                 {
@@ -1555,7 +1556,7 @@ namespace PokeRoadie
                 attemptCounter++;
                 await RandomHelper.RandomDelay(300, 400);
             }
-            while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
+            while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError && attemptCounter < 10);
         }
 
         #endregion
@@ -2068,7 +2069,12 @@ namespace PokeRoadie
         {
             var mapObjects = await _client.Map.GetMapObjects();
             var pokeStopList = GetPokestops(GetCurrentLocation(), path ? 40 : _settings.MaxDistance, mapObjects.Item1);
-            if (pokeStopList.Count > 0) await ProcessFortList(pokeStopList, mapObjects.Item1);
+            if (pokeStopList.Count > 0)
+            {
+                if (inTravel) Logger.Write($"Slight course change...", LogLevel.Info);
+                await ProcessFortList(pokeStopList, mapObjects.Item1);
+                if (inTravel) Logger.Write($"Returning to long distance travel...", LogLevel.Info);
+            }
         }
 
         #endregion
