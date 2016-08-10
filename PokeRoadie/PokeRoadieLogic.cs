@@ -431,6 +431,7 @@ namespace PokeRoadie
         {
             await RandomHelper.RandomDelay(320, 520);
         }
+
         #endregion
         #region " Navigation Methods "
 
@@ -2590,8 +2591,8 @@ namespace PokeRoadie
                 }
                 else
                 {
-                    var response = await _client.Inventory.UseItemPotion(potion, pokemon.Id);
-                    if (response.Result == UseItemPotionResponse.Types.Result.Success)
+                    var response = await _client.Inventory.UseItemRevive(potion, pokemon.Id);
+                    if (response.Result == UseItemReviveResponse.Types.Result.Success)
                     {
                         Logger.Write($"Revived {pokemon.GetMinStats()} with {potion} ", LogLevel.Pokemon);
 
