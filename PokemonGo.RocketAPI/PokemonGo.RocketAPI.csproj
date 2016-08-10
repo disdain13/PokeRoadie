@@ -116,7 +116,7 @@
     <Compile Include="Login\GPSOAuthClient.cs" />
     <Compile Include="Login\ILoginType.cs" />
     <Compile Include="Login\PtcLogin.cs" />
-    <Compile Include="POGOProtos\Networking\Envelopes\Signature.cs" />
+    <Compile Include="POGOProtos\Signature.cs" />
     <Compile Include="PokemonInfo.cs" />
     <Compile Include="Rpc\BaseRpc.cs" />
     <Compile Include="Rpc\Download.cs" />

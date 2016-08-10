@@ -92,11 +92,12 @@ namespace PokeRoadie
         private static string pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pokestops");
         private static string gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Gyms");
         private static string eggDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Eggs");
-        private static object xloLock = new object();
-        private static int xloCount = 0;
-        private volatile static bool isRunning;
-        private volatile static bool inFlight = false;
-        private volatile static bool inTravel = false;
+
+        private object xloLock = new object();
+        private int xloCount = 0;
+        private volatile bool isRunning;
+        private volatile bool inFlight = false;
+        private volatile bool inTravel = false;
 
         #endregion
         #region " Primary Objects "

@@ -104,6 +104,7 @@ namespace PokeRoadie.Extensions
             if (val.ToLower().EndsWith("fast")) val = val.Substring(0, val.Length - 4);
             return val;
         }
+
         public static double CalculatePokemonValue(this PokemonData pokemon)
         {
             const double twoThousand = 2000;
