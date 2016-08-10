@@ -23,6 +23,7 @@ using POGOProtos.Map.Pokemon;
 
 using PokeRoadie.Extensions;
 using PokeRoadie.Utils;
+//using PokeRoadie.Logging;
 using System.ComponentModel;
 
 #endregion
@@ -760,6 +761,8 @@ namespace PokeRoadie
                                     OnChangeDestination(destination, newIndex);
                             }
 
+                            Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
+
                             if (_settings.FlyingEnabled)
                             {
                                 if (_settings.FlyLikeCaptKirk)
@@ -787,7 +790,6 @@ namespace PokeRoadie
                                 await _navigation.HumanLikeWalking(destination.GetGeo(), _settings.MinSpeed, GetLongWalkingTask());
                                 gymTries.Clear();
                             }
-                            Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
 
                             //reset destination timer
                             _settings.DestinationEndDate = DateTime.Now.AddMinutes(_settings.MinutesPerDestination);
@@ -812,7 +814,7 @@ namespace PokeRoadie
             var mapObjects = await _client.Map.GetMapObjects();
             var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
             var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
-            var stopList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+            var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var totalActivecount = 0;
             if (_settings.VisitGyms) totalActivecount += gymsList.Count;
             if (_settings.VisitPokestops) totalActivecount += stopList.Count;
@@ -1202,18 +1204,18 @@ namespace PokeRoadie
                     }
                 }
 
-                if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
-                recycleCounter++;
-
                 //reset ban
                 if (softBan)
                 {
+                    Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
+                    fleeStartTime = null;
                     softBan = false;
                     fleeCounter = 0;
                     fleeEndTime = null;
-                    fleeStartTime = null;
-                    Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
                 }
+
+                if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                recycleCounter++;
 
             }
             else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
@@ -1229,7 +1231,7 @@ namespace PokeRoadie
             }
 
             //catch lure pokemon 8)
-            if (_settings.CatchPokemon && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
+            if (!softBan && _settings.CatchPokemon && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
             {
                 if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
                     await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
@@ -1237,7 +1239,7 @@ namespace PokeRoadie
                     Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
             }
 
-            if (_settings.LoiteringActive && pokeStop.LureInfo != null)
+            if (!softBan && _settings.LoiteringActive && pokeStop.LureInfo != null)
             {
                 Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
                 while (_settings.LoiteringActive && pokeStop.LureInfo != null && DateTime.Now.ToUnixTime() < pokeStop.LureInfo.LureExpiresTimestampMs)
@@ -1308,7 +1310,7 @@ namespace PokeRoadie
                 if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
                 {
                     Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
+                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                     //ordering
                     switch (_settings.TransferPriorityType)
@@ -1372,7 +1374,7 @@ namespace PokeRoadie
                 if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
                 {
                     Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
+                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                     //ordering
                     switch (_settings.TransferPriorityType)
@@ -1462,15 +1464,15 @@ namespace PokeRoadie
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
                     if (encounter.Source == EncounterSourceTypes.Lure) lastEnconterId = encounter.EncounterId;
-                    fleeCounter = 0;
-                    fleeEndTime = null;
-                    fleeStartTime = null;
                     //reset soft ban info
                     if (softBan)
                     {
                         softBan = false;
                         Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
                     }
+                    fleeCounter = 0;
+                    fleeEndTime = null;
+                    fleeStartTime = null;
 
                     foreach (var xp in caughtPokemonResponse.CaptureAward.Xp)
                         _stats.AddExperience(xp);
@@ -1486,11 +1488,7 @@ namespace PokeRoadie
                     }
    
                 }
-                else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
-                {
-                
-                }
-                else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee)
+                else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
                 {
                     fleeCounter++;
                     if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
@@ -1553,7 +1551,7 @@ namespace PokeRoadie
                 attemptCounter++;
                 await RandomHelper.RandomDelay(300, 400);
             }
-            while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError && attemptCounter < 10);
+            while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape && attemptCounter < 10);
         }
 
         #endregion
