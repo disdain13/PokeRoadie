@@ -488,7 +488,7 @@ namespace PokeRoadie
             var now = DateTime.UtcNow;
             var ss = new SemaphoreSlim(10);
 
-            if (IsDirty || (_lastRefresh.AddSeconds(30).Ticks > now.Ticks && request == false))
+            if (!IsDirty && (_lastRefresh.AddSeconds(30).Ticks > now.Ticks && request == false))
             {
                 return _cachedInventory;
             }
