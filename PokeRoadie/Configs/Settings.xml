@@ -75,8 +75,8 @@
   <UseProxyAuthentication>false</UseProxyAuthentication>
   <UseProxyUsername />
   <UseProxyPassword />
-  <MinDelay>320</MinDelay>
-  <MaxDelay>520</MaxDelay>
+  <MinDelay>1500</MinDelay>
+  <MaxDelay>2500</MaxDelay>
   <FavoritePokemon>false</FavoritePokemon>
   <FavoriteAboveCp>0</FavoriteAboveCp>
   <FavoriteAboveIV>0</FavoriteAboveIV>
