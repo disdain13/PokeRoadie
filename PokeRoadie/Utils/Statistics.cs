@@ -102,10 +102,12 @@ namespace PokeRoadie
             var pokes = await _inventory.GetPokemons();
             TotalPokesInBag = pokes.Count();
 
-            var inventory = await PokeRoadieInventory.getCachedInventory(_client, true);
-            TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokemonId).ToArray().Length;
-            
-            CurrentLevelInfos = await _getcurrentLevelInfos(_inventory);
+            var inventory = await PokeRoadieInventory.getCachedInventory(_client);
+            if (inventory.InventoryDelta != null)
+            {
+                TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokemonId).ToArray().Length;
+                CurrentLevelInfos = await _getcurrentLevelInfos(_inventory);
+            }
             Console.Title = ToString();
         }
 

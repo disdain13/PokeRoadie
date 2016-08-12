@@ -56,6 +56,10 @@
       <HintPath>$(SolutionDir)\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="POGOProtos, Version=2016.8.10.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\POGOProtos.1.6.0\lib\net45\POGOProtos.dll</HintPath>
+    </Reference>
     <Reference Include="S2Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\S2Geometry.1.0.1\lib\portable-net45+wp8+win8\S2Geometry.dll</HintPath>
       <Private>True</Private>
@@ -116,7 +120,6 @@
     <Compile Include="Login\GPSOAuthClient.cs" />
     <Compile Include="Login\ILoginType.cs" />
     <Compile Include="Login\PtcLogin.cs" />
-    <Compile Include="POGOProtos\Signature.cs" />
     <Compile Include="PokemonInfo.cs" />
     <Compile Include="Rpc\BaseRpc.cs" />
     <Compile Include="Rpc\Download.cs" />
@@ -139,10 +142,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\POGOProtos\POGOProtos.csproj">
-      <Project>{a03a7bb2-4f0b-467b-84b2-9a76e6aae6fb}</Project>
-      <Name>POGOProtos</Name>
-    </ProjectReference>
+    <Folder Include="POGOProtos\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

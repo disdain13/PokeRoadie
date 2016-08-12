@@ -431,7 +431,7 @@ namespace PokeRoadie
 
         private async Task RandomDelay()
         {
-            await RandomHelper.RandomDelay(320, 520);
+            await RandomHelper.RandomDelay(_settings.MinDelay, _settings.MaxDelay);
         }
 
         #endregion
@@ -547,6 +547,47 @@ namespace PokeRoadie
             isRunning = false;
         }
 
+        public async Task ProcessPeriodicals()
+        {
+            //only do this once, calling this 14 times every iteration could be
+            //detectable for banning
+            await PokeRoadieInventory.getCachedInventory(_client);
+
+            //write stats
+            await WriteStats();
+
+            //revive
+            if (_settings.UseRevives) await UseRevives();
+
+            //heal
+            if (_settings.UsePotions) await UsePotions();
+
+            //egg incubators
+            await UseIncubators(!_settings.UseEggIncubators);
+
+            //evolve
+            if (_settings.EvolvePokemon) await EvolvePokemon();
+
+            //power up
+            if (_settings.PowerUpPokemon) await PowerUpPokemon();
+
+            //transfer
+            if (_settings.TransferPokemon) await TransferPokemon();
+
+            //export
+            await Export();
+
+            //incense
+            if (_settings.UseIncense) await UseIncense();
+
+            //incense
+            if (_settings.UseLuckyEggs) await UseLuckyEgg();
+
+            //recycle
+            if (recycleCounter >= 5)
+                await RecycleItems();
+        }
+
         public async Task PostLoginExecute()
         {
             Logger.Write($"Client logged in", LogLevel.Info);
@@ -554,46 +595,9 @@ namespace PokeRoadie
             {
 
                 if (!isRunning) break;
-
                 if (!IsInitialized)
                 {
-                    //write stats
-                    await WriteStats();
-
-                    //get ignore lists
-                    var PokemonsNotToTransfer = _settings.PokemonsNotToTransfer;
-                    var PokemonsNotToCatch = _settings.PokemonsNotToCatch;
-                    var PokemonsToEvolve = _settings.PokemonsToEvolve;
-
-                    //revive
-                    if (_settings.UseRevives) await UseRevives();
-
-                    //heal
-                    if (_settings.UsePotions) await UsePotions();
-
-                    //egg incubators
-                    await UseIncubators(!_settings.UseEggIncubators);
-
-                    //evolve
-                    if (_settings.EvolvePokemon) await EvolvePokemon();
-
-                    //power up
-                    if (_settings.PowerUpPokemon) await PowerUpPokemon();
-
-                    //transfer
-                    if (_settings.TransferPokemon) await TransferPokemon();
-
-                    //export
-                    await Export();
-
-                    //incense
-                    if (_settings.UseIncense) await UseIncense();
-
-                    //incense
-                    if (_settings.UseLuckyEggs) await UseLuckyEgg();
-
-                    //recycle
-                    await RecycleItems();
+                    await ProcessPeriodicals();
                 }
                 IsInitialized = true;
                 await ExecuteFarming(_settings.UseGPXPathing);
@@ -1082,7 +1086,7 @@ namespace PokeRoadie
                             if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
                             {
 
-                                await PokeRoadieInventory.getCachedInventory(_client, true);
+                                await PokeRoadieInventory.getCachedInventory(_client);
                                 var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
                                 var pokemon = pokemonList.FirstOrDefault();
                                 if (pokemon != null)
@@ -1091,6 +1095,7 @@ namespace PokeRoadie
                                     var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
                                     if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
                                     {
+                                        PokeRoadieInventory.IsDirty = true;
                                         Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
 
                                         //raise event
@@ -1484,6 +1489,7 @@ namespace PokeRoadie
                 
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
+                    PokeRoadieInventory.IsDirty = true;
                     if (encounter.Source == EncounterSourceTypes.Lure) lastEnconterId = encounter.EncounterId;
                     //reset soft ban info
                     if (softBan)
@@ -2091,6 +2097,7 @@ namespace PokeRoadie
                 await ProcessFortList(pokeStopList, mapObjects.Item1);
                 if (inTravel) Logger.Write($"Returning to long distance travel...", LogLevel.Info);
             }
+
         }
 
         #endregion
@@ -2098,7 +2105,7 @@ namespace PokeRoadie
      
         private async Task EvolvePokemon()
         {
-            await PokeRoadieInventory.getCachedInventory(_client, true);
+            await PokeRoadieInventory.getCachedInventory(_client);
             var pokemonToEvolve = await _inventory.GetPokemonToEvolve();
             await EvolvePokemon(pokemonToEvolve.ToList());
         }
@@ -2126,6 +2133,7 @@ namespace PokeRoadie
 
             if (evolvePokemonOutProto.Result == EvolvePokemonResponse.Types.Result.Success)
             {
+                PokeRoadieInventory.IsDirty = true;
                 Logger.Write($"{pokemon.GetMinStats()} for {evolvePokemonOutProto.ExperienceAwarded} xp", LogLevel.Evolve);
                 
                 //raise event
@@ -2147,7 +2155,7 @@ namespace PokeRoadie
 
         private async Task TransferPokemon()
         {
-            await PokeRoadieInventory.getCachedInventory(_client, true);
+            await PokeRoadieInventory.getCachedInventory(_client);
             var duplicatePokemons = await _inventory.GetPokemonToTransfer();
             await TransferPokemon(duplicatePokemons);
 
@@ -2157,14 +2165,14 @@ namespace PokeRoadie
             var response = await _client.Inventory.TransferPokemon(pokemon.Id);
             if (response.Result == ReleasePokemonResponse.Types.Result.Success)
             {
-                await PokeRoadieInventory.getCachedInventory(_client, true);
+                PokeRoadieInventory.IsDirty = true;
                 var myPokemonSettings = await _inventory.GetPokemonSettings();
                 var pokemonSettings = myPokemonSettings.ToList();
                 var myPokemonFamilies = await _inventory.GetPokemonFamilies();
                 var pokemonFamilies = myPokemonFamilies.ToArray();
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-                var FamilyCandies = $"{familyCandy.Candy_}";
+                var FamilyCandies = $"{familyCandy.Candy_ + 1}";
 
                 _stats.IncreasePokemonsTransfered();
                 _stats.UpdateConsoleTitle(_client, _inventory);
@@ -2214,8 +2222,9 @@ namespace PokeRoadie
 
         private async Task TransferTrimTheFat()
         {
-            if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
+            if (!_settings.TransferPokemon || _settings.TransferTrimFatCount == 0)
             {
+                await PokeRoadieInventory.getCachedInventory(_client);
                 Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
                 var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
@@ -2246,14 +2255,12 @@ namespace PokeRoadie
 
         public async Task PowerUpPokemon()
         {
-
-            if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps)
-            return;
-
+            if (!_settings.PowerUpPokemon) return;
+            await PokeRoadieInventory.getCachedInventory(_client);
+            if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps) return;
             var pokemons = await _inventory.GetPokemonToPowerUp();
             if (pokemons.Count == 0) return;
             await PowerUpPokemons(pokemons);
-
         }
 
         public async Task PowerUpPokemons(List<PokemonData> pokemons)
@@ -2278,6 +2285,7 @@ namespace PokeRoadie
                 var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
+                    PokeRoadieInventory.IsDirty = true;
                     Logger.Write($"(POWER) Pokemon was powered up! {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.White);
                     upgradedNumber++;
 
@@ -2301,11 +2309,9 @@ namespace PokeRoadie
 
         private async Task UsePotions()
         {
-            await PokeRoadieInventory.getCachedInventory(_client, true);
+            await PokeRoadieInventory.getCachedInventory(_client);
             var pokemons = await _inventory.GetPokemonToHeal();
             await UsePotions(pokemons.ToList());
-
-
         }
 
         private async Task UsePotions(List<PokemonData> pokemons)
@@ -2337,9 +2343,10 @@ namespace PokeRoadie
                     var response = await _client.Inventory.UseItemPotion(potion, pokemon.Id);
                     if (response.Result == UseItemPotionResponse.Types.Result.Success)
                     {
+                        PokeRoadieInventory.IsDirty = true;
                         Logger.Write($"Healed {pokemon.GetMinStats()} with {potion} - {response.Stamina}/{pokemon.StaminaMax}", LogLevel.Pokemon);
                         hp = response.Stamina;
-
+                      
                         //raise event
                         if (OnUsePotion != null)
                         {
@@ -2362,7 +2369,7 @@ namespace PokeRoadie
 
         private async Task RecycleItems()
         {
-            await PokeRoadieInventory.getCachedInventory(_client, true);
+            await PokeRoadieInventory.getCachedInventory(_client);
             var items = await _inventory.GetItemsToRecycle(_settings);
             if (items != null && items.Any())
                 Logger.Write($"Found {items.Count()} Recyclable {(items.Count() == 1 ? "Item" : "Items")}:", LogLevel.Info);
@@ -2373,6 +2380,7 @@ namespace PokeRoadie
                 var response = await _client.Inventory.RecycleItem(item.ItemId, item.Count);
                 if (response.Result == RecycleInventoryItemResponse.Types.Result.Success)
                 {
+                    PokeRoadieInventory.IsDirty = true;
                     Logger.Write($"{(item.ItemId).ToString().Replace("Item", "")} x {item.Count}", LogLevel.Recycling);
 
                     _stats.AddItemsRemoved(item.Count);
@@ -2434,6 +2442,7 @@ namespace PokeRoadie
                 if (response.Result == UseItemXpBoostResponse.Types.Result.Success)
                 {
                     _nextLuckyEggTime = DateTime.Now.AddMinutes(30);
+                    PokeRoadieInventory.IsDirty = true;
                     Logger.Write($"(EGG) Used Lucky Egg, remaining: {LuckyEgg.Count - 1}", LogLevel.None, ConsoleColor.Magenta);
 
                     //raise event
@@ -2460,8 +2469,7 @@ namespace PokeRoadie
 
         public async Task UseIncubators(bool checkOnly)
         {
-            await PokeRoadieInventory.getCachedInventory(_client, true);
-
+            
             var playerStats = await _inventory.GetPlayerStats();
             if (playerStats == null)
                 return;
@@ -2489,20 +2497,17 @@ namespace PokeRoadie
             if (checkOnly) return;
 
             //var kmWalked = playerStats.
+            await PokeRoadieInventory.getCachedInventory(_client);
 
             var incubators = (await _inventory.GetEggIncubators())
                 .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
                 .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
                 .ToList();
 
-            await RandomDelay();
-
             var unusedEggs = (await _inventory.GetEggs())
                 .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
                 .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
                 .ToList();
-
-            await RandomDelay();
 
             var newRememberedIncubators = new List<IncubatorData>();
 
@@ -2523,6 +2528,7 @@ namespace PokeRoadie
                     if (response.Result == UseItemEggIncubatorResponse.Types.Result.Success)
                     {
                         unusedEggs.Remove(egg);
+                        PokeRoadieInventory.IsDirty = true;
                         newRememberedIncubators.Add(new IncubatorData { IncubatorId = incubator.Id, PokemonId = egg.Id });
                         Logger.Write($"Added {egg.EggKmWalkedTarget}km egg to incubator", LogLevel.Egg);
 
@@ -2576,7 +2582,7 @@ namespace PokeRoadie
 
         private async Task UseRevives()
         {
-            await PokeRoadieInventory.getCachedInventory(_client, true);
+            await PokeRoadieInventory.getCachedInventory(_client);
             var pokemonList = await _inventory.GetPokemonToRevive();
             if (pokemonList == null || pokemonList.Count() == 0) return;
 
@@ -2596,14 +2602,15 @@ namespace PokeRoadie
                     var response = await _client.Inventory.UseItemRevive(potion, pokemon.Id);
                     if (response.Result == UseItemReviveResponse.Types.Result.Success)
                     {
+                        PokeRoadieInventory.IsDirty = true;
                         Logger.Write($"Revived {pokemon.GetMinStats()} with {potion} ", LogLevel.Pokemon);
-
                         //raise event
                         if (OnUseRevive != null)
                         {
                             if (!RaiseSyncEvent(OnUseRevive, potion, pokemon))
                                 OnUseRevive(potion, pokemon);
                         }
+                        
                     }
                     else
                     {
@@ -2626,6 +2633,7 @@ namespace PokeRoadie
                 if (response.Result == UseIncenseResponse.Types.Result.Success)
                 {
                     _nextIncenseTime = DateTime.Now.AddMinutes(30);
+                    PokeRoadieInventory.IsDirty = true;
                     Logger.Write($"(INCENSE) Used Ordinary Incense, remaining: {WorstIncense.Count - 1}", LogLevel.None, ConsoleColor.Magenta);
 
                     //raise event
@@ -2639,7 +2647,6 @@ namespace PokeRoadie
                 {
                     _nextIncenseTime = DateTime.Now.AddMinutes(30);
                     Logger.Write($"(INCENSE) Incense Active", LogLevel.None, ConsoleColor.Magenta);
-
 
                     //raise event
                     if (OnIncenseActive != null)

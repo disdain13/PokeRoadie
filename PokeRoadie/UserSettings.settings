@@ -227,5 +227,29 @@
     <Setting Name="MaxDistanceForLongTravel" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">65</Value>
     </Setting>
+    <Setting Name="MinDelay" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">320</Value>
+    </Setting>
+    <Setting Name="MaxDelay" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">520</Value>
+    </Setting>
+    <Setting Name="FavoriteAboveCp" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FavoriteAboveIV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FavoriteAboveV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FavoritePokemon" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RenamePokemon" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RenameFormat" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{V}-{IV}-{N}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -56,7 +56,7 @@
     </Reference>
     <Reference Include="POGOProtos, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\POGOProtos.1.5.0\lib\net45\POGOProtos.dll</HintPath>
+      <HintPath>..\packages\POGOProtos.1.6.0\lib\net45\POGOProtos.dll</HintPath>
     </Reference>
     <Reference Include="PokeRoadie.Xml">
       <HintPath>..\components\PokeRoadie.Xml.dll</HintPath>

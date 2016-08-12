@@ -141,12 +141,26 @@ namespace PokeRoadie
         public virtual double WaypointAltitude { get; set; }
 
         //proxy
-        public bool UseProxy { get; set; }
-        public string UseProxyHost { get; set; }
-        public string UseProxyPort { get; set; }
-        public bool UseProxyAuthentication { get; set; }
-        public string UseProxyUsername { get; set; }
-        public string UseProxyPassword { get; set; }
+        public virtual bool UseProxy { get; set; }
+        public virtual string UseProxyHost { get; set; }
+        public virtual string UseProxyPort { get; set; }
+        public virtual bool UseProxyAuthentication { get; set; }
+        public virtual string UseProxyUsername { get; set; }
+        public virtual string UseProxyPassword { get; set; }
+
+        //delays
+        public virtual int MinDelay { get; set; }
+        public virtual int MaxDelay { get; set; }
+
+        //favorite
+        public virtual bool FavoritePokemon { get; set; }
+        public virtual int FavoriteAboveCp { get; set; }
+        public virtual double FavoriteAboveIV { get; set; }
+        public virtual double FavoriteAboveV { get; set; }
+
+        //rename
+        public virtual bool RenamePokemon { get; set; }
+        public virtual string RenameFormat { get; set; }
 
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -470,6 +484,15 @@ namespace PokeRoadie
 
             this.MaxDistanceForLongTravel = UserSettings.Default.MaxDistanceForLongTravel;
 
+            this.MinDelay = UserSettings.Default.MinDelay;
+            this.MaxDelay = UserSettings.Default.MaxDelay;
+            this.FavoritePokemon = UserSettings.Default.FavoritePokemon;
+            this.FavoriteAboveCp = UserSettings.Default.FavoriteAboveCp;
+            this.FavoriteAboveIV = UserSettings.Default.FavoriteAboveIV;
+            this.FavoriteAboveV = UserSettings.Default.FavoriteAboveV;
+            this.RenamePokemon = UserSettings.Default.RenamePokemon;
+            this.RenameFormat = UserSettings.Default.RenameFormat;
+
         }
 
         #endregion
@@ -614,6 +637,15 @@ namespace PokeRoadie
                     this.UseProxyUsername = obj.UseProxyUsername;
 
                     this.MaxDistanceForLongTravel = obj.MaxDistanceForLongTravel;
+
+                    this.MinDelay = obj.MinDelay;
+                    this.MaxDelay = obj.MaxDelay;
+                    this.FavoritePokemon = obj.FavoritePokemon;
+                    this.FavoriteAboveCp = obj.FavoriteAboveCp;
+                    this.FavoriteAboveIV = obj.FavoriteAboveIV;
+                    this.FavoriteAboveV = obj.FavoriteAboveV;
+                    this.RenamePokemon = obj.RenamePokemon;
+                    this.RenameFormat = obj.RenameFormat;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

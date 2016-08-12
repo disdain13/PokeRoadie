@@ -34,7 +34,7 @@ namespace PokeRoadie
         public static DateTime _lastRefresh;
         public static GetInventoryResponse _cachedInventory;
         private string export_path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
-
+        public static bool IsDirty { get; set; }
         public PokeRoadieInventory(PokeRoadieClient client, PokeRoadieSettings settings)
         {
             _client = client;
@@ -394,9 +394,8 @@ namespace PokeRoadie
         public async Task<IEnumerable<PokemonData>> GetPokemons()
         {
             var inventory = await getCachedInventory(_client);
-            return
-                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
-                    .Where(p => p != null && p.PokemonId > 0);
+            if (inventory == null || inventory.InventoryDelta == null) return new List<PokemonData>();
+            return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData).Where(p => p != null && p.PokemonId > 0);
         }
 
         public async Task<IEnumerable<PokemonSettings>> GetPokemonSettings()
@@ -489,7 +488,7 @@ namespace PokeRoadie
             var now = DateTime.UtcNow;
             var ss = new SemaphoreSlim(10);
 
-            if (_lastRefresh.AddSeconds(30).Ticks > now.Ticks && request == false)
+            if (IsDirty || (_lastRefresh.AddSeconds(30).Ticks > now.Ticks && request == false))
             {
                 return _cachedInventory;
             }
@@ -502,6 +501,7 @@ namespace PokeRoadie
                 try
                 {
                     _cachedInventory = await _client.Inventory.GetInventory();
+                    IsDirty = false;
                 }
                 catch
                 {

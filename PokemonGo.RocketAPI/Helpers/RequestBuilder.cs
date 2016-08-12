@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Google.Protobuf;
-using POGOProtos.Networking.Signature;
 using PokemonGo.RocketAPI.Enums;
 using POGOProtos.Networking.Envelopes;
 using POGOProtos.Networking.Requests;
@@ -53,7 +52,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 LocationHash2 =
                     Utils.GenerateLocation2(requestEnvelope.Latitude, requestEnvelope.Longitude,
                         requestEnvelope.Altitude),
-                Unk22 = ByteString.CopyFrom(rnd32),
+                Unknown22 = ByteString.CopyFrom(rnd32),
                 Timestamp = (ulong)DateTime.UtcNow.ToUnixTime(),
                 TimestampSinceStart = (ulong)(DateTime.UtcNow.ToUnixTime() - _startTime.ToUnixTime()),
                 SensorInfo = new Signature.Types.SensorInfo()
@@ -78,7 +77,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 }
             };
             //sig.DeviceInfo = _client.DeviceInfo;
-            sig.LocationFix.Add(new POGOProtos.Networking.Signature.Signature.Types.LocationFix()
+            sig.LocationFix.Add(new Signature.Types.LocationFix()
             {
                 Provider = "network",
 
@@ -98,14 +97,14 @@ namespace PokemonGo.RocketAPI.Helpers
                 );
             }
 
-            requestEnvelope.Unknown6.Add(new Unknown6()
+            requestEnvelope.Unknown6 = new Unknown6()
             {
                 RequestType = 6,
                 Unknown2 = new Unknown6.Types.Unknown2()
                 {
-                    Unknown1 = ByteString.CopyFrom(Crypt.Encrypt(sig.ToByteArray()))
+                     EncryptedSignature = ByteString.CopyFrom(Crypt.Encrypt(sig.ToByteArray()))
                 }
-            });
+            };
 
             return requestEnvelope;
         }

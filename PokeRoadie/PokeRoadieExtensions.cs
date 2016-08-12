@@ -29,42 +29,56 @@ namespace PokeRoadie.Extensions
 {
     public static class PokeRoadieExtensions
     {
+        const double twoThousand = 2000d;
+        const double twoHundred = 200d;
+        const double oneHundred = 100d;
+
         public static double GetPerfection(this PokemonData pokemon)
         {
             return PokemonInfo.CalculatePokemonPerfection(pokemon);
         }
+
         public static double GetLevel(this PokemonData pokemon)
         {
             return PokemonInfo.GetLevel(pokemon);
         }
+
         public static int GetMaxCP(this PokemonData pokemon)
         {
             return PokemonInfo.CalculateMaxCP(pokemon);
         }
+
         public static int GetMinCP(this PokemonData pokemon)
         {
             return PokemonInfo.CalculateMinCP(pokemon);
         }
+
         public static double GetMaxCPMultiplier(this PokemonData pokemon)
         {
             return PokemonInfo.CalculateMaxCPMultiplier(pokemon);
         }
+
         public static double GetMinCPMultiplier(this PokemonData pokemon)
         {
             return PokemonInfo.CalculateMinCPMultiplier(pokemon);
         }
+
+
         public static int GetPowerUpLevel(this PokemonData pokemon)
         {
             return PokemonInfo.GetPowerUpLevel(pokemon);
         }
+
         public static BaseStats GetBaseStats(this PokemonData pokemon)
         {
             return PokemonInfo.GetBaseStats(pokemon.PokemonId);
         }
+
         public static double GetCP(this PokemonData pokemon)
         {
             return PokemonInfo.CalculateCP(pokemon);
         }
+
         public static MoveData GetMove(this ICollection<MoveData> list, string name)
         {
             var filteredName = name.ToLower();
@@ -80,24 +94,27 @@ namespace PokeRoadie.Extensions
                 Logger.Write($"Pokemon move '{name}' could not be found in the PokemonMoveDatas.xml file, using default move.", LogLevel.Error);
                 move = new MoveData();
                 move.Name = name;
-                move.Power = 30;
-                move.PP = 15;
+                move.Power = 50;
+                move.PP = 20;
                 move.Type = "Normal";
                 move.Category = "Physical";
                 move.Effect = "Unknown";
-                move.Accuracy = 50;
+                move.Accuracy = 75;
             }
                 
             return move;
         }
+
         public static string GetStats(this PokemonData pokemon)
         {
             return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} True Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Move1.GetMoveName()}/{pokemon.Move2.GetMoveName()}";
         }
+
         public static string GetMinStats(this PokemonData pokemon)
         {
             return $"{pokemon.PokemonId.ToString()} {pokemon.CalculatePokemonValue()} V | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% | Lvl {pokemon.GetLevel().ToString("00")}";
         }
+
         public static string GetMoveName(this PokemonMove move)
         {
             var val = move.ToString();
@@ -105,17 +122,25 @@ namespace PokeRoadie.Extensions
             return val;
         }
 
+        private static int CalculateMoveValue(string moveName)
+        {
+            var m1a = 100;
+            var move1 = PokeRoadieSettings.Current.PokemonMoves.GetMove(moveName);
+            if (move1 == null) return 20;
+            m1a = move1.Power + move1.Accuracy + move1.Hit;
+            m1a = m1a < 51 ? 50 : m1a > 250 ? 250 : m1a;
+            double m1b = move1.PP == 0 ?
+                2.0d : move1.PP > 0 && move1.PP < 15 ?
+                1.5d : (double)move1.PP / 10d;
+            return Convert.ToInt32(m1a / m1b);
+        }
+
         public static double CalculatePokemonValue(this PokemonData pokemon)
         {
-            const double twoThousand = 2000;
-            const double twoHundred = 200;
-            var move1 = PokeRoadieSettings.Current.PokemonMoves.GetMove(pokemon.Move1.GetMoveName());
-            var move2 = PokeRoadieSettings.Current.PokemonMoves.GetMove(pokemon.Move2.GetMoveName());
-            var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon));
-            var cp = Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * twoHundred);
-            var m1 = move1 == null && move1.Power > 0 ? 0 : move1.Power / 2;
-            var m2 = move2 == null && move2.Power > 0 ? 0 : move2.Power / 2;
-            return p + cp + m1 + m2;
+            return System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon)) +
+            Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * oneHundred) +
+            CalculateMoveValue(pokemon.Move1.GetMoveName()) + CalculateMoveValue(pokemon.Move2.GetMoveName()) +
+            (pokemon.GetLevel() == 0 ? 0 : (pokemon.GetLevel() / 40) * oneHundred);
         }
 
         public static void Save(this FortDetailsResponse fortInfo, string filePath, double currentAltitude)
