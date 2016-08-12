@@ -6,9 +6,9 @@
   <DestinationsEnabled>false</DestinationsEnabled>
   <MinutesPerDestination>30</MinutesPerDestination>
   <DestinationIndex>0</DestinationIndex>
-  <CurrentLatitude>0</CurrentLatitude>
-  <CurrentLongitude>0</CurrentLongitude>
-  <CurrentAltitude>0</CurrentAltitude>
+  <CurrentLatitude>34.0114062</CurrentLatitude>
+  <CurrentLongitude>-118.495009</CurrentLongitude>
+  <CurrentAltitude>10</CurrentAltitude>
   <MinSpeed>10</MinSpeed>
   <MaxSpeed>25</MaxSpeed>
   <MaxDistance>5000</MaxDistance>
@@ -55,20 +55,32 @@
   <LoiteringActive>false</LoiteringActive>
   <VisitGyms>false</VisitGyms>
   <AutoDeployAtTeamGyms>false</AutoDeployAtTeamGyms>
+  <PokeBallBalancing>true</PokeBallBalancing>
   <UseLuckyEggs>false</UseLuckyEggs>
   <UseIncense>false</UseIncense>
   <UseRevives>false</UseRevives>
   <UsePotions>false</UsePotions>
   <UseEggIncubators>false</UseEggIncubators>
   <UsePokemonToNotCatchList>false</UsePokemonToNotCatchList>
-  <PokeBallBalancing>true</PokeBallBalancing>
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
-  <WaypointLatitude>0</WaypointLatitude>
-  <WaypointLongitude>0</WaypointLongitude>
-  <WaypointAltitude>0</WaypointAltitude>
   <WaitOnStart>false</WaitOnStart>
+  <WaypointLatitude>34.0114062</WaypointLatitude>
+  <WaypointLongitude>-118.495009</WaypointLongitude>
+  <WaypointAltitude>10</WaypointAltitude>
   <UseProxy>false</UseProxy>
+  <UseProxyHost />
+  <UseProxyPort />
   <UseProxyAuthentication>false</UseProxyAuthentication>
+  <UseProxyUsername />
+  <UseProxyPassword />
+  <MinDelay>320</MinDelay>
+  <MaxDelay>520</MaxDelay>
+  <FavoritePokemon>false</FavoritePokemon>
+  <FavoriteAboveCp>0</FavoriteAboveCp>
+  <FavoriteAboveIV>0</FavoriteAboveIV>
+  <FavoriteAboveV>0</FavoriteAboveV>
+  <RenamePokemon>false</RenamePokemon>
+  <RenameFormat>{V}-{IV}-{N}</RenameFormat>
 </PokeRoadieSettings>
