@@ -9,13 +9,13 @@
   <CurrentLatitude>34.0114062</CurrentLatitude>
   <CurrentLongitude>-118.495009</CurrentLongitude>
   <CurrentAltitude>10</CurrentAltitude>
-  <MinSpeed>10</MinSpeed>
-  <MaxSpeed>25</MaxSpeed>
+  <MinSpeed>4</MinSpeed>
+  <MaxSpeed>18</MaxSpeed>
   <MaxDistance>5000</MaxDistance>
   <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
-  <MaxSecondsBetweenStops>30</MaxSecondsBetweenStops>
+  <MaxSecondsBetweenStops>20</MaxSecondsBetweenStops>
   <FlyingEnabled>false</FlyingEnabled>
   <FlyLikeCaptKirk>false</FlyLikeCaptKirk>
   <FlyingSpeed>250</FlyingSpeed>
@@ -66,21 +66,33 @@
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
   <WaitOnStart>false</WaitOnStart>
-  <WaypointLatitude>34.0114062</WaypointLatitude>
-  <WaypointLongitude>-118.495009</WaypointLongitude>
-  <WaypointAltitude>10</WaypointAltitude>
+  <WaypointLatitude>0</WaypointLatitude>
+  <WaypointLongitude>0</WaypointLongitude>
+  <WaypointAltitude>0</WaypointAltitude>
   <UseProxy>false</UseProxy>
   <UseProxyHost />
   <UseProxyPort />
   <UseProxyAuthentication>false</UseProxyAuthentication>
   <UseProxyUsername />
   <UseProxyPassword />
-  <MinDelay>1500</MinDelay>
-  <MaxDelay>2500</MaxDelay>
+  <MinDelay>2500</MinDelay>
+  <MaxDelay>5000</MaxDelay>
   <FavoritePokemon>false</FavoritePokemon>
   <FavoriteAboveCp>0</FavoriteAboveCp>
   <FavoriteAboveIV>0</FavoriteAboveIV>
   <FavoriteAboveV>0</FavoriteAboveV>
   <RenamePokemon>false</RenamePokemon>
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
+  <EnableHumanizedThrows>true</EnableHumanizedThrows>
+  <ForceExcellentThrowOverCp>0</ForceExcellentThrowOverCp>
+  <ForceExcellentThrowOverIV>0</ForceExcellentThrowOverIV>
+  <ForceExcellentThrowOverV>0</ForceExcellentThrowOverV>
+  <ForceGreatThrowOverCp>0</ForceGreatThrowOverCp>
+  <ForceGreatThrowOverIV>0</ForceGreatThrowOverIV>
+  <ForceGreatThrowOverV>0</ForceGreatThrowOverV>
+  <ExcellentThrowChance>15</ExcellentThrowChance>
+  <GreatThrowChance>25</GreatThrowChance>
+  <NiceThrowChance>25</NiceThrowChance>
+  <CurveThrowChance>35</CurveThrowChance>
+  <DevicePackageName>htc10</DevicePackageName>
 </PokeRoadieSettings>

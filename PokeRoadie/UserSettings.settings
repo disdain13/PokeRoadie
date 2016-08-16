@@ -251,5 +251,41 @@
     <Setting Name="RenameFormat" Type="System.String" Scope="Application">
       <Value Profile="(Default)">{V}-{IV}-{N}</Value>
     </Setting>
+    <Setting Name="EnableHumanizedThrows" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ForceExcellentThrowOverCp" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="ForceExcellentThrowOverIV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">85</Value>
+    </Setting>
+    <Setting Name="ForceGreatThrowOverCp" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="ForceGreatThrowOverIV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">65</Value>
+    </Setting>
+    <Setting Name="ExcellentThrowChance" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="GreatThrowChance" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="NiceThrowChance" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="ForceExcellentThrowOverV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="ForceGreatThrowOverV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">150</Value>
+    </Setting>
+    <Setting Name="CurveThrowChance" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
+    <Setting Name="DevicePackageName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">htc10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -162,6 +162,20 @@ namespace PokeRoadie
         public virtual bool RenamePokemon { get; set; }
         public virtual string RenameFormat { get; set; }
 
+        //humanized throws
+        public virtual bool EnableHumanizedThrows { get; set; }
+        public virtual int ForceExcellentThrowOverCp { get; set; }
+        public virtual double ForceExcellentThrowOverIV { get; set; }
+        public virtual double ForceExcellentThrowOverV { get; set; }
+        public virtual int ForceGreatThrowOverCp { get; set; }
+        public virtual double ForceGreatThrowOverIV { get; set; }
+        public virtual double ForceGreatThrowOverV { get; set; }
+        public virtual int ExcellentThrowChance { get; set; }
+        public virtual int GreatThrowChance { get; set; }
+        public virtual int NiceThrowChance { get; set; }
+        public virtual double CurveThrowChance { get; set; }
+        public virtual string DevicePackageName { get; set; }
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -493,7 +507,20 @@ namespace PokeRoadie
             this.RenamePokemon = UserSettings.Default.RenamePokemon;
             this.RenameFormat = UserSettings.Default.RenameFormat;
 
-        }
+            this.EnableHumanizedThrows = UserSettings.Default.EnableHumanizedThrows;
+            this.ForceExcellentThrowOverCp = UserSettings.Default.ForceExcellentThrowOverCp;
+            this.ForceExcellentThrowOverIV = UserSettings.Default.ForceExcellentThrowOverIV;
+            this.ForceExcellentThrowOverV = UserSettings.Default.ForceExcellentThrowOverV;
+            this.ForceGreatThrowOverV = UserSettings.Default.ForceGreatThrowOverV;
+            this.ForceGreatThrowOverCp = UserSettings.Default.ForceGreatThrowOverCp;
+            this.ForceGreatThrowOverIV = UserSettings.Default.ForceGreatThrowOverIV;
+            this.ExcellentThrowChance = UserSettings.Default.ExcellentThrowChance;
+            this.GreatThrowChance = UserSettings.Default.GreatThrowChance;
+            this.NiceThrowChance = UserSettings.Default.NiceThrowChance;
+            this.CurveThrowChance = UserSettings.Default.CurveThrowChance;
+            this.DevicePackageName = UserSettings.Default.DevicePackageName;
+
+    }
 
         #endregion
         #region " Methods "
@@ -646,6 +673,20 @@ namespace PokeRoadie
                     this.FavoriteAboveV = obj.FavoriteAboveV;
                     this.RenamePokemon = obj.RenamePokemon;
                     this.RenameFormat = obj.RenameFormat;
+
+                    this.EnableHumanizedThrows = obj.EnableHumanizedThrows;
+                    this.ForceExcellentThrowOverCp = obj.ForceExcellentThrowOverCp;
+                    this.ForceExcellentThrowOverIV = obj.ForceExcellentThrowOverIV;
+                    this.ForceExcellentThrowOverV = obj.ForceExcellentThrowOverV;
+                    this.ForceGreatThrowOverV = obj.ForceGreatThrowOverV;
+                    this.ForceGreatThrowOverCp = obj.ForceGreatThrowOverCp;
+                    this.ForceGreatThrowOverIV = obj.ForceGreatThrowOverIV;
+                    this.ExcellentThrowChance = obj.ExcellentThrowChance;
+                    this.GreatThrowChance = obj.GreatThrowChance;
+                    this.NiceThrowChance = obj.NiceThrowChance;
+                    this.CurveThrowChance = obj.CurveThrowChance;
+                    this.DevicePackageName = obj.DevicePackageName;
+
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

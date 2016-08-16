@@ -128,6 +128,7 @@ namespace PokeRoadie
         private ApiFailureStrategy _apiFailureStrategy;
         private List<string> gymTries = new List<string>();
         private ulong lastEnconterId = 0;
+        private Random Random = new Random(DateTime.Now.Millisecond);
         //private DateTime? _lastLoginTime;
 
         #endregion
@@ -501,7 +502,7 @@ namespace PokeRoadie
                 {
                     var eMessage = e.Message;
                     Logger.Write($"(LOGIN ERROR) The Ptc servers are currently offline - {eMessage}. Waiting 30 seconds... ", LogLevel.None, ConsoleColor.Red);
-                    await Task.Delay(30000);;
+                    await Task.Delay(30000);
                     e = null;
                 }
                 catch (Exception e)
@@ -1460,15 +1461,16 @@ namespace PokeRoadie
                     fleeEndTime = null;
                 }
 
-                var bestPokeball = await GetBestBall(encounter.PokemonData, encounter.Probability);
-                if (bestPokeball == ItemId.ItemUnknown)
+                //get humanized throw data
+                var throwData = await GetThrowData(encounter.PokemonData, encounter.Probability);
+                if (throwData.ItemId == ItemId.ItemUnknown)
                 {
                     Logger.Write($"No Pokeballs :( - We missed {encounter.PokemonData.GetMinStats()}", LogLevel.Warning);
                     return;
                 }
 
                 //only use crappy pokeballs when they are fleeing
-                if (fleeCounter > 1) bestPokeball = ItemId.ItemPokeBall;
+                if (fleeCounter > 1) throwData.ItemId = ItemId.ItemPokeBall;
 
                 var bestBerry = await GetBestBerry(encounter.PokemonData, encounter.Probability);
                 //only use berries when they are fleeing
@@ -1485,7 +1487,7 @@ namespace PokeRoadie
                     }
                 }
 
-                caughtPokemonResponse = await _client.Encounter.CatchPokemon(encounter.EncounterId, encounter.SpawnPointId, bestPokeball);
+                caughtPokemonResponse = await _client.Encounter.CatchPokemon(encounter.EncounterId, encounter.SpawnPointId, throwData.ItemId, throwData.NormalizedRecticleSize,throwData.SpinModifier);
                 
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
@@ -1548,22 +1550,6 @@ namespace PokeRoadie
 
                 if (encounter.Probability.HasValue)
                 {
-                    Func<ItemId, string> returnRealBallName = a =>
-                    {
-                        switch (a)
-                        {
-                            case ItemId.ItemPokeBall:
-                                return "Poke";
-                            case ItemId.ItemGreatBall:
-                                return "Great";
-                            case ItemId.ItemUltraBall:
-                                return "Ultra";
-                            case ItemId.ItemMasterBall:
-                                return "Master";
-                            default:
-                                return "Unknown";
-                        }
-                    };
                     var catchStatus = attemptCounter > 1
                         ? $"{caughtPokemonResponse.Status} Attempt #{attemptCounter}"
                         : $"{caughtPokemonResponse.Status}";
@@ -1572,7 +1558,7 @@ namespace PokeRoadie
                         ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}"
                         : $"";
 
-                    Logger.Write($"({encounter.Source} {catchStatus.Replace("Catch","")}) | {encounter.PokemonData.GetMinStats()} | Chance: {(encounter.Probability.HasValue ? ((float)((int)(encounter.Probability * 100)) / 100).ToString() : "Unknown")} | with a {returnRealBallName(bestPokeball)}Ball {receivedXP}", LogLevel.None, ConsoleColor.Yellow);
+                    Logger.Write($"({encounter.Source} {catchStatus.Replace("Catch","")}) | {encounter.PokemonData.GetMinStats()} | Chance: {(encounter.Probability.HasValue ? ((float)((int)(encounter.Probability * 100)) / 100).ToString() : "Unknown")} | with a {throwData.BallName}Ball {receivedXP}", LogLevel.None, ConsoleColor.Yellow);
                 }
 
                 attemptCounter++;
@@ -1583,6 +1569,23 @@ namespace PokeRoadie
 
         #endregion
         #region " Travel & Destination Methods "
+
+        private string GetBallName(ItemId pokeballItemId)
+        {
+            switch (pokeballItemId)
+            {
+                case ItemId.ItemPokeBall:
+                    return "Poke";
+                case ItemId.ItemGreatBall:
+                    return "Great";
+                case ItemId.ItemUltraBall:
+                    return "Ultra";
+                case ItemId.ItemMasterBall:
+                    return "Master";
+                default:
+                    return "Unknown";
+            }
+        }
 
         private async Task NextDestination()
         {
@@ -1938,9 +1941,76 @@ namespace PokeRoadie
             return ItemId.ItemUnknown;
         }
 
-        private async Task<ItemId> GetBestBall(EncounterResponse encounter)
+        private async Task<ThrowData> GetThrowData(PokemonData pokemon, float? captureProbability)
         {
-            return await GetBestBall(encounter?.WildPokemon?.PokemonData, encounter?.CaptureProbability?.CaptureProbability_.First());
+
+            var throwData = new ThrowData();
+            throwData.NormalizedRecticleSize = 1.95d;
+            throwData.SpinModifier = 1d;
+            throwData.SpinText = "curve";
+            throwData.HitText = "Excellent";
+            throwData.ItemId = await GetBestBall(pokemon, captureProbability);
+            throwData.BallName = GetBallName(throwData.ItemId);
+
+            //Humanized throws
+            if (_settings.EnableHumanizedThrows)
+            {
+                var pokemonIv = pokemon.GetPerfection();
+                var pokemonV = pokemon.CalculatePokemonValue();
+
+                if ((_settings.ForceExcellentThrowOverCp > 0 && pokemon.Cp > _settings.ForceExcellentThrowOverCp) ||
+                    (_settings.ForceExcellentThrowOverIV > 0 && pokemonIv > _settings.ForceExcellentThrowOverIV) ||
+                    (_settings.ForceExcellentThrowOverV > 0 && pokemonV > _settings.ForceExcellentThrowOverV))
+                {
+                    throwData.NormalizedRecticleSize = Random.NextDouble() * (1.95 - 1.7) + 1.7;
+                }
+                else if ((_settings.ForceGreatThrowOverCp > 0 && pokemon.Cp >= _settings.ForceGreatThrowOverCp) ||
+                         (_settings.ForceGreatThrowOverIV > 0 &&  pokemonIv >= _settings.ForceGreatThrowOverIV) ||
+                         (_settings.ForceGreatThrowOverV > 0 && pokemonV >= _settings.ForceGreatThrowOverV))
+                {
+                    throwData.NormalizedRecticleSize = Random.NextDouble() * (1.95 - 1.3) + 1.3;
+                    throwData.HitText = "Great";
+                }
+                else
+                {
+                    var regularThrow = 100 - (_settings.ExcellentThrowChance +
+                                              _settings.GreatThrowChance +
+                                              _settings.NiceThrowChance);
+                    var rnd = Random.Next(1, 101);
+
+                    if (rnd <= regularThrow)
+                    {
+                        throwData.NormalizedRecticleSize = Random.NextDouble() * (1 - 0.1) + 0.1;
+                        throwData.HitText = "Ordinary";
+                    }
+                    else if (rnd <= regularThrow + _settings.NiceThrowChance)
+                    {
+                        throwData.NormalizedRecticleSize = Random.NextDouble() * (1.3 - 1) + 1;
+                        throwData.HitText = "Nice";
+                    }
+                    else if (rnd <=
+                             regularThrow + _settings.NiceThrowChance +
+                             _settings.GreatThrowChance)
+                    {
+                        throwData.NormalizedRecticleSize = Random.NextDouble() * (1.7 - 1.3) + 1.3;
+                        throwData.HitText = "Great";
+                    }
+
+                    if (Random.NextDouble() * 100 > _settings.CurveThrowChance)
+                    {
+                        throwData.SpinModifier = 0.0;
+                        throwData.SpinText = "straight";
+                    }
+                }
+
+                //round to 2 decimals
+                throwData.NormalizedRecticleSize = Math.Round(throwData.NormalizedRecticleSize, 2);
+
+                Logger.Write($"(THROW) {throwData.HitText} {throwData.BallName} ball {throwData.SpinText} toss...", LogLevel.None, ConsoleColor.Yellow);
+            }
+
+            return throwData;
+
         }
 
         private async Task<ItemId> GetBestBerry(EncounterResponse encounter)

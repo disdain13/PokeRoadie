@@ -137,10 +137,10 @@ namespace PokeRoadie.Extensions
 
         public static double CalculatePokemonValue(this PokemonData pokemon)
         {
-            return System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon)) +
+            return Math.Round(System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon)) +
             Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * oneHundred) +
             CalculateMoveValue(pokemon.Move1.GetMoveName()) + CalculateMoveValue(pokemon.Move2.GetMoveName()) +
-            (pokemon.GetLevel() == 0 ? 0 : (pokemon.GetLevel() / 40) * oneHundred);
+            (pokemon.GetLevel() == 0 ? 0 : (pokemon.GetLevel() / 40) * oneHundred),0);
         }
 
         public static void Save(this FortDetailsResponse fortInfo, string filePath, double currentAltitude)

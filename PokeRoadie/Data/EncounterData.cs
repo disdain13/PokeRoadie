@@ -1,27 +1,8 @@
 ﻿#region " Imports "
 
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.Helpers;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Exceptions;
-
-using POGOProtos.Inventory.Item;
-using POGOProtos.Networking.Responses;
 using POGOProtos.Data;
-using POGOProtos.Enums;
-using POGOProtos.Map.Fort;
-using POGOProtos.Map.Pokemon;
 
-using PokeRoadie.Extensions;
-using PokeRoadie.Utils;
 
 #endregion
 

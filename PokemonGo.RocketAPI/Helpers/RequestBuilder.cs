@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using Google.Protobuf;
 using PokemonGo.RocketAPI.Enums;
 using POGOProtos.Networking.Envelopes;
 using POGOProtos.Networking.Requests;
 using PokemonGo.RocketAPI.Extensions;
+using PokemonGo.RocketAPI.Logging;
 using static POGOProtos.Networking.Envelopes.RequestEnvelope.Types;
 
 namespace PokemonGo.RocketAPI.Helpers
@@ -22,6 +24,7 @@ namespace PokemonGo.RocketAPI.Helpers
         private readonly Stopwatch _internalWatch = new Stopwatch();
         private ulong _nextRequestId;
         private static readonly Random rnd = new Random();
+        private static Signature.Types.DeviceInfo deviceInfo = null;
 
         public RequestBuilder(Client client)
         {
@@ -74,7 +77,8 @@ namespace PokemonGo.RocketAPI.Helpers
                     GyroscopeRawY = GenRandom(-0.00054931640625),
                     GyroscopeRawZ = GenRandom(0.0024566650390625),
                     AccelerometerAxes = 3
-                }
+                },
+                DeviceInfo = GetDeviceInfo()
             };
             //sig.DeviceInfo = _client.DeviceInfo;
             sig.LocationFix.Add(new Signature.Types.LocationFix()
@@ -170,6 +174,35 @@ namespace PokemonGo.RocketAPI.Helpers
             var randomMax = (num * (1 + randomFactor));
             var randomizedDelay = rnd.NextDouble() * (randomMax - randomMin) + randomMin; ;
             return randomizedDelay; ;
+        }
+        public Signature.Types.DeviceInfo GetDeviceInfo()
+        {
+            if (deviceInfo != null) return deviceInfo;
+            var devicePackageName = _client.Settings.DevicePackageName;
+            if (!DeviceInfoHelper.DeviceInfoSets.ContainsKey(devicePackageName))
+            {
+                devicePackageName = DeviceInfoHelper.DeviceInfoSets.Keys.ElementAt(0);
+                var deviceList = String.Join(",", DeviceInfoHelper.DeviceInfoSets.Select(x => x.Key).ToArray());
+                Logger.Write($"You must provide a valid DevicePackageName in the Configs/Settings.xml file. We are going to use the default '{devicePackageName}'. The currently supported values are: {deviceList}", LogLevel.Warning);
+            }
+
+            deviceInfo = new Signature.Types.DeviceInfo();
+            deviceInfo.AndroidBoardName = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["AndroidBoardName"];
+            deviceInfo.AndroidBootloader = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["AndroidBootloader"];
+            deviceInfo.DeviceBrand = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceBrand"];
+            deviceInfo.DeviceId = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceId"];
+            deviceInfo.DeviceModel = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceModel"];
+            deviceInfo.DeviceModelBoot = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceModelBoot"];
+            deviceInfo.DeviceModelIdentifier = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceModelIdentifier"];
+            deviceInfo.FirmwareBrand = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["FirmwareBrand"];
+            deviceInfo.FirmwareFingerprint = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["FirmwareFingerprint"];
+            deviceInfo.FirmwareTags = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["FirmwareTags"];
+            deviceInfo.FirmwareType = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["FirmwareType"];
+            deviceInfo.HardwareManufacturer = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["HardwareManufacturer"];
+            deviceInfo.HardwareModel = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["HardwareModel"];
+
+            return deviceInfo;
+     
         }
     }
 }

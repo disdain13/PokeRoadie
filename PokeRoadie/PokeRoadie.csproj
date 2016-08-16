@@ -79,6 +79,7 @@
     <Compile Include="Data\EncounterSourceTypes.cs" />
     <Compile Include="Data\IncubatorData.cs" />
     <Compile Include="Data\LoginResultTypes.cs" />
+    <Compile Include="Data\ThrowData.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,8 +173,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Configs\Settings.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\001 Bulbasaur.png" />
     <Content Include="Images\002 Ivysaur.png" />
