@@ -1039,15 +1039,15 @@ namespace PokeRoadie
 
                                     }
                                 }
-                                catch (FormatException)
+                                catch (FormatException e)
                                 {
-                                    Logger.Write("Destinations in \"\\Configs\\DestinationCoords.ini\" file is invalid. Destinations will not be used.", LogLevel.Error);
+                                    Logger.Write($"Destinations in \"\\Configs\\DestinationCoords.ini\" file is invalid. Destinations will not be used. {e.ToString()}", LogLevel.Error);
                                     return null;
                                 }
                             }
                             else
                             {
-                                Logger.Write("Destinations in \"\\Configs\\DestinationCoords.ini\" file is invalid. 1 line per destination, formatted like - LAT:LONG:ALT:NAME", LogLevel.Error);
+                                Logger.Write($"Destinations in \"\\Configs\\DestinationCoords.ini\" file is invalid. 1 line per destination, formatted like - LAT:LONG:ALT:NAME", LogLevel.Error);
                                 return null;
                             }
 
