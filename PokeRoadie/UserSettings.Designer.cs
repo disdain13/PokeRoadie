@@ -43,7 +43,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("34.0114062")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double DefaultLatitude {
             get {
                 return ((double)(this["DefaultLatitude"]));
@@ -52,7 +52,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-118.495009")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double DefaultLongitude {
             get {
                 return ((double)(this["DefaultLongitude"]));
@@ -875,6 +875,51 @@ namespace PokeRoadie {
         public string DevicePackageName {
             get {
                 return ((string)(this["DevicePackageName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("22:00:00")]
+        public global::System.TimeSpan MaxRunTimespan {
+            get {
+                return ((global::System.TimeSpan)(this["MaxRunTimespan"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("02:00:00")]
+        public global::System.TimeSpan MinBreakTimespan {
+            get {
+                return ((global::System.TimeSpan)(this["MinBreakTimespan"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("975")]
+        public int MaxPokemonCatches {
+            get {
+                return ((int)(this["MaxPokemonCatches"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1975")]
+        public int MaxPokestopVisits {
+            get {
+                return ((int)(this["MaxPokestopVisits"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int DisplayPokemonCount {
+            get {
+                return ((int)(this["DisplayPokemonCount"]));
             }
         }
     }

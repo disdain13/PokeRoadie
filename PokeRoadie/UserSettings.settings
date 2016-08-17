@@ -9,10 +9,10 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="DefaultLatitude" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">34.0114062</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="DefaultLongitude" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">-118.495009</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="UsePokemonToNotCatchList" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
@@ -286,6 +286,21 @@
     </Setting>
     <Setting Name="DevicePackageName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">htc10</Value>
+    </Setting>
+    <Setting Name="MaxRunTimespan" Type="System.TimeSpan" Scope="Application">
+      <Value Profile="(Default)">22:00:00</Value>
+    </Setting>
+    <Setting Name="MinBreakTimespan" Type="System.TimeSpan" Scope="Application">
+      <Value Profile="(Default)">02:00:00</Value>
+    </Setting>
+    <Setting Name="MaxPokemonCatches" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">975</Value>
+    </Setting>
+    <Setting Name="MaxPokestopVisits" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1975</Value>
+    </Setting>
+    <Setting Name="DisplayPokemonCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
     </Setting>
   </Settings>
 </SettingsFile>

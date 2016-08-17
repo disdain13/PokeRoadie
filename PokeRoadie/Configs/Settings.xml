@@ -3,12 +3,16 @@
   <AuthType>Google</AuthType>
   <Username></Username>
   <Password></Password>
+  <MaxRunTimespan>22:00:00</MaxRunTimespan>
+  <MinBreakTimespan>02:00:00</MinBreakTimespan>
+  <MaxPokemonCatches>975</MaxPokemonCatches>
+  <MaxPokestopVisits>1975</MaxPokestopVisits>
   <DestinationsEnabled>false</DestinationsEnabled>
   <MinutesPerDestination>30</MinutesPerDestination>
   <DestinationIndex>0</DestinationIndex>
-  <CurrentLatitude>34.0114062</CurrentLatitude>
-  <CurrentLongitude>-118.495009</CurrentLongitude>
-  <CurrentAltitude>10</CurrentAltitude>
+  <CurrentLatitude>0</CurrentLatitude>
+  <CurrentLongitude>0</CurrentLongitude>
+  <CurrentAltitude>0</CurrentAltitude>
   <MinSpeed>4</MinSpeed>
   <MaxSpeed>18</MaxSpeed>
   <MaxDistance>5000</MaxDistance>
@@ -65,6 +69,7 @@
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
+  <DisplayPokemonCount>20</DisplayPokemonCount>
   <WaitOnStart>false</WaitOnStart>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>

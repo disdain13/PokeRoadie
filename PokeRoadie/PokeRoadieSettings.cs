@@ -32,8 +32,10 @@ namespace PokeRoadie
         #endregion
         #region " Members "
 
-        private static object syncRoot => new object();
+        private static object syncRoot = new object();
+        private static object sessionRoot = new object();
         private static string configs_path = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
+        private static string temp_path = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
         private ICollection<PokemonId> _pokemonsNotToTransfer;
         private ICollection<PokemonId> _pokemonsToEvolve;
         private ICollection<PokemonId> _pokemonsNotToCatch;
@@ -42,6 +44,7 @@ namespace PokeRoadie
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
+        private SessionData _session = null;
 
         #endregion
         #region " General Properties "
@@ -109,6 +112,13 @@ namespace PokeRoadie
         public virtual int MinCandyForPowerUps { get; set; }
         public virtual int MaxPowerUpsPerRound { get; set; }
 
+
+        //favorites
+        public virtual bool FavoritePokemon { get; set; }
+        public virtual int FavoriteAboveCp { get; set; }
+        public virtual double FavoriteAboveIV { get; set; }
+        public virtual double FavoriteAboveV { get; set; }
+
         //player behavior
         public virtual bool CatchPokemon { get; set; }
         public virtual bool VisitPokestops { get; set; }
@@ -118,6 +128,19 @@ namespace PokeRoadie
         public virtual bool VisitGyms { get; set; }
         public virtual bool AutoDeployAtTeamGyms { get; set; }
         public virtual bool PokeBallBalancing { get; set; }
+
+        //humanized throws
+        public virtual bool EnableHumanizedThrows { get; set; }
+        public virtual int ForceExcellentThrowOverCp { get; set; }
+        public virtual double ForceExcellentThrowOverIV { get; set; }
+        public virtual double ForceExcellentThrowOverV { get; set; }
+        public virtual int ForceGreatThrowOverCp { get; set; }
+        public virtual double ForceGreatThrowOverIV { get; set; }
+        public virtual double ForceGreatThrowOverV { get; set; }
+        public virtual int ExcellentThrowChance { get; set; }
+        public virtual int GreatThrowChance { get; set; }
+        public virtual int NiceThrowChance { get; set; }
+        public virtual double CurveThrowChance { get; set; }
 
         //inventory
         public virtual bool UseLuckyEggs { get; set; }
@@ -148,36 +171,40 @@ namespace PokeRoadie
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
 
-        //delays
-        public virtual int MinDelay { get; set; }
-        public virtual int MaxDelay { get; set; }
-
-        //favorite
-        public virtual bool FavoritePokemon { get; set; }
-        public virtual int FavoriteAboveCp { get; set; }
-        public virtual double FavoriteAboveIV { get; set; }
-        public virtual double FavoriteAboveV { get; set; }
-
+        
         //rename
         public virtual bool RenamePokemon { get; set; }
         public virtual string RenameFormat { get; set; }
 
-        //humanized throws
-        public virtual bool EnableHumanizedThrows { get; set; }
-        public virtual int ForceExcellentThrowOverCp { get; set; }
-        public virtual double ForceExcellentThrowOverIV { get; set; }
-        public virtual double ForceExcellentThrowOverV { get; set; }
-        public virtual int ForceGreatThrowOverCp { get; set; }
-        public virtual double ForceGreatThrowOverIV { get; set; }
-        public virtual double ForceGreatThrowOverV { get; set; }
-        public virtual int ExcellentThrowChance { get; set; }
-        public virtual int GreatThrowChance { get; set; }
-        public virtual int NiceThrowChance { get; set; }
-        public virtual double CurveThrowChance { get; set; }
+        //emulation & safety
         public virtual string DevicePackageName { get; set; }
+        public virtual int MinDelay { get; set; }
+        public virtual int MaxDelay { get; set; }
+
+        //new
+        public virtual int DisplayPokemonCount { get; set; }
+        public virtual TimeSpan MaxRunTimespan { get; set; }
+        public virtual TimeSpan MinBreakTimespan { get; set; }
+        public virtual int MaxPokemonCatches { get; set; }
+        public virtual int MaxPokestopVisits { get; set; }
 
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
+
+        [XmlIgnore()]
+        public SessionData Session
+        {
+            get
+            {
+                if (_session != null) return _session;
+                _session = LoadSession(Path.Combine(temp_path, "Session.xml"));
+                return _session;
+            }
+            set
+            {
+                _session = value;
+            }
+        }
 
         #endregion
         #region " Collection Properties "
@@ -520,6 +547,13 @@ namespace PokeRoadie
             this.CurveThrowChance = UserSettings.Default.CurveThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
+            this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
+            this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan;
+            this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan;
+            this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
+            this.MaxPokestopVisits = UserSettings.Default.MaxPokestopVisits;
+
+
     }
 
         #endregion
@@ -527,7 +561,6 @@ namespace PokeRoadie
 
         public void Save()
         {
-            //UserSettings.Default.Save();
             try
             {
                 string fileName = "Settings.xml";
@@ -547,8 +580,65 @@ namespace PokeRoadie
             {
                 Logger.Write("Could not save settings to file. Error: " + e.ToString(), LogLevel.Error);
             }
+            SaveSession(Session);
         }
 
+        public bool SaveSession(SessionData session)
+        {
+            string fileName = "Session.xml";
+            string filePath = Path.Combine(temp_path, fileName);
+            try
+            {
+                lock (syncRoot)
+                {
+                    if (File.Exists(filePath)) File.Delete(filePath);
+                    using (FileStream s = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
+                        x.Serialize(s, session);
+                        s.Close();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Write($"Could not save {filePath}. Error: " + e.ToString(), LogLevel.Error);
+            }
+            return false;
+        }
+
+        public SessionData LoadSession(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    lock (syncRoot)
+                    {
+                        using (FileStream s = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                        {
+                            var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
+                            var session = (SessionData)x.Deserialize(s);
+                            s.Close();
+                            return session;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write($"The {filePath} file could not be loaded, a new session will be created. {ex.Message} {ex.ToString()}", LogLevel.Warning);
+                }
+            }
+            return NewSession();
+        }
+
+        public SessionData NewSession()
+        {
+            var session = new SessionData();
+            session.StartDate = DateTime.Now;
+            return session;
+        }
         private PokeRoadieSettings Load()
         {
             //check for base path
@@ -686,6 +776,12 @@ namespace PokeRoadie
                     this.NiceThrowChance = obj.NiceThrowChance;
                     this.CurveThrowChance = obj.CurveThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
+
+                    this.DisplayPokemonCount = obj.DisplayPokemonCount;
+                    this.MaxRunTimespan = obj.MaxRunTimespan;
+                    this.MinBreakTimespan = obj.MinBreakTimespan;
+                    this.MaxPokemonCatches = obj.MaxPokemonCatches;
+                    this.MaxPokestopVisits = obj.MaxPokestopVisits;
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))

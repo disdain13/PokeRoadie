@@ -132,6 +132,12 @@ namespace PokeRoadie
         //private DateTime? _lastLoginTime;
 
         #endregion
+        #region " Properties "
+
+            public bool CanCatch { get { return _settings.CatchPokemon && _settings.Session.CatchEnabled && !softBan; } }
+            public bool CanVisit { get { return _settings.VisitPokestops && _settings.Session.VisitEnabled && !softBan; } }
+
+        #endregion
         #region " Constructors "
 
         public PokeRoadieLogic() : this(null)
@@ -153,10 +159,12 @@ namespace PokeRoadie
 
         #endregion
         #region " Application Methods "
+
         public void Stop()
         {
             isRunning = false;
         }
+
         private async Task CloseApplication(int exitCode)
         {
             for (int i = 3; i > 0; i--)
@@ -186,9 +194,17 @@ namespace PokeRoadie
             //clear old temp files
             DeleteOldFiles(gymDir);
 
+            //check lat long
+            if (_settings.CurrentLongitude == 0 && _settings.CurrentLatitude == 0)
+            {
+                Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
+                if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
+                Task.Delay(15000);
+                CloseApplication(4);
+            }
+
             //run temp data serializer on own thread
             Task.Run(new Action(Xlo));
-
 
         }
 
@@ -305,15 +321,15 @@ namespace PokeRoadie
                     }
                 }
                 Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
-                var highestsPokemonV = await _inventory.GetHighestsV(20);
+                var highestsPokemonV = await _inventory.GetHighestsV(_settings.DisplayPokemonCount);
                 foreach (var pokemon in highestsPokemonV)
                     Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                 Logger.Write("====== Highest CP ======", LogLevel.None, ConsoleColor.Yellow);
-                var highestsPokemonCp = await _inventory.GetHighestsCP(20);
+                var highestsPokemonCp = await _inventory.GetHighestsCP(_settings.DisplayPokemonCount);
                 foreach (var pokemon in highestsPokemonCp)
                     Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                 Logger.Write("====== Most Perfect Genetics ======", LogLevel.None, ConsoleColor.Yellow);
-                var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(20);
+                var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(_settings.DisplayPokemonCount);
                 foreach (var pokemon in highestsPokemonPerfect)
                 {
                     Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
@@ -433,6 +449,52 @@ namespace PokeRoadie
         private async Task RandomDelay()
         {
             await RandomHelper.RandomDelay(_settings.MinDelay, _settings.MaxDelay);
+        }
+
+        private async Task CheckSession()
+        {
+            var nowdate = DateTime.Now;
+            var session = _settings.Session;
+            var endDate = session.StartDate.Add(_settings.MaxRunTimespan);
+            var totalEndDate = endDate.Add(_settings.MinBreakTimespan);
+
+            //session is still active
+            if (endDate < nowdate)
+            {
+                if (_settings.Session.CatchEnabled && _settings.Session.CatchCount >= _settings.MaxPokemonCatches)
+                {
+                    _settings.Session.CatchEnabled = false;
+                }
+                if (_settings.Session.VisitEnabled && _settings.Session.VisitCount >= _settings.MaxPokestopVisits)
+                {
+                    _settings.Session.VisitEnabled = false;
+                }
+                if (!_settings.Session.CatchEnabled && !_settings.Session.CatchEnabled)
+                {
+                    var diff = totalEndDate.Subtract(nowdate);
+                    Logger.Write($"Limit reached! The bot visited {_settings.Session.VisitCount} pokestops, and caught {_settings.Session.CatchCount} pokemon since {session.StartDate}. The bot will wait until {totalEndDate.ToShortTimeString()} to continue...", LogLevel.Warning);
+                    await Task.Delay(diff);
+                    _settings.Session = _settings.NewSession();
+                }
+                return;
+            }
+
+            //session has expired
+            if (totalEndDate < nowdate)
+            {
+                _settings.Session = _settings.NewSession();
+                return;
+            }
+
+            //session expired, but break not completed   
+            if (endDate > nowdate && totalEndDate < DateTime.Now)
+            {
+                //must wait the difference before start
+                var diff = totalEndDate.Subtract(nowdate);
+                Logger.Write($"Your last recorded session ended {endDate.ToShortTimeString()}, but the required break time has not passed. The bot will wait until {totalEndDate.ToShortTimeString()} to continue...", LogLevel.Warning);
+                await Task.Delay(diff);
+                _settings.Session = _settings.NewSession();
+            }
         }
 
         #endregion
@@ -556,6 +618,9 @@ namespace PokeRoadie
 
             //write stats
             await WriteStats();
+
+            //session
+            await CheckSession();
 
             //revive
             if (_settings.UseRevives) await UseRevives();
@@ -689,11 +754,11 @@ namespace PokeRoadie
 
             if (!_settings.VisitGyms && !_settings.VisitPokestops)
             {
-                Logger.Write("Both VisitGyms and VisitPokestops settings are false... This is boring.");
+                Logger.Write("Both VisitGyms and VisitPokestops settings are false... Standing around I guess...");
                 
-                await RandomHelper.RandomDelay(2500);
+                await RandomHelper.RandomDelay(5000);
 
-                if (_settings.CatchPokemon && !softBan)
+                if (CanCatch)
                     await CatchNearbyPokemons();
             }
 
@@ -831,7 +896,7 @@ namespace PokeRoadie
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var totalActivecount = 0;
             if (_settings.VisitGyms) totalActivecount += gymsList.Count;
-            if (_settings.VisitPokestops) totalActivecount += stopList.Count;
+            if (CanVisit) totalActivecount += stopList.Count;
             if (totalActivecount == 0)
             {
                 Logger.Write("No locations in your area...", LogLevel.Warning);
@@ -889,7 +954,7 @@ namespace PokeRoadie
             if (!_settings.VisitGyms)
                 pokeStopList = pokeStopList.Where(x => x.Type != FortType.Gym);
 
-            if (!_settings.VisitPokestops)
+            if (!CanVisit)
                 pokeStopList = pokeStopList.Where(x => x.Type == FortType.Gym);
 
             return pokeStopList.ToList();
@@ -906,7 +971,7 @@ namespace PokeRoadie
                     LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //incense pokemon
-            if (!softBan && _settings.CatchPokemon && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
+            if (CanCatch && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
             {
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
@@ -1039,7 +1104,7 @@ namespace PokeRoadie
             if (!gymTries.Contains(pokeStop.Id))
             {
 
-                if (_settings.CatchPokemon && !softBan)
+                if (CanCatch)
                     await CatchNearbyPokemons();
 
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
@@ -1144,7 +1209,7 @@ namespace PokeRoadie
         private async Task ProcessPokeStop(FortData pokeStop, GetMapObjectsResponse mapObjects)
         {
 
-            if (_settings.CatchPokemon && !softBan)
+            if (CanCatch)
                 await CatchNearbyPokemons();
 
             var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
@@ -1244,7 +1309,7 @@ namespace PokeRoadie
             }
 
             //catch lure pokemon 8)
-            if (!softBan && _settings.CatchPokemon && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
+            if (CanCatch && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
             {
                 if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
                     await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
@@ -1257,7 +1322,7 @@ namespace PokeRoadie
                 Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
                 while (_settings.LoiteringActive && pokeStop.LureInfo != null && DateTime.Now.ToUnixTime() < pokeStop.LureInfo.LureExpiresTimestampMs)
                 {
-                    if (_settings.CatchPokemon && !softBan)
+                    if (CanCatch)
                         await CatchNearbyPokemons();
 
                     if (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId)
@@ -2098,10 +2163,10 @@ namespace PokeRoadie
         {
             Func<Task> del = null;
             if (softBan) return del;
-            if (!_settings.CatchPokemon && !_settings.VisitPokestops) return del;
-            if (_settings.CatchPokemon && _settings.VisitPokestops) return GpxCatchNearbyPokemonsAndStops;
-            if (_settings.CatchPokemon) return CatchNearbyPokemons;
-            if (_settings.VisitPokestops) return GpxCatchNearbyStops;
+            if (!CanCatch && !CanVisit) return del;
+            if (CanCatch && CanVisit) return GpxCatchNearbyPokemonsAndStops;
+            if (CanCatch) return CatchNearbyPokemons;
+            if (CanVisit) return GpxCatchNearbyStops;
             return del;
         }
 
@@ -2109,7 +2174,7 @@ namespace PokeRoadie
         {
             Func<Task> del = null;
             if (softBan) return del;
-            if (_settings.VisitPokestops && _settings.PingStopsWhileFlying) return GpxCatchNearbyStops;
+            if (CanVisit && _settings.PingStopsWhileFlying) return GpxCatchNearbyStops;
             return del;
         }
 
@@ -2117,7 +2182,7 @@ namespace PokeRoadie
         {
             Func<Task> del = null;
             if (softBan) return del;
-            if (_settings.CatchPokemon) return CatchNearbyPokemons;
+            if (CanCatch) return CatchNearbyPokemons;
             return del;
         }
 
@@ -2125,9 +2190,9 @@ namespace PokeRoadie
         {
             Func<Task> del = null;
             if (softBan) return del;
-            if (!_settings.CatchPokemon && !_settings.VisitPokestops) return del;
-            if (_settings.CatchPokemon && _settings.VisitPokestops) return GpxCatchNearbyPokemonsAndStops;
-            if (_settings.CatchPokemon) return CatchNearbyPokemons;
+            if (!CanCatch && !CanVisit) return del;
+            if (CanCatch && CanVisit) return GpxCatchNearbyPokemonsAndStops;
+            if (CanCatch) return CatchNearbyPokemons;
             return GpxCatchNearbyStops;
         }
 
@@ -2693,7 +2758,7 @@ namespace PokeRoadie
 
         public async Task UseIncense()
         {
-            if (_settings.CatchPokemon && _settings.UseIncense && (!_nextIncenseTime.HasValue || _nextIncenseTime.Value < DateTime.Now))
+            if (CanCatch && _settings.UseIncense && (!_nextIncenseTime.HasValue || _nextIncenseTime.Value < DateTime.Now))
             {
                 var inventory = await _inventory.GetItems();
                 var WorstIncense = inventory.FirstOrDefault(p => p.ItemId == ItemId.ItemIncenseOrdinary);
