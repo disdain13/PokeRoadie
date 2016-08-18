@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <PokeRoadieSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <AuthType>Google</AuthType>
+  <AuthType>Ptc</AuthType>
   <Username></Username>
   <Password></Password>
   <DestinationsEnabled>false</DestinationsEnabled>
   <MinutesPerDestination>30</MinutesPerDestination>
   <DestinationIndex>0</DestinationIndex>
-  <CurrentLatitude>34.0114062</CurrentLatitude>
-  <CurrentLongitude>-118.495009</CurrentLongitude>
-  <CurrentAltitude>10</CurrentAltitude>
-  <MinSpeed>4</MinSpeed>
-  <MaxSpeed>18</MaxSpeed>
-  <MaxDistance>5000</MaxDistance>
+  <CurrentLatitude>0</CurrentLatitude>
+  <CurrentLongitude>0</CurrentLongitude>
+  <CurrentAltitude>0</CurrentAltitude>
+  <MinSpeed>5</MinSpeed>
+  <MaxSpeed>10</MaxSpeed>
+  <MaxDistance>3000</MaxDistance>
   <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
@@ -48,6 +48,10 @@
   <UsePokemonsToPowerUpList>false</UsePokemonsToPowerUpList>
   <MinCandyForPowerUps>0</MinCandyForPowerUps>
   <MaxPowerUpsPerRound>0</MaxPowerUpsPerRound>
+  <FavoritePokemon>false</FavoritePokemon>
+  <FavoriteAboveCp>0</FavoriteAboveCp>
+  <FavoriteAboveIV>0</FavoriteAboveIV>
+  <FavoriteAboveV>0</FavoriteAboveV>
   <CatchPokemon>true</CatchPokemon>
   <VisitPokestops>true</VisitPokestops>
   <MoveWhenNoStops>false</MoveWhenNoStops>
@@ -56,6 +60,17 @@
   <VisitGyms>false</VisitGyms>
   <AutoDeployAtTeamGyms>false</AutoDeployAtTeamGyms>
   <PokeBallBalancing>true</PokeBallBalancing>
+  <EnableHumanizedThrows>true</EnableHumanizedThrows>
+  <ForceExcellentThrowOverCp>600</ForceExcellentThrowOverCp>
+  <ForceExcellentThrowOverIV>85</ForceExcellentThrowOverIV>
+  <ForceExcellentThrowOverV>200</ForceExcellentThrowOverV>
+  <ForceGreatThrowOverCp>400</ForceGreatThrowOverCp>
+  <ForceGreatThrowOverIV>65</ForceGreatThrowOverIV>
+  <ForceGreatThrowOverV>150</ForceGreatThrowOverV>
+  <ExcellentThrowChance>15</ExcellentThrowChance>
+  <GreatThrowChance>25</GreatThrowChance>
+  <NiceThrowChance>25</NiceThrowChance>
+  <CurveThrowChance>35</CurveThrowChance>
   <UseLuckyEggs>false</UseLuckyEggs>
   <UseIncense>false</UseIncense>
   <UseRevives>false</UseRevives>
@@ -75,24 +90,26 @@
   <UseProxyAuthentication>false</UseProxyAuthentication>
   <UseProxyUsername />
   <UseProxyPassword />
-  <MinDelay>2500</MinDelay>
-  <MaxDelay>5000</MaxDelay>
-  <FavoritePokemon>false</FavoritePokemon>
-  <FavoriteAboveCp>0</FavoriteAboveCp>
-  <FavoriteAboveIV>0</FavoriteAboveIV>
-  <FavoriteAboveV>0</FavoriteAboveV>
   <RenamePokemon>false</RenamePokemon>
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
-  <EnableHumanizedThrows>true</EnableHumanizedThrows>
-  <ForceExcellentThrowOverCp>0</ForceExcellentThrowOverCp>
-  <ForceExcellentThrowOverIV>0</ForceExcellentThrowOverIV>
-  <ForceExcellentThrowOverV>0</ForceExcellentThrowOverV>
-  <ForceGreatThrowOverCp>0</ForceGreatThrowOverCp>
-  <ForceGreatThrowOverIV>0</ForceGreatThrowOverIV>
-  <ForceGreatThrowOverV>0</ForceGreatThrowOverV>
-  <ExcellentThrowChance>15</ExcellentThrowChance>
-  <GreatThrowChance>25</GreatThrowChance>
-  <NiceThrowChance>25</NiceThrowChance>
-  <CurveThrowChance>35</CurveThrowChance>
   <DevicePackageName>htc10</DevicePackageName>
+  <MinDelay>2500</MinDelay>
+  <MaxDelay>5000</MaxDelay>
+  <DisplayPokemonCount>20</DisplayPokemonCount>
+  <MaxRunTimespan>22:00:00</MaxRunTimespan>
+  <MinBreakTimespan>02:00:00</MinBreakTimespan>
+  <MaxPokemonCatches>975</MaxPokemonCatches>
+  <MaxPokestopVisits>975</MaxPokestopVisits>
+  <EvolutionMinDelay>2500</EvolutionMinDelay>
+  <EvolutionMaxDelay>5000</EvolutionMaxDelay>
+  <EggHatchMinDelay>2500</EggHatchMinDelay>
+  <EggHatchMaxDelay>5000</EggHatchMaxDelay>
+  <TransferMinDelay>2500</TransferMinDelay>
+  <TransferMaxDelay>5000</TransferMaxDelay>
+  <CatchMinDelay>2500</CatchMinDelay>
+  <CatchMaxDelay>5000</CatchMaxDelay>
+  <RecycleMinDelay>2500</RecycleMinDelay>
+  <RecycleMaxDelay>5000</RecycleMaxDelay>
+  <PowerUpMinDelay>2500</PowerUpMinDelay>
+  <PowerUpMaxDelay>5000</PowerUpMaxDelay>
 </PokeRoadieSettings>
