@@ -194,15 +194,6 @@ namespace PokeRoadie
             //clear old temp files
             DeleteOldFiles(gymDir);
 
-            //check lat long
-            if (_settings.CurrentLongitude == 0 && _settings.CurrentLatitude == 0)
-            {
-                Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
-                if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
-                Task.Delay(15000);
-                CloseApplication(4);
-            }
-
             //run temp data serializer on own thread
             Task.Run(new Action(Xlo));
 
@@ -450,29 +441,37 @@ namespace PokeRoadie
         {
             await RandomHelper.RandomDelay(_settings.MinDelay, _settings.MaxDelay);
         }
+        private async Task RandomDelay(int min, int max)
+        {
+            await RandomHelper.RandomDelay(min, max);
+        }
 
         private async Task CheckSession()
         {
+            var maxTimespan = TimeSpan.Parse(_settings.MaxRunTimespan);
+            var minBreakTimespan = TimeSpan.Parse(_settings.MinBreakTimespan);
             var nowdate = DateTime.Now;
             var session = _settings.Session;
-            var endDate = session.StartDate.Add(_settings.MaxRunTimespan);
-            var totalEndDate = endDate.Add(_settings.MinBreakTimespan);
+            var endDate = session.StartDate.Add(maxTimespan);
+            var totalEndDate = endDate.Add(minBreakTimespan);
 
             //session is still active
-            if (endDate < nowdate)
+            if (endDate > nowdate)
             {
                 if (_settings.Session.CatchEnabled && _settings.Session.CatchCount >= _settings.MaxPokemonCatches)
                 {
                     _settings.Session.CatchEnabled = false;
+                    Logger.Write($"Limit reached! The bot caught {_settings.Session.CatchCount} pokemon since {session.StartDate}.", LogLevel.Warning);
                 }
                 if (_settings.Session.VisitEnabled && _settings.Session.VisitCount >= _settings.MaxPokestopVisits)
                 {
                     _settings.Session.VisitEnabled = false;
+                    Logger.Write($"Limit reached! The bot visited {_settings.Session.VisitCount} pokestops since {session.StartDate}.", LogLevel.Warning);
                 }
-                if (!_settings.Session.CatchEnabled && !_settings.Session.CatchEnabled)
+                if (!_settings.Session.CatchEnabled && !_settings.Session.VisitEnabled)
                 {
                     var diff = totalEndDate.Subtract(nowdate);
-                    Logger.Write($"Limit reached! The bot visited {_settings.Session.VisitCount} pokestops, and caught {_settings.Session.CatchCount} pokemon since {session.StartDate}. The bot will wait until {totalEndDate.ToShortTimeString()} to continue...", LogLevel.Warning);
+                    Logger.Write($"All limits reached! The bot visited {_settings.Session.VisitCount} pokestops, and caught {_settings.Session.CatchCount} pokemon since {session.StartDate}. The bot will wait until {totalEndDate.ToShortTimeString()} to continue...", LogLevel.Warning);
                     await Task.Delay(diff);
                     _settings.Session = _settings.NewSession();
                 }
@@ -487,7 +486,7 @@ namespace PokeRoadie
             }
 
             //session expired, but break not completed   
-            if (endDate > nowdate && totalEndDate < DateTime.Now)
+            if (endDate < nowdate && totalEndDate > nowdate)
             {
                 //must wait the difference before start
                 var diff = totalEndDate.Subtract(nowdate);
@@ -530,6 +529,15 @@ namespace PokeRoadie
             //flag as running
             if (!isRunning)
                 isRunning = true;
+
+            //check lat long
+            if (_settings.CurrentLongitude == 0 && _settings.CurrentLatitude == 0)
+            {
+                Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
+                if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
+                await Task.Delay(15000);
+                await CloseApplication(4);
+            }
 
             //do maint
             Maintenance();
@@ -1009,23 +1017,24 @@ namespace PokeRoadie
                     await RandomDelay();
             }
 
-            //revive
-            if (_settings.UseRevives) await UseRevives();
+            await ProcessPeriodicals();
+            ////revive
+            //if (_settings.UseRevives) await UseRevives();
 
-            //heal
-            if (_settings.UsePotions) await UsePotions();
+            ////heal
+            //if (_settings.UsePotions) await UsePotions();
 
-            //egg incubators
-            await UseIncubators(!_settings.UseEggIncubators);
+            ////egg incubators
+            //await UseIncubators(!_settings.UseEggIncubators);
 
-            //evolve
-            if (_settings.EvolvePokemon) await EvolvePokemon();
+            ////evolve
+            //if (_settings.EvolvePokemon) await EvolvePokemon();
 
-            //power up
-            if (_settings.PowerUpPokemon) await PowerUpPokemon();
+            ////power up
+            //if (_settings.PowerUpPokemon) await PowerUpPokemon();
 
-            //trasnfer
-            if (_settings.TransferPokemon) await TransferPokemon();
+            ////trasnfer
+            //if (_settings.TransferPokemon) await TransferPokemon();
         }
 
         private async Task ProcessFortList(List<FortData> pokeStopList, GetMapObjectsResponse mapObjects)
@@ -1292,6 +1301,8 @@ namespace PokeRoadie
                     fleeEndTime = null;
                 }
 
+                _settings.Session.VisitCount++;
+
                 if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
                 recycleCounter++;
 
@@ -1548,7 +1559,7 @@ namespace PokeRoadie
                         await _client.Encounter.UseCaptureItem(encounter.EncounterId, bestBerry, encounter.SpawnPointId);
                         berries.Count--;
                         Logger.Write($"{bestBerry} used, remaining: {berries.Count}", LogLevel.Berry);
-                        await RandomHelper.RandomDelay(50, 200);
+                        await RandomDelay();
                     }
                 }
 
@@ -1580,6 +1591,9 @@ namespace PokeRoadie
                         if (!RaiseSyncEvent(OnCatch, encounter, caughtPokemonResponse))
                             OnCatch(encounter, caughtPokemonResponse);
                     }
+                    _settings.Session.CatchCount++;
+                    //catch specific delay
+                    await RandomDelay(_settings.CatchMinDelay, _settings.CatchMaxDelay);
    
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
@@ -1626,8 +1640,13 @@ namespace PokeRoadie
                     Logger.Write($"({encounter.Source} {catchStatus.Replace("Catch","")}) | {encounter.PokemonData.GetMinStats()} | Chance: {(encounter.Probability.HasValue ? ((float)((int)(encounter.Probability * 100)) / 100).ToString() : "Unknown")} | with a {throwData.BallName}Ball {receivedXP}", LogLevel.None, ConsoleColor.Yellow);
                 }
 
-                attemptCounter++;
-                await RandomHelper.RandomDelay(300, 400);
+                
+                if (caughtPokemonResponse.Status != CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
+                {
+                    attemptCounter++;
+                    await RandomDelay();
+                }
+
             }
             while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape && attemptCounter < 10);
         }
@@ -2257,7 +2276,6 @@ namespace PokeRoadie
                 {
                     if (!isRunning) break;
                     await EvolvePokemon(pokemon);
-                    await RandomDelay();
                 }
             }
         }
@@ -2278,10 +2296,13 @@ namespace PokeRoadie
                         OnEvolve(pokemon);
                 }
 
+                //evolution specific delay
+                await RandomDelay(_settings.EvolutionMinDelay, _settings.EvolutionMaxDelay);
             }
             else
             {
                 Logger.Write($"(EVOLVE ERROR) {pokemon.GetMinStats()} - {evolvePokemonOutProto.Result}", LogLevel.None, ConsoleColor.Red);
+                await RandomDelay();
             }
         }
 
@@ -2337,8 +2358,14 @@ namespace PokeRoadie
                     if (!RaiseSyncEvent(OnTransfer, pokemon))
                         OnTransfer(pokemon);
                 }
+                //transfer specific delay
+                await RandomDelay(_settings.TransferMinDelay, _settings.TransferMaxDelay);
             }
-            else Logger.Write($"Transfer Error - {response.Result}", LogLevel.Error);
+            else
+            {
+                Logger.Write($"Transfer Error - {response.Result}", LogLevel.Error);
+                await RandomDelay();
+            }
 
         }
         private async Task TransferPokemon(IEnumerable<PokemonData> pokemons)
@@ -2350,7 +2377,6 @@ namespace PokeRoadie
                 {
                     if (!isRunning) break;
                     await TransferPokemon(pokemon);
-                    await RandomDelay();
                 }
             }
         }
@@ -2430,12 +2456,19 @@ namespace PokeRoadie
                         if (!RaiseSyncEvent(OnPowerUp, pokemon))
                             OnPowerUp(pokemon);
                     }
-                }
 
+                    //power up specific delay
+                    await RandomDelay(_settings.PowerUpMinDelay, _settings.PowerUpMaxDelay);
+
+                }
+                else
+                {
+                    await RandomDelay();
+                }
                 if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
                     break;
 
-                await RandomDelay();
+                
             }
         }
 
@@ -2528,7 +2561,9 @@ namespace PokeRoadie
                             OnRecycleItems(item.ItemId, response.NewCount);
                     }
                  }
-                await RandomDelay();
+
+                //recycle specific delay
+                await RandomDelay(_settings.RecycleMinDelay, _settings.RecycleMaxDelay);
             }
             recycleCounter = 0;
         }
@@ -2626,7 +2661,9 @@ namespace PokeRoadie
                     if (!RaiseSyncEvent(OnEggHatched, incubator, hatched))
                         OnEggHatched(incubator, hatched);
                 }
-               
+
+                //egg hatch specific delay
+                await RandomDelay(_settings.EggHatchMinDelay, _settings.EggHatchMaxDelay);
             }
 
             if (checkOnly) return;
@@ -2673,7 +2710,6 @@ namespace PokeRoadie
                             if (!RaiseSyncEvent(OnUseIncubator, incubator))
                                 OnUseIncubator(incubator);
                         }
-
                     }
                     else
                     {

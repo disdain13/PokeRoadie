@@ -183,10 +183,24 @@ namespace PokeRoadie
 
         //new
         public virtual int DisplayPokemonCount { get; set; }
-        public virtual TimeSpan MaxRunTimespan { get; set; }
-        public virtual TimeSpan MinBreakTimespan { get; set; }
+        public virtual string MaxRunTimespan { get; set; }
+        public virtual string MinBreakTimespan { get; set; }
         public virtual int MaxPokemonCatches { get; set; }
         public virtual int MaxPokestopVisits { get; set; }
+
+        //configurable delays
+        public virtual int EvolutionMinDelay { get; set; }
+        public virtual int EvolutionMaxDelay { get; set; }
+        public virtual int EggHatchMinDelay { get; set; }
+        public virtual int EggHatchMaxDelay { get; set; }
+        public virtual int TransferMinDelay { get; set; }
+        public virtual int TransferMaxDelay { get; set; }
+        public virtual int CatchMinDelay { get; set; }
+        public virtual int CatchMaxDelay { get; set; }
+        public virtual int RecycleMinDelay { get; set; }
+        public virtual int RecycleMaxDelay { get; set; }
+        public virtual int PowerUpMinDelay { get; set; }
+        public virtual int PowerUpMaxDelay { get; set; }
 
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -548,11 +562,23 @@ namespace PokeRoadie
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
-            this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan;
-            this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan;
+            this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
+            this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
             this.MaxPokestopVisits = UserSettings.Default.MaxPokestopVisits;
 
+            this.EvolutionMinDelay = UserSettings.Default.EvolutionMinDelay;
+            this.EvolutionMaxDelay = UserSettings.Default.EvolutionMaxDelay;
+            this.EggHatchMaxDelay = UserSettings.Default.EggHatchMaxDelay;
+            this.EggHatchMinDelay = UserSettings.Default.EggHatchMinDelay;
+            this.TransferMinDelay = UserSettings.Default.TransferMinDelay;
+            this.TransferMaxDelay = UserSettings.Default.TransferMaxDelay;
+            this.CatchMinDelay = UserSettings.Default.CatchMinDelay;
+            this.CatchMaxDelay = UserSettings.Default.CatchMaxDelay;
+            this.RecycleMinDelay = UserSettings.Default.RecycleMinDelay;
+            this.RecycleMaxDelay = UserSettings.Default.RecycleMaxDelay;
+            this.PowerUpMinDelay = UserSettings.Default.PowerUpMinDelay;
+            this.PowerUpMaxDelay = UserSettings.Default.PowerUpMaxDelay;
 
     }
 
@@ -782,6 +808,19 @@ namespace PokeRoadie
                     this.MinBreakTimespan = obj.MinBreakTimespan;
                     this.MaxPokemonCatches = obj.MaxPokemonCatches;
                     this.MaxPokestopVisits = obj.MaxPokestopVisits;
+
+                    this.EvolutionMinDelay = obj.EvolutionMinDelay;
+                    this.EvolutionMaxDelay = obj.EvolutionMaxDelay;
+                    this.EggHatchMaxDelay = obj.EggHatchMaxDelay;
+                    this.EggHatchMinDelay = obj.EggHatchMinDelay;
+                    this.TransferMinDelay = obj.TransferMinDelay;
+                    this.TransferMaxDelay = obj.TransferMaxDelay;
+                    this.CatchMinDelay = obj.CatchMinDelay;
+                    this.CatchMaxDelay = obj.CatchMaxDelay;
+                    this.RecycleMinDelay = obj.RecycleMinDelay;
+                    this.RecycleMaxDelay = obj.RecycleMaxDelay;
+                    this.PowerUpMinDelay = obj.PowerUpMinDelay;
+                    this.PowerUpMaxDelay = obj.PowerUpMaxDelay;
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))

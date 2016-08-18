@@ -250,7 +250,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int MaxSpeed {
             get {
                 return ((int)(this["MaxSpeed"]));
@@ -259,7 +259,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("120")]
         public int MaxSecondsBetweenStops {
             get {
                 return ((int)(this["MaxSecondsBetweenStops"]));
@@ -295,7 +295,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
         public int MaxDistance {
             get {
                 return ((int)(this["MaxDistance"]));
@@ -403,7 +403,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("55")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public double MinSpeed {
             get {
                 return ((double)(this["MinSpeed"]));
@@ -700,7 +700,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("320")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2500")]
         public int MinDelay {
             get {
                 return ((int)(this["MinDelay"]));
@@ -709,7 +709,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("520")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
         public int MaxDelay {
             get {
                 return ((int)(this["MaxDelay"]));
@@ -907,7 +907,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1975")]
+        [global::System.Configuration.DefaultSettingValueAttribute("975")]
         public int MaxPokestopVisits {
             get {
                 return ((int)(this["MaxPokestopVisits"]));
@@ -920,6 +920,117 @@ namespace PokeRoadie {
         public int DisplayPokemonCount {
             get {
                 return ((int)(this["DisplayPokemonCount"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18000")]
+        public int EvolutionMinDelay {
+            get {
+                return ((int)(this["EvolutionMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25000")]
+        public int EvolutionMaxDelay {
+            get {
+                return ((int)(this["EvolutionMaxDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12000")]
+        public int EggHatchMinDelay {
+            get {
+                return ((int)(this["EggHatchMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15000")]
+        public int EggHatchMaxDelay {
+            get {
+                return ((int)(this["EggHatchMaxDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2500")]
+        public int TransferMinDelay {
+            get {
+                return ((int)(this["TransferMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int TransferMaxDelay {
+            get {
+                return ((int)(this["TransferMaxDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7500")]
+        public int CatchMinDelay {
+            get {
+                return ((int)(this["CatchMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        public int CatchMaxDelay {
+            get {
+                return ((int)(this["CatchMaxDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2500")]
+        public int RecycleMinDelay {
+            get {
+                return ((int)(this["RecycleMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int RecycleMaxDelay {
+            get {
+                return ((int)(this["RecycleMaxDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2500")]
+        public int PowerUpMinDelay {
+            get {
+                return ((int)(this["PowerUpMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int PowerUpMaxDelay {
+            get {
+                return ((int)(this["PowerUpMaxDelay"]));
+            }
+            set {
+                this["PowerUpMaxDelay"] = value;
             }
         }
     }
