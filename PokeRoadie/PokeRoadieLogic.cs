@@ -1328,10 +1328,10 @@ namespace PokeRoadie
                     Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
             }
 
-            if (!softBan && _settings.LoiteringActive && pokeStop.LureInfo != null)
+            if (CanCatch && _settings.LoiteringActive && pokeStop.LureInfo != null)
             {
                 Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
-                while (_settings.LoiteringActive && pokeStop.LureInfo != null && DateTime.Now.ToUnixTime() < pokeStop.LureInfo.LureExpiresTimestampMs)
+                while (_settings.LoiteringActive && pokeStop.LureInfo != null && pokeStop.LureInfo.LureExpiresTimestampMs > 0)
                 {
                     if (CanCatch)
                         await CatchNearbyPokemons();
@@ -1355,19 +1355,14 @@ namespace PokeRoadie
                         recycleCounter++;
                     }
 
-                    if (recycleCounter >= 5)
-                    {
-                        await RecycleItems();
-                        //egg incubators
-                        await UseIncubators(!_settings.UseEggIncubators);
-                    }
-                        
+                    
+                    await RandomHelper.RandomDelay(15000, 45000);
+                    await ProcessPeriodicals();
 
-                    await RandomHelper.RandomDelay(25000, 30000);
                     var mapObjectsTuple = await _client.Map.GetMapObjects();
                     mapObjects = mapObjectsTuple.Item1;
                     pokeStop = mapObjects.MapCells.SelectMany(i => i.Forts).Where(x => x.Id == pokeStop.Id).FirstOrDefault();
-                    if (pokeStop.LureInfo == null || DateTime.Now.ToUnixTime() < pokeStop.LureInfo.LureExpiresTimestampMs)
+                    if (pokeStop.LureInfo == null || pokeStop.LureInfo.LureExpiresTimestampMs < 1)
                         break;
                     else
                         Logger.Write($"Loitering: {fortInfo.Name} still has a lure, chillin out!", LogLevel.Info);
@@ -1375,13 +1370,7 @@ namespace PokeRoadie
                 }
             }
 
-            //await RandomHelper.RandomDelay(50, 200);
-            if (recycleCounter >= 5)
-            {
-                await RecycleItems();
-                //egg incubators
-                await UseIncubators(!_settings.UseEggIncubators);
-            }
+            await ProcessPeriodicals();
 
         }
 

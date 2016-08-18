@@ -83,7 +83,7 @@
   <WaitOnStart>false</WaitOnStart>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
-  <WaypointAltitude>10</WaypointAltitude>
+  <WaypointAltitude>0</WaypointAltitude>
   <UseProxy>false</UseProxy>
   <UseProxyHost />
   <UseProxyPort />

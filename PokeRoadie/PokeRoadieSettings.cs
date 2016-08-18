@@ -860,7 +860,7 @@ namespace PokeRoadie
             }
 
             //resolve unknown waypoint
-            if (WaypointLatitude == 0 && WaypointLongitude == 0 && WaypointAltitude == 0)
+            if (WaypointLatitude == 0 && WaypointLongitude == 0)
             {
                 if (DestinationsEnabled && Destinations.Any())
                 {
@@ -870,7 +870,7 @@ namespace PokeRoadie
                     WaypointLongitude = destination.Longitude;
                     WaypointAltitude = destination.Altitude;
                 }
-                else if (CurrentLatitude != 0 && CurrentLongitude != 0 && CurrentAltitude != 0)
+                else if (CurrentLatitude != 0 && CurrentLongitude != 0)
                 {
                     WaypointLatitude = CurrentLatitude;
                     WaypointLongitude = CurrentLongitude;
