@@ -67,6 +67,7 @@ namespace PokeRoadie
         public event Action<PokemonData> OnEvolve;
         public event Action<PokemonData> OnPowerUp;
         public event Action<PokemonData> OnTransfer;
+        public event Action<PokemonData> OnFavorite;
 
         //inventory events
         public event Action<ItemId,int> OnRecycleItems;
@@ -512,7 +513,7 @@ namespace PokeRoadie
                         Logger.Write("(LOGIN ERROR) Please login to your google account and turn off 'Two-Step Authentication' under security settings. If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.None, ConsoleColor.Red);
                         await Task.Delay(15000);
                     }
-                    else if (e.Message.Contains("BadAuthentication"))
+                    else if (e.Message.Contains("BadAuthentication") || e is LoginFailedException)
                     {
                         Logger.Write("(LOGIN ERROR) The username and password provided failed. " + e.Message, LogLevel.None, ConsoleColor.Red);
                         //raise event
@@ -541,6 +542,7 @@ namespace PokeRoadie
                     {
                         Logger.Write($"(FATAL ERROR) Unhandled exception encountered: {e.Message.ToString()}.", LogLevel.None, ConsoleColor.Red);
                         Logger.Write("Restarting the application due to error...", LogLevel.Warning);
+                        await Task.Delay(15000);
                     }
                     await Execute();
                 }          
@@ -571,6 +573,9 @@ namespace PokeRoadie
 
             //power up
             if (_settings.PowerUpPokemon) await PowerUpPokemon();
+
+            //favorite
+            //if (_settings.FavoritePokemon) await FavoritePokemon();
 
             //transfer
             if (_settings.TransferPokemon) await TransferPokemon();
@@ -1279,14 +1284,8 @@ namespace PokeRoadie
                         recycleCounter++;
                     }
 
-                    if (recycleCounter >= 5)
-                    {
-                        await RecycleItems();
-                        //egg incubators
-                        await UseIncubators(!_settings.UseEggIncubators);
-                    }
+                    await ProcessPeriodicals();
                         
-
                     await RandomHelper.RandomDelay(25000, 30000);
                     var mapObjectsTuple = await _client.Map.GetMapObjects();
                     mapObjects = mapObjectsTuple.Item1;
@@ -1299,13 +1298,7 @@ namespace PokeRoadie
                 }
             }
 
-            //await RandomHelper.RandomDelay(50, 200);
-            if (recycleCounter >= 5)
-            {
-                await RecycleItems();
-                //egg incubators
-                await UseIncubators(!_settings.UseEggIncubators);
-            }
+            await ProcessPeriodicals();
 
         }
 
@@ -1570,23 +1563,6 @@ namespace PokeRoadie
         #endregion
         #region " Travel & Destination Methods "
 
-        private string GetBallName(ItemId pokeballItemId)
-        {
-            switch (pokeballItemId)
-            {
-                case ItemId.ItemPokeBall:
-                    return "Poke";
-                case ItemId.ItemGreatBall:
-                    return "Great";
-                case ItemId.ItemUltraBall:
-                    return "Ultra";
-                case ItemId.ItemMasterBall:
-                    return "Master";
-                default:
-                    return "Unknown";
-            }
-        }
-
         private async Task NextDestination()
         {
             //get current destination
@@ -1775,7 +1751,7 @@ namespace PokeRoadie
 
 
         #endregion
-        #region " GetBest* Methods "
+        #region " Get Methods "
 
         private async Task<ItemId> GetBestPotion(PokemonData pokemon)
         {
@@ -1941,6 +1917,23 @@ namespace PokeRoadie
             return ItemId.ItemUnknown;
         }
 
+        private string GetBallName(ItemId pokeballItemId)
+        {
+            switch (pokeballItemId)
+            {
+                case ItemId.ItemPokeBall:
+                    return "Poke";
+                case ItemId.ItemGreatBall:
+                    return "Great";
+                case ItemId.ItemUltraBall:
+                    return "Ultra";
+                case ItemId.ItemMasterBall:
+                    return "Master";
+                default:
+                    return "Unknown";
+            }
+        }
+
         private async Task<ThrowData> GetThrowData(PokemonData pokemon, float? captureProbability)
         {
 
@@ -2092,7 +2085,7 @@ namespace PokeRoadie
         }
 
         #endregion
-        #region " Walking Task Methods "
+        #region " Travel Task Methods "
 
         private Func<Task> GetLongWalkingTask()
         {
@@ -2177,23 +2170,21 @@ namespace PokeRoadie
         {
             await PokeRoadieInventory.getCachedInventory(_client);
             var pokemonToEvolve = await _inventory.GetPokemonToEvolve();
+            if (pokemonToEvolve == null || !pokemonToEvolve.Any()) return;
             await EvolvePokemon(pokemonToEvolve.ToList());
         }
 
         private async Task EvolvePokemon(List<PokemonData> pokemonToEvolve)
         {
-            if (pokemonToEvolve != null && pokemonToEvolve.Any())
-            {
-                Logger.Write($"Found {pokemonToEvolve.Count()} Pokemon for Evolve:", LogLevel.Info);
-                if (_settings.UseLuckyEggs)
-                    await UseLuckyEgg();
+            Logger.Write($"Found {pokemonToEvolve.Count()} Pokemon for Evolve:", LogLevel.Info);
+            if (_settings.UseLuckyEggs)
+                await UseLuckyEgg();
 
-                foreach (var pokemon in pokemonToEvolve)
-                {
-                    if (!isRunning) break;
-                    await EvolvePokemon(pokemon);
-                    await RandomDelay();
-                }
+            foreach (var pokemon in pokemonToEvolve)
+            {
+                if (!isRunning) break;
+                await EvolvePokemon(pokemon);
+                await RandomDelay();
             }
         }
 
@@ -2226,8 +2217,9 @@ namespace PokeRoadie
         private async Task TransferPokemon()
         {
             await PokeRoadieInventory.getCachedInventory(_client);
-            var duplicatePokemons = await _inventory.GetPokemonToTransfer();
-            await TransferPokemon(duplicatePokemons);
+            var pokemons = await _inventory.GetPokemonToTransfer();
+            if (pokemons != null && pokemons.Any()) return;
+            await TransferPokemon(pokemons);
 
         }
         private async Task TransferPokemon(PokemonData pokemon)
@@ -2278,15 +2270,12 @@ namespace PokeRoadie
         }
         private async Task TransferPokemon(IEnumerable<PokemonData> pokemons)
         {
-            if (pokemons != null && pokemons.Any())
+            Logger.Write($"Found {pokemons.Count()} pokemon to transfer:", LogLevel.Info);
+            foreach (var pokemon in pokemons)
             {
-                Logger.Write($"Found {pokemons.Count()} pokemon to transfer...", LogLevel.Info);
-                foreach (var pokemon in pokemons)
-                {
-                    if (!isRunning) break;
-                    await TransferPokemon(pokemon);
-                    await RandomDelay();
-                }
+                if (!isRunning) break;
+                await TransferPokemon(pokemon);
+                await RandomDelay();
             }
         }
 
@@ -2295,7 +2284,7 @@ namespace PokeRoadie
             if (!_settings.TransferPokemon || _settings.TransferTrimFatCount == 0)
             {
                 await PokeRoadieInventory.getCachedInventory(_client);
-                Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
+                Logger.Write($"Pokemon inventory full, trimming the fat by {_settings.TransferTrimFatCount}:", LogLevel.Info);
                 var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                 //ordering
@@ -2329,12 +2318,13 @@ namespace PokeRoadie
             await PokeRoadieInventory.getCachedInventory(_client);
             if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps) return;
             var pokemons = await _inventory.GetPokemonToPowerUp();
-            if (pokemons.Count == 0) return;
-            await PowerUpPokemons(pokemons);
+            if (pokemons == null || pokemons.Count == 0) return;
+            await PowerUpPokemon(pokemons);
         }
 
-        public async Task PowerUpPokemons(List<PokemonData> pokemons)
+        public async Task PowerUpPokemon(List<PokemonData> pokemons)
         {
+            Logger.Write($"Found {pokemons.Count()} pokemon to power up:", LogLevel.Info);
             var myPokemonSettings = await _inventory.GetPokemonSettings();
             var pokemonSettings = myPokemonSettings.ToList();
 
@@ -2369,6 +2359,44 @@ namespace PokeRoadie
 
                 if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
                     break;
+
+                await RandomDelay();
+            }
+        }
+
+        #endregion
+        #region " Favorite Methods "
+
+        public async Task FavoritePokemon()
+        {
+            if (!_settings.FavoritePokemon) return;
+            await PokeRoadieInventory.getCachedInventory(_client);
+            var pokemons = await _inventory.GetPokemonToFavorite();
+            if (pokemons.Count == 0) return;
+            await FavoritePokemon(pokemons);
+        }
+
+        public async Task FavoritePokemon(List<PokemonData> pokemons)
+        {
+            Logger.Write($"Found {pokemons.Count()} pokemon to favorite:", LogLevel.Info);
+            foreach (var pokemon in pokemons)
+            {
+                //this will not work, pokemon.id is a ulong, but the proto only takes a long.
+                //already tried the conversion and the id's are too large to convert. have to wait
+                //till the proto is updated, or start managing my own proto lib generation.
+                var response = await _client.Inventory.SetFavoritePokemon(Convert.ToInt64(pokemon.Id), true);
+                if (response.Result == SetFavoritePokemonResponse.Types.Result.Success)
+                {
+                    PokeRoadieInventory.IsDirty = true;
+                    Logger.Write($"(FAVORITE) {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.White);
+
+                    //raise event
+                    if (OnFavorite != null)
+                    {
+                        if (!RaiseSyncEvent(OnFavorite, pokemon))
+                            OnFavorite(pokemon);
+                    }
+                }
 
                 await RandomDelay();
             }
