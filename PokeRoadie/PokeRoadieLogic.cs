@@ -152,7 +152,7 @@ namespace PokeRoadie
             _client = new PokeRoadieClient(_settings, _apiFailureStrategy);
             _apiFailureStrategy.Client = _client;
             _inventory = new PokeRoadieInventory(_client, _settings);
-            _stats = new Statistics();
+            _stats = new Statistics(_inventory);
             _navigation = new PokeRoadieNavigation(_client);
             _navigation.OnChangeLocation += RelayLocation;
         }
@@ -229,9 +229,9 @@ namespace PokeRoadie
             {
                 await PokeRoadieInventory.getCachedInventory(_client);
                 _playerProfile = await _client.Player.GetPlayer();
-                var playerName = Statistics.GetUsername(_client, _playerProfile);
+                var playerName = _stats.GetUsername(_client, _playerProfile);
                 _stats.UpdateConsoleTitle(_client, _inventory);
-                var currentLevelInfos = await Statistics._getcurrentLevelInfos(_inventory);
+                var currentLevelInfos = await _stats._getcurrentLevelInfos(_inventory);
                 //get all ordered by id, then cp
                 var allPokemon = (await _inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
 
