@@ -90,6 +90,7 @@ namespace PokeRoadie
         #endregion
         #region " Static Members "
 
+        private static string tempDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
         private static string configsDir = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
         private static string pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pokestops");
         private static string gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Gyms");
@@ -182,11 +183,14 @@ namespace PokeRoadie
 
         private void Maintenance()
         {
+            //check temp dir
+            if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+
             //check pokestop dir
             if (!Directory.Exists(pokestopsDir)) Directory.CreateDirectory(pokestopsDir);
             DeleteOldFiles(pokestopsDir);
 
-            //check pokestop dir
+            //check gym dir
             if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
 
             //check egg dir
