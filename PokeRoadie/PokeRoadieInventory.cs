@@ -35,7 +35,7 @@ namespace PokeRoadie
         public static GetInventoryResponse _cachedInventory;
         private string export_path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
         public static bool IsDirty { get; set; }
-        private int _level = 0;
+        //private int _level = 0;
 
         public PokeRoadieInventory(PokeRoadieClient client, PokeRoadieSettings settings)
         {

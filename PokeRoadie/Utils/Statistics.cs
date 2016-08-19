@@ -53,6 +53,7 @@ namespace PokeRoadie
         public Statistics(PokeRoadieInventory inventory)
         {
             _inventory = inventory;
+            InitSessionDateTime = DateTime.Now;
             Duration = DateTime.Now - InitSessionDateTime;
         }
         public async Task<string> _getcurrentLevelInfos(PokeRoadieInventory _inventory)
