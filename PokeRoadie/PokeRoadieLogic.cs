@@ -125,7 +125,7 @@ namespace PokeRoadie
         private DateTime? fleeEndTime;
         private DateTime? fleeStartTime;
         private bool softBan = false;
-        private bool hasDisplayedTransferSettings;
+        private bool hasDisplayedConfigSettings;
         private ApiFailureStrategy _apiFailureStrategy;
         private List<string> gymTries = new List<string>();
         private ulong lastEnconterId = 0;
@@ -251,26 +251,70 @@ namespace PokeRoadie
                     Logger.Write($"{(item.ItemId).ToString().Replace("Item", "")} x {item.Count}", LogLevel.None, ConsoleColor.White);
                 }
 
-                //write transfer settings
-                if (!hasDisplayedTransferSettings)
+                
+                if (!hasDisplayedConfigSettings)
                 {
-                    hasDisplayedTransferSettings = true;
-                    Logger.Write("====== Transfer Settings ======", LogLevel.None, ConsoleColor.Yellow);
-                    Logger.Write($"{("Keep Above CP:").PadRight(25)}{_settings.KeepAboveCp}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"{("Keep Above IV:").PadRight(25)}{_settings.KeepAboveIV}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"{("Keep Above V:").PadRight(25)}{_settings.KeepAboveV}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"{("Transfer Below CP:").PadRight(25)}{_settings.TransferBelowCp}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.TransferBelowIV}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"{("Transfer Below V:").PadRight(25)}{_settings.TransferBelowV}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!_settings.NotTransferPokemonsThatCanEvolve}", LogLevel.None, ConsoleColor.White);
-                    if (_settings.PokemonsNotToTransfer.Count > 0)
+                    hasDisplayedConfigSettings = true;
+
+
+                    //write transfer settings
+                    if (_settings.TransferPokemon)
                     {
-                        Logger.Write($"{("PokemonsNotToTransfer:").PadRight(25)} {_settings.PokemonsNotToTransfer.Count}", LogLevel.None, ConsoleColor.White);
-                        foreach (PokemonId i in _settings.PokemonsNotToTransfer)
+                        Logger.Write("====== Transfer Settings ======", LogLevel.None, ConsoleColor.Yellow);
+                        Logger.Write($"{("Keep Above CP:").PadRight(25)}{_settings.KeepAboveCp}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Keep Above IV:").PadRight(25)}{_settings.KeepAboveIV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Keep Above V:").PadRight(25)}{_settings.KeepAboveV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below CP:").PadRight(25)}{_settings.TransferBelowCp}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.TransferBelowIV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below V:").PadRight(25)}{_settings.TransferBelowV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!_settings.NotTransferPokemonsThatCanEvolve}", LogLevel.None, ConsoleColor.White);
+                        if (_settings.PokemonsNotToTransfer.Count > 0)
                         {
-                            Logger.Write(i.ToString(), LogLevel.None, ConsoleColor.White);
+                            Logger.Write($"{("Pokemons Not To Transfer:").PadRight(25)} {_settings.PokemonsNotToTransfer.Count}", LogLevel.None, ConsoleColor.White);
+                            foreach (PokemonId i in _settings.PokemonsNotToTransfer)
+                            {
+                                Logger.Write(i.ToString(), LogLevel.None, ConsoleColor.White);
+                            }
                         }
                     }
+
+
+                    //write evolution settings
+                    if (_settings.EvolvePokemon)
+                    {
+                        Logger.Write("====== Evolution Settings ======", LogLevel.None, ConsoleColor.Yellow);
+                        Logger.Write($"{("Evolve Above CP:").PadRight(25)}{_settings.EvolveAboveCp}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Evolve Above IV:").PadRight(25)}{_settings.EvolveAboveIV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Evolve Above V:").PadRight(25)}{_settings.EvolveAboveV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Use Evolution List:").PadRight(25)}{!_settings.UsePokemonsToEvolveList}", LogLevel.None, ConsoleColor.White);
+                        if (_settings.UsePokemonsToEvolveList && _settings.PokemonsToEvolve.Count > 0)
+                        {
+                            Logger.Write($"{("Pokemons To Evolve:").PadRight(25)} {_settings.PokemonsToEvolve.Count}", LogLevel.None, ConsoleColor.White);
+                            foreach (PokemonId i in _settings.PokemonsToEvolve)
+                            {
+                                Logger.Write(i.ToString(), LogLevel.None, ConsoleColor.White);
+                            }
+                        }
+                    }
+
+                    //write powerup settings
+                    if (_settings.PowerUpPokemon)
+                    {
+                        Logger.Write("====== Power-Up Settings ======", LogLevel.None, ConsoleColor.Yellow);
+                        Logger.Write($"{("Power-Up Above CP:").PadRight(25)}{_settings.PowerUpAboveCp}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Power-Up Above IV:").PadRight(25)}{_settings.PowerUpAboveIV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Power-Up Above V:").PadRight(25)}{_settings.PowerUpAboveV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Use Power-Up List:").PadRight(25)}{!_settings.UsePokemonsToPowerUpList}", LogLevel.None, ConsoleColor.White);
+                        if (_settings.UsePokemonsToPowerUpList && _settings.PokemonsToPowerUp.Count > 0)
+                        {
+                            Logger.Write($"{("Pokemons To Power-up:").PadRight(25)} {_settings.PokemonsToPowerUp.Count}", LogLevel.None, ConsoleColor.White);
+                            foreach (PokemonId i in _settings.PokemonsToPowerUp)
+                            {
+                                Logger.Write(i.ToString(), LogLevel.None, ConsoleColor.White);
+                            }
+                        }
+                    }
+
                 }
 
 
@@ -2305,7 +2349,7 @@ namespace PokeRoadie
         {
             await PokeRoadieInventory.getCachedInventory(_client);
             var pokemons = await _inventory.GetPokemonToTransfer();
-            if (pokemons != null && pokemons.Any()) return;
+            if (pokemons == null || !pokemons.Any()) return;
             await TransferPokemon(pokemons);
 
         }
@@ -2343,7 +2387,7 @@ namespace PokeRoadie
                 string bestPokemonInfo = "NONE";
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{pokemon.GetMinStats()} | Best: [{bestPokemonInfo}] | Candy: {FamilyCandies}", LogLevel.Transfer);
+                Logger.Write($"{pokemon.GetMinStats()}    Best: {bestPokemonInfo}   Candy: {FamilyCandies}", LogLevel.Transfer);
 
                 //raise event
                 if (OnTransfer != null)
