@@ -107,12 +107,12 @@ namespace PokeRoadie.Extensions
 
         public static string GetStats(this PokemonData pokemon)
         {
-            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} True Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Move1.GetMoveName()}/{pokemon.Move2.GetMoveName()}";
+            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} True Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Move1.GetMoveName()}({CalculateMoveValue(pokemon.Move1.GetMoveName())})/{pokemon.Move2.GetMoveName()}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
         }
 
         public static string GetMinStats(this PokemonData pokemon)
         {
-            return $"{pokemon.PokemonId.ToString()} {pokemon.CalculatePokemonValue()} V | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00")}% | Lvl {pokemon.GetLevel().ToString("00")}";
+            return $"{pokemon.PokemonId.ToString()} ({pokemon.CalculatePokemonValue()}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")})";
         }
 
         public static string GetMoveName(this PokemonMove move)
@@ -128,10 +128,9 @@ namespace PokeRoadie.Extensions
             var move1 = PokeRoadieSettings.Current.PokemonMoves.GetMove(moveName);
             if (move1 == null) return 20;
             m1a = move1.Power + move1.Accuracy + move1.Hit;
-            m1a = m1a < 51 ? 50 : m1a > 250 ? 250 : m1a;
-            double m1b = move1.PP == 0 ?
-                2.0d : move1.PP > 0 && move1.PP < 15 ?
-                1.5d : (double)move1.PP / 10d;
+            m1a = m1a < 51 ? 50 : m1a > 200 ? 200 : m1a;
+            double m1b = (move1.PP > 0 && move1.PP < 15) ?
+                3.0d : 4.0d;
             return Convert.ToInt32(m1a / m1b);
         }
 

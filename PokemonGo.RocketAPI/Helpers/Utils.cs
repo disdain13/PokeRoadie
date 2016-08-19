@@ -38,11 +38,11 @@ namespace PokemonGo.RocketAPI.Helpers
             return BitConverter.ToUInt32(xxh32.ComputeHash(locationBytes.ToArray()), 0);
         }
 
-        public static ulong GenerateRequestHash(byte[] authTicket, byte[] request)
+        public static long GenerateRequestHash(byte[] authTicket, byte[] request)
         {
             var seed = BitConverter.ToUInt64(new xxHash(64, 0x1B845238).ComputeHash(authTicket), 0);
             var xxh64 = new xxHash(64, seed);
-            return BitConverter.ToUInt64(xxh64.ComputeHash(request), 0);
+            return BitConverter.ToInt64(xxh64.ComputeHash(request), 0);
         }
     }
 }

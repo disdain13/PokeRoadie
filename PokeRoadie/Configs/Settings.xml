@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <PokeRoadieSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <AuthType>Ptc</AuthType>
+  <AuthType>Google</AuthType>
   <Username></Username>
   <Password></Password>
   <DestinationsEnabled>false</DestinationsEnabled>
@@ -9,7 +9,7 @@
   <CurrentLatitude>0</CurrentLatitude>
   <CurrentLongitude>0</CurrentLongitude>
   <CurrentAltitude>0</CurrentAltitude>
-  <MinSpeed>5</MinSpeed>
+  <MinSpeed>3</MinSpeed>
   <MaxSpeed>10</MaxSpeed>
   <MaxDistance>3000</MaxDistance>
   <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
@@ -63,14 +63,14 @@
   <EnableHumanizedThrows>true</EnableHumanizedThrows>
   <ForceExcellentThrowOverCp>600</ForceExcellentThrowOverCp>
   <ForceExcellentThrowOverIV>85</ForceExcellentThrowOverIV>
-  <ForceExcellentThrowOverV>200</ForceExcellentThrowOverV>
+  <ForceExcellentThrowOverV>0</ForceExcellentThrowOverV>
   <ForceGreatThrowOverCp>400</ForceGreatThrowOverCp>
-  <ForceGreatThrowOverIV>65</ForceGreatThrowOverIV>
-  <ForceGreatThrowOverV>150</ForceGreatThrowOverV>
-  <ExcellentThrowChance>15</ExcellentThrowChance>
-  <GreatThrowChance>25</GreatThrowChance>
-  <NiceThrowChance>25</NiceThrowChance>
-  <CurveThrowChance>35</CurveThrowChance>
+  <ForceGreatThrowOverIV>75</ForceGreatThrowOverIV>
+  <ForceGreatThrowOverV>0</ForceGreatThrowOverV>
+  <ExcellentThrowChance>10</ExcellentThrowChance>
+  <GreatThrowChance>20</GreatThrowChance>
+  <NiceThrowChance>30</NiceThrowChance>
+  <CurveThrowChance>25</CurveThrowChance>
   <UseLuckyEggs>false</UseLuckyEggs>
   <UseIncense>false</UseIncense>
   <UseRevives>false</UseRevives>

@@ -508,6 +508,30 @@ namespace PokeRoadie
             return await _client.Player.GetLevelUpRewards(level);
         }
 
+        public async Task<List<PokemonData>> GetPokemonToFavorite()
+        {
+            var query = (await GetPokemons()).Where(p =>
+                  String.IsNullOrWhiteSpace(p.DeployedFortId) && p.Favorite == 0);
+
+            //Favorite By CP filter
+            if (PokeRoadieSettings.Current.FavoriteAboveCp > 0)
+                query = query.Where(p => p.Cp > PokeRoadieSettings.Current.FavoriteAboveCp);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //Favorite By IV filter
+            if (PokeRoadieSettings.Current.FavoriteAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() > PokeRoadieSettings.Current.FavoriteAboveIV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //Favorite By V filter
+            if (PokeRoadieSettings.Current.FavoriteAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.FavoriteAboveV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            return query.ToList();
+
+        }
+
         //public async Task<UpgradePokemonResponse> UpgradePokemon(ulong pokemonid)
         //{
         //    var upgradeResult = await _client.Inventory.UpgradePokemon(pokemonid);

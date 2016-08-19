@@ -49,13 +49,13 @@ namespace PokemonGo.RocketAPI.Helpers
 
             var sig = new Signature()
             {
-                LocationHash1 =
-                    Utils.GenerateLocation1(ticketBytes, requestEnvelope.Latitude, requestEnvelope.Longitude,
+                LocationHash1 = Utils.GenerateLocation1(ticketBytes, requestEnvelope.Latitude, requestEnvelope.Longitude,
                         requestEnvelope.Altitude),
                 LocationHash2 =
                     Utils.GenerateLocation2(requestEnvelope.Latitude, requestEnvelope.Longitude,
                         requestEnvelope.Altitude),
-                Unknown22 = ByteString.CopyFrom(rnd32),
+
+                //Unknown25 = -8537042734809897855,
                 Timestamp = (ulong)DateTime.UtcNow.ToUnixTime(),
                 TimestampSinceStart = (ulong)(DateTime.UtcNow.ToUnixTime() - _startTime.ToUnixTime()),
                 SensorInfo = new Signature.Types.SensorInfo()
@@ -80,6 +80,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 },
                 DeviceInfo = GetDeviceInfo()
             };
+      
             //sig.DeviceInfo = _client.DeviceInfo;
             sig.LocationFix.Add(new Signature.Types.LocationFix()
             {
@@ -89,9 +90,11 @@ namespace PokemonGo.RocketAPI.Helpers
                 Latitude = (float)_client.CurrentLatitude,
                 Longitude = (float)_client.CurrentLongitude,
                 Altitude = (float)_client.CurrentAltitude,
-                TimestampSinceStart = (ulong)_internalWatch.ElapsedMilliseconds - 200,
+                TimestampSnapshot = (ulong)_internalWatch.ElapsedMilliseconds - 200,
                 Floor = 3,
-                LocationType = 1
+                LocationType = 1,
+                ProviderStatus= 3
+              
             });
 
             foreach (var request in requestEnvelope.Requests)
