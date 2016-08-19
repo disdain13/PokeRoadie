@@ -953,7 +953,7 @@ namespace PokeRoadie
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var totalActivecount = 0;
             if (_settings.VisitGyms) totalActivecount += gymsList.Count;
-            if (CanVisit) totalActivecount += stopList.Count;
+            if (_settings.VisitPokestops) totalActivecount += stopList.Count;
             if (totalActivecount == 0)
             {
                 Logger.Write("No locations in your area...", LogLevel.Warning);
@@ -1011,7 +1011,7 @@ namespace PokeRoadie
             if (!_settings.VisitGyms)
                 pokeStopList = pokeStopList.Where(x => x.Type != FortType.Gym);
 
-            if (!CanVisit)
+            if (!_settings.VisitPokestops)
                 pokeStopList = pokeStopList.Where(x => x.Type == FortType.Gym);
 
             return pokeStopList.ToList();
@@ -1296,77 +1296,84 @@ namespace PokeRoadie
                 await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.MinSpeed, GetShortWalkingTask());
             }
 
-            //search fort
-            var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+            if (CanCatch)
+                await CatchNearbyPokemons();
 
-            //raise event
-            if (OnVisitPokestop != null)
+            if (CanVisit)
             {
-                var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-                if (!RaiseSyncEvent(OnVisitPokestop, location, fortInfo, fortSearch))
-                    OnVisitPokestop(location, fortInfo, fortSearch);
-            }
+               //search fort
+                var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+
+                //raise event
+                if (OnVisitPokestop != null)
+                {
+                    var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
+                    if (!RaiseSyncEvent(OnVisitPokestop, location, fortInfo, fortSearch))
+                        OnVisitPokestop(location, fortInfo, fortSearch);
+                }
            
-            if (fortSearch.ExperienceAwarded > 0)
-            {
-                _stats.AddExperience(fortSearch.ExperienceAwarded);
-                _stats.UpdateConsoleTitle(_client, _inventory);
-                string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-
-                //a little comedy never hurt
-                if (inFlight)
+                if (fortSearch.ExperienceAwarded > 0)
                 {
-                    var rnd = RandomHelper.RandomNumber(0, 5);
-                    switch (rnd)
+                    _stats.AddExperience(fortSearch.ExperienceAwarded);
+                    _stats.UpdateConsoleTitle(_client, _inventory);
+                    string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+
+                    ////a little comedy never hurt
+                    //if (inFlight)
+                    //{
+                    //    var rnd = RandomHelper.RandomNumber(0, 5);
+                    //    switch (rnd)
+                    //    {
+                    //        case 0:
+                    //            Logger.Write("Taking it into a dive...", LogLevel.None, ConsoleColor.Blue);
+                    //            break;
+                    //        case 1:
+                    //            Logger.Write("Barrel roll pickup!", LogLevel.None, ConsoleColor.Blue);
+                    //            break;
+                    //        case 2:
+                    //            Logger.Write("That was a close one...", LogLevel.None, ConsoleColor.Blue);
+                    //            break;
+                    //        case 3:
+                    //            Logger.Write("Bringing us down...", LogLevel.None, ConsoleColor.Blue);
+                    //            break;
+                    //        case 4:
+                    //            Logger.Write("Totally inverted!", LogLevel.None, ConsoleColor.Blue);
+                    //            break;
+                    //        default:
+                    //            Logger.Write("Tower, Requesting a fly-by...", LogLevel.None, ConsoleColor.Blue);
+                    //            break;
+                    //    }
+                    //}
+
+                    //reset ban
+                    if (softBan)
                     {
-                        case 0:
-                            Logger.Write("Taking it into a dive...", LogLevel.None, ConsoleColor.Blue);
-                            break;
-                        case 1:
-                            Logger.Write("Barrel roll pickup!", LogLevel.None, ConsoleColor.Blue);
-                            break;
-                        case 2:
-                            Logger.Write("That was a close one...", LogLevel.None, ConsoleColor.Blue);
-                            break;
-                        case 3:
-                            Logger.Write("Bringing us down...", LogLevel.None, ConsoleColor.Blue);
-                            break;
-                        case 4:
-                            Logger.Write("Totally inverted!", LogLevel.None, ConsoleColor.Blue);
-                            break;
-                        default:
-                            Logger.Write("Tower, Requesting a fly-by...", LogLevel.None, ConsoleColor.Blue);
-                            break;
+                        Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
+                        fleeStartTime = null;
+                        softBan = false;
+                        fleeCounter = 0;
+                        fleeEndTime = null;
                     }
-                }
 
-                //reset ban
-                if (softBan)
+                    _settings.Session.VisitCount++;
+
+                    if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                    recycleCounter++;
+
+                }
+                else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
                 {
-                    Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
-                    fleeStartTime = null;
-                    softBan = false;
-                    fleeCounter = 0;
-                    fleeEndTime = null;
+                    fleeCounter++;
+                    if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                    {
+                        softBan = true;
+                        fleeStartTime = DateTime.Now;
+                        Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
+                    }
+                    fleeEndTime = DateTime.Now;
                 }
-
-                _settings.Session.VisitCount++;
-
-                if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
-                recycleCounter++;
-
             }
-            else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
-            {
-                fleeCounter++;
-                if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
-                {
-                    softBan = true;
-                    fleeStartTime = DateTime.Now;
-                    Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
-                }
-                fleeEndTime = DateTime.Now;
-            }
+ 
 
             //catch lure pokemon 8)
             if (CanCatch && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
@@ -1393,18 +1400,19 @@ namespace PokeRoadie
                             Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
                
                     }
-
-                    var fortSearch2 = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                    if (fortSearch2.ExperienceAwarded > 0)
+                    if (CanVisit)
                     {
-                        _stats.AddExperience(fortSearch2.ExperienceAwarded);
-                        _stats.UpdateConsoleTitle(_client, _inventory);
-                        string EggReward = fortSearch2.PokemonDataEgg != null ? "1" : "0";
-                        Logger.Write($"XP: {fortSearch2.ExperienceAwarded}, Gems: {fortSearch2.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch2.ItemsAwarded)}", LogLevel.Pokestop);
-                        recycleCounter++;
-                    }
+                        var fortSearch2 = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                        if (fortSearch2.ExperienceAwarded > 0)
+                        {
+                            _stats.AddExperience(fortSearch2.ExperienceAwarded);
+                            _stats.UpdateConsoleTitle(_client, _inventory);
+                            string EggReward = fortSearch2.PokemonDataEgg != null ? "1" : "0";
+                            Logger.Write($"XP: {fortSearch2.ExperienceAwarded}, Gems: {fortSearch2.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch2.ItemsAwarded)}", LogLevel.Pokestop);
+                            recycleCounter++;
+                        }
 
-                        
+                    }
                     await RandomHelper.RandomDelay(15000, 45000);
                     await ProcessPeriodicals();
 
