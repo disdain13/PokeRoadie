@@ -35,6 +35,8 @@ namespace PokeRoadie
         public static GetInventoryResponse _cachedInventory;
         private string export_path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
         public static bool IsDirty { get; set; }
+        //private int _level = 0;
+
         public PokeRoadieInventory(PokeRoadieClient client, PokeRoadieSettings settings)
         {
             _client = client;
@@ -501,7 +503,10 @@ namespace PokeRoadie
             return query.ToList();
 
         }
-
+        public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
+        {
+            return await _client.Player.GetLevelUpRewards(level);
+        }
 
         public async Task<List<PokemonData>> GetPokemonToFavorite()
         {

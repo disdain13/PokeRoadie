@@ -1,14 +1,31 @@
 ﻿#region " Imports "
 
 using System;
+using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Globalization;
 
 using PokemonGo.RocketAPI;
 using PokemonGo.RocketAPI.Enums;
+using PokemonGo.RocketAPI.Extensions;
+using PokemonGo.RocketAPI.Helpers;
+using PokemonGo.RocketAPI.Logging;
+using PokemonGo.RocketAPI.Exceptions;
 
+using POGOProtos.Inventory;
+using POGOProtos.Inventory.Item;
 using POGOProtos.Networking.Responses;
+using POGOProtos.Data;
+using POGOProtos.Enums;
+using POGOProtos.Map.Fort;
+using POGOProtos.Map.Pokemon;
+
+using PokeRoadie.Extensions;
+using PokeRoadie.Utils;
+//using PokeRoadie.Logging;
+using System.ComponentModel;
+using Google.Protobuf.Collections;
 
 #endregion
 
@@ -17,21 +34,29 @@ namespace PokeRoadie
 {
     internal class Statistics
     {
-        public static int TotalExperience;
-        public static int TotalPokemons;
-        public static int TotalItemsRemoved;
-        public static int TotalPokemonsTransfered;
-        public static int TotalStardust;
-        public static string CurrentLevelInfos;
-        public static int Currentlevel = -1;
-        public static string PlayerName;
-        public static int TotalPokesInBag;
-        public static int TotalPokesInPokedex;
+        public int TotalExperience;
+        public int TotalPokemons;
+        public int TotalItemsRemoved;
+        public int TotalPokemonsTransfered;
+        public int TotalStardust;
+        public string CurrentLevelInfos;
+        public int Currentlevel = -1;
+        public string PlayerName;
+        public int TotalPokesInBag;
+        public int TotalPokesInPokedex;
+        public int LevelForRewards = -1;
+        public int _level = 0;
+        public DateTime InitSessionDateTime;
+        public PokeRoadieInventory _inventory = null;
+        public TimeSpan Duration;
 
-        public static DateTime InitSessionDateTime = DateTime.Now;
-        public static TimeSpan Duration = DateTime.Now - InitSessionDateTime;
-
-        public static async Task<string> _getcurrentLevelInfos(PokeRoadieInventory _inventory)
+        public Statistics(PokeRoadieInventory inventory)
+        {
+            _inventory = inventory;
+            InitSessionDateTime = DateTime.Now;
+            Duration = DateTime.Now - InitSessionDateTime;
+        }
+        public async Task<string> _getcurrentLevelInfos(PokeRoadieInventory _inventory)
         {
             var stats = await _inventory.GetPlayerStats();
             var output = string.Empty;
@@ -44,29 +69,56 @@ namespace PokeRoadie
                 var minutes = 0.00;
                 if (Double.IsInfinity(time) == false && time > 0)
                 {
-                    time = Convert.ToDouble(TimeSpan.FromHours(time).ToString("h\\.mm"), CultureInfo.InvariantCulture);
+                    time = Convert.ToDouble(TimeSpan.FromHours(time).ToString("h\\.mm"), System.Globalization.CultureInfo.InvariantCulture);
                     hours = Math.Truncate(time);
                     minutes = Math.Round((time - hours) * 100);
                 }
 
-                output = $"{stat.Level} (LvLUp in {hours}h {minutes}m | {stat.Experience - stat.PrevLevelXp - GetXpDiff(stat.Level)}/{stat.NextLevelXp - stat.PrevLevelXp - GetXpDiff(stat.Level)} XP)";
-                //output = $"{stat.Level} (LvLUp in {_hours}hours // EXP required: {_ep})";
+                bool didLevelUp = false;
+
+                if (LevelForRewards == -1 || stat.Level >= LevelForRewards)
+                {
+                    LevelUpRewardsResponse Result = await _inventory.GetLevelUpRewards(stat.Level);
+
+                    if (Result.Result == LevelUpRewardsResponse.Types.Result.AwardedAlready)
+                        LevelForRewards = stat.Level + 1;
+
+                    if (Result.Result == LevelUpRewardsResponse.Types.Result.Success)
+                    {
+                        didLevelUp = true;
+                        Logger.Write($"(LEVEL) Reached level {stat.Level}!", LogLevel.None, ConsoleColor.Green);
+
+                        RepeatedField<ItemAward> items = Result.ItemsAwarded;
+
+                        if (items.Any<ItemAward>())
+                        {
+                            Logger.Write("- Received Bonus Items -", LogLevel.Info);
+                            foreach (ItemAward item in items)
+                            {
+                                Logger.Write($"[ITEM] {item.ItemId} x {item.ItemCount} ", LogLevel.Info);
+                            }
+                        }
+                    }
+                }
+
+                if (!didLevelUp)
+                    output = $"{stat.Level} (Level in {hours}h {minutes}m | {stat.Experience - stat.PrevLevelXp - GetXpDiff(stat.Level)}/{stat.NextLevelXp - stat.PrevLevelXp - GetXpDiff(stat.Level)} XP)";
             }
             return output;
         }
 
-        public static string GetUsername(PokeRoadieClient client, GetPlayerResponse profile)
+        public string GetUsername(PokeRoadieClient client, GetPlayerResponse profile)
         {
            
             return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.PtcUsername : (profile == null || profile.PlayerData  == null ? client.Settings.GoogleUsername : profile.PlayerData.Username);
         }
 
-        public static double _getSessionRuntime()
+        public double _getSessionRuntime()
         {
             return (DateTime.Now - InitSessionDateTime).TotalSeconds/3600;
         }
 
-        public static string _getSessionRuntimeInTimeFormat()
+        public string _getSessionRuntimeInTimeFormat()
         {
             return (DateTime.Now - InitSessionDateTime).ToString(@"dd\.hh\:mm\:ss");
         }
@@ -103,6 +155,7 @@ namespace PokeRoadie
             TotalPokesInBag = pokes.Count();
 
             var inventory = await PokeRoadieInventory.getCachedInventory(_client);
+
             if (inventory.InventoryDelta != null)
             {
                 TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokemonId).ToArray().Length;
@@ -120,7 +173,7 @@ namespace PokeRoadie
                     TotalPokemons / _getSessionRuntime(), TotalStardust, TotalPokemonsTransfered, TotalItemsRemoved, TotalPokesInBag, TotalPokesInPokedex);
         }
 
-        public static int GetXpDiff(int level)
+        public int GetXpDiff(int level)
         {
             if (level > 0 && level <= 40)
             {
@@ -132,6 +185,22 @@ namespace PokeRoadie
             }
 
             return 0;
+        }
+        public async Task<LevelUpRewardsResponse> Execute(PokeRoadieClient ctx)
+        {
+            var Result = await GetLevelUpRewards(LevelForRewards);
+            return Result;
+        }
+
+        public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
+        {
+            if (_level == 0 || level > _level)
+            {
+                _level = level;
+                return await _inventory.GetLevelUpRewards(level);
+            }
+
+            return new LevelUpRewardsResponse();
         }
     }
 }

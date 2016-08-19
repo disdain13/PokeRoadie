@@ -90,6 +90,7 @@ namespace PokeRoadie
         #endregion
         #region " Static Members "
 
+        private static string tempDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
         private static string configsDir = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
         private static string pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pokestops");
         private static string gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Gyms");
@@ -153,7 +154,7 @@ namespace PokeRoadie
             _client = new PokeRoadieClient(_settings, _apiFailureStrategy);
             _apiFailureStrategy.Client = _client;
             _inventory = new PokeRoadieInventory(_client, _settings);
-            _stats = new Statistics();
+            _stats = new Statistics(_inventory);
             _navigation = new PokeRoadieNavigation(_client);
             _navigation.OnChangeLocation += RelayLocation;
         }
@@ -182,11 +183,14 @@ namespace PokeRoadie
 
         private void Maintenance()
         {
+            //check temp dir
+            if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+
             //check pokestop dir
             if (!Directory.Exists(pokestopsDir)) Directory.CreateDirectory(pokestopsDir);
             DeleteOldFiles(pokestopsDir);
 
-            //check pokestop dir
+            //check gym dir
             if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
 
             //check egg dir
@@ -230,9 +234,9 @@ namespace PokeRoadie
             {
                 await PokeRoadieInventory.getCachedInventory(_client);
                 _playerProfile = await _client.Player.GetPlayer();
-                var playerName = Statistics.GetUsername(_client, _playerProfile);
+                var playerName = _stats.GetUsername(_client, _playerProfile);
                 _stats.UpdateConsoleTitle(_client, _inventory);
-                var currentLevelInfos = await Statistics._getcurrentLevelInfos(_inventory);
+                var currentLevelInfos = await _stats._getcurrentLevelInfos(_inventory);
                 //get all ordered by id, then cp
                 var allPokemon = (await _inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
 
@@ -2081,6 +2085,8 @@ namespace PokeRoadie
             throwData.HitText = "Excellent";
             throwData.ItemId = await GetBestBall(pokemon, captureProbability);
             throwData.BallName = GetBallName(throwData.ItemId);
+            if (throwData.ItemId == ItemId.ItemUnknown) return throwData;
+
 
             //Humanized throws
             if (_settings.EnableHumanizedThrows)

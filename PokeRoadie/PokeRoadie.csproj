@@ -80,6 +80,7 @@
     <Compile Include="Data\IncubatorData.cs" />
     <Compile Include="Data\LoginResultTypes.cs" />
     <Compile Include="Data\SessionData.cs" />
+    <Compile Include="Data\StatsData.cs" />
     <Compile Include="Data\ThrowData.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
