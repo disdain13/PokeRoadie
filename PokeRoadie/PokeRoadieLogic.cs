@@ -2073,6 +2073,8 @@ namespace PokeRoadie
             throwData.HitText = "Excellent";
             throwData.ItemId = await GetBestBall(pokemon, captureProbability);
             throwData.BallName = GetBallName(throwData.ItemId);
+            if (throwData.ItemId == ItemId.ItemUnknown) return throwData;
+
 
             //Humanized throws
             if (_settings.EnableHumanizedThrows)
