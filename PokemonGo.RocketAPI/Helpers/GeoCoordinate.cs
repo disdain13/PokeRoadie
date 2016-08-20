@@ -103,7 +103,7 @@ namespace PokemonGo.RocketAPI.Helpers
 
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "({0},{1})", Latitude, Longitude);
+            return String.Format(CultureInfo.InvariantCulture, "({0},{1})", Math.Round(Latitude,5), Math.Round(Longitude,5));
         }
     }
 }

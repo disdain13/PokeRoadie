@@ -99,7 +99,7 @@ namespace PokeRoadie
         private object xloLock = new object();
         private int xloCount = 0;
         private volatile bool isRunning;
-        private volatile bool inFlight = false;
+        //private volatile bool inFlight = false;
         private volatile bool inTravel = false;
 
         #endregion
@@ -136,7 +136,7 @@ namespace PokeRoadie
         #endregion
         #region " Properties "
 
-            public bool CanCatch { get { return _settings.CatchPokemon && _settings.Session.CatchEnabled && !softBan; } }
+            public bool CanCatch { get { return _settings.CatchPokemon && _settings.Session.CatchEnabled && !softBan && _navigation.LastKnownSpeed <= _settings.MaxCatchSpeed; } }
             public bool CanVisit { get { return _settings.VisitPokestops && _settings.Session.VisitEnabled && !softBan; } }
 
         #endregion
@@ -144,6 +144,14 @@ namespace PokeRoadie
 
         public PokeRoadieLogic() : this(null)
         {
+            //check temp dir
+            if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+            //check pokestop dir
+            if (!Directory.Exists(pokestopsDir)) Directory.CreateDirectory(pokestopsDir);
+            //check gym dir
+            if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
+            //check egg dir
+            if (!Directory.Exists(eggDir)) Directory.CreateDirectory(eggDir);
         }
 
         public PokeRoadieLogic(ISynchronizeInvoke form) : base()
@@ -183,18 +191,9 @@ namespace PokeRoadie
 
         private void Maintenance()
         {
-            //check temp dir
-            if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
 
-            //check pokestop dir
-            if (!Directory.Exists(pokestopsDir)) Directory.CreateDirectory(pokestopsDir);
+            //delete old temp files
             DeleteOldFiles(pokestopsDir);
-
-            //check gym dir
-            if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
-
-            //check egg dir
-            if (!Directory.Exists(eggDir)) Directory.CreateDirectory(eggDir);
 
             //clear old temp files
             DeleteOldFiles(gymDir);
@@ -329,7 +328,7 @@ namespace PokeRoadie
                     for (int i = 0; i < _settings.Destinations.Count; i++)
                     {
                         var destination = _settings.Destinations[i];
-                        var str = $"{i} - {destination.Name} - {destination.Latitude}:{destination.Longitude}:{destination.Altitude}";
+                        var str = $"{i} - {destination.Name} - {Math.Round(destination.Latitude,5)}:{Math.Round(destination.Longitude,5)}:{Math.Round(destination.Altitude,5)}";
                         if (_settings.DestinationIndex < i)
                         {
                             if (lastDestination != null)
@@ -338,10 +337,10 @@ namespace PokeRoadie
                                 var sourceLocation = new GeoCoordinate(lastDestination.Latitude, lastDestination.Longitude, lastDestination.Altitude);
                                 var targetLocation = new GeoCoordinate(destination.Latitude, destination.Longitude, destination.Altitude);
                                 var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
-                                var speed = _settings.FlyingEnabled ? _settings.FlyingSpeed : _settings.MaxSpeed;
+                                var speed = _settings.LongDistanceSpeed;
                                 var speedInMetersPerSecond = speed / 3.6;
                                 var seconds = distanceToTarget / speedInMetersPerSecond;
-                                var action = _settings.FlyingEnabled ? "flying" : "driving";
+                                var action = "driving";
                                 str += " (";
                                 str += StringUtils.GetSecondsDisplay(seconds);
                                 str += $" {action} at {speed}kmh)";
@@ -584,30 +583,11 @@ namespace PokeRoadie
             {
                 Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
                 if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
-                await Task.Delay(15000);
-                await CloseApplication(4);
+                await CloseApplication(1);
             }
 
             //do maint
             Maintenance();
-
-            //Wait Message
-            if (_settings.WaitOnStart)
-            {
-                if (_settings.CurrentLatitude == 0 || _settings.CurrentLongitude == 0)
-                {
-                    Logger.Write($"Please change first Latitude and/or Longitude because currently your using default values!", LogLevel.Error);
-                }
-                else
-                {
-                    Logger.Write($"Make sure Lat & Lng is right. Exit Program if not! Lat: {_client.CurrentLatitude} Lng: {_client.CurrentLongitude}", LogLevel.Warning);
-                    for (int i = 3; i > 0; i--)
-                    {
-                        Logger.Write($"Script will continue in {i * 5} seconds!", LogLevel.Warning);
-                        await Task.Delay(5000);
-                    }
-                }
-            }
 
             Logger.Write($"Logging in via: {_settings.AuthType}", LogLevel.Info);
             while (isRunning)
@@ -789,7 +769,7 @@ namespace PokeRoadie
                             await _navigation.HumanPathWalking(
                                 trackPoints.ElementAt(curTrkPt),
                                 _settings.MinSpeed,
-                                GetShortWalkingTask());
+                                GetShortTask());
 
 
                             if (curTrkPt >= maxTrkPt)
@@ -829,45 +809,16 @@ namespace PokeRoadie
             _client.CurrentLatitude, _client.CurrentLongitude,
             wayPointGeo.Latitude, wayPointGeo.Longitude);
 
+
             // Edge case for when the client somehow ends up outside the defined radius
             if (_settings.MaxDistance != 0 &&
                 distanceFromStart > _settings.MaxDistance)
             {
                 inTravel = true;
-                if (_settings.FlyingEnabled && (distanceFromStart > 2000 || _settings.FlyLikeCaptKirk))
-                { 
-                    if (_settings.FlyLikeCaptKirk)
-                    {
-                        Logger.Write($"Scotty, warm up the engines, were headed back...", LogLevel.Info);
-
-                        _settings.CurrentLatitude = wayPointGeo.Latitude;
-                        _settings.CurrentLongitude = wayPointGeo.Longitude;
-                        _settings.CurrentAltitude = wayPointGeo.Altitude;
-                        _settings.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (_settings.MinSpeed / 3.6));
-                        _settings.Save();
-
-                        //_client.SetLocation(wayPointGeo.Latitude, wayPointGeo.Longitude, wayPointGeo.Altitude);
-                        await _client.Player.UpdatePlayerLocation(wayPointGeo.Latitude, wayPointGeo.Longitude, wayPointGeo.Altitude);
-                        Logger.Write($"(WARP) You've been beamed! ({distanceFromStart}m instantly) ", LogLevel.None, ConsoleColor.Green);
-                        gymTries.Clear();
-                    }
-                    else
-                    {
-                        Logger.Write($"Preparing for long distance travel - Boarded flight #{RandomHelper.RandomNumber(101, 501)}", LogLevel.Navigation, ConsoleColor.White);
-                        inFlight = true;
-                        await _navigation.HumanLikeWalking(wayPointGeo, _settings.FlyingSpeed, GetFlyingTask());
-                        inFlight = false;
-                        gymTries.Clear();
-                    }
-
-                }
-                else
-                {
-                    Logger.Write("Preparing for long distance travel...", LogLevel.Navigation, ConsoleColor.White);
-                    await _navigation.HumanLikeWalking(wayPointGeo, _settings.MinSpeed, GetLongWalkingTask());
-                    gymTries.Clear();
-                }
-                Logger.Write($"Arrived at destination.", LogLevel.Navigation);
+                Logger.Write($"We have traveled outside the max distance of {_settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
+                await _navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance ? GetLongTask() : distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > _settings.MaxDistance ? false : true);
+                gymTries.Clear();
+                Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude,5)}", LogLevel.Navigation);
                 inTravel = false;
             }
 
@@ -888,9 +839,9 @@ namespace PokeRoadie
 
                             //set new index and default location
                             _settings.DestinationIndex = newIndex;
-                            _settings.CurrentLatitude = destination.Latitude;
-                            _settings.CurrentLongitude = destination.Longitude;
-                            _settings.CurrentAltitude = destination.Altitude;
+                            _settings.WaypointLatitude = destination.Latitude;
+                            _settings.WaypointLongitude = destination.Longitude;
+                            _settings.WaypointAltitude = destination.Altitude;
                             _settings.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (_settings.MinSpeed / 3.6));
                             _settings.Save();
 
@@ -902,39 +853,15 @@ namespace PokeRoadie
                             }
 
                             Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
-
-                            if (_settings.FlyingEnabled)
-                            {
-                                if (_settings.FlyLikeCaptKirk)
-                                {
-                                    Logger.Write($"Scotty, warm up the engines, were headed back...", LogLevel.Info);
-                                    //_client.SetLocation(wayPointGeo.Latitude, destination.Longitude, destination.Altitude);
-                                    await _client.Player.UpdatePlayerLocation(destination.Latitude, destination.Longitude, destination.Altitude);
-                                    Logger.Write($"(WARP) You've been beamed! ({distanceFromStart}m instantly) ", LogLevel.None, ConsoleColor.Green);
-                                    gymTries.Clear();
-                                }
-                                else
-                                {
-                                    Logger.Write($"Preparing for long distance travel - Boarded flight #{RandomHelper.RandomNumber(101, 501)}", LogLevel.Navigation, ConsoleColor.White);
-
-                                    inFlight = true;
-                                    await _navigation.HumanLikeWalking(destination.GetGeo(), _settings.FlyingSpeed, GetFlyingTask());
-                                    inFlight = false;
-                                    gymTries.Clear();
-                                }
-
-                            } 
-                            else
-                            {
-                                Logger.Write("Preparing for long distance travel...", LogLevel.None, ConsoleColor.White);
-                                await _navigation.HumanLikeWalking(destination.GetGeo(), _settings.MinSpeed, GetLongWalkingTask());
-                                gymTries.Clear();
-                            }
+                            Logger.Write("Preparing for long distance travel...", LogLevel.None, ConsoleColor.White);
+                            await _navigation.HumanLikeWalking(destination.GetGeo(), _settings.LongDistanceSpeed, GetLongTask(), false);
+                            Logger.Write($"Arrived at destination - {destination.Name}!", LogLevel.Navigation, ConsoleColor.White);
+                            gymTries.Clear();
 
                             //reset destination timer
                             _settings.DestinationEndDate = DateTime.Now.AddMinutes(_settings.MinutesPerDestination);
 
-                            Logger.Write($"Arrived at destination - {destination.Name}!", LogLevel.Navigation, ConsoleColor.White);
+                           
                         }
                         else
                         {
@@ -950,25 +877,69 @@ namespace PokeRoadie
             //await CheckDestinations();
 
 
-            var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-            var mapObjects = await _client.Map.GetMapObjects();
-            var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
-            var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
-            var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var totalActivecount = 0;
-            if (_settings.VisitGyms) totalActivecount += gymsList.Count;
-            if (_settings.VisitPokestops) totalActivecount += stopList.Count;
-            if (totalActivecount == 0)
+            var attemptCount = 0;
+            while(totalActivecount == 0 && attemptCount < 50)
             {
-                Logger.Write("No locations in your area...", LogLevel.Warning);
-                if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
-                await Task.Delay(5000);
-            }
-            else
-            {
-                await ProcessFortList(pokeStopList, mapObjects.Item1);
-            }
 
+                attemptCount++;
+                var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
+                var mapObjects = await _client.Map.GetMapObjects();
+                var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
+                var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+                var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
+                if (_settings.VisitGyms) totalActivecount += gymsList.Count;
+                if (_settings.VisitPokestops) totalActivecount += stopList.Count;
+
+
+                if (totalActivecount == 0)
+                {
+                    if (_settings.DestinationsEnabled && (_settings.MoveWhenNoStops || (_settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)) && _client != null)
+                    {
+                        Logger.Write("No locations in your area...", LogLevel.Warning);
+                        Logger.Write("Setting new destination...", LogLevel.Info);
+                        _settings.DestinationEndDate = DateTime.Now;
+                        break;
+                    }
+                    else
+                    {
+                        if (attemptCount == 1) Logger.Write("No locations in your area...", LogLevel.Warning);
+                        Logger.Write("Wandering to find a location...", LogLevel.Warning);
+                        var current = GetCurrentGeo();
+                        if (current.Longitude < 0)
+                        {
+                            if (current.Longitude > -179.99999)
+                            {
+                                current.Longitude += 0.01;
+                            }
+                            else
+                            {
+                                current.Longitude -= 0.01;
+                            }
+                        }
+                        else if (current.Longitude > 0)
+                        {
+                            if (current.Longitude < 179.99999)
+                            {
+                                current.Longitude += 0.01;
+                            }
+                            else
+                            {
+                                current.Longitude -= 0.01;
+                            }
+                        }
+                        await _navigation.HumanLikeWalking(current, _settings.MinSpeed, GetLongTask(), false);
+                        SetWaypoint(current);
+                    }
+
+                }
+                else
+                {
+                    await ProcessFortList(pokeStopList, mapObjects.Item1);
+                    break;
+                }
+
+            }
         }
 
         #endregion
@@ -1098,7 +1069,7 @@ namespace PokeRoadie
             var gymCount = pokeStopList.Where(x => x.Type == FortType.Gym).Count();
             var lureCount = pokeStopList.Where(x => x.LureInfo != null).Count();
 
-            Logger.Write($"Found{(inFlight ? " from the sky" : "")} {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( _settings.VisitGyms && gymCount > 0 ? " | " + (_settings.AutoDeployAtTeamGyms ? gymTries.Count.ToString() + "\\" : string.Empty) + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") : string.Empty)}", LogLevel.Info);
+            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( _settings.VisitGyms && gymCount > 0 ? " | " + (_settings.AutoDeployAtTeamGyms ? gymTries.Count.ToString() + "\\" : string.Empty) + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") : string.Empty)}", LogLevel.Info);
             if (lureCount > 0) Logger.Write($"(INFO) Found {lureCount} with lure!", LogLevel.None, ConsoleColor.DarkMagenta);
 
             if (lureCount > 0)
@@ -1135,7 +1106,7 @@ namespace PokeRoadie
             while (pokeStopList.Any())
             {
                 if (!isRunning) break;
-                if (!inFlight && _settings.DestinationsEnabled && _settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)
+                if (_settings.DestinationsEnabled && _settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)
                 {
                     break;
                 }
@@ -1182,18 +1153,10 @@ namespace PokeRoadie
                             OnTravelingToGym(location, fortInfo);
                     }
 
-                    var name = $"{(inFlight ? "Set target lock on " : "")}{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
+                    var name = $"{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
                     Logger.Write(name, LogLevel.Pokestop);
-
-                    if (inFlight)
-                    {
-                        await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.FlyingSpeed, null);
-                    }
-                    else
-                    {
-                        await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.MinSpeed, GetShortWalkingTask());
-                    }
-
+                    await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.MinSpeed, GetShortTask());
+    
                     var fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     if (fortDetails.Result == GetGymDetailsResponse.Types.Result.Success)
                     {
@@ -1288,17 +1251,8 @@ namespace PokeRoadie
                     OnTravelingToPokestop(location, fortInfo);
             }
 
-            var name = $"{(inFlight ? "Set target lock on " : "")}{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
-            Logger.Write(name, LogLevel.Pokestop);
-
-            if (inFlight)
-            {
-                await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.FlyingSpeed, null);
-            }
-            else
-            {
-                await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.MinSpeed, GetShortWalkingTask());
-            }
+            Logger.Write($"{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance", LogLevel.Pokestop);
+            await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), distance > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distance > _settings.MaxDistance ? GetLongTask() : distance > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask());
 
             if (CanCatch)
                 await CatchNearbyPokemons();
@@ -1321,33 +1275,6 @@ namespace PokeRoadie
                     _stats.AddExperience(fortSearch.ExperienceAwarded);
                     _stats.UpdateConsoleTitle(_client, _inventory);
                     string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-
-                    ////a little comedy never hurt
-                    //if (inFlight)
-                    //{
-                    //    var rnd = RandomHelper.RandomNumber(0, 5);
-                    //    switch (rnd)
-                    //    {
-                    //        case 0:
-                    //            Logger.Write("Taking it into a dive...", LogLevel.None, ConsoleColor.Blue);
-                    //            break;
-                    //        case 1:
-                    //            Logger.Write("Barrel roll pickup!", LogLevel.None, ConsoleColor.Blue);
-                    //            break;
-                    //        case 2:
-                    //            Logger.Write("That was a close one...", LogLevel.None, ConsoleColor.Blue);
-                    //            break;
-                    //        case 3:
-                    //            Logger.Write("Bringing us down...", LogLevel.None, ConsoleColor.Blue);
-                    //            break;
-                    //        case 4:
-                    //            Logger.Write("Totally inverted!", LogLevel.None, ConsoleColor.Blue);
-                    //            break;
-                    //        default:
-                    //            Logger.Write("Tower, Requesting a fly-by...", LogLevel.None, ConsoleColor.Blue);
-                    //            break;
-                    //    }
-                    //}
 
                     //reset ban
                     if (softBan)
@@ -1702,7 +1629,7 @@ namespace PokeRoadie
         }
 
         #endregion
-        #region " Travel & Destination Methods "
+        #region " New Destination Methods - not yet used "
 
         private async Task NextDestination()
         {
@@ -1730,7 +1657,7 @@ namespace PokeRoadie
             await Travel(
                 GetCurrentGeo(),
                 GetWaypointGeo(),
-                true, destination.Name
+                destination.Name
                 );
         }
 
@@ -1787,7 +1714,7 @@ namespace PokeRoadie
             (
                 GetCurrentGeo(),
                 GetWaypointGeo()
-                , true, "waypoint center"
+                , "waypoint center"
             );
         }
 
@@ -1853,32 +1780,18 @@ namespace PokeRoadie
             return new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
         }
 
-        private async Task Travel(LocationData source, LocationData destination)
-        {
-            await Travel(source.GetGeo(), destination.GetGeo(), true, destination.Name);
-        }
-
-        private async Task Travel(GeoCoordinate source, GeoCoordinate destination, bool fly, string name = "")
+        private async Task Travel(GeoCoordinate source, GeoCoordinate destination, string name = "")
         {
             //get distance
             var distance = LocationUtils.CalculateDistanceInMeters(source, destination);
-            if (distance > 5)
+            if (distance > 0)
             {
-                //determine if we fly
-                var isFlying = fly && _settings.FlyingEnabled && distance > 1000;
+                //write travel plan
 
-                //get travel plan
-                if (fly && _settings.FlyingEnabled && distance > 1000)
-                {
-                    Logger.Write($"Boarded flight #{RandomHelper.RandomNumber(101, 501)}{(string.IsNullOrWhiteSpace(name) ? "" : $" to {name}")}", LogLevel.Navigation, ConsoleColor.White);
-                }
-                else if (!string.IsNullOrWhiteSpace(name))
-                {
-                    Logger.Write($"Traveling to {name}", LogLevel.Navigation);
-                }
 
                 //go to location
-                var response = await _navigation.HumanLikeWalking(destination, isFlying ? _settings.FlyingSpeed : _settings.MinSpeed, isFlying ? GetFlyingTask() : GetShortWalkingTask());
+                var response = await _navigation.HumanLikeWalking(destination, distance > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distance > _settings.MaxDistance ? GetLongTask() : distance > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask());
+
 
                 //log arrival
                 if (!string.IsNullOrWhiteSpace(name))
@@ -2230,7 +2143,7 @@ namespace PokeRoadie
         #endregion
         #region " Travel Task Methods "
 
-        private Func<Task> GetLongWalkingTask()
+        private Func<Task> GetLongTask()
         {
             Func<Task> del = null;
             if (softBan) return del;
@@ -2241,15 +2154,7 @@ namespace PokeRoadie
             return del;
         }
 
-        private Func<Task> GetFlyingTask()
-        {
-            Func<Task> del = null;
-            if (softBan) return del;
-            if (CanVisit && _settings.PingStopsWhileFlying) return GpxCatchNearbyStops;
-            return del;
-        }
-
-        private Func<Task> GetShortWalkingTask()
+        private Func<Task> GetShortTask()
         {
             Func<Task> del = null;
             if (softBan) return del;

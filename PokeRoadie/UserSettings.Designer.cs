@@ -151,19 +151,10 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("250")]
-        public int FlyingSpeed {
+        [global::System.Configuration.DefaultSettingValueAttribute("65")]
+        public int LongDistanceSpeed {
             get {
-                return ((int)(this["FlyingSpeed"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FlyingEnabled {
-            get {
-                return ((bool)(this["FlyingEnabled"]));
+                return ((int)(this["LongDistanceSpeed"]));
             }
         }
         
@@ -250,7 +241,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
         public int MaxSpeed {
             get {
                 return ((int)(this["MaxSpeed"]));
@@ -385,15 +376,6 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PingStopsWhileFlying {
-            get {
-                return ((bool)(this["PingStopsWhileFlying"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("V")]
         public string TransferPriorityType {
             get {
@@ -506,15 +488,6 @@ namespace PokeRoadie {
         public double WaypointAltitude {
             get {
                 return ((double)(this["WaypointAltitude"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FlyLikeCaptKirk {
-            get {
-                return ((bool)(this["FlyLikeCaptKirk"]));
             }
         }
         
@@ -1022,15 +995,21 @@ namespace PokeRoadie {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5000")]
         public int PowerUpMaxDelay {
             get {
                 return ((int)(this["PowerUpMaxDelay"]));
             }
-            set {
-                this["PowerUpMaxDelay"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        public double MaxCatchSpeed {
+            get {
+                return ((double)(this["MaxCatchSpeed"]));
             }
         }
     }
