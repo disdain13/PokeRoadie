@@ -1523,7 +1523,7 @@ namespace PokeRoadie
                 }
 
                 //only use crappy pokeballs when they are fleeing
-                if (fleeCounter > 1) throwData.ItemId = ItemId.ItemPokeBall;
+                //if (fleeCounter > 1) throwData.ItemId = ItemId.ItemPokeBall;
 
                 var bestBerry = await GetBestBerry(encounter.PokemonData, encounter.Probability);
                 //only use berries when they are fleeing
