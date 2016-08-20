@@ -289,7 +289,7 @@ namespace PokeRoadie
                         Logger.Write($"{("Evolve Above CP:").PadRight(25)}{_settings.EvolveAboveCp}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Evolve Above IV:").PadRight(25)}{_settings.EvolveAboveIV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Evolve Above V:").PadRight(25)}{_settings.EvolveAboveV}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Use Evolution List:").PadRight(25)}{!_settings.UsePokemonsToEvolveList}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Use Evolution List:").PadRight(25)}{_settings.UsePokemonsToEvolveList}", LogLevel.None, ConsoleColor.White);
                         if (_settings.UsePokemonsToEvolveList && _settings.PokemonsToEvolve.Count > 0)
                         {
                             Logger.Write($"{("Pokemons To Evolve:").PadRight(25)} {_settings.PokemonsToEvolve.Count}", LogLevel.None, ConsoleColor.White);
@@ -307,7 +307,7 @@ namespace PokeRoadie
                         Logger.Write($"{("Power-Up Above CP:").PadRight(25)}{_settings.PowerUpAboveCp}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Power-Up Above IV:").PadRight(25)}{_settings.PowerUpAboveIV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Power-Up Above V:").PadRight(25)}{_settings.PowerUpAboveV}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Use Power-Up List:").PadRight(25)}{!_settings.UsePokemonsToPowerUpList}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Use Power-Up List:").PadRight(25)}{_settings.UsePokemonsToPowerUpList}", LogLevel.None, ConsoleColor.White);
                         if (_settings.UsePokemonsToPowerUpList && _settings.PokemonsToPowerUp.Count > 0)
                         {
                             Logger.Write($"{("Pokemons To Power-up:").PadRight(25)} {_settings.PokemonsToPowerUp.Count}", LogLevel.None, ConsoleColor.White);
