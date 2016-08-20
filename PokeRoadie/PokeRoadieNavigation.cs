@@ -22,6 +22,7 @@ namespace PokeRoadie
         private const double SpeedDownTo = 10 / 3.6;
         private readonly Client _client;
         private DateTime? _lastSaveDate;
+        private Random random = new Random(DateTime.Now.Millisecond);
         public event Action<LocationData> OnChangeLocation;
 
         public PokeRoadieNavigation(Client client)
@@ -39,6 +40,12 @@ namespace PokeRoadie
         }
         private async Task<PlayerUpdateResponse> UpdatePlayerLocation(double lat, double lng, double alt)
         {
+
+            //randomize altitude
+            alt = Math.Round((alt < 5) ? GenRandom(alt, 1, (alt * (1 + .02))) : 
+                  (alt > 25) ? GenRandom(alt, (alt * (1 - .02)), 1) : 
+                  GenRandom(alt, (alt * (1 - .02)), (alt * (1 + .02))),1);
+
             PokeRoadieSettings.Current.CurrentLatitude = lat;
             PokeRoadieSettings.Current.CurrentLongitude = lng;
             PokeRoadieSettings.Current.CurrentAltitude = alt;
@@ -51,6 +58,11 @@ namespace PokeRoadie
             var r = await _client.Player.UpdatePlayerLocation(lat, lng, alt);
             OnChangeLocation?.Invoke(new LocationData(lat, lng, alt));
             return r;
+        }
+
+        public double GenRandom(double num, double min, double max)
+        {
+            return random.NextDouble() * (max - min) + min; 
         }
 
         public async Task<PlayerUpdateResponse> HumanLikeWalkingGetCloser(GeoCoordinate targetLocation,
