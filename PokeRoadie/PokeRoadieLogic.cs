@@ -93,6 +93,7 @@ namespace PokeRoadie
         private static string tempDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
         private static string configsDir = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
         private static string pokestopsDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pokestops");
+        private static string encountersDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Encounters");
         private static string gymDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Gyms");
         private static string eggDir = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Eggs");
 
@@ -153,6 +154,8 @@ namespace PokeRoadie
             if (!Directory.Exists(gymDir)) Directory.CreateDirectory(gymDir);
             //check egg dir
             if (!Directory.Exists(eggDir)) Directory.CreateDirectory(eggDir);
+            //check encounters dir
+            if (!Directory.Exists(encountersDir)) Directory.CreateDirectory(encountersDir);
         }
 
         public PokeRoadieLogic(ISynchronizeInvoke form) : base()
@@ -411,6 +414,7 @@ namespace PokeRoadie
             lock (xloLock)
             {
                 xloCount++;
+
                 if (!isRunning) return;
                 if (Directory.Exists(pokestopsDir))
                 {
@@ -433,11 +437,11 @@ namespace PokeRoadie
                                     f.Wait();
                                     if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
                                 }
-                                catch //(Exception ex)
+                                catch (Exception ex)
                                 {
                                     //System.Threading.Thread.Sleep(500);
                                     //do nothing
-                                    //Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                    Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
                                 }
                             }
                             System.Threading.Thread.Sleep(500);
@@ -465,9 +469,39 @@ namespace PokeRoadie
                                     f.Wait();
                                     if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
                                 }
-                                catch //(Exception ex)
+                                catch (Exception ex)
                                 {
-                                    //Logger.Write($"Gym {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                    Logger.Write($"Gym {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                }
+                            }
+                            System.Threading.Thread.Sleep(500);
+                        }
+                    }
+                }
+
+                if (Directory.Exists(encountersDir))
+                {
+                    var files = Directory.GetFiles(encountersDir)
+                                    .Where(x => x.EndsWith(".xml")).ToList();
+                    foreach (var filePath in files)
+                    {
+                        if (!isRunning) break;
+                        if (File.Exists(filePath))
+                        {
+                            var info = new FileInfo(filePath);
+                            if (info.CreationTime.AddSeconds(60) < DateTime.Now)
+                            {
+                                try
+                                {
+                                    //pull the file
+                                    var encounter = (Xml.PokemonEncounter)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.PokemonEncounter));
+                                    var f = Xml.Serializer.Xlo(encounter);
+                                    f.Wait();
+                                    if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Write($"Encounter {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
                                 }
                             }
                             System.Threading.Thread.Sleep(500);
@@ -480,8 +514,9 @@ namespace PokeRoadie
                     if (!isRunning) return;
                     System.Threading.Thread.Sleep(1000);
                 }
-                Task.Run(new Action(Xlo));
                 xloCount--;
+                Task.Run(new Action(Xlo));
+                
             }
             
         }
@@ -884,6 +919,14 @@ namespace PokeRoadie
             {
 
                 attemptCount++;
+
+                if (_settings.DestinationsEnabled && (_settings.MoveWhenNoStops || (_settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)) && _client != null)
+                {
+                    Logger.Write("Setting new destination...", LogLevel.Info);
+                    _settings.DestinationEndDate = DateTime.Now;
+                    break;
+                }
+
                 var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
                 var mapObjects = await _client.Map.GetMapObjects();
                 var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
@@ -895,43 +938,33 @@ namespace PokeRoadie
 
                 if (totalActivecount == 0)
                 {
-                    if (_settings.DestinationsEnabled && (_settings.MoveWhenNoStops || (_settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)) && _client != null)
+                    if (attemptCount == 1) Logger.Write("No locations in your area...", LogLevel.Warning);
+                    Logger.Write("Wandering to find a location...", LogLevel.Warning);
+                    var current = GetCurrentGeo();
+                    if (current.Longitude < 0)
                     {
-                        Logger.Write("No locations in your area...", LogLevel.Warning);
-                        Logger.Write("Setting new destination...", LogLevel.Info);
-                        _settings.DestinationEndDate = DateTime.Now;
-                        break;
+                        if (current.Longitude > -179.99999)
+                        {
+                            current.Longitude += 0.01;
+                        }
+                        else
+                        {
+                            current.Longitude -= 0.01;
+                        }
                     }
-                    else
+                    else if (current.Longitude > 0)
                     {
-                        if (attemptCount == 1) Logger.Write("No locations in your area...", LogLevel.Warning);
-                        Logger.Write("Wandering to find a location...", LogLevel.Warning);
-                        var current = GetCurrentGeo();
-                        if (current.Longitude < 0)
+                        if (current.Longitude < 179.99999)
                         {
-                            if (current.Longitude > -179.99999)
-                            {
-                                current.Longitude += 0.01;
-                            }
-                            else
-                            {
-                                current.Longitude -= 0.01;
-                            }
+                            current.Longitude += 0.01;
                         }
-                        else if (current.Longitude > 0)
+                        else
                         {
-                            if (current.Longitude < 179.99999)
-                            {
-                                current.Longitude += 0.01;
-                            }
-                            else
-                            {
-                                current.Longitude -= 0.01;
-                            }
+                            current.Longitude -= 0.01;
                         }
-                        await _navigation.HumanLikeWalking(current, _settings.MinSpeed, GetLongTask(), false);
-                        SetWaypoint(current);
                     }
+                    await _navigation.HumanLikeWalking(current, _settings.MinSpeed, GetLongTask(), false);
+                    SetWaypoint(current);
 
                 }
                 else
@@ -1023,10 +1056,14 @@ namespace PokeRoadie
             }
 
             if (pokemons != null && pokemons.Any())
+            {
                 Logger.Write($"Found {pokemons.Count()} catchable Pokemon", LogLevel.Info);
+            }  
             else
+            {
                 return;
-
+            }
+               
             foreach (var pokemon in pokemons)
             {
                 if (!isRunning) break;
@@ -1370,7 +1407,10 @@ namespace PokeRoadie
             var probability = encounter?.CaptureProbability?.CaptureProbability_?.First();
 
             if (encounter.Status == EncounterResponse.Types.Status.EncounterSuccess)
+            {
+                
                 await ProcessCatch(new EncounterData(location, encounterId, encounter?.WildPokemon?.PokemonData, probability, spawnPointId, source));
+            }
             else if (encounter.Status == EncounterResponse.Types.Status.PokemonInventoryFull)
             {
 
@@ -1493,7 +1533,9 @@ namespace PokeRoadie
 
         private async Task ProcessCatch(EncounterData encounter)
         {
-
+            //save
+            _inventory.Save(encounter.PokemonData, encounter.Location.GetGeo(), _playerProfile.PlayerData.Username, _stats.Currentlevel, _playerProfile.PlayerData.Team.ToString().Substring(0, 1).ToUpper(), encounter.EncounterId, encounter.Source, Path.Combine(encountersDir, encounter.EncounterId + ".xml"));
+            
             //raise event
             if (OnEncounter != null)
             {
