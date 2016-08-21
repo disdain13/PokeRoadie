@@ -131,6 +131,7 @@ namespace PokeRoadie
         private List<string> gymTries = new List<string>();
         private ulong lastEnconterId = 0;
         private Random Random = new Random(DateTime.Now.Millisecond);
+        private ulong lastMissedPokemonId = 0;
         //private DateTime? _lastLoginTime;
 
         #endregion
@@ -1518,12 +1519,10 @@ namespace PokeRoadie
                 var throwData = await GetThrowData(encounter.PokemonData, encounter.Probability);
                 if (throwData.ItemId == ItemId.ItemUnknown)
                 {
-                    Logger.Write($"No Pokeballs :( - We missed {encounter.PokemonData.GetMinStats()}", LogLevel.Warning);
+                    if (encounter.PokemonData.Id != lastMissedPokemonId) Logger.Write($"No Pokeballs :( - We missed {encounter.PokemonData.GetMinStats()}", LogLevel.Warning);
+                    lastMissedPokemonId = encounter.PokemonData.Id;
                     return;
                 }
-
-                //only use crappy pokeballs when they are fleeing
-                //if (fleeCounter > 1) throwData.ItemId = ItemId.ItemPokeBall;
 
                 var bestBerry = await GetBestBerry(encounter.PokemonData, encounter.Probability);
                 //only use berries when they are fleeing
@@ -1539,6 +1538,9 @@ namespace PokeRoadie
                         await RandomDelay();
                     }
                 }
+
+                //log throw attempt
+                Logger.Write($"(THROW) {throwData.HitText} {throwData.BallName} ball {throwData.SpinText} toss...", LogLevel.None, ConsoleColor.Yellow);
 
                 caughtPokemonResponse = await _client.Encounter.CatchPokemon(encounter.EncounterId, encounter.SpawnPointId, throwData.ItemId, throwData.NormalizedRecticleSize,throwData.SpinModifier);
                 
@@ -1928,45 +1930,87 @@ namespace PokeRoadie
             {
                 //substitute when low (Downgrade)
                 if (balance && ultraBalls != null && masterBalls.Count * 3 < ultraBalls.Count)
+                {
+                    ultraBalls.Count--;
                     return ItemId.ItemUltraBall;
+                }
                 //return the default
+                masterBalls.Count--;
                 return ItemId.ItemMasterBall;
             }
             if (ultraBalls != null && (pokemonCp >= 1000 || (iV >= _settings.KeepAboveIV && proba < 0.40)))
             {
                 //substitute when low (Upgrade)
                 if (balance && masterBalls != null && ultraBalls.Count * 3 < masterBalls.Count)
+                {
+                    masterBalls.Count--;
                     return ItemId.ItemMasterBall;
+                }
+                    
                 //substitute when low (Downgrade)
                 if (balance && greatBalls != null && ultraBalls.Count * 3 < greatBalls.Count)
+                {
+                    greatBalls.Count--;
                     return ItemId.ItemGreatBall;
+                }
                 //return the default
+                ultraBalls.Count--;
                 return ItemId.ItemUltraBall;
             }
             if (greatBalls != null && (pokemonCp >= 300 || (iV >= _settings.KeepAboveIV && proba < 0.50)))
             {
                 //substitute when low (Upgrade)
                 if (balance && ultraBalls != null && greatBalls.Count * 3 < ultraBalls.Count)
+                {
+                    ultraBalls.Count--;
                     return ItemId.ItemUltraBall;
+                }
+                    
                 //substitute when low (Downgrade)
                 if (balance && pokeBalls != null && greatBalls.Count * 3 < pokeBalls.Count)
+                {
+                    pokeBalls.Count--;
                     return ItemId.ItemPokeBall;
+                }
+
                 //return the default
+                greatBalls.Count--;
                 return ItemId.ItemGreatBall;
             }
             if (pokeBalls != null)
             {
                 //substitute when low (Upgrade)
                 if (balance && greatBalls != null && pokeBalls.Count * 3 < greatBalls.Count)
+                {
+                    greatBalls.Count--;
                     return ItemId.ItemGreatBall;
+                }
+
                 //return the default
+                pokeBalls.Count--;
                 return ItemId.ItemPokeBall;
             }
-            //default to highest possible
-            if (pokeBalls != null) return ItemId.ItemPokeBall;
-            if (greatBalls != null) return ItemId.ItemGreatBall;
-            if (ultraBalls != null) return ItemId.ItemUltraBall;
-            if (masterBalls != null) return ItemId.ItemMasterBall;
+            //default to lowest possible
+            if (pokeBalls != null)
+            {
+                pokeBalls.Count--;
+                return ItemId.ItemPokeBall;
+            }
+            if (greatBalls != null)
+            {
+                greatBalls.Count--;
+                return ItemId.ItemGreatBall;
+            }
+            if (ultraBalls != null)
+            {
+                ultraBalls.Count--;
+                return ItemId.ItemUltraBall;
+            }
+            if (masterBalls != null)
+            {
+                masterBalls.Count--;
+                return ItemId.ItemMasterBall;
+            }
 
             return ItemId.ItemUnknown;
         }
@@ -2055,7 +2099,6 @@ namespace PokeRoadie
                 //round to 2 decimals
                 throwData.NormalizedRecticleSize = Math.Round(throwData.NormalizedRecticleSize, 2);
 
-                Logger.Write($"(THROW) {throwData.HitText} {throwData.BallName} ball {throwData.SpinText} toss...", LogLevel.None, ConsoleColor.Yellow);
             }
 
             return throwData;
@@ -2379,7 +2422,7 @@ namespace PokeRoadie
 
         public async Task PowerUpPokemon(List<PokemonData> pokemons)
         {
-            Logger.Write($"Found {pokemons.Count()} pokemon to power up:", LogLevel.Info);
+         
             var myPokemonSettings = await _inventory.GetPokemonSettings();
             var pokemonSettings = myPokemonSettings.ToList();
 
@@ -2387,6 +2430,8 @@ namespace PokeRoadie
             var pokemonFamilies = myPokemonFamilies.ToArray();
 
             var upgradedNumber = 0;
+            var finalList = new List<PokemonData>();
+
             foreach (var pokemon in pokemons)
             {
                 if (pokemon.GetMaxCP() == pokemon.Cp) continue;
@@ -2396,7 +2441,15 @@ namespace PokeRoadie
 
                 if (familyCandy.Candy_ <= 0) continue;
                 if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps) continue;
+                finalList.Add(pokemon);
+            }
 
+            if (finalList.Count == 0) return;
+
+            Logger.Write($"Found {pokemons.Count()} pokemon to power up:", LogLevel.Info);
+
+            foreach (var pokemon in finalList)
+            {
                 var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
@@ -2421,8 +2474,6 @@ namespace PokeRoadie
                 }
                 if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
                     break;
-
-                
             }
         }
 

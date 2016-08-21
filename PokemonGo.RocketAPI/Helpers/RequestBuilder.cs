@@ -80,7 +80,9 @@ namespace PokemonGo.RocketAPI.Helpers
                 },
                 DeviceInfo = GetDeviceInfo()
             };
-      
+
+           
+
             //sig.DeviceInfo = _client.DeviceInfo;
             sig.LocationFix.Add(new Signature.Types.LocationFix()
             {
@@ -90,12 +92,16 @@ namespace PokemonGo.RocketAPI.Helpers
                 Latitude = (float)_client.CurrentLatitude,
                 Longitude = (float)_client.CurrentLongitude,
                 Altitude = (float)_client.CurrentAltitude,
+                //TimestampSinceStart = (ulong)_internalWatch.ElapsedMilliseconds - 200,
                 TimestampSnapshot = (ulong)_internalWatch.ElapsedMilliseconds - 200,
                 Floor = 3,
                 LocationType = 1,
                 ProviderStatus= 3
               
             });
+
+            sig.SessionHash = ByteString.CopyFrom(new byte[16] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F });
+            sig.Unknown25 = BitConverter.ToUInt32(new System.Data.HashFunction.xxHash(64, 0x88533787).ComputeHash(System.Text.Encoding.ASCII.GetBytes("\"b8fa9757195897aae92c53dbcf8a60fb3d86d745\"")), 0);
 
             foreach (var request in requestEnvelope.Requests)
             {
@@ -167,7 +173,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 RequestType = type,
                 RequestMessage = message.ToByteString()
             });
-
+    
         }
 
         public static double GenRandom(double num)
