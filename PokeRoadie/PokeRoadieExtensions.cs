@@ -164,7 +164,7 @@ namespace PokeRoadie.Extensions
             }
             catch (Exception e)
             {
-                Logger.Write($"Could not save the pokestop information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+                //Logger.Write($"Could not save the pokestop information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
             }
         }
 
@@ -221,7 +221,7 @@ namespace PokeRoadie.Extensions
             }
             catch (Exception e)
             {
-                Logger.Write($"Could not save the gym information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+                //Logger.Write($"Could not save the gym information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
             }
         }
 
@@ -249,7 +249,7 @@ namespace PokeRoadie.Extensions
             }
             catch (Exception e)
             {
-                Logger.Write($"Could not save the encounter information file for {encounterId} - {e.ToString()}", LogLevel.Error);
+                //Logger.Write($"Could not save the encounter information file for {encounterId} - {e.ToString()}", LogLevel.Error);
             }
         }
     }
