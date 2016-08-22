@@ -3,7 +3,7 @@
 [1.2]: http://i.imgur.com/NNcGs1n.png (BTC)
 <!-- title -->
 <img src="https://github.com/disdain13/PokeRoadie/blob/master/marketing//PokeRoadie_Pokemon_Bot_Logo_Small.png?raw=true" alt="PokeRoadie_Pokemon_Bot_Logo_Small.png" title="PokeRoadie PokemonGo Bot"/><br/>
-<h2>Advanced PokemonGo Bot</h2>
+<h2>Test Harness Bot for PGO</h2>
 
 Extremely easy to use fully featured bot which will play the game for you when you cannot. Harvest pokestops, collect pokemon, transfer, evolve, all automatically. <a href="https://github.com/disdain13/PokeRoadie/wiki" title="goto the WIKI, just do it!">Checkout the full list of new features in our WIKI</a><br/><br/>
 
