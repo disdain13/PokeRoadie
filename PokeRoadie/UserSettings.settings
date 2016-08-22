@@ -203,8 +203,8 @@
     <Setting Name="UseProxyHost" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="UseProxyPort" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+    <Setting Name="UseProxyPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="UseProxyAuthentication" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
@@ -343,6 +343,9 @@
     </Setting>
     <Setting Name="ShowDebugMessages" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DeviceId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

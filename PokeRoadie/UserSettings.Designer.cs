@@ -628,10 +628,10 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string UseProxyPort {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int UseProxyPort {
             get {
-                return ((string)(this["UseProxyPort"]));
+                return ((int)(this["UseProxyPort"]));
             }
         }
         
@@ -1046,6 +1046,15 @@ namespace PokeRoadie {
         public bool ShowDebugMessages {
             get {
                 return ((bool)(this["ShowDebugMessages"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DeviceId {
+            get {
+                return ((string)(this["DeviceId"]));
             }
         }
     }

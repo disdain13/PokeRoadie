@@ -204,7 +204,7 @@ namespace PokemonGo.RocketAPI.Helpers
             deviceInfo.AndroidBoardName = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["AndroidBoardName"];
             deviceInfo.AndroidBootloader = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["AndroidBootloader"];
             deviceInfo.DeviceBrand = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceBrand"];
-            deviceInfo.DeviceId = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceId"];
+            deviceInfo.DeviceId = string.IsNullOrEmpty(_client.Settings.DeviceId) ? DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceId"] : _client.Settings.DeviceId;
             deviceInfo.DeviceModel = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceModel"];
             deviceInfo.DeviceModelBoot = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceModelBoot"];
             deviceInfo.DeviceModelIdentifier = DeviceInfoHelper.DeviceInfoSets[devicePackageName]["DeviceModelIdentifier"];

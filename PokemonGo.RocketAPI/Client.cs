@@ -39,15 +39,17 @@ namespace PokemonGo.RocketAPI
 
         public AuthType AuthType => Settings.AuthType;
 
-        internal readonly PokemonHttpClient PokemonHttpClient = new PokemonHttpClient();
+        internal readonly PokemonHttpClient PokemonHttpClient;
         internal string ApiUrl { get; set; }
         internal AuthTicket AuthTicket { get; set; }
+        internal  static WebProxy Proxy { get; set; }
 
         public Client(ISettings settings, IApiFailureStrategy apiFailureStrategy)
         {
             Settings = settings;
             ApiFailure = apiFailureStrategy;
-
+            InitProxy(settings);
+            PokemonHttpClient = new PokemonHttpClient(settings);
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);
             Download = new Rpc.Download(this);
@@ -58,6 +60,15 @@ namespace PokemonGo.RocketAPI
             Misc = new Rpc.Misc(this);
 
             Player.SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
+        }
+
+        private void InitProxy(ISettings settings)
+        {
+            Proxy = new WebProxy(settings.UseProxyHost, settings.UseProxyPort);
+
+            if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) && !string.IsNullOrWhiteSpace(settings.UseProxyPassword))
+                Proxy.Credentials = new NetworkCredential(settings.UseProxyUsername, settings.UseProxyPassword);
+
         }
     }
 }

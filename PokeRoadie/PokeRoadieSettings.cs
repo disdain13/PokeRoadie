@@ -167,11 +167,10 @@ namespace PokeRoadie
         //proxy
         public virtual bool UseProxy { get; set; }
         public virtual string UseProxyHost { get; set; }
-        public virtual string UseProxyPort { get; set; }
+        public virtual int UseProxyPort { get; set; }
         public virtual bool UseProxyAuthentication { get; set; }
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
-
         
         //rename
         public virtual bool RenamePokemon { get; set; }
@@ -179,10 +178,9 @@ namespace PokeRoadie
 
         //emulation & safety
         public virtual string DevicePackageName { get; set; }
-        public virtual int MinDelay { get; set; }
-        public virtual int MaxDelay { get; set; }
+        public virtual string DeviceId { get; set; }
 
-        //new
+        //session
         public virtual int DisplayPokemonCount { get; set; }
         public virtual string MaxRunTimespan { get; set; }
         public virtual string MinBreakTimespan { get; set; }
@@ -190,6 +188,8 @@ namespace PokeRoadie
         public virtual int MaxPokestopVisits { get; set; }
 
         //configurable delays
+        public virtual int MinDelay { get; set; }
+        public virtual int MaxDelay { get; set; }
         public virtual int EvolutionMinDelay { get; set; }
         public virtual int EvolutionMaxDelay { get; set; }
         public virtual int EggHatchMinDelay { get; set; }
@@ -204,6 +204,7 @@ namespace PokeRoadie
         public virtual int PowerUpMaxDelay { get; set; }
 
         public virtual bool ShowDebugMessages { get; set; }
+       
         
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -589,6 +590,7 @@ namespace PokeRoadie
             this.EnableWandering = UserSettings.Default.EnableWandering;
             this.ShowDebugMessages = UserSettings.Default.ShowDebugMessages;
 
+            this.DeviceId = UserSettings.Default.DeviceId;
         }
 
         #endregion
@@ -838,6 +840,8 @@ namespace PokeRoadie
                     this.SpeedCurveDistance = obj.SpeedCurveDistance;
                     this.EnableWandering = obj.EnableWandering;
                     this.ShowDebugMessages = obj.ShowDebugMessages;
+
+                    this.DeviceId = obj.DeviceId;
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
