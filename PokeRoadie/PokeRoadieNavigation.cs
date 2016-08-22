@@ -19,15 +19,15 @@ namespace PokeRoadie
     public class PokeRoadieNavigation
     {
 
-        private const double SpeedDownTo = 10 / 3.6;
-        private readonly Client _client;
+        private const double SpeedDownTo = 2 / 3.6;
+        private readonly PokeRoadieClient _client;
         private DateTime? _lastSaveDate;
         private Random random = new Random(DateTime.Now.Millisecond);
         public event Action<LocationData> OnChangeLocation;
 
         public double LastKnownSpeed { get; set; }
 
-        public PokeRoadieNavigation(Client client)
+        public PokeRoadieNavigation(PokeRoadieClient client)
         {
             _client = client;
         }
@@ -305,8 +305,11 @@ namespace PokeRoadie
             {
                 Logger.Write($"Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.Navigation);
             }
-
             var nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);
+
+            if (_client.Settings.ShowDebugMessages)
+                Logger.Write($"From {sourceLocation} to {targetLocation} bearing {Math.Round(nextWaypointBearing,1)}", LogLevel.Debug);
+           
             var nextWaypointDistance = speedInMetersPerSecond;
             var waypoint = LocationUtils.CreateWaypoint(sourceLocation, nextWaypointDistance, nextWaypointBearing);
 
@@ -314,9 +317,10 @@ namespace PokeRoadie
             var requestSendDateTime = DateTime.Now;
             var result =
                 await
-                    UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, _client.Settings.DefaultAltitude);
+                    UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, _client.Settings.CurrentAltitude);
 
-            var targetSpeedInMetersPerSecond = speedInMetersPerSecond;
+            var minMetersPerSecond = _client.Settings.MinSpeed / 3.6;
+            var enableCurve = distanceToTarget > (_client.Settings.SpeedCurveDistance * 2);
             do
             {
                 var millisecondsUntilGetUpdatePlayerLocationResponse =
@@ -327,12 +331,12 @@ namespace PokeRoadie
                 //if (_client.Settings.DebugMode)
                 //Logger.Write($"Distance to target location: {currentDistanceToTarget:0.##} meters. Will take {currentDistanceToTarget / speedInMetersPerSecond:0.##} seconds!", LogLevel.Navigation);
 
-                if (currentDistanceToTarget < 30 && speedInMetersPerSecond > SpeedDownTo)
+                if (enableCurve && currentDistanceToTarget < _client.Settings.SpeedCurveDistance  && speedInMetersPerSecond > (minMetersPerSecond + .2))
                 {
-                    //if (_client.Settings.DebugMode)
-                    //Logger.Write($"We are within 30 meters of the target. Speeding down to 10kmh", LogLevel.Navigation);
-                    speedInMetersPerSecond = SpeedDownTo;
-                    LastKnownSpeed = SpeedDownTo * 3.6;
+                    speedInMetersPerSecond -= .55;
+                    LastKnownSpeed = speedInMetersPerSecond * 3.6;
+                    if (_client.Settings.ShowDebugMessages)
+                        Logger.Write($"{Math.Round(currentDistanceToTarget,1)} meters from the target, slowing down to {LastKnownSpeed}...", LogLevel.Debug);
                 }
 
                 nextWaypointDistance = Math.Min(currentDistanceToTarget,
@@ -344,7 +348,7 @@ namespace PokeRoadie
                 result =
                     await
                         UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
-                            _client.Settings.DefaultAltitude);
+                            _client.Settings.CurrentAltitude);
 
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon

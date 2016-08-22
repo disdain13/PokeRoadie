@@ -132,13 +132,15 @@ namespace PokeRoadie
         private List<string> gymTries = new List<string>();
         private ulong lastEnconterId = 0;
         private Random Random = new Random(DateTime.Now.Millisecond);
-        private ulong lastMissedPokemonId = 0;
+        private ulong lastMissedEncounterId = 0;
+        private int locationAttemptCount = 0;
+        private DateTime? nextTransEvoPowTime;
         //private DateTime? _lastLoginTime;
 
         #endregion
         #region " Properties "
 
-            public bool CanCatch { get { return _settings.CatchPokemon && _settings.Session.CatchEnabled && !softBan && _navigation.LastKnownSpeed <= _settings.MaxCatchSpeed; } }
+        public bool CanCatch { get { return _settings.CatchPokemon && _settings.Session.CatchEnabled && !softBan && _navigation.LastKnownSpeed <= _settings.MaxCatchSpeed; } }
             public bool CanVisit { get { return _settings.VisitPokestops && _settings.Session.VisitEnabled && !softBan; } }
 
         #endregion
@@ -705,17 +707,25 @@ namespace PokeRoadie
             //egg incubators
             await UseIncubators(!_settings.UseEggIncubators);
 
-            //evolve
-            if (_settings.EvolvePokemon) await EvolvePokemon();
+            //delay transfer/power ups/evolutions with a 5 minute window unless needed.
+            var pokemonCount = (await _inventory.GetPokemons()).Count();
+            var maxPokemonCount = _playerProfile.PlayerData.MaxPokemonStorage;
+            if (maxPokemonCount - pokemonCount < 20 ||  !nextTransEvoPowTime.HasValue || nextTransEvoPowTime.Value <= DateTime.Now)
+            {
+                //evolve
+                if (_settings.EvolvePokemon) await EvolvePokemon();
 
-            //power up
-            if (_settings.PowerUpPokemon) await PowerUpPokemon();
+                //power up
+                if (_settings.PowerUpPokemon) await PowerUpPokemon();
 
-            //favorite
-            //if (_settings.FavoritePokemon) await FavoritePokemon();
+                //favorite
+                //if (_settings.FavoritePokemon) await FavoritePokemon();
 
-            //transfer
-            if (_settings.TransferPokemon) await TransferPokemon();
+                //transfer
+                if (_settings.TransferPokemon) await TransferPokemon();
+                nextTransEvoPowTime = DateTime.Now.AddMinutes(5);
+            }
+
 
             //export
             await Export();
@@ -728,7 +738,10 @@ namespace PokeRoadie
 
             //recycle
             if (recycleCounter >= 5)
+            {
                 await RecycleItems();
+            }
+                
         }
 
         public async Task PostLoginExecute()
@@ -833,10 +846,6 @@ namespace PokeRoadie
             {
                 Logger.Write("Both VisitGyms and VisitPokestops settings are false... Standing around I guess...");
                 
-                await RandomHelper.RandomDelay(5000);
-
-                if (CanCatch)
-                    await CatchNearbyPokemons();
             }
 
             var wayPointGeo = GetWaypointGeo();
@@ -854,6 +863,7 @@ namespace PokeRoadie
                 Logger.Write($"We have traveled outside the max distance of {_settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
                 await _navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance ? GetLongTask() : distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > _settings.MaxDistance ? false : true);
                 gymTries.Clear();
+                locationAttemptCount = 0;
                 Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude,5)}", LogLevel.Navigation);
                 inTravel = false;
             }
@@ -878,7 +888,7 @@ namespace PokeRoadie
                             _settings.WaypointLatitude = destination.Latitude;
                             _settings.WaypointLongitude = destination.Longitude;
                             _settings.WaypointAltitude = destination.Altitude;
-                            _settings.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (_settings.MinSpeed / 3.6));
+                            _settings.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (_settings.MinSpeed / 3.6)).AddMinutes(_settings.MinutesPerDestination);
                             _settings.Save();
 
                             //raise event
@@ -887,12 +897,14 @@ namespace PokeRoadie
                                 if (!RaiseSyncEvent(OnChangeDestination, destination, newIndex))
                                     OnChangeDestination(destination, newIndex);
                             }
-
+                            inTravel = true;
                             Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
                             Logger.Write("Preparing for long distance travel...", LogLevel.None, ConsoleColor.White);
                             await _navigation.HumanLikeWalking(destination.GetGeo(), _settings.LongDistanceSpeed, GetLongTask(), false);
                             Logger.Write($"Arrived at destination - {destination.Name}!", LogLevel.Navigation, ConsoleColor.White);
                             gymTries.Clear();
+                            locationAttemptCount = 0;
+                            inTravel = false;
 
                             //reset destination timer
                             _settings.DestinationEndDate = DateTime.Now.AddMinutes(_settings.MinutesPerDestination);
@@ -914,66 +926,85 @@ namespace PokeRoadie
 
 
             var totalActivecount = 0;
-            var attemptCount = 0;
-            while(totalActivecount == 0 && attemptCount < 50)
+            var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
+            var mapObjects = await _client.Map.GetMapObjects();
+            var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
+            var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+            var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
+            if (_settings.VisitGyms) totalActivecount += gymsList.Count;
+            if (_settings.VisitPokestops) totalActivecount += stopList.Count;
+
+            if (totalActivecount == 0)
             {
 
-                attemptCount++;
-
-                if (_settings.DestinationsEnabled && (_settings.MoveWhenNoStops || (_settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)) && _client != null)
+                locationAttemptCount++;
+                if (locationAttemptCount == 1)
                 {
-                    Logger.Write("Setting new destination...", LogLevel.Info);
-                    _settings.DestinationEndDate = DateTime.Now;
-                    break;
-                }
-
-                var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-                var mapObjects = await _client.Map.GetMapObjects();
-                var pokeStopList = GetPokestops(GetCurrentLocation(), _settings.MaxDistance, mapObjects.Item1);
-                var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
-                var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
-                if (_settings.VisitGyms) totalActivecount += gymsList.Count;
-                if (_settings.VisitPokestops) totalActivecount += stopList.Count;
-
-
-                if (totalActivecount == 0)
-                {
-                    if (attemptCount == 1) Logger.Write("No locations in your area...", LogLevel.Warning);
-                    Logger.Write("Wandering to find a location...", LogLevel.Warning);
-                    var current = GetCurrentGeo();
-                    if (current.Longitude < 0)
-                    {
-                        if (current.Longitude > -179.99999)
-                        {
-                            current.Longitude += 0.01;
-                        }
-                        else
-                        {
-                            current.Longitude -= 0.01;
-                        }
-                    }
-                    else if (current.Longitude > 0)
-                    {
-                        if (current.Longitude < 179.99999)
-                        {
-                            current.Longitude += 0.01;
-                        }
-                        else
-                        {
-                            current.Longitude -= 0.01;
-                        }
-                    }
-                    await _navigation.HumanLikeWalking(current, _settings.MinSpeed, GetLongTask(), false);
-                    SetWaypoint(current);
-
+                    Logger.Write($"No locations in your area...", LogLevel.Warning);
                 }
                 else
                 {
-                    await ProcessFortList(pokeStopList, mapObjects.Item1);
-                    break;
+                    Logger.Write($"Attempt {locationAttemptCount}...", LogLevel.Warning);
                 }
 
+                if (locationAttemptCount >= _settings.MaxLocationAttempts)
+                {
+                   
+                    if (_settings.DestinationsEnabled && _settings.MoveWhenNoStops)
+                    {
+                        Logger.Write("Setting new destination...", LogLevel.Info);
+                        _settings.DestinationEndDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        if (_settings.EnableWandering && distanceFromStart < _settings.MaxDistance)
+                        {
+                            Logger.Write("Wandering a lttile to find a location...", LogLevel.Warning);
+                            var current = GetCurrentGeo();
+                            if (current.Longitude < 0)
+                            {
+                                if (current.Longitude > -179.99999)
+                                {
+                                    current.Longitude += 0.005;
+                                }
+                                else
+                                {
+                                    current.Longitude -= 0.005;
+                                }
+                            }
+                            else if (current.Longitude > 0)
+                            {
+                                if (current.Longitude < 179.99999)
+                                {
+                                    current.Longitude += 0.005;
+                                }
+                                else
+                                {
+                                    current.Longitude -= 0.005;
+                                }
+                            }
+                            await _navigation.HumanLikeWalking(current, _settings.MinSpeed, GetLongTask(), false);
+                        }
+                        else
+                        {
+                            
+                            inTravel = true;
+                            Logger.Write($"Since there are no locations, let's go back to the destination center... {_settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
+                            await _navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > _settings.MaxDistance ? false : true);
+                            gymTries.Clear();
+                            locationAttemptCount = 0;
+                            Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
+                            inTravel = false;
+                        }
+                    }
+                }
             }
+            else
+            {
+                locationAttemptCount = 0;
+                await ProcessFortList(pokeStopList, mapObjects.Item1);
+            }
+
         }
 
         #endregion
@@ -1561,8 +1592,9 @@ namespace PokeRoadie
                 var throwData = await GetThrowData(encounter.PokemonData, encounter.Probability);
                 if (throwData.ItemId == ItemId.ItemUnknown)
                 {
-                    if (encounter.PokemonData.Id != lastMissedPokemonId) Logger.Write($"No Pokeballs :( - We missed {encounter.PokemonData.GetMinStats()}", LogLevel.Warning);
-                    lastMissedPokemonId = encounter.PokemonData.Id;
+                    if (encounter.EncounterId != lastMissedEncounterId) Logger.Write($"No Pokeballs :( - We missed {encounter.PokemonData.GetMinStats()}", LogLevel.Warning);
+                    else Logger.Write($"It is that same {encounter.PokemonData}.", LogLevel.Info);
+                    lastMissedEncounterId = encounter.EncounterId;
                     return;
                 }
 
@@ -2328,7 +2360,7 @@ namespace PokeRoadie
             {
                 PokeRoadieInventory.IsDirty = true;
                 Logger.Write($"{pokemon.GetMinStats()} for {evolvePokemonOutProto.ExperienceAwarded} xp", LogLevel.Evolve);
-                
+                _stats.AddExperience(evolvePokemonOutProto.ExperienceAwarded);
                 //raise event
                 if (OnEvolve != null)
                 {
@@ -2496,9 +2528,8 @@ namespace PokeRoadie
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
                     PokeRoadieInventory.IsDirty = true;
-                    Logger.Write($"(POWER) Pokemon was powered up! {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"(POWER) Pokemon was powered up! {upgradeResult.UpgradedPokemon.GetMinStats()}", LogLevel.None, ConsoleColor.White);
                     upgradedNumber++;
-
                     //raise event
                     if (OnPowerUp != null)
                     {
