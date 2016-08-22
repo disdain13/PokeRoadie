@@ -959,7 +959,7 @@ namespace PokeRoadie
                     {
                         if (_settings.EnableWandering && distanceFromStart < _settings.MaxDistance)
                         {
-                            Logger.Write("Wandering a lttile to find a location...", LogLevel.Warning);
+                            Logger.Write("Wandering a little to find a location...", LogLevel.Warning);
                             var current = GetCurrentGeo();
                             if (current.Longitude < 0)
                             {
