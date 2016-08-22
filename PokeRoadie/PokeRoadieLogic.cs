@@ -1986,10 +1986,10 @@ namespace PokeRoadie
             var balance = _settings.PokeBallBalancing;
 
             var items = await _inventory.GetItems();
-            var pokeBalls = items.Where(x => x.ItemId == ItemId.ItemPokeBall).FirstOrDefault();
-            var greatBalls = items.Where(x => x.ItemId == ItemId.ItemGreatBall).FirstOrDefault();
-            var ultraBalls = items.Where(x => x.ItemId == ItemId.ItemUltraBall).FirstOrDefault();
-            var masterBalls = items.Where(x => x.ItemId == ItemId.ItemMasterBall).FirstOrDefault();
+            var pokeBalls = items.Where(x => x.ItemId == ItemId.ItemPokeBall && x.Count > 0).FirstOrDefault();
+            var greatBalls = items.Where(x => x.ItemId == ItemId.ItemGreatBall && x.Count > 0).FirstOrDefault();
+            var ultraBalls = items.Where(x => x.ItemId == ItemId.ItemUltraBall && x.Count > 0).FirstOrDefault();
+            var masterBalls = items.Where(x => x.ItemId == ItemId.ItemMasterBall && x.Count > 0).FirstOrDefault();
 
             var totalCount = (pokeBalls == null ? 0 : pokeBalls.Count) +
                              (greatBalls == null ? 0 : greatBalls.Count) +
