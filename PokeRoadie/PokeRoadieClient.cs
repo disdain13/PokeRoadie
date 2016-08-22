@@ -22,6 +22,7 @@ namespace PokeRoadie
         {
         }
 
+        new public PokeRoadieSettings Settings { get { return (PokeRoadieSettings)base.Settings; } }
 
     }
 }

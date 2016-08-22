@@ -45,7 +45,6 @@ namespace PokeRoadie
         public int TotalPokesInBag;
         public int TotalPokesInPokedex;
         public int LevelForRewards = -1;
-        public int _level = 0;
         public DateTime InitSessionDateTime;
         public PokeRoadieInventory _inventory = null;
         public TimeSpan Duration;
@@ -63,6 +62,7 @@ namespace PokeRoadie
             var stat = stats.FirstOrDefault();
             if (stat != null)
             {
+                Currentlevel = stat.Level;
                 var ep = (stat.NextLevelXp - stat.PrevLevelXp) - (stat.Experience - stat.PrevLevelXp);
                 var time = Math.Round(ep / (TotalExperience / _getSessionRuntime()), 2);
                 var hours = 0.00;
@@ -95,7 +95,7 @@ namespace PokeRoadie
                             Logger.Write("- Received Bonus Items -", LogLevel.Info);
                             foreach (ItemAward item in items)
                             {
-                                Logger.Write($"[ITEM] {item.ItemId} x {item.ItemCount} ", LogLevel.Info);
+                                Logger.Write($"{item.ItemId} x {item.ItemCount} ", LogLevel.Info);
                             }
                         }
                     }
@@ -110,7 +110,7 @@ namespace PokeRoadie
         public string GetUsername(PokeRoadieClient client, GetPlayerResponse profile)
         {
            
-            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.PtcUsername : (profile == null || profile.PlayerData  == null ? client.Settings.GoogleUsername : profile.PlayerData.Username);
+            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.Username : (profile == null || profile.PlayerData  == null ? client.Settings.Username : profile.PlayerData.Username);
         }
 
         public double _getSessionRuntime()
@@ -194,13 +194,7 @@ namespace PokeRoadie
 
         public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
         {
-            if (_level == 0 || level > _level)
-            {
-                _level = level;
-                return await _inventory.GetLevelUpRewards(level);
-            }
-
-            return new LevelUpRewardsResponse();
+            return await _inventory.GetLevelUpRewards(level);
         }
     }
 }

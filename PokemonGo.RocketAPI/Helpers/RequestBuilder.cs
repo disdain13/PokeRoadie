@@ -25,6 +25,7 @@ namespace PokemonGo.RocketAPI.Helpers
         private ulong _nextRequestId;
         private static readonly Random rnd = new Random();
         private static Signature.Types.DeviceInfo deviceInfo = null;
+        private static byte[] sessionHash = new byte[16] { GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte() };
 
         public RequestBuilder(Client client)
         {
@@ -80,7 +81,9 @@ namespace PokemonGo.RocketAPI.Helpers
                 },
                 DeviceInfo = GetDeviceInfo()
             };
-      
+
+           
+
             //sig.DeviceInfo = _client.DeviceInfo;
             sig.LocationFix.Add(new Signature.Types.LocationFix()
             {
@@ -90,12 +93,16 @@ namespace PokemonGo.RocketAPI.Helpers
                 Latitude = (float)_client.CurrentLatitude,
                 Longitude = (float)_client.CurrentLongitude,
                 Altitude = (float)_client.CurrentAltitude,
+                //TimestampSinceStart = (ulong)_internalWatch.ElapsedMilliseconds - 200,
                 TimestampSnapshot = (ulong)_internalWatch.ElapsedMilliseconds - 200,
                 Floor = 3,
                 LocationType = 1,
                 ProviderStatus= 3
               
             });
+
+            sig.SessionHash = ByteString.CopyFrom(sessionHash);
+            sig.Unknown25 = BitConverter.ToUInt32(new System.Data.HashFunction.xxHash(64, 0x88533787).ComputeHash(System.Text.Encoding.ASCII.GetBytes("\"b8fa9757195897aae92c53dbcf8a60fb3d86d745\"")), 0);
 
             foreach (var request in requestEnvelope.Requests)
             {
@@ -167,7 +174,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 RequestType = type,
                 RequestMessage = message.ToByteString()
             });
-
+    
         }
 
         public static double GenRandom(double num)
@@ -177,6 +184,10 @@ namespace PokemonGo.RocketAPI.Helpers
             var randomMax = (num * (1 + randomFactor));
             var randomizedDelay = rnd.NextDouble() * (randomMax - randomMin) + randomMin; ;
             return randomizedDelay; ;
+        }
+        public static byte GenRandomByte()
+        {
+            return System.Convert.ToByte(rnd.Next(0, 255));
         }
         public Signature.Types.DeviceInfo GetDeviceInfo()
         {

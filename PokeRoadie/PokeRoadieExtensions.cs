@@ -162,9 +162,9 @@ namespace PokeRoadie.Extensions
                 }
                 Xml.Serializer.SerializeToFile(data, filePath);
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
-                Logger.Write($"Could not save the pokestop information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+                //Logger.Write($"Could not save the pokestop information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
             }
         }
 
@@ -219,9 +219,37 @@ namespace PokeRoadie.Extensions
                 Xml.Serializer.SerializeToFile(data, filePath);
 
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
-                Logger.Write($"Could not save the gym information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+                //Logger.Write($"Could not save the gym information file for {fortInfo.FortId} - {e.ToString()}", LogLevel.Error);
+            }
+        }
+
+        public static void Save(this PokeRoadieInventory inventory, PokemonData pokemon, GeoCoordinate geo, string playerName, int playerLevel, string playerTeam, ulong encounterId, EncounterSourceTypes encounterType, string filePath)
+        {
+            try
+            {
+                var data = new Xml.PokemonEncounter()
+                {
+                    EncounterId = encounterId,
+                    EncounterType = Convert.ToInt32(encounterType),
+                    Latitude = geo.Latitude,
+                    Longitude = geo.Longitude,
+                    Altitude = geo.Altitude,
+                    Player = playerName,
+                    PlayerLevel = playerLevel,
+                    PlayerTeam = playerTeam,
+                    Cp = pokemon.Cp,
+                    IV = pokemon.GetPerfection(),
+                    V = pokemon.CalculatePokemonValue(),
+                    NumberOfUpgrades = System.Convert.ToInt32(pokemon.GetLevel()),
+                    Type = pokemon.PokemonId.ToString()
+                };
+                Xml.Serializer.SerializeToFile(data, filePath);
+            }
+            catch// (Exception e)
+            {
+                //Logger.Write($"Could not save the encounter information file for {encounterId} - {e.ToString()}", LogLevel.Error);
             }
         }
     }

@@ -58,7 +58,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\POGOProtos.1.7.0\lib\net45\POGOProtos.dll</HintPath>
     </Reference>
-    <Reference Include="PokeRoadie.Xml">
+    <Reference Include="PokeRoadie.Xml, Version=2016.8.2.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\components\PokeRoadie.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System" />

@@ -16,10 +16,8 @@
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
   <MaxSecondsBetweenStops>20</MaxSecondsBetweenStops>
-  <FlyingEnabled>false</FlyingEnabled>
-  <FlyLikeCaptKirk>false</FlyLikeCaptKirk>
-  <FlyingSpeed>250</FlyingSpeed>
-  <PingStopsWhileFlying>false</PingStopsWhileFlying>
+  <LongDistanceSpeed>65</LongDistanceSpeed>
+  <MaxCatchSpeed>45</MaxCatchSpeed>
   <UseGPXPathing>false</UseGPXPathing>
   <GPXFile>GPXFILE.gpx</GPXFile>
   <EvolvePokemon>false</EvolvePokemon>
@@ -112,4 +110,8 @@
   <RecycleMaxDelay>5000</RecycleMaxDelay>
   <PowerUpMinDelay>2500</PowerUpMinDelay>
   <PowerUpMaxDelay>5000</PowerUpMaxDelay>
+  <EnableWandering>false</EnableWandering>
+  <ShowDebugMessages>false</ShowDebugMessages>
+  <MaxLocationAttempts>5</MaxLocationAttempts>
+  <SpeedCurveDistance>40</SpeedCurveDistance>
 </PokeRoadieSettings>

@@ -55,14 +55,14 @@ namespace PokeRoadie
                 return $"{Math.Round(seconds, 2).ToString():0.##} seconds";
             }
         }
-        public static string GetTravelActionString(double speed, bool flyingEnabled)
+        public static string GetTravelActionString(double speed)
         {
             var action = "rocking";
             if (speed < 1)
                 action = "standing";
-            else if (speed < 5)
+            else if (speed < 3)
                 action = "crawling";
-            else if (speed < 10)
+            else if (speed < 9)
                 action = "walking";
             else if (speed < 15)
                 action = "jogging";
@@ -71,7 +71,7 @@ namespace PokeRoadie
             else if (speed < 80)
                 action = "driving";
             else
-                action = flyingEnabled ? "flying" : "driving mad";
+                action = "driving crazy";
             return action;
         }
     }

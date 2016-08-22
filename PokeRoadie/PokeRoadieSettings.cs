@@ -73,12 +73,12 @@ namespace PokeRoadie
         public virtual bool EnableSpeedAdjustment { get; set; }
         public virtual bool EnableSpeedRandomizer { get; set; }
         public virtual int MaxSecondsBetweenStops { get; set; }
-        public virtual bool FlyingEnabled { get; set; }
-        public virtual bool FlyLikeCaptKirk { get; set; }
-        public virtual int FlyingSpeed { get; set; }
-        public virtual bool PingStopsWhileFlying { get; set; }
+        public virtual int MaxLocationAttempts { get; set; }
+        public virtual int LongDistanceSpeed { get; set; }
+        public virtual int SpeedCurveDistance { get; set; }
         public virtual bool UseGPXPathing { get; set; }
         public virtual string GPXFile { get; set; }
+        public virtual bool EnableWandering { get; set; }
 
         //evolution
         public virtual bool EvolvePokemon { get; set; }
@@ -121,6 +121,7 @@ namespace PokeRoadie
 
         //player behavior
         public virtual bool CatchPokemon { get; set; }
+        public virtual double MaxCatchSpeed { get; set; }
         public virtual bool VisitPokestops { get; set; }
         public virtual bool MoveWhenNoStops { get; set; }
         public virtual bool PrioritizeStopsWithLures { get; set; }
@@ -202,6 +203,8 @@ namespace PokeRoadie
         public virtual int PowerUpMinDelay { get; set; }
         public virtual int PowerUpMaxDelay { get; set; }
 
+        public virtual bool ShowDebugMessages { get; set; }
+        
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -451,7 +454,6 @@ namespace PokeRoadie
             if (Enum.TryParse<AuthType>(UserSettings.Default.AuthType, true, out parserValue))
                 this.AuthType = parserValue;
             this.CatchPokemon = UserSettings.Default.CatchPokemon;
-            this.PingStopsWhileFlying = UserSettings.Default.PingStopsWhileFlying;
             this.CurrentAltitude = UserSettings.Default.DefaultAltitude;
             this.CurrentLatitude = UserSettings.Default.DefaultLatitude;
             this.CurrentLongitude = UserSettings.Default.DefaultLongitude;
@@ -465,8 +467,8 @@ namespace PokeRoadie
             //this.EvolveOnlyPokemonAboveIV = UserSettings.Default.EvolveOnlyPokemonAboveIV;
             //this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
             this.EvolvePokemon = UserSettings.Default.EvolvePokemon;
-            this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
-            this.FlyingSpeed = UserSettings.Default.FlyingSpeed;
+            //this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
+            this.LongDistanceSpeed = UserSettings.Default.LongDistanceSpeed;
             this.GPXFile = UserSettings.Default.GPXFile;
             this.KeepAboveCp = UserSettings.Default.KeepAboveCP;
             this.KeepAboveIV = UserSettings.Default.KeepAboveIV;
@@ -512,7 +514,7 @@ namespace PokeRoadie
             this.WaypointLatitude = UserSettings.Default.WaypointLatitude;
             this.WaypointLongitude = UserSettings.Default.WaypointLongitude;
             this.WaypointAltitude = UserSettings.Default.WaypointAltitude;
-            this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
+            //this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
             this.TransferTrimFatCount = UserSettings.Default.TransferTrimFatCount;
             this.PokeBallBalancing = UserSettings.Default.PokeBallBalancing;
 
@@ -580,7 +582,14 @@ namespace PokeRoadie
             this.PowerUpMinDelay = UserSettings.Default.PowerUpMinDelay;
             this.PowerUpMaxDelay = UserSettings.Default.PowerUpMaxDelay;
 
-    }
+            this.MaxCatchSpeed = UserSettings.Default.MaxCatchSpeed;
+
+            this.MaxLocationAttempts = UserSettings.Default.MaxLocationAttempts;
+            this.SpeedCurveDistance = UserSettings.Default.SpeedCurveDistance;
+            this.EnableWandering = UserSettings.Default.EnableWandering;
+            this.ShowDebugMessages = UserSettings.Default.ShowDebugMessages;
+
+        }
 
         #endregion
         #region " Methods "
@@ -611,11 +620,12 @@ namespace PokeRoadie
 
         public bool SaveSession(SessionData session)
         {
+            if (!Directory.Exists(temp_path)) Directory.CreateDirectory(temp_path);
             string fileName = "Session.xml";
             string filePath = Path.Combine(temp_path, fileName);
             try
             {
-                lock (syncRoot)
+                lock (sessionRoot)
                 {
                     if (File.Exists(filePath)) File.Delete(filePath);
                     using (FileStream s = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
@@ -640,8 +650,9 @@ namespace PokeRoadie
             {
                 try
                 {
-                    lock (syncRoot)
+                    lock (sessionRoot)
                     {
+                        if (!Directory.Exists(temp_path)) Directory.CreateDirectory(temp_path);
                         using (FileStream s = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                         {
                             var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
@@ -700,7 +711,6 @@ namespace PokeRoadie
                 {
                     this.AuthType = obj.AuthType;
                     this.CatchPokemon = obj.CatchPokemon;
-                    this.PingStopsWhileFlying = obj.PingStopsWhileFlying;
                     this.CurrentAltitude = obj.CurrentAltitude;
                     this.CurrentLatitude = obj.CurrentLatitude;
                     this.CurrentLongitude = obj.CurrentLongitude;
@@ -714,8 +724,8 @@ namespace PokeRoadie
                     //this.EvolveOnlyPokemonAboveIV = obj.EvolveOnlyPokemonAboveIV;
                     //this.EvolveOnlyPokemonAboveIVValue = obj.EvolveOnlyPokemonAboveIVValue;
                     this.EvolvePokemon = obj.EvolvePokemon;
-                    this.FlyingEnabled = obj.FlyingEnabled;
-                    this.FlyingSpeed = obj.FlyingSpeed;
+                    //this.FlyingEnabled = obj.FlyingEnabled;
+                    this.LongDistanceSpeed = obj.LongDistanceSpeed;
                     this.GPXFile = obj.GPXFile;
                     this.KeepAboveCp = obj.KeepAboveCp;
                     this.KeepAboveIV = obj.KeepAboveIV;
@@ -755,7 +765,7 @@ namespace PokeRoadie
                     this.WaypointLatitude = obj.WaypointLatitude;
                     this.WaypointLongitude = obj.WaypointLongitude;
                     this.WaypointAltitude = obj.WaypointAltitude;
-                    this.FlyLikeCaptKirk = obj.FlyLikeCaptKirk;
+                    //this.FlyLikeCaptKirk = obj.FlyLikeCaptKirk;
                     this.TransferTrimFatCount = obj.TransferTrimFatCount;
                     this.PokeBallBalancing = obj.PokeBallBalancing;
 
@@ -822,6 +832,13 @@ namespace PokeRoadie
                     this.PowerUpMinDelay = obj.PowerUpMinDelay;
                     this.PowerUpMaxDelay = obj.PowerUpMaxDelay;
 
+                    this.MaxCatchSpeed = obj.MaxCatchSpeed;
+
+                    this.MaxLocationAttempts = obj.MaxLocationAttempts;
+                    this.SpeedCurveDistance = obj.SpeedCurveDistance;
+                    this.EnableWandering = obj.EnableWandering;
+                    this.ShowDebugMessages = obj.ShowDebugMessages;
+
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
@@ -837,7 +854,13 @@ namespace PokeRoadie
             //resolve unknown location
             if (CurrentLongitude == 0 && CurrentLatitude == 0 && CurrentAltitude == 0) 
             {
-                if (DestinationsEnabled && Destinations.Any())
+                if (WaypointLatitude != 0 && WaypointLongitude != 0 && WaypointAltitude != 0)
+                {
+                    CurrentLatitude = WaypointLatitude;
+                    CurrentLongitude = WaypointLongitude;
+                    CurrentAltitude = WaypointAltitude;
+                }
+                else if (DestinationsEnabled && Destinations.Any())
                 {
                     var index = DestinationIndex < Destinations.Count ? DestinationIndex : 0;
                     var destination = Destinations[index];
@@ -845,42 +868,24 @@ namespace PokeRoadie
                     CurrentLongitude = destination.Longitude;
                     CurrentAltitude = destination.Altitude;
                 }
-                else if (WaypointLatitude != 0 && WaypointLongitude != 0 && WaypointAltitude != 0)
-                {
-                    CurrentLatitude = WaypointLatitude;
-                    CurrentLongitude = WaypointLongitude;
-                    CurrentAltitude = WaypointAltitude;
-                }
-                else
-                {
-                    CurrentLatitude = UserSettings.Default.DefaultLatitude;
-                    CurrentLongitude = UserSettings.Default.DefaultLongitude;
-                    CurrentAltitude = UserSettings.Default.DefaultAltitude;
-                }
             }
 
             //resolve unknown waypoint
             if (WaypointLatitude == 0 && WaypointLongitude == 0)
             {
-                if (DestinationsEnabled && Destinations.Any())
+                if (CurrentLatitude != 0 && CurrentLongitude != 0)
+                {
+                    WaypointLatitude = CurrentLatitude;
+                    WaypointLongitude = CurrentLongitude;
+                    WaypointAltitude = CurrentAltitude;
+                }
+                else if (DestinationsEnabled && Destinations.Any())
                 {
                     var index = DestinationIndex < Destinations.Count ? DestinationIndex : 0;
                     var destination = Destinations[index];
                     WaypointLatitude = destination.Latitude;
                     WaypointLongitude = destination.Longitude;
                     WaypointAltitude = destination.Altitude;
-                }
-                else if (CurrentLatitude != 0 && CurrentLongitude != 0)
-                {
-                    WaypointLatitude = CurrentLatitude;
-                    WaypointLongitude = CurrentLongitude;
-                    WaypointAltitude = CurrentAltitude;
-                }
-                else
-                {
-                    WaypointLatitude = UserSettings.Default.DefaultLatitude;
-                    WaypointLongitude = UserSettings.Default.DefaultLongitude;
-                    WaypointAltitude = UserSettings.Default.DefaultAltitude;
                 }
             }
 
