@@ -110,4 +110,8 @@
   <RecycleMaxDelay>5000</RecycleMaxDelay>
   <PowerUpMinDelay>2500</PowerUpMinDelay>
   <PowerUpMaxDelay>5000</PowerUpMaxDelay>
+  <EnableWandering>false</EnableWandering>
+  <ShowDebugMessages>false</ShowDebugMessages>
+  <MaxLocationAttempts>5</MaxLocationAttempts>
+  <SpeedCurveDistance>40</SpeedCurveDistance>
 </PokeRoadieSettings>

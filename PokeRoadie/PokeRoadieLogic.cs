@@ -861,7 +861,7 @@ namespace PokeRoadie
             {
                 inTravel = true;
                 Logger.Write($"We have traveled outside the max distance of {_settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
-                await _navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance ? GetLongTask() : distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > _settings.MaxDistance ? false : true);
+                await _navigation.HumanLikeWalking(wayPointGeo,  distanceFromStart > _settings.MaxDistance / 2 ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(),  distanceFromStart > _settings.MaxDistance / 2 ? false : true);
                 gymTries.Clear();
                 locationAttemptCount = 0;
                 Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude,5)}", LogLevel.Navigation);
@@ -989,8 +989,8 @@ namespace PokeRoadie
                         {
                             
                             inTravel = true;
-                            Logger.Write($"Since there are no locations, let's go back to the destination center... {_settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
-                            await _navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > _settings.MaxDistance ? false : true);
+                            Logger.Write($"Since there are no locations, let's go back to the waypoint center {wayPointGeo} {distanceFromStart}m", LogLevel.Navigation, ConsoleColor.White);
+                            await _navigation.HumanLikeWalking(wayPointGeo,  distanceFromStart > _settings.MaxDistance / 2 ? _settings.LongDistanceSpeed : _settings.MinSpeed, distanceFromStart > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(),  distanceFromStart > _settings.MaxDistance / 2 ? false : true);
                             gymTries.Clear();
                             locationAttemptCount = 0;
                             Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
@@ -1321,7 +1321,7 @@ namespace PokeRoadie
             }
 
             Logger.Write($"{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance", LogLevel.Pokestop);
-            await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), distance > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distance > _settings.MaxDistance ? GetLongTask() : distance > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask());
+            await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude),  distance > _settings.MaxDistance / 2 ? _settings.LongDistanceSpeed : _settings.MinSpeed,  distance > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distance > _settings.MaxDistance / 2 ? false : true);
 
             if (CanCatch)
                 await CatchNearbyPokemons();
@@ -1866,7 +1866,7 @@ namespace PokeRoadie
 
 
                 //go to location
-                var response = await _navigation.HumanLikeWalking(destination, distance > _settings.MaxDistance ? _settings.LongDistanceSpeed : _settings.MinSpeed, distance > _settings.MaxDistance ? GetLongTask() : distance > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask());
+                var response = await _navigation.HumanLikeWalking(destination,  distance > _settings.MaxDistance / 2 ? _settings.LongDistanceSpeed : _settings.MinSpeed,  distance > _settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distance > _settings.MaxDistance / 2 ? false : true);
 
 
                 //log arrival
