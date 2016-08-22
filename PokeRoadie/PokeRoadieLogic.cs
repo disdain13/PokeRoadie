@@ -246,13 +246,30 @@ namespace PokeRoadie
                 var allPokemon = (await _inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
 
                 Logger.Write("====== User Info ======", LogLevel.None, ConsoleColor.Yellow);
-                if (_settings.AuthType == AuthType.Ptc)
-                    Logger.Write($"PTC Account: {playerName}\n", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Name: {playerName}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Team: {_playerProfile.PlayerData.Team}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Level: {currentLevelInfos}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Pokemon: {allPokemon.Count}", LogLevel.None, ConsoleColor.White);
-                Logger.Write($"Stardust: {_playerProfile.PlayerData.Currencies.ToArray()[1].Amount}", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== Currencies ======", LogLevel.None, ConsoleColor.Yellow);
+                if (_playerProfile.PlayerData.Currencies.Any())
+                {
+                    foreach (var entry in _playerProfile.PlayerData.Currencies)
+                    {
+                        Logger.Write($"{entry.Name}: {entry.Amount}", LogLevel.None, ConsoleColor.White);
+                    }
+                }
+                if (_settings.ShowDebugMessages)
+                {
+                    Logger.Write("====== Tutorial States ======", LogLevel.Debug);
+                    if (_playerProfile.PlayerData.TutorialState.Any())
+                    {
+
+                        foreach (var entry in _playerProfile.PlayerData.TutorialState)
+                        {
+                            Logger.Write($"{entry}", LogLevel.Debug);
+                        }
+                    }
+                }
                 var items = await _inventory.GetItems();
                 Logger.Write($"====== Items ({items.Select(x => x.Count).Sum()}) ======", LogLevel.None, ConsoleColor.Yellow);
                 foreach (var item in items)
@@ -542,7 +559,7 @@ namespace PokeRoadie
             var totalEndDate = endDate.Add(minBreakTimespan);
 
             //session is still active
-            if (endDate > nowdate)
+            if (session.PlayerName == _playerProfile.PlayerData.Username && endDate > nowdate)
             {
                 if (_settings.Session.CatchEnabled && _settings.Session.CatchCount >= _settings.MaxPokemonCatches)
                 {
@@ -567,7 +584,9 @@ namespace PokeRoadie
             //session has expired
             if (totalEndDate < nowdate)
             {
-                _settings.Session = _settings.NewSession();
+                var s = _settings.NewSession();
+                s.PlayerName = _playerProfile.PlayerData.Username;
+                _settings.Session = s;
                 return;
             }
 
@@ -998,6 +1017,7 @@ namespace PokeRoadie
                         }
                     }
                 }
+                await RandomDelay();
             }
             else
             {

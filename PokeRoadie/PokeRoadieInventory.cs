@@ -508,6 +508,11 @@ namespace PokeRoadie
             return await _client.Player.GetLevelUpRewards(level);
         }
 
+        public async Task<EncounterTutorialCompleteResponse> EncounterTutorialComplete(PokemonId pokemonId)
+        {
+            return await _client.Encounter.EncounterTutorialComplete(pokemonId);
+        }
+
         public async Task<List<PokemonData>> GetPokemonToFavorite()
         {
             var query = (await GetPokemons()).Where(p =>

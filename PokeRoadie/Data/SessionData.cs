@@ -9,6 +9,7 @@ namespace PokeRoadie
     [Serializable]
     public class SessionData
     {
+        public string PlayerName { get; set; }
         public DateTime StartDate { get; set; }
         public int CatchCount { get; set; }
         public int VisitCount { get; set; }

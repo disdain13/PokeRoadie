@@ -205,6 +205,9 @@ namespace PokeRoadie
 
         public virtual bool ShowDebugMessages { get; set; }
        
+        //tutorials
+        public virtual PokemonId TutorialPokmonId { get; set; }
+        public virtual string TeamColor { get; set; }
         
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -591,6 +594,12 @@ namespace PokeRoadie
             this.ShowDebugMessages = UserSettings.Default.ShowDebugMessages;
 
             this.DeviceId = UserSettings.Default.DeviceId;
+
+            PokemonId outValue4 = PokemonId.Squirtle;
+            if (Enum.TryParse<PokemonId>(UserSettings.Default.TutorialPokemonId, true, out outValue4))
+                this.TutorialPokmonId = outValue4;
+            this.TeamColor = UserSettings.Default.TeamColor;
+
         }
 
         #endregion
@@ -842,6 +851,9 @@ namespace PokeRoadie
                     this.ShowDebugMessages = obj.ShowDebugMessages;
 
                     this.DeviceId = obj.DeviceId;
+
+                    this.TeamColor = obj.TeamColor;
+                    this.TutorialPokmonId = obj.TutorialPokmonId;
 
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))

@@ -1057,5 +1057,23 @@ namespace PokeRoadie {
                 return ((string)(this["DeviceId"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Squirtle")]
+        public string TutorialPokemonId {
+            get {
+                return ((string)(this["TutorialPokemonId"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TeamColor {
+            get {
+                return ((string)(this["TeamColor"]));
+            }
+        }
     }
 }

@@ -347,5 +347,11 @@
     <Setting Name="DeviceId" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="TutorialPokemonId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Squirtle</Value>
+    </Setting>
+    <Setting Name="TeamColor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
