@@ -513,6 +513,19 @@ namespace PokeRoadie
             return await _client.Encounter.EncounterTutorialComplete(pokemonId);
         }
 
+        public async Task<CollectDailyDefenderBonusResponse> CollectDailyDefenderBonus()
+        {
+            return await _client.Player.CollectDailyDefenderBonus();
+        }
+        public async Task<CollectDailyBonusResponse> CollectDailyBonus()
+        {
+            return await _client.Player.CollectDailyBonus();
+        }
+        public async Task<SetPlayerTeamResponse> SetPlayerTeam(TeamColor team)
+        {
+            return await _client.Player.SetPlayerTeam(team);
+        }
+
         public async Task<List<PokemonData>> GetPokemonToFavorite()
         {
             var query = (await GetPokemons()).Where(p =>
