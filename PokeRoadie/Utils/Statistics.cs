@@ -110,7 +110,7 @@ namespace PokeRoadie
         public string GetUsername(PokeRoadieClient client, GetPlayerResponse profile)
         {
            
-            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.PtcUsername : (profile == null || profile.PlayerData  == null ? client.Settings.GoogleUsername : profile.PlayerData.Username);
+            return PlayerName = client.Settings.AuthType == AuthType.Ptc ? client.Settings.Username : (profile == null || profile.PlayerData  == null ? client.Settings.Username : profile.PlayerData.Username);
         }
 
         public double _getSessionRuntime()
