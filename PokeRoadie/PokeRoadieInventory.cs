@@ -253,6 +253,13 @@ namespace PokeRoadie
                 .OrderByDescending(x => x.CalculatePokemonValue())
                 .FirstOrDefault();
         }
+        
+        public async Task<IEnumerable<PokemonData>> GetHighestsCandies(int limit)
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.OrderByDescending(x => /* family candy */).ThenBy(n => /* family name */).Take(limit);
+        }
 
         public async Task<int> GetItemAmountByType(ItemId type)
         {
