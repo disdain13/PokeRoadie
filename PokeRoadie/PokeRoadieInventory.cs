@@ -29,18 +29,38 @@ namespace PokeRoadie
 {
     public class PokeRoadieInventory
     {
+
+        #region " Members "
+
         private readonly PokeRoadieClient _client;
         private readonly PokeRoadieSettings _settings;
         public static DateTime _lastRefresh;
         public static GetInventoryResponse _cachedInventory;
         private string export_path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
+        private Random Random = new Random(DateTime.Now.Millisecond);
+
+        #endregion
+        #region " Properties "
+
         public static bool IsDirty { get; set; }
-        //private int _level = 0;
+
+        #endregion
+        #region " Constructors "
 
         public PokeRoadieInventory(PokeRoadieClient client, PokeRoadieSettings settings)
         {
             _client = client;
             _settings = settings;
+        }
+
+        #endregion
+        #region " Pokemon Methods "
+
+        public async Task<IEnumerable<PokemonData>> GetPokemons()
+        {
+            var inventory = await GetCachedInventory(_client);
+            if (inventory == null || inventory.InventoryDelta == null) return new List<PokemonData>();
+            return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData).Where(p => p != null && p.PokemonId > 0);
         }
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer()
@@ -54,7 +74,7 @@ namespace PokeRoadie
 
             //Build Transfer Below List. These will always transfer, and overrides
             //the Keep list.
-            var results1 = query.Where(x=>
+            var results1 = query.Where(x =>
                 (PokeRoadieSettings.Current.TransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.TransferBelowCp) ||
                 (PokeRoadieSettings.Current.TransferBelowIV > 0 && x.GetPerfection() < PokeRoadieSettings.Current.TransferBelowIV) ||
                 (PokeRoadieSettings.Current.TransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.TransferBelowV)
@@ -136,12 +156,12 @@ namespace PokeRoadie
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
                     .SelectMany(p =>
-                                
+
                                 p.OrderByDescending(x => x.Cp)
                                 .ThenBy(n => n.StaminaMax)
                                 .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
                                 .ToList()
-                                
+
                                 ).ToList();
                     break;
                 case PriorityTypes.IV:
@@ -155,7 +175,7 @@ namespace PokeRoadie
                                 .ThenBy(n => n.StaminaMax)
                                 .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
                                 .ToList()
-                                
+
                                 ).ToList();
                     break;
                 default:
@@ -199,6 +219,7 @@ namespace PokeRoadie
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina > 0 && x.Stamina < x.StaminaMax).OrderByDescending(n => n.CalculatePokemonValue()).ThenBy(n => n.Stamina);
         }
+
         public async Task<IEnumerable<PokemonData>> GetPokemonToRevive()
         {
             var myPokemon = await GetPokemons();
@@ -261,75 +282,12 @@ namespace PokeRoadie
             return pokemons.OrderByDescending(x => /* family candy */).ThenBy(n => /* family name */).Take(limit);
         }
 
-        public async Task<int> GetItemAmountByType(ItemId type)
-        {
-            var pokeballs = await GetItems();
-            return pokeballs.FirstOrDefault(i => i.ItemId == type)?.Count ?? 0;
-        }
-
-        public async Task<IEnumerable<ItemData>> GetItems()
-        {
-            var inventory = await getCachedInventory(_client);
-            return inventory.InventoryDelta.InventoryItems
-                .Select(i => i.InventoryItemData?.Item)
-                .Where(p => p != null);
-        }
-
-        public async Task<IEnumerable<ItemData>> GetItemsToRecycle(ISettings settings)
-        {
-            var myItems = await GetItems();
-
-            return myItems
-                .Where(x => PokeRoadieSettings.Current.ItemRecycleFilter.Any(f => f.Key == (ItemId)x.ItemId && x.Count > f.Value))
-                .Select(
-                    x =>
-                        new ItemData
-                        {
-                            ItemId = x.ItemId,
-                            Count = x.Count - PokeRoadieSettings.Current.ItemRecycleFilter.Single(f => f.Key == x.ItemId).Value,
-                            Unseen = x.Unseen
-                        });
-        }
-
-        public async Task<IEnumerable<EggIncubator>> GetEggIncubators()
-        {
-            var inventory = await getCachedInventory(_client);
-            return
-                inventory.InventoryDelta.InventoryItems
-                    .Where(x => x.InventoryItemData.EggIncubators != null)
-                    .SelectMany(i => i.InventoryItemData.EggIncubators.EggIncubator)
-                    .Where(i => i != null);
-        }
-
-        public async Task<IEnumerable<PokemonData>> GetEggs()
-        {
-            var inventory = await getCachedInventory(_client);
-            return
-                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
-                    .Where(p => p != null && p.IsEgg);
-        }
-
-        public async Task<IEnumerable<PlayerStats>> GetPlayerStats()
-        {
-            var inventory = await getCachedInventory(_client);
-            return inventory.InventoryDelta.InventoryItems
-                .Select(i => i.InventoryItemData?.PlayerStats)
-                .Where(p => p != null);
-        }
-
         public async Task<IEnumerable<Candy>> GetPokemonFamilies()
         {
-            var inventory = await getCachedInventory(_client);
+            var inventory = await GetCachedInventory(_client);
             return
                 inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Candy)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
-        }
-
-        public async Task<IEnumerable<PokemonData>> GetPokemons()
-        {
-            var inventory = await getCachedInventory(_client);
-            if (inventory == null || inventory.InventoryDelta == null) return new List<PokemonData>();
-            return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData).Where(p => p != null && p.PokemonId > 0);
         }
 
         public async Task<IEnumerable<PokemonSettings>> GetPokemonSettings()
@@ -339,7 +297,6 @@ namespace PokeRoadie
                 templates.ItemTemplates.Select(i => i.PokemonSettings)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
         }
-    
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToEvolve()
         {
@@ -417,49 +374,6 @@ namespace PokeRoadie
             return pokemonToEvolve;
         }
 
-        public static async Task<GetInventoryResponse> getCachedInventory(PokeRoadieClient _client, bool request = false)
-        {
-            var now = DateTime.UtcNow;
-            var ss = new SemaphoreSlim(10);
-
-            if (!IsDirty && (_lastRefresh.AddSeconds(30).Ticks > now.Ticks && request == false))
-            {
-                return _cachedInventory;
-            }
-            await ss.WaitAsync();
-            try
-            {
-                _lastRefresh = now;
-                //_cachedInventory = await _client.GetInventory();
-
-                try
-                {
-                    _cachedInventory = await _client.Inventory.GetInventory();
-                    IsDirty = false;
-                }
-                catch
-                {
-                    // ignored
-                }
-
-                return _cachedInventory;
-            }
-            finally
-            {
-                ss.Release();
-            }
-        }
-
-        public async Task<int> GetStarDust()
-        {
-            var StarDust = await _client.Player.GetPlayer();
-            var gdrfds = StarDust.PlayerData.Currencies;
-            var SplitStar = gdrfds[1].Amount;
-            return SplitStar;
-
-        }
-
-
         public async Task<List<PokemonData>> GetPokemonToPowerUp()
         {
             var query = (await GetPokemons()).Where(p =>
@@ -510,28 +424,6 @@ namespace PokeRoadie
             return query.ToList();
 
         }
-        public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
-        {
-            return await _client.Player.GetLevelUpRewards(level);
-        }
-
-        public async Task<EncounterTutorialCompleteResponse> EncounterTutorialComplete(PokemonId pokemonId)
-        {
-            return await _client.Encounter.EncounterTutorialComplete(pokemonId);
-        }
-
-        public async Task<CollectDailyDefenderBonusResponse> CollectDailyDefenderBonus()
-        {
-            return await _client.Player.CollectDailyDefenderBonus();
-        }
-        public async Task<CollectDailyBonusResponse> CollectDailyBonus()
-        {
-            return await _client.Player.CollectDailyBonus();
-        }
-        public async Task<SetPlayerTeamResponse> SetPlayerTeam(TeamColor team)
-        {
-            return await _client.Player.SetPlayerTeam(team);
-        }
 
         public async Task<List<PokemonData>> GetPokemonToFavorite()
         {
@@ -557,11 +449,153 @@ namespace PokeRoadie
 
         }
 
-        //public async Task<UpgradePokemonResponse> UpgradePokemon(ulong pokemonid)
-        //{
-        //    var upgradeResult = await _client.Inventory.UpgradePokemon(pokemonid);
-        //    return upgradeResult;
-        //}
+        #endregion
+        #region " Inventory Methods "
+
+        public static async Task<GetInventoryResponse> GetCachedInventory(PokeRoadieClient _client, bool request = false)
+        {
+            var now = DateTime.UtcNow;
+            var ss = new SemaphoreSlim(10);
+
+            if (!IsDirty && _lastRefresh > now && request == false)
+            {
+                return _cachedInventory;
+            }
+            await ss.WaitAsync();
+            try
+            {
+                _lastRefresh = now.AddSeconds(30);
+                //_cachedInventory = await _client.GetInventory();
+
+                try
+                {
+                    _cachedInventory = await _client.Inventory.GetInventory();
+                    IsDirty = false;
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                return _cachedInventory;
+            }
+            finally
+            {
+                ss.Release();
+            }
+        }
+
+        public async Task<int> GetItemAmountByType(ItemId type)
+        {
+            var pokeballs = await GetItems();
+            return pokeballs.FirstOrDefault(i => i.ItemId == type)?.Count ?? 0;
+        }
+
+        public async Task<IEnumerable<ItemData>> GetItems()
+        {
+            var inventory = await GetCachedInventory(_client);
+            return inventory.InventoryDelta.InventoryItems
+                .Select(i => i.InventoryItemData?.Item)
+                .Where(p => p != null);
+        }
+
+        public async Task<IEnumerable<ItemData>> GetItemsToRecycle(ISettings settings)
+        {
+            var myItems = await GetItems();
+
+            return myItems
+                .Where(x => PokeRoadieSettings.Current.ItemRecycleFilter.Any(f => f.Key == (ItemId)x.ItemId && x.Count > f.Value))
+                .Select(
+                    x =>
+                        new ItemData
+                        {
+                            ItemId = x.ItemId,
+                            Count = x.Count - PokeRoadieSettings.Current.ItemRecycleFilter.Single(f => f.Key == x.ItemId).Value,
+                            Unseen = x.Unseen
+                        });
+        }
+
+        public async Task<IEnumerable<EggIncubator>> GetEggIncubators()
+        {
+            var inventory = await GetCachedInventory(_client);
+            return
+                inventory.InventoryDelta.InventoryItems
+                    .Where(x => x.InventoryItemData.EggIncubators != null)
+                    .SelectMany(i => i.InventoryItemData.EggIncubators.EggIncubator)
+                    .Where(i => i != null);
+        }
+
+        public async Task<IEnumerable<PokemonData>> GetEggs()
+        {
+            var inventory = await GetCachedInventory(_client);
+            return
+                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
+                    .Where(p => p != null && p.IsEgg);
+        }
+
+        #endregion
+        #region " Player/Trainer Methods "
+
+        public async Task<IEnumerable<PlayerStats>> GetPlayerStats()
+        {
+            var inventory = await GetCachedInventory(_client);
+            return inventory.InventoryDelta.InventoryItems
+                .Select(i => i.InventoryItemData?.PlayerStats)
+                .Where(p => p != null);
+        }
+
+        public async Task<int> GetStarDust()
+        {
+            var StarDust = await _client.Player.GetPlayer();
+            var gdrfds = StarDust.PlayerData.Currencies;
+            var SplitStar = gdrfds[1].Amount;
+            return SplitStar;
+
+        }
+
+        public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
+        {
+            return await _client.Player.GetLevelUpRewards(level);
+        }
+
+        public async Task<EncounterTutorialCompleteResponse> TutorialComplete(PokemonId pokemonId)
+        {
+            return await _client.Encounter.EncounterTutorialComplete(pokemonId);
+        }
+
+        public async Task<CollectDailyDefenderBonusResponse> CollectDailyDefenderBonus()
+        {
+            return await _client.Player.CollectDailyDefenderBonus();
+        }
+
+        public async Task<CollectDailyBonusResponse> CollectDailyBonus()
+        {
+            return await _client.Player.CollectDailyBonus();
+        }
+
+        public async Task<SetPlayerTeamResponse> SetPlayerTeam(TeamColor team)
+        {
+            return await _client.Player.SetPlayerTeam(team);
+        }
+        public async Task<EncounterTutorialCompleteResponse> TutorialMarkComplete(TeamColor team)
+        {
+            return await _client.Misc.MarkTutorialComplete();
+        }
+        public async Task<ClaimCodenameResponse> ClaimCodeName(string codeName)
+        {
+            return await _client.Misc.ClaimCodename(codeName);
+        }
+        public async Task<GetSuggestedCodenamesResponse> GetSuggestedCodenames()
+        {
+            return await _client.Misc.GetSuggestedCodenames();
+        }
+        public async Task<SetAvatarResponse> SetAvatar(PlayerAvatar avatar)
+        {
+            return await _client.Player.SetAvatar(avatar);
+        }
+
+        #endregion
+        #region " Export "
 
         public async Task ExportPokemonToCSV(PlayerData player, string filename = "PokeList.csv")
         {
@@ -622,6 +656,8 @@ namespace PokeRoadie
                 }
             }
         }
+
+        #endregion
 
     }
 }

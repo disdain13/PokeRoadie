@@ -154,7 +154,7 @@ namespace PokeRoadie
             var pokes = await _inventory.GetPokemons();
             TotalPokesInBag = pokes.Count();
 
-            var inventory = await PokeRoadieInventory.getCachedInventory(_client);
+            var inventory = await PokeRoadieInventory.GetCachedInventory(_client);
 
             if (inventory.InventoryDelta != null)
             {

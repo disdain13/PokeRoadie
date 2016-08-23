@@ -120,4 +120,6 @@
   <PickupDailyBonuses>false</PickupDailyBonuses>
   <PickupDailyDefenderBonuses>false</PickupDailyDefenderBonuses>
   <IncludeHotPokestops>false</IncludeHotPokestops>
+  <TutorialGenerateCodename>true</TutorialGenerateCodename>
+  <TutorialCodename></TutorialCodename>
 </PokeRoadieSettings>
