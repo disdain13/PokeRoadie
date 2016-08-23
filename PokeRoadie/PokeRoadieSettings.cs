@@ -208,6 +208,8 @@ namespace PokeRoadie
         //tutorials
         public virtual PokemonId TutorialPokmonId { get; set; }
         public virtual TeamColor TeamColor { get; set; }
+        public virtual string TutorialCodename { get; set; }
+        public virtual bool TutorialGenerateCodename { get; set; }
 
         public virtual bool PickupDailyBonuses { get; set; }
         public virtual bool PickupDailyDefenderBonuses { get; set; }
@@ -611,6 +613,9 @@ namespace PokeRoadie
             this.PickupDailyDefenderBonuses = UserSettings.Default.PickupDailyDefenderBonuses;
             this.IncludeHotPokestops = UserSettings.Default.IncludeHotPokestops;
 
+            this.TutorialCodename = UserSettings.Default.TutorialCodename;
+            this.TutorialGenerateCodename = UserSettings.Default.TutorialGenerateCodename;
+
         }
 
         #endregion
@@ -869,6 +874,10 @@ namespace PokeRoadie
                     this.PickupDailyBonuses = obj.PickupDailyBonuses;
                     this.PickupDailyDefenderBonuses = obj.PickupDailyDefenderBonuses;
                     this.IncludeHotPokestops = obj.IncludeHotPokestops;
+
+                    this.TutorialCodename = obj.TutorialCodename;
+                    this.TutorialGenerateCodename = obj.TutorialGenerateCodename;
+
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

@@ -1102,5 +1102,23 @@ namespace PokeRoadie {
                 return ((bool)(this["IncludeHotPokestops"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TutorialCodename {
+            get {
+                return ((string)(this["TutorialCodename"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TutorialGenerateCodename {
+            get {
+                return ((bool)(this["TutorialGenerateCodename"]));
+            }
+        }
     }
 }

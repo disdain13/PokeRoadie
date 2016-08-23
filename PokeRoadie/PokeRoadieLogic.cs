@@ -19,6 +19,7 @@ using POGOProtos.Networking.Responses;
 using POGOProtos.Data;
 using POGOProtos.Enums;
 using POGOProtos.Map.Fort;
+using POGOProtos.Data.Player;
 using POGOProtos.Map.Pokemon;
 
 using PokeRoadie.Extensions;
@@ -238,7 +239,7 @@ namespace PokeRoadie
         {
             if (!_nextWriteStatsTime.HasValue || _nextWriteStatsTime.Value <= DateTime.Now)
             {
-                await PokeRoadieInventory.getCachedInventory(_client);
+                await PokeRoadieInventory.GetCachedInventory(_client);
                 _playerProfile = await _client.Player.GetPlayer();
                 var playerName = _stats.GetUsername(_client, _playerProfile);
                 _stats.UpdateConsoleTitle(_client, _inventory);
@@ -710,7 +711,7 @@ namespace PokeRoadie
         {
             //only do this once, calling this 14 times every iteration could be
             //detectable for banning
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
 
             //write stats
             await WriteStats();
@@ -1308,7 +1309,7 @@ namespace PokeRoadie
                                 if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
                                 {
 
-                                    await PokeRoadieInventory.getCachedInventory(_client);
+                                    await PokeRoadieInventory.GetCachedInventory(_client);
                                     var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
                                     var pokemon = pokemonList.FirstOrDefault();
                                     if (pokemon != null)
@@ -2408,7 +2409,7 @@ namespace PokeRoadie
      
         private async Task EvolvePokemon()
         {
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             var pokemonToEvolve = await _inventory.GetPokemonToEvolve();
             if (pokemonToEvolve == null || !pokemonToEvolve.Any()) return;
             await EvolvePokemon(pokemonToEvolve.ToList());
@@ -2458,7 +2459,7 @@ namespace PokeRoadie
 
         private async Task TransferPokemon()
         {
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             var pokemons = await _inventory.GetPokemonToTransfer();
             if (pokemons == null || !pokemons.Any()) return;
             await TransferPokemon(pokemons);
@@ -2530,7 +2531,7 @@ namespace PokeRoadie
         {
             if (!_settings.TransferPokemon || _settings.TransferTrimFatCount == 0)
             {
-                await PokeRoadieInventory.getCachedInventory(_client);
+                await PokeRoadieInventory.GetCachedInventory(_client);
                 Logger.Write($"Pokemon inventory full, trimming the fat by {_settings.TransferTrimFatCount}:", LogLevel.Info);
                 var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
@@ -2562,7 +2563,7 @@ namespace PokeRoadie
         public async Task PowerUpPokemon()
         {
             if (!_settings.PowerUpPokemon) return;
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps) return;
             var pokemons = await _inventory.GetPokemonToPowerUp();
             if (pokemons == null || pokemons.Count == 0) return;
@@ -2631,7 +2632,7 @@ namespace PokeRoadie
         public async Task FavoritePokemon()
         {
             if (!_settings.FavoritePokemon) return;
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             var pokemons = await _inventory.GetPokemonToFavorite();
             if (pokemons.Count == 0) return;
             await FavoritePokemon(pokemons);
@@ -2668,7 +2669,7 @@ namespace PokeRoadie
 
         private async Task UsePotions()
         {
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             var pokemons = await _inventory.GetPokemonToHeal();
             await UsePotions(pokemons.ToList());
         }
@@ -2726,21 +2727,6 @@ namespace PokeRoadie
             }
         }
 
-        //private async Task CompleteTutorials()
-        //{
-        //    if (_playerProfile.PlayerData.TutorialState.Any())
-        //    {
-
-        //        foreach (var entry in _playerProfile.PlayerData.TutorialState)
-        //        {
-        //            switch (entry)
-        //            {
-        //                case TutorialState.
-        //            }
-        //            //Logger.Write($"{entry}", LogLevel.Debug);
-        //        }
-        //    }
-        //}
 
         private async Task PickupBonuses()
         {
@@ -2797,7 +2783,7 @@ namespace PokeRoadie
         }
         private async Task RecycleItems()
         {
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             var items = await _inventory.GetItemsToRecycle(_settings);
             if (items != null && items.Any())
                 Logger.Write($"Found {items.Count()} Recyclable {(items.Count() == 1 ? "Item" : "Items")}:", LogLevel.Info);
@@ -2929,7 +2915,7 @@ namespace PokeRoadie
             if (checkOnly) return;
 
             //var kmWalked = playerStats.
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
 
             var incubators = (await _inventory.GetEggIncubators())
                 .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
@@ -3013,7 +2999,7 @@ namespace PokeRoadie
 
         private async Task UseRevives()
         {
-            await PokeRoadieInventory.getCachedInventory(_client);
+            await PokeRoadieInventory.GetCachedInventory(_client);
             var pokemonList = await _inventory.GetPokemonToRevive();
             if (pokemonList == null || pokemonList.Count() == 0) return;
 
@@ -3091,7 +3077,93 @@ namespace PokeRoadie
         }
 
         #endregion
+        #region " Tutorial Methods "
 
+        private async Task CompleteTutorials()
+        {
+            if (_playerProfile.PlayerData.TutorialState.Any())
+            {
+
+                foreach (var entry in _playerProfile.PlayerData.TutorialState)
+                {
+                    switch (entry)
+                    {
+                        //Name selection
+                        case TutorialState.NameSelection:
+                            await TutorialSetCodename();
+                            break;
+                        case TutorialState.AvatarSelection:
+                            await TutorialSetAvatar();
+                            break;
+                    }
+                    //Logger.Write($"{entry}", LogLevel.Debug);
+                }
+            }
+        }
+
+        public async Task TutorialSetAvatar()
+        {
+            //generate random avatar
+            var avatar = new PlayerAvatar()
+            {
+                Backpack = Random.Next(1, 3),
+                Eyes = Random.Next(1, 5),
+                Gender = Random.Next(0, 1) == 0 ? Gender.Male : Gender.Female,
+                Hair = Random.Next(1, 5),
+                Hat = Random.Next(1, 3),
+                Pants = Random.Next(1, 3),
+                Shirt = Random.Next(1, 3),
+                Shoes = Random.Next(1, 3),
+                Skin = Random.Next(1, 5)
+            };
+            var response = await _inventory.SetAvatar(avatar);
+            if (response.Status == SetAvatarResponse.Types.Status.Success)
+            {
+                Logger.Write($"Avatar generated!", LogLevel.Tutorial);
+                if (_settings.ShowDebugMessages)
+                    Logger.Write($"Backpack:{avatar.Backpack}|Eyes:{avatar.Eyes}|Gender:{avatar.Gender}|Hair:{avatar.Hair}|Hat:{avatar.Hat}|Pants:{avatar.Pants}|Shirt:{avatar.Shirt}|Shoes:{avatar.Shoes}|Skin:{avatar.Skin}", LogLevel.Debug);
+            }
+            else
+            {
+                Logger.Write($"Failed to create player avatar: {response.Status}", LogLevel.Error);
+            }
+
+        }
+        public async Task TutorialSetCodename()
+        {
+            var name = _settings.TutorialCodename;
+            if (_settings.TutorialGenerateCodename)
+            {
+                var suggestedNames = await _inventory.GetSuggestedCodenames();
+                if (suggestedNames.Success && suggestedNames.Codenames != null && suggestedNames.Codenames.Count > 0)
+                {
+                    var randomIndex = Random.Next(0, suggestedNames.Codenames.Count - 1);
+                    name = suggestedNames.Codenames[randomIndex];
+                    await RandomDelay();
+                }
+                else
+                {
+                    Logger.Write($"Failed to generate and claim a Codename. No suggested names returned.", LogLevel.Error);
+                    return;
+                }
+            }
+
+             if (!string.IsNullOrWhiteSpace(name))
+            {
+                var response = await _client.Misc.ClaimCodename(name);
+                if (response.Status == ClaimCodenameResponse.Types.Status.Success)
+                {
+                    Logger.Write($"Codename generated : {name}", LogLevel.Tutorial);
+                    await RandomDelay();
+                }
+                else
+                {
+                    Logger.Write($"Failed to claim Codename {name}. {response.Status} - {response.UserMessage}", LogLevel.Error);
+                }
+            }
+        }
+
+        #endregion
     }
 }
  
