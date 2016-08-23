@@ -586,7 +586,14 @@ namespace PokeRoadie
         {
             return await _client.Player.SetAvatar(avatar);
         }
-
+        public async Task<SetContactSettingsResponse> SetContactSettings(ContactSettings contactSettings)
+        {
+            return await _client.Player.SetContactSetting(contactSettings);
+        }
+        public async Task<CheckAwardedBadgesResponse> GetNewlyAwardedBadges()
+        {
+            return await _client.Player.GetNewlyAwardedBadges();
+        }
         #endregion
         #region " Export "
 
