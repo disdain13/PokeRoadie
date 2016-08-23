@@ -389,19 +389,22 @@ namespace PokeRoadie
                 //write top candy list
                 if (_settings.ShowTopCandy)
                 {
-                    Logger.Write("====== Top Candies ======", LogLevel.None, ConsoleColor.Yellow);
-					PokeRoadieInventory.IsDirty = true;
-					var myPokemonSettings = await _inventory.GetPokemonSettings();
-					var pokemonSettings = myPokemonSettings.ToList();
-					var myPokemonFamilies = await _inventory.GetPokemonFamilies();
-					var pokemonFamilies = myPokemonFamilies.ToArray();
-					var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
-					var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-					var FamilyCandies = $"{familyCandy.Candy_ }";
-					foreach (var pokemon in pokemons)
-				    {
-					    Logger.Write($"{pokemon.PokemonId.ToString().PadRight(19,' ')} Candy: {FamilyCandies}", LogLevel.None, ConsoleColor.White);
-				    }
+                	/*
+			Logger.Write("====== Top Candies ======", LogLevel.None, ConsoleColor.Yellow);
+			PokeRoadieInventory.IsDirty = true;
+			var myPokemonSettings = await _inventory.GetPokemonSettings();
+			var pokemonSettings = myPokemonSettings.ToList();
+			var myPokemonFamilies = await _inventory.GetPokemonFamilies();
+			var pokemonFamilies = myPokemonFamilies.ToArray();
+			var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+			var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+			var FamilyCandies = $"{familyCandy.Candy_ }";
+			*/
+			var highestsPokemonCandy = await _inventory.GetHighestCandies(_settings.DisplayTopCandy);
+			foreach (var pokemon in highestsPokemonCandy)
+			    {
+				    Logger.Write($"{pokemon.PokemonId.ToString().PadRight(19,' ')} Candy: {FamilyCandies}", LogLevel.None, ConsoleColor.White);
+			    }
                 }                  
                 
                 
