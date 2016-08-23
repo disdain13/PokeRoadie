@@ -2746,7 +2746,7 @@ namespace PokeRoadie
         {
             if (_settings.PickupDailyBonuses)
             {
-                //if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs == 0)
+                //if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
                 //{
                 //    var response = await _inventory.CollectDailyBonus();
                 //    if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
@@ -2769,7 +2769,7 @@ namespace PokeRoadie
                 var pokemonDefendingCount = (await _inventory.GetPokemons()).Where(x => !string.IsNullOrEmpty(x.DeployedFortId)).Count();
                 if (pokemonDefendingCount == 0) return;
 
-                if (_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs == 0)
+                if (_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs < DateTime.UtcNow.ToUnixTime())
                 {
                     var response = await _inventory.CollectDailyDefenderBonus();
                     if (response.Result == CollectDailyDefenderBonusResponse.Types.Result.Success)
