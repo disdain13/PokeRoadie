@@ -117,4 +117,7 @@
   <ShowDebugMessages>false</ShowDebugMessages>
   <TutorialPokmonId>Squirtle</TutorialPokmonId>
   <TeamColor>Blue</TeamColor>
+  <PickupDailyBonuses>false</PickupDailyBonuses>
+  <PickupDailyDefenderBonuses>false</PickupDailyDefenderBonuses>
+  <IncludeHotPokestops>false</IncludeHotPokestops>
 </PokeRoadieSettings>

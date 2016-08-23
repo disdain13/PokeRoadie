@@ -208,7 +208,11 @@ namespace PokeRoadie
         //tutorials
         public virtual PokemonId TutorialPokmonId { get; set; }
         public virtual TeamColor TeamColor { get; set; }
-        
+
+        public virtual bool PickupDailyBonuses { get; set; }
+        public virtual bool PickupDailyDefenderBonuses { get; set; }
+        public virtual bool IncludeHotPokestops { get; set; }
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -603,6 +607,10 @@ namespace PokeRoadie
             if (Enum.TryParse<TeamColor>(UserSettings.Default.TeamColor, true, out outValue5))
                 this.TeamColor = outValue5;
 
+            this.PickupDailyBonuses = UserSettings.Default.PickupDailyBonuses;
+            this.PickupDailyDefenderBonuses = UserSettings.Default.PickupDailyDefenderBonuses;
+            this.IncludeHotPokestops = UserSettings.Default.IncludeHotPokestops;
+
         }
 
         #endregion
@@ -858,6 +866,9 @@ namespace PokeRoadie
                     this.TeamColor = obj.TeamColor;
                     this.TutorialPokmonId = obj.TutorialPokmonId;
 
+                    this.PickupDailyBonuses = obj.PickupDailyBonuses;
+                    this.PickupDailyDefenderBonuses = obj.PickupDailyDefenderBonuses;
+                    this.IncludeHotPokestops = obj.IncludeHotPokestops;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

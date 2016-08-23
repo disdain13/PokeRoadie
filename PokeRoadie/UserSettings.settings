@@ -353,5 +353,14 @@
     <Setting Name="TeamColor" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Blue</Value>
     </Setting>
+    <Setting Name="PickupDailyDefenderBonuses" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PickupDailyBonuses" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IncludeHotPokestops" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

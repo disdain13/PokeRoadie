@@ -1075,5 +1075,32 @@ namespace PokeRoadie {
                 return ((string)(this["TeamColor"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PickupDailyDefenderBonuses {
+            get {
+                return ((bool)(this["PickupDailyDefenderBonuses"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PickupDailyBonuses {
+            get {
+                return ((bool)(this["PickupDailyBonuses"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeHotPokestops {
+            get {
+                return ((bool)(this["IncludeHotPokestops"]));
+            }
+        }
     }
 }

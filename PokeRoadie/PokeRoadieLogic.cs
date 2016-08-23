@@ -141,8 +141,9 @@ namespace PokeRoadie
         #region " Properties "
 
         public bool CanCatch { get { return _settings.CatchPokemon && _settings.Session.CatchEnabled && !softBan && _navigation.LastKnownSpeed <= _settings.MaxCatchSpeed; } }
-            public bool CanVisit { get { return _settings.VisitPokestops && _settings.Session.VisitEnabled && !softBan; } }
-
+        public bool CanVisit { get { return _settings.VisitPokestops && _settings.Session.VisitEnabled && !softBan; } }
+        public bool CanVisitGyms { get { return _settings.VisitGyms && _stats.Currentlevel > 4 && !softBan; } }
+        
         #endregion
         #region " Constructors "
 
@@ -260,7 +261,7 @@ namespace PokeRoadie
                 }
                 if (_settings.ShowDebugMessages)
                 {
-                    Logger.Write("====== Tutorial States ======", LogLevel.Debug);
+                    Logger.Write("(DEBUG) ====== Tutorial States ======", LogLevel.None, ConsoleColor.Yellow);
                     if (_playerProfile.PlayerData.TutorialState.Any())
                     {
 
@@ -717,6 +718,12 @@ namespace PokeRoadie
             //session
             await CheckSession();
 
+            //handle tutorials
+
+            //pickup bonuses
+            if (_settings.PickupDailyBonuses || _settings.PickupDailyDefenderBonuses)
+                await PickupBonuses();
+
             //revive
             if (_settings.UseRevives) await UseRevives();
 
@@ -1065,10 +1072,11 @@ namespace PokeRoadie
                 }
             }
 
-            var pokeStopList = fullPokestopList
-                    .Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime());
+            var pokeStopList = _settings.IncludeHotPokestops ?
+                fullPokestopList :
+                fullPokestopList.Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime());
 
-            if (!_settings.VisitGyms)
+            if (!CanVisitGyms)
                 pokeStopList = pokeStopList.Where(x => x.Type != FortType.Gym);
 
             if (!_settings.VisitPokestops)
@@ -1158,7 +1166,7 @@ namespace PokeRoadie
             var gymCount = pokeStopList.Where(x => x.Type == FortType.Gym).Count();
             var lureCount = pokeStopList.Where(x => x.LureInfo != null).Count();
 
-            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( _settings.VisitGyms && gymCount > 0 ? " | " + (_settings.AutoDeployAtTeamGyms ? gymTries.Count.ToString() + "\\" : string.Empty) + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") : string.Empty)}", LogLevel.Info);
+            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( CanVisitGyms && gymCount > 0 ? " | " + (_settings.AutoDeployAtTeamGyms ? gymTries.Count.ToString() + "\\" : string.Empty) + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") : string.Empty)}", LogLevel.Info);
             if (lureCount > 0) Logger.Write($"(INFO) Found {lureCount} with lure!", LogLevel.None, ConsoleColor.DarkMagenta);
 
             if (lureCount > 0)
@@ -1262,43 +1270,82 @@ namespace PokeRoadie
                                     OnVisitGym(location, fortInfo, fortDetails);
                             }
 
-                            fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
-                            if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
+                            if (_stats.Currentlevel > 4)
                             {
 
-                                await PokeRoadieInventory.getCachedInventory(_client);
-                                var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
-                                var pokemon = pokemonList.FirstOrDefault();
-                                if (pokemon != null)
+                                //set team color
+                                if (_playerProfile.PlayerData.Team == TeamColor.Neutral && _settings.TeamColor != TeamColor.Neutral)
+                                {
+                                    var teamResponse = await _inventory.SetPlayerTeam(_settings.TeamColor);
+                                    if (teamResponse.Status == SetPlayerTeamResponse.Types.Status.Success)
+                                    {
+                                        var color = ConsoleColor.Blue;
+                                        switch (_settings.TeamColor)
+                                        {
+                                            case TeamColor.Blue:
+                                                color = ConsoleColor.Blue;
+                                                break;
+                                            case TeamColor.Red:
+                                                color = ConsoleColor.Red;
+                                                break;
+                                            case TeamColor.Yellow:
+                                                color = ConsoleColor.Yellow;
+                                                break;
+                                        }
+                                        Logger.Write($"(TEAM) Joined the {_settings.TeamColor} Team!", LogLevel.None, color);
+                                    }
+                                    else if (teamResponse.Status == SetPlayerTeamResponse.Types.Status.Failure)
+                                    {
+                                        Logger.Write($"The team color selection failed - Player:{teamResponse.PlayerData} - Setting:{_settings.TeamColor}", LogLevel.Error);
+                                    }
+                                    else if (teamResponse.Status == SetPlayerTeamResponse.Types.Status.TeamAlreadySet)
+                                    {
+                                        Logger.Write($"The team was already set! - Player:{teamResponse.PlayerData} - Setting:{_settings.TeamColor}", LogLevel.Error);
+                                    }
+                                }
+
+                                fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
+                                if (fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
                                 {
 
-                                    var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
-                                    if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                    await PokeRoadieInventory.getCachedInventory(_client);
+                                    var pokemonList = await _inventory.GetHighestsVNotDeployed(1);
+                                    var pokemon = pokemonList.FirstOrDefault();
+                                    if (pokemon != null)
                                     {
-                                        PokeRoadieInventory.IsDirty = true;
-                                        Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
-
-                                        //raise event
-                                        if (OnDeployToGym != null)
+                                        var response = await _client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
+                                        if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
                                         {
-                                            if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
-                                                OnDeployToGym(location, fortDetails, pokemon);
+                                            PokeRoadieInventory.IsDirty = true;
+                                            Logger.Write($"(GYM) Deployed {pokemon.GetMinStats()} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+
+                                            //raise event
+                                            if (OnDeployToGym != null)
+                                            {
+                                                if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
+                                                    OnDeployToGym(location, fortDetails, pokemon);
+                                            }
                                         }
+                                        //else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)
+                                        //{
+                                        //    var figureThisShitOut = pokemon;
+                                        //}
+                                        //else
+                                        //{
+                                        //    Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
+                                        //}
                                     }
-                                    //else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)
-                                    //{
-                                    //    var figureThisShitOut = pokemon;
-                                    //}
-                                    //else
-                                    //{
-                                    //    Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
-                                    //}
+                                }
+                                else
+                                {
+                                    Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
                                 }
                             }
                             else
                             {
-                                Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
+                                Logger.Write($"(GYM) Not level 5 yet, come back later...", LogLevel.None, ConsoleColor.Cyan);
                             }
+
                         }
                     }
                     //else if (fortDetails.Result == GetGymDetailsResponse.Types.Result.ErrorNotInRange)
@@ -1348,50 +1395,58 @@ namespace PokeRoadie
 
             if (CanVisit)
             {
-               //search fort
-                var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-
-                //raise event
-                if (OnVisitPokestop != null)
+                if (pokeStop.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime())
                 {
-                    var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-                    if (!RaiseSyncEvent(OnVisitPokestop, location, fortInfo, fortSearch))
-                        OnVisitPokestop(location, fortInfo, fortSearch);
-                }
-           
-                if (fortSearch.ExperienceAwarded > 0)
-                {
-                    _stats.AddExperience(fortSearch.ExperienceAwarded);
-                    _stats.UpdateConsoleTitle(_client, _inventory);
-                    string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+                    //search fort
+                    var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
 
-                    //reset ban
-                    if (softBan)
+                    //raise event
+                    if (OnVisitPokestop != null)
                     {
-                        Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
-                        fleeStartTime = null;
-                        softBan = false;
-                        fleeCounter = 0;
-                        fleeEndTime = null;
+                        var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
+                        if (!RaiseSyncEvent(OnVisitPokestop, location, fortInfo, fortSearch))
+                            OnVisitPokestop(location, fortInfo, fortSearch);
                     }
 
-                    _settings.Session.VisitCount++;
-
-                    if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
-                    recycleCounter++;
-
-                }
-                else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
-                {
-                    fleeCounter++;
-                    if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                    if (fortSearch.ExperienceAwarded > 0)
                     {
-                        softBan = true;
-                        fleeStartTime = DateTime.Now;
-                        Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
+                        _stats.AddExperience(fortSearch.ExperienceAwarded);
+                        _stats.UpdateConsoleTitle(_client, _inventory);
+                        string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+
+                        //reset ban
+                        if (softBan)
+                        {
+                            Logger.Write($"(SOFT BAN) The ban was lifted{(fleeStartTime.HasValue ? " after " + DateTime.Now.Subtract(fleeStartTime.Value).ToString() : string.Empty)}!", LogLevel.None, ConsoleColor.DarkRed);
+                            fleeStartTime = null;
+                            softBan = false;
+                            fleeCounter = 0;
+                            fleeEndTime = null;
+                        }
+
+                        _settings.Session.VisitCount++;
+
+                        if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                        recycleCounter++;
+
                     }
-                    fleeEndTime = DateTime.Now;
+                    else if (fortSearch.Result == FortSearchResponse.Types.Result.Success)
+                    {
+                        fleeCounter++;
+                        if (fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) > DateTime.Now && fleeCounter > 3 && !softBan)
+                        {
+                            softBan = true;
+                            fleeStartTime = DateTime.Now;
+                            Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
+                        }
+                        fleeEndTime = DateTime.Now;
+                    }
                 }
+                else
+                {
+                    Logger.Write($"The pokestop could not be had, it has not cooled down yet.", LogLevel.Pokestop);
+                }
+ 
             }
  
 
@@ -2671,6 +2726,75 @@ namespace PokeRoadie
             }
         }
 
+        //private async Task CompleteTutorials()
+        //{
+        //    if (_playerProfile.PlayerData.TutorialState.Any())
+        //    {
+
+        //        foreach (var entry in _playerProfile.PlayerData.TutorialState)
+        //        {
+        //            switch (entry)
+        //            {
+        //                case TutorialState.
+        //            }
+        //            //Logger.Write($"{entry}", LogLevel.Debug);
+        //        }
+        //    }
+        //}
+
+        private async Task PickupBonuses()
+        {
+            if (_settings.PickupDailyBonuses)
+            {
+                //if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs == 0)
+                //{
+                //    var response = await _inventory.CollectDailyBonus();
+                //    if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
+                //    {
+                //        Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
+                //    }
+                //    else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
+                //    {
+                //        Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+                //    }
+                //    else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
+                //    {
+                //        Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+                //    }
+                //}
+            }
+
+            if (_settings.PickupDailyDefenderBonuses)
+            { 
+                var pokemonDefendingCount = (await _inventory.GetPokemons()).Where(x => !string.IsNullOrEmpty(x.DeployedFortId)).Count();
+                if (pokemonDefendingCount == 0) return;
+
+                if (_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs == 0)
+                {
+                    var response = await _inventory.CollectDailyDefenderBonus();
+                    if (response.Result == CollectDailyDefenderBonusResponse.Types.Result.Success)
+                    {
+                        Logger.Write($"(BONUS) Daily Defender Bonus Collected!", LogLevel.None, ConsoleColor.Green);
+                        if (response.CurrencyType.Count() > 0)
+                        {
+                            for (int i = 0;i< response.CurrencyType.Count();i++)
+                            {
+                                Logger.Write($"{response.CurrencyAwarded[i]} {response.CurrencyType[i]}", LogLevel.None, ConsoleColor.Green);
+                            }
+                        }
+
+                    }
+                    else if (response.Result == CollectDailyDefenderBonusResponse.Types.Result.TooSoon)
+                    {
+                        Logger.Write($"Attempted to collect Daily Defender Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs}", LogLevel.Error);
+                    }
+                    else if (response.Result == CollectDailyDefenderBonusResponse.Types.Result.Failure || response.Result == CollectDailyDefenderBonusResponse.Types.Result.Unset)
+                    {
+                        Logger.Write($"Failure to collect Daily Defender Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs}", LogLevel.Error);
+                    }
+                }
+            }
+        }
         private async Task RecycleItems()
         {
             await PokeRoadieInventory.getCachedInventory(_client);
