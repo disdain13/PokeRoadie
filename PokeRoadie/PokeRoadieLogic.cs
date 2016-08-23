@@ -457,11 +457,11 @@ namespace PokeRoadie
                                     f.Wait();
                                     if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
                                 }
-                                catch (Exception ex)
+                                catch// (Exception ex)
                                 {
                                     //System.Threading.Thread.Sleep(500);
                                     //do nothing
-                                    Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                    //Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
                                 }
                             }
                             System.Threading.Thread.Sleep(500);
@@ -489,9 +489,9 @@ namespace PokeRoadie
                                     f.Wait();
                                     if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
                                 }
-                                catch (Exception ex)
+                                catch// (Exception ex)
                                 {
-                                    Logger.Write($"Gym {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                    //Logger.Write($"Gym {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
                                 }
                             }
                             System.Threading.Thread.Sleep(500);
@@ -519,9 +519,9 @@ namespace PokeRoadie
                                     f.Wait();
                                     if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
                                 }
-                                catch (Exception ex)
+                                catch// (Exception ex)
                                 {
-                                    Logger.Write($"Encounter {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                    //Logger.Write($"Encounter {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
                                 }
                             }
                             System.Threading.Thread.Sleep(500);
