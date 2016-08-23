@@ -15,6 +15,7 @@ namespace PokemonGo.RocketAPI
         string GooglePassword { get; set; }
         string DevicePackageName { get; set; }
         string DeviceId { get; set; }
+
         bool UseProxy { get; set; }
         bool UseProxyAuthentication { get; set; }
         string UseProxyHost { get; set; }

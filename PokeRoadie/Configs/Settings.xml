@@ -8,18 +8,20 @@
   <DestinationIndex>0</DestinationIndex>
   <CurrentLatitude>0</CurrentLatitude>
   <CurrentLongitude>0</CurrentLongitude>
-  <CurrentAltitude>0</CurrentAltitude>
+  <CurrentAltitude>10</CurrentAltitude>
   <MinSpeed>3</MinSpeed>
-  <MaxSpeed>10</MaxSpeed>
+  <MaxSpeed>45</MaxSpeed>
   <MaxDistance>3000</MaxDistance>
   <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
-  <MaxSecondsBetweenStops>20</MaxSecondsBetweenStops>
+  <MaxSecondsBetweenStops>120</MaxSecondsBetweenStops>
+  <MaxLocationAttempts>5</MaxLocationAttempts>
   <LongDistanceSpeed>65</LongDistanceSpeed>
-  <MaxCatchSpeed>45</MaxCatchSpeed>
+  <SpeedCurveDistance>40</SpeedCurveDistance>
   <UseGPXPathing>false</UseGPXPathing>
   <GPXFile>GPXFILE.gpx</GPXFile>
+  <EnableWandering>false</EnableWandering>
   <EvolvePokemon>false</EvolvePokemon>
   <EvolvePriorityType>V</EvolvePriorityType>
   <EvolveAboveIV>0</EvolveAboveIV>
@@ -51,6 +53,7 @@
   <FavoriteAboveIV>0</FavoriteAboveIV>
   <FavoriteAboveV>0</FavoriteAboveV>
   <CatchPokemon>true</CatchPokemon>
+  <MaxCatchSpeed>45</MaxCatchSpeed>
   <VisitPokestops>true</VisitPokestops>
   <MoveWhenNoStops>false</MoveWhenNoStops>
   <PrioritizeStopsWithLures>false</PrioritizeStopsWithLures>
@@ -61,14 +64,14 @@
   <EnableHumanizedThrows>true</EnableHumanizedThrows>
   <ForceExcellentThrowOverCp>600</ForceExcellentThrowOverCp>
   <ForceExcellentThrowOverIV>85</ForceExcellentThrowOverIV>
-  <ForceExcellentThrowOverV>0</ForceExcellentThrowOverV>
+  <ForceExcellentThrowOverV>200</ForceExcellentThrowOverV>
   <ForceGreatThrowOverCp>400</ForceGreatThrowOverCp>
-  <ForceGreatThrowOverIV>75</ForceGreatThrowOverIV>
-  <ForceGreatThrowOverV>0</ForceGreatThrowOverV>
-  <ExcellentThrowChance>10</ExcellentThrowChance>
-  <GreatThrowChance>20</GreatThrowChance>
-  <NiceThrowChance>30</NiceThrowChance>
-  <CurveThrowChance>25</CurveThrowChance>
+  <ForceGreatThrowOverIV>65</ForceGreatThrowOverIV>
+  <ForceGreatThrowOverV>150</ForceGreatThrowOverV>
+  <ExcellentThrowChance>15</ExcellentThrowChance>
+  <GreatThrowChance>25</GreatThrowChance>
+  <NiceThrowChance>25</NiceThrowChance>
+  <CurveThrowChance>35</CurveThrowChance>
   <UseLuckyEggs>false</UseLuckyEggs>
   <UseIncense>false</UseIncense>
   <UseRevives>false</UseRevives>
@@ -84,34 +87,34 @@
   <WaypointAltitude>0</WaypointAltitude>
   <UseProxy>false</UseProxy>
   <UseProxyHost />
-  <UseProxyPort />
+  <UseProxyPort>0</UseProxyPort>
   <UseProxyAuthentication>false</UseProxyAuthentication>
   <UseProxyUsername />
   <UseProxyPassword />
   <RenamePokemon>false</RenamePokemon>
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
   <DevicePackageName>htc10</DevicePackageName>
-  <MinDelay>2500</MinDelay>
-  <MaxDelay>5000</MaxDelay>
+  <DeviceId />
   <DisplayPokemonCount>20</DisplayPokemonCount>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
   <MaxPokestopVisits>975</MaxPokestopVisits>
-  <EvolutionMinDelay>2500</EvolutionMinDelay>
-  <EvolutionMaxDelay>5000</EvolutionMaxDelay>
-  <EggHatchMinDelay>2500</EggHatchMinDelay>
-  <EggHatchMaxDelay>5000</EggHatchMaxDelay>
+  <MinDelay>2500</MinDelay>
+  <MaxDelay>5000</MaxDelay>
+  <EvolutionMinDelay>18000</EvolutionMinDelay>
+  <EvolutionMaxDelay>25000</EvolutionMaxDelay>
+  <EggHatchMinDelay>12000</EggHatchMinDelay>
+  <EggHatchMaxDelay>15000</EggHatchMaxDelay>
   <TransferMinDelay>2500</TransferMinDelay>
   <TransferMaxDelay>5000</TransferMaxDelay>
-  <CatchMinDelay>2500</CatchMinDelay>
-  <CatchMaxDelay>5000</CatchMaxDelay>
+  <CatchMinDelay>7500</CatchMinDelay>
+  <CatchMaxDelay>10000</CatchMaxDelay>
   <RecycleMinDelay>2500</RecycleMinDelay>
   <RecycleMaxDelay>5000</RecycleMaxDelay>
   <PowerUpMinDelay>2500</PowerUpMinDelay>
   <PowerUpMaxDelay>5000</PowerUpMaxDelay>
-  <EnableWandering>false</EnableWandering>
   <ShowDebugMessages>false</ShowDebugMessages>
-  <MaxLocationAttempts>5</MaxLocationAttempts>
-  <SpeedCurveDistance>40</SpeedCurveDistance>
+  <TutorialPokmonId>Squirtle</TutorialPokmonId>
+  <TeamColor>Blue</TeamColor>
 </PokeRoadieSettings>

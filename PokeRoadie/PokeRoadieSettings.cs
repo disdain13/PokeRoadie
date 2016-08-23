@@ -207,7 +207,7 @@ namespace PokeRoadie
        
         //tutorials
         public virtual PokemonId TutorialPokmonId { get; set; }
-        public virtual string TeamColor { get; set; }
+        public virtual TeamColor TeamColor { get; set; }
         
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -598,7 +598,10 @@ namespace PokeRoadie
             PokemonId outValue4 = PokemonId.Squirtle;
             if (Enum.TryParse<PokemonId>(UserSettings.Default.TutorialPokemonId, true, out outValue4))
                 this.TutorialPokmonId = outValue4;
-            this.TeamColor = UserSettings.Default.TeamColor;
+
+            TeamColor outValue5 = TeamColor.Neutral;
+            if (Enum.TryParse<TeamColor>(UserSettings.Default.TeamColor, true, out outValue5))
+                this.TeamColor = outValue5;
 
         }
 

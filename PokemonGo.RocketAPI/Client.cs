@@ -48,7 +48,7 @@ namespace PokemonGo.RocketAPI
         {
             Settings = settings;
             ApiFailure = apiFailureStrategy;
-            InitProxy(settings);
+            if (settings.UseProxy) InitProxy(settings);
             PokemonHttpClient = new PokemonHttpClient(settings);
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);

@@ -351,7 +351,7 @@
       <Value Profile="(Default)">Squirtle</Value>
     </Setting>
     <Setting Name="TeamColor" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Blue</Value>
     </Setting>
   </Settings>
 </SettingsFile>

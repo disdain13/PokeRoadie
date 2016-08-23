@@ -1069,7 +1069,7 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
         public string TeamColor {
             get {
                 return ((string)(this["TeamColor"]));
