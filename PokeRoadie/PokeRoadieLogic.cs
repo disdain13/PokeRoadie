@@ -323,7 +323,8 @@ namespace PokeRoadie
                             }
                         }
                     }
-
+                  
+                    
                     //write powerup settings
                     if (_settings.PowerUpPokemon)
                     {
@@ -383,20 +384,49 @@ namespace PokeRoadie
                         lastDestination = destination;
                     }
                 }
+                
+                    
+                //write top candy list
+                if (_settings.ShowTopCandy)
+                {
+                    Logger.Write("====== Top Candies ======", LogLevel.None, ConsoleColor.Yellow);
+					PokeRoadieInventory.IsDirty = true;
+					var myPokemonSettings = await _inventory.GetPokemonSettings();
+					var pokemonSettings = myPokemonSettings.ToList();
+					var myPokemonFamilies = await _inventory.GetPokemonFamilies();
+					var pokemonFamilies = myPokemonFamilies.ToArray();
+					var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+					var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+					var FamilyCandies = $"{familyCandy.Candy_ }";
+					foreach (var pokemon in pokemons)
+				    {
+					    Logger.Write($"{pokemon.PokemonId.ToString().PadRight(19,' ')} Candy: {FamilyCandies}", LogLevel.None, ConsoleColor.White);
+				    }
+                }                  
+                
+                
                 Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
                 var highestsPokemonV = await _inventory.GetHighestsV(_settings.DisplayPokemonCount);
-                foreach (var pokemon in highestsPokemonV)
+                foreach (var pokemon in highestsPokemonV) {
                     Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
+                }
+                
+                
                 Logger.Write("====== Highest CP ======", LogLevel.None, ConsoleColor.Yellow);
                 var highestsPokemonCp = await _inventory.GetHighestsCP(_settings.DisplayPokemonCount);
-                foreach (var pokemon in highestsPokemonCp)
+                foreach (var pokemon in highestsPokemonCp) {
                     Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
+                }
+                
+                
                 Logger.Write("====== Most Perfect Genetics ======", LogLevel.None, ConsoleColor.Yellow);
                 var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(_settings.DisplayPokemonCount);
                 foreach (var pokemon in highestsPokemonPerfect)
                 {
                     Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                 }
+                
+                
                 if (_settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
