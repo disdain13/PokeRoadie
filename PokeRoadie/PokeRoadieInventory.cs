@@ -570,9 +570,9 @@ namespace PokeRoadie
         {
             return await _client.Player.SetPlayerTeam(team);
         }
-        public async Task<EncounterTutorialCompleteResponse> TutorialMarkComplete(TeamColor team)
+        public async Task<EncounterTutorialCompleteResponse> TutorialMarkComplete(IEnumerable<TutorialState> tutorialStates)
         {
-            return await _client.Misc.MarkTutorialComplete();
+            return await _client.Misc.MarkTutorialComplete(tutorialStates, false, false);
         }
         public async Task<ClaimCodenameResponse> ClaimCodeName(string codeName)
         {
