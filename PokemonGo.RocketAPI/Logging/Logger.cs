@@ -34,6 +34,11 @@ namespace PokemonGo.RocketAPI.Logging
             Log($"Initializing Rocket logger @ {DateTime.Now}...");
         }
 
+        public static void Append(string text)
+        {
+            System.Console.Write(text);
+        }
+
         /// <summary>
         ///     Log a specific message to the logger setup by <see cref="SetLogger(ILogger)" /> .
         /// </summary>

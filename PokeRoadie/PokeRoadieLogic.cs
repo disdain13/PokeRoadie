@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
 
 using PokemonGo.RocketAPI;
 using PokemonGo.RocketAPI.Enums;
@@ -138,6 +139,7 @@ namespace PokeRoadie
         private int locationAttemptCount = 0;
         private DateTime? nextTransEvoPowTime;
         private List<TutorialState> tutorialAttempts = new List<TutorialState>();
+        private int consecutiveFatalErrorCount = 0;
         //private DateTime? _lastLoginTime;
 
         #endregion
@@ -197,7 +199,7 @@ namespace PokeRoadie
         }
 
         #endregion
-        #region " Maintenance Methods "
+        #region " Maintenance/Utility Methods "
 
         private void Maintenance()
         {
@@ -606,6 +608,61 @@ namespace PokeRoadie
             }
         }
 
+        public static bool CheckForInternetConnection()
+        {
+            var hasConnection = false;
+            var c = 0;
+            while (!hasConnection && c < 120)
+            {
+                c++; //i like writing that
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        using (var stream = client.OpenRead("http://www.google.com"))
+                        {
+                            hasConnection= true;
+                            break;
+                        }
+                    }
+                }
+                catch
+                {
+                    hasConnection = false;
+                }
+
+                if (!hasConnection)
+                {
+                    switch (c)
+                    {
+                        case 1:
+                            Logger.Write("Lost internet connection, waiting to re-establish...", LogLevel.Warning);
+                            break;
+                        default:
+                            Logger.Append(".");
+                            break;
+                    }
+                }
+                else
+                {
+                    if (c > 1)
+                    {
+                        Logger.Write("Internet connection re-established!", LogLevel.Warning);
+                    }
+                }
+
+                var i = 0;
+                while(i<30)
+                {
+                    i++;
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+            }
+            return hasConnection; 
+
+        }
+
         #endregion
         #region " Navigation Methods "
 
@@ -695,8 +752,8 @@ namespace PokeRoadie
                     }
                     else if (e.Message.Contains("Object reference"))
                     {
-                        Logger.Write($"(PGO SERVER) It appears the PokemonGo servers are down...", LogLevel.None, ConsoleColor.Red);
-                        await Task.Delay(15000);
+                        Logger.Write($"(PGO SERVER) It appears the PokemonGo servers are down, or not taking our requests. Let's wait one minute.", LogLevel.None, ConsoleColor.Red);
+                        await Task.Delay(60000);
                     }
                     else
                     {
@@ -1471,11 +1528,19 @@ namespace PokeRoadie
                     Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
             }
 
-            if (CanCatch && _settings.LoiteringActive && pokeStop.LureInfo != null)
+            if (CanCatch && _settings.LoiteringActive && pokeStop.LureInfo != null && pokeStop.LureInfo.LureExpiresTimestampMs < DateTime.UtcNow.ToUnixTime())
             {
-                Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);
-                while (_settings.LoiteringActive && pokeStop.LureInfo != null && pokeStop.LureInfo.LureExpiresTimestampMs > 0)
+
+                Logger.Write($"Loitering: {fortInfo.Name} has a lure we can milk!", LogLevel.Info);                  
+                while (_settings.LoiteringActive && pokeStop.LureInfo != null && pokeStop.LureInfo.LureExpiresTimestampMs < DateTime.UtcNow.ToUnixTime())
                 {
+
+                    if (_settings.ShowDebugMessages)
+                    {
+                        var ts = new TimeSpan(DateTime.UtcNow.ToUnixTime() - pokeStop.LureInfo.LureExpiresTimestampMs);
+                        Logger.Write($"Lure Info - Now:{DateTime.UtcNow.ToUnixTime()} | Lure Timestamp: {pokeStop.LureInfo.LureExpiresTimestampMs} | Expiration: {ts}");
+                    }
+
                     if (CanCatch)
                         await CatchNearbyPokemons();
 
@@ -2914,7 +2979,7 @@ namespace PokeRoadie
                 if (incubator.PokemonId == 0)
                 {
                     // Unlimited incubators prefer short eggs, limited incubators prefer long eggs
-                    var egg = incubator.ItemId == ItemId.ItemIncubatorBasicUnlimited
+                    var egg = incubator.ItemId == ItemId.ItemIncubatorBasicUnlimited && incubators.Count > 1
                         ? unusedEggs.FirstOrDefault()
                         : unusedEggs.LastOrDefault();
 
