@@ -278,17 +278,7 @@ namespace PokeRoadie
         //GetHighestsCandies
         public async Task<IEnumerable<Candy>> GetHighestsCandies(int limit)
         {   
-            //var myPokemon = await GetPokemons();
-            //var pokemons = myPokemon.ToList();
-
-            //var myPokemonSettings = await GetPokemonSettings();
-            //var pokemonSettings = myPokemonSettings.ToList();
             var myPokemonFamilies = await GetPokemonFamilies();
-            //var pokemonFamilies = myPokemonFamilies.ToArray();
-            //var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
-            //var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-            //var FamilyCandies = familyCandy.Candy_;
-
             return myPokemonFamilies.OrderByDescending(x => x.Candy_ ).ThenBy(n => n.FamilyId ).Take(limit).ToArray();
         }
 
