@@ -96,6 +96,7 @@
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
   <DisplayPokemonCount>20</DisplayPokemonCount>
+  <DisplayTopCandy>10</DisplayTopCandy>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
