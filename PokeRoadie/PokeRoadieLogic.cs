@@ -139,7 +139,6 @@ namespace PokeRoadie
         private int locationAttemptCount = 0;
         private DateTime? nextTransEvoPowTime;
         private List<TutorialState> tutorialAttempts = new List<TutorialState>();
-        private int consecutiveFatalErrorCount = 0;
         //private DateTime? _lastLoginTime;
 
         #endregion
