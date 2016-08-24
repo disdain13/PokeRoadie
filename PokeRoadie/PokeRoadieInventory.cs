@@ -275,11 +275,21 @@ namespace PokeRoadie
                 .FirstOrDefault();
         }
         
-        public async Task<IEnumerable<PokemonData>> GetHighestsCandies(int limit)
+        //GetHighestsCandies
+        public async Task<IEnumerable<PokemonData>> GetHighestsCandies(int limit, PokemonData pokemon)
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.OrderByDescending(x => /* family candy */).ThenBy(n => /* family name */).Take(limit);
+
+            var myPokemonSettings = await GetPokemonSettings();
+            var pokemonSettings = myPokemonSettings.ToList();
+            var myPokemonFamilies = await GetPokemonFamilies();
+            var pokemonFamilies = myPokemonFamilies.ToArray();
+            var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+            var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+            var FamilyCandies = familyCandy.Candy_;
+
+            return pokemonFamilies.OrderByDescending(x => x.FamilyCandies ).ThenBy(n => n.FamilyId );
         }
 
         public async Task<IEnumerable<Candy>> GetPokemonFamilies()

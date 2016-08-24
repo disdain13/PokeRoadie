@@ -1120,5 +1120,14 @@ namespace PokeRoadie {
                 return ((bool)(this["TutorialGenerateCodename"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int DisplayTopCandy {
+            get {
+                return ((int)(this["DisplayTopCandy"]));
+            }
+        }
     }
 }
