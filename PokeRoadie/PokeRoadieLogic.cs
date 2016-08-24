@@ -1313,6 +1313,12 @@ namespace PokeRoadie
                                     var teamResponse = await _inventory.SetPlayerTeam(_settings.TeamColor);
                                     if (teamResponse.Status == SetPlayerTeamResponse.Types.Status.Success)
                                     {
+                                        //set cached memory object, so it does not try again
+                                        _playerProfile.PlayerData.Team = _settings.TeamColor;
+
+                                        //re-pull player information
+                                        //_playerProfile = await _client.Player.GetPlayer();
+
                                         var color = ConsoleColor.Blue;
                                         switch (_settings.TeamColor)
                                         {
@@ -1325,6 +1331,7 @@ namespace PokeRoadie
                                             case TeamColor.Yellow:
                                                 color = ConsoleColor.Yellow;
                                                 break;
+
                                         }
                                         Logger.Write($"(TEAM) Joined the {_settings.TeamColor} Team!", LogLevel.None, color);
                                     }
@@ -3152,14 +3159,20 @@ namespace PokeRoadie
             var response = await _inventory.SetAvatar(avatar);
             if (response.Status == SetAvatarResponse.Types.Status.Success)
             {
+                //remove cached tutorial entry, so we do not try again before player data is updated.
+                _playerProfile.PlayerData.TutorialState.Remove(TutorialState.AvatarSelection);
+
                 Logger.Write($"Avatar generated!", LogLevel.Tutorial);
-                if (_settings.ShowDebugMessages)
-                    Logger.Write($"Backpack:{avatar.Backpack}|Eyes:{avatar.Eyes}|Gender:{avatar.Gender}|Hair:{avatar.Hair}|Hat:{avatar.Hat}|Pants:{avatar.Pants}|Shirt:{avatar.Shirt}|Shoes:{avatar.Shoes}|Skin:{avatar.Skin}", LogLevel.Debug);
             }
             else
             {
                 Logger.Write($"Failed to create player avatar: {response.Status}", LogLevel.Error);
             }
+
+            if (_settings.ShowDebugMessages)
+                Logger.Write($"Backpack:{avatar.Backpack}|Eyes:{avatar.Eyes}|Gender:{avatar.Gender}|Hair:{avatar.Hair}|Hat:{avatar.Hat}|Pants:{avatar.Pants}|Shirt:{avatar.Shirt}|Shoes:{avatar.Shoes}|Skin:{avatar.Skin}", LogLevel.Debug);
+
+            await RandomDelay();
 
         }
         public async Task TutorialSetCodename()
@@ -3186,6 +3199,10 @@ namespace PokeRoadie
                 var response = await _client.Misc.ClaimCodename(name);
                 if (response.Status == ClaimCodenameResponse.Types.Status.Success)
                 {
+
+                    //remove cached tutorial entry, so we do not try again before player data is updated.
+                    _playerProfile.PlayerData.TutorialState.Remove(TutorialState.NameSelection);
+
                     Logger.Write($"Codename generated : {name}", LogLevel.Tutorial);
                     await RandomDelay();
                 }

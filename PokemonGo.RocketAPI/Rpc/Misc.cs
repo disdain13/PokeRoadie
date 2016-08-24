@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using POGOProtos.Enums;
 using POGOProtos.Networking.Requests;
 using POGOProtos.Networking.Requests.Messages;
 using POGOProtos.Networking.Responses;
@@ -48,9 +49,20 @@ namespace PokemonGo.RocketAPI.Rpc
             return await PostProtoPayload<Request, EchoResponse>(RequestType.Echo, new EchoMessage());
         }
 
-        public async Task<EncounterTutorialCompleteResponse> MarkTutorialComplete()
+        public async Task<EncounterTutorialCompleteResponse> MarkTutorialComplete(IEnumerable<TutorialState> tutorialStates,bool sendMarketingEmails, bool sendPushNotifications)
         {
-            return await PostProtoPayload<Request, EncounterTutorialCompleteResponse>(RequestType.MarkTutorialComplete, new MarkTutorialCompleteMessage());
+            var message = new MarkTutorialCompleteMessage()
+            {
+                SendMarketingEmails = sendMarketingEmails,
+                SendPushNotifications = sendPushNotifications
+            };
+
+            foreach (var tutorial in tutorialStates)
+            {
+                message.TutorialsCompleted.Add(tutorial);
+            }
+
+            return await PostProtoPayload<Request, EncounterTutorialCompleteResponse>(RequestType.MarkTutorialComplete, message);
         }
     }
 }
