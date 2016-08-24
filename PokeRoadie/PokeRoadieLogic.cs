@@ -21,6 +21,7 @@ using POGOProtos.Enums;
 using POGOProtos.Map.Fort;
 using POGOProtos.Data.Player;
 using POGOProtos.Map.Pokemon;
+using POGOProtos.Data.Capture;
 
 using PokeRoadie.Extensions;
 using PokeRoadie.Utils;
@@ -136,6 +137,7 @@ namespace PokeRoadie
         private ulong lastMissedEncounterId = 0;
         private int locationAttemptCount = 0;
         private DateTime? nextTransEvoPowTime;
+        private List<TutorialState> tutorialAttempts = new List<TutorialState>();
         //private DateTime? _lastLoginTime;
 
         #endregion
@@ -272,6 +274,7 @@ namespace PokeRoadie
                         }
                     }
                 }
+
                 var items = await _inventory.GetItems();
                 Logger.Write($"====== Items ({items.Select(x => x.Count).Sum()}) ======", LogLevel.None, ConsoleColor.Yellow);
                 foreach (var item in items)
@@ -719,7 +722,8 @@ namespace PokeRoadie
             //session
             await CheckSession();
 
-            //handle tutorials
+            //handle tutorials - pissed this is not working
+            //await CompleteTutorials();
 
             //pickup bonuses
             if (_settings.PickupDailyBonuses || _settings.PickupDailyDefenderBonuses)
@@ -2739,22 +2743,22 @@ namespace PokeRoadie
         {
             if (_settings.PickupDailyBonuses)
             {
-                //if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
-                //{
-                //    var response = await _inventory.CollectDailyBonus();
-                //    if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
-                //    {
-                //        Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
-                //    }
-                //    else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
-                //    {
-                //        Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-                //    }
-                //    else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
-                //    {
-                //        Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-                //    }
-                //}
+                if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
+                {
+                    var response = await _inventory.CollectDailyBonus();
+                    if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
+                    {
+                        Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
+                    }
+                    else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
+                    {
+                        Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+                    }
+                    else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
+                    {
+                        Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+                    }
+                }
             }
 
             if (_settings.PickupDailyDefenderBonuses)
@@ -2820,38 +2824,6 @@ namespace PokeRoadie
             }
             recycleCounter = 0;
         }
-
-        //private async Task UseIncubators()
-        //{
-        //    // Refresh inventory so that the player stats are fresh
-        //    await _inventory.RefreshCachedInventory();
-
-        //    var playerStats = (await _inventory.GetPlayerStats()).FirstOrDefault();
-        //    if (playerStats == null)
-        //        return;
-
-        //    var kmWalked = playerStats.KmWalked;
-
-        //    var incubators = (await _inventory.GetEggIncubators())
-        //        .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-        //        .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-        //        .ToList();
-
-        //    var unusedEggs = (await _inventory.GetEggs())
-        //        .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
-        //        .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
-        //        .ToList();
-
-        //    //session.EventDispatcher.Send(
-        //    //    new EggsListEvent
-        //    //    {
-        //    //        PlayerKmWalked = kmWalked,
-        //    //        Incubators = incubators,
-        //    //        UnusedEggs = unusedEggs
-        //    //    });
-
-        //    //DelayingUtils.Delay(session.LogicSettings.DelayBetweenPlayerActions, 0);
-        //}
 
         public async Task UseLuckyEgg()
         {
@@ -3088,28 +3060,74 @@ namespace PokeRoadie
 
         private async Task CompleteTutorials()
         {
-            if (_playerProfile.PlayerData.TutorialState.Any())
+            var state = _playerProfile.PlayerData.TutorialState;
+            if (state.Any())
             {
 
-                foreach (var entry in _playerProfile.PlayerData.TutorialState)
-                {
-                    switch (entry)
-                    {
-                        //Name selection
-                        case TutorialState.NameSelection:
-                            await TutorialSetCodename();
-                            break;
-                        case TutorialState.AvatarSelection:
-                            await TutorialSetAvatar();
-                            break;
-                    }
-                    //Logger.Write($"{entry}", LogLevel.Debug);
-                }
+                //legal screen
+                if (state.Contains(TutorialState.LegalScreen))
+                    await TutorialLegalScreen();
+
+                //avatar
+                if (state.Contains(TutorialState.AvatarSelection))
+                    await TutorialSetAvatar();
+
+                if (state.Contains(TutorialState.AccountCreation))
+                    await TutorialAccountCreation();
+
+                //first time
+                if (state.Contains(TutorialState.FirstTimeExperienceComplete))
+                    await TutorialFirstTimeExperience();
+
+                //capture
+                if (state.Contains(TutorialState.PokemonCapture))
+                    await TutorialCapture();
+
+                //name
+                if (state.Contains(TutorialState.NameSelection))
+                    await TutorialSetCodename();
+
+                //pokestop
+                if (state.Contains(TutorialState.PokestopTutorial))
+                    await TutorialPokestop();
+
             }
         }
 
+        public async Task TutorialFirstTimeExperience()
+        {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.FirstTimeExperienceComplete)) return;
+            tutorialAttempts.Add(TutorialState.FirstTimeExperienceComplete);
+
+            //hummanize
+            Logger.Write("We haven't done the \"First-Time\" Tutorial... Pausing to pretend we are listening to PW.");
+            await RandomDelay(10000, 30000);
+
+            var result = await _inventory.TutorialMarkComplete(TutorialState.FirstTimeExperienceComplete,_playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
+            if (result.Success)
+            {
+                //remove cached tutorial entry, so we do not try again before player data is updated.
+                _playerProfile.PlayerData = result.PlayerData;
+
+                Logger.Write($"Completed first-time experience tutorial.", LogLevel.Tutorial);
+            }
+            else
+            {
+                Logger.Write($"Could not complete the first-time experience tutorial.", LogLevel.Error);
+            }
+            await RandomDelay(10000, 20000);
+        }
         public async Task TutorialSetAvatar()
         {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.AvatarSelection)) return;
+            tutorialAttempts.Add(TutorialState.AvatarSelection);
+
+            //hummanize
+            Logger.Write("Found we don't have an avatar... Pausing to pretend we are looking at the menus.");
+            await RandomDelay(10000, 30000);
+
             //generate random avatar
             var avatar = new PlayerAvatar()
             {
@@ -3123,40 +3141,167 @@ namespace PokeRoadie
                 Shoes = Random.Next(1, 3),
                 Skin = Random.Next(1, 5)
             };
-            var response = await _inventory.SetAvatar(avatar);
+
+            var response = await _inventory.TutorialSetAvatar(avatar);
             if (response.Status == SetAvatarResponse.Types.Status.Success)
             {
-                //remove cached tutorial entry, so we do not try again before player data is updated.
-                _playerProfile.PlayerData.TutorialState.Remove(TutorialState.AvatarSelection);
 
-                Logger.Write($"Avatar generated!", LogLevel.Tutorial);
+                await RandomDelay(10000, 30000);
+
+                var result = await _inventory.TutorialMarkComplete(TutorialState.AvatarSelection, _playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
+                if (result.Success)
+                {
+                    //remove cached tutorial entry, so we do not try again before player data is updated.
+                    _playerProfile.PlayerData = result.PlayerData;
+
+                    Logger.Write($"Player avatar generated!", LogLevel.Tutorial);
+                }
+                else
+                {
+                    Logger.Write($"TutorialMarkComplete Failed to complete the player avatar: {response.Status}", LogLevel.Error);
+                }
+
             }
             else
             {
-                Logger.Write($"Failed to create player avatar: {response.Status}", LogLevel.Error);
+                Logger.Write($"Failed to generate player avatar: {response.Status}", LogLevel.Error);
             }
 
             if (_settings.ShowDebugMessages)
                 Logger.Write($"Backpack:{avatar.Backpack}|Eyes:{avatar.Eyes}|Gender:{avatar.Gender}|Hair:{avatar.Hair}|Hat:{avatar.Hat}|Pants:{avatar.Pants}|Shirt:{avatar.Shirt}|Shoes:{avatar.Shoes}|Skin:{avatar.Skin}", LogLevel.Debug);
 
-            await RandomDelay();
+            await RandomDelay(5000, 10000);
 
         }
+        public async Task TutorialLegalScreen()
+        {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.LegalScreen)) return;
+            tutorialAttempts.Add(TutorialState.LegalScreen);
+
+            //hummanize
+            await RandomDelay(2500, 5000);
+
+            var result = await _inventory.TutorialMarkComplete(TutorialState.LegalScreen, _playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
+            //remove cached tutorial entry, so we do not try again before player data is updated.
+            _playerProfile.PlayerData.TutorialState.Remove(TutorialState.LegalScreen);
+            await RandomDelay(10000, 20000);
+        }
+
+        public async Task TutorialPokestop()
+        {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.PokestopTutorial)) return;
+            tutorialAttempts.Add(TutorialState.PokestopTutorial);
+
+            //hummanize
+            Logger.Write("We have not finished the pokestop tutorial... Pausing to pretend we are listening.");
+            await RandomDelay(10000, 30000);
+
+            var result = await _inventory.TutorialMarkComplete(TutorialState.PokestopTutorial, _playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
+            if (result.Success)
+            {
+                //remove cached tutorial entry, so we do not try again before player data is updated.
+                _playerProfile.PlayerData = result.PlayerData;
+                Logger.Write($"Completed the pokestop tutorial.", LogLevel.Tutorial);
+            }
+            else
+            {
+                Logger.Write($"Could not complete the pokestop tutorial.", LogLevel.Error);
+            }
+            await RandomDelay(10000, 20000);
+        }
+
+        public async Task TutorialAccountCreation()
+        {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.AccountCreation)) return;
+            tutorialAttempts.Add(TutorialState.AccountCreation);
+
+            //hummanize
+            Logger.Write("We have not finished account creation...");
+            await RandomDelay(5000, 10000);
+
+            var result = await _inventory.TutorialMarkComplete(TutorialState.AccountCreation, _playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
+            if (result.Success)
+            {
+                //remove cached tutorial entry, so we do not try again before player data is updated.
+                _playerProfile.PlayerData = result.PlayerData;
+
+                Logger.Write($"Completed the account creation.", LogLevel.Tutorial);
+            }
+            else
+            {
+                Logger.Write($"Could not complete the account creation.", LogLevel.Error);
+            }
+            await RandomDelay(10000, 20000);
+        }
+
+
+        private void ProcessCaptureAward(CaptureAward awards)
+        {
+            if (awards == null) return;
+            if (awards.Xp.Count > 0)
+                foreach (var i in awards.Xp)
+                    if (i > 0) Logger.Write($"Received {i} Xp!", LogLevel.Info);
+            if (awards.Candy.Count > 0)
+                foreach (var i in awards.Candy)
+                    if (i > 0) Logger.Write($"Received {i} Candy!", LogLevel.Info);
+            if (awards.Stardust.Count > 0)
+                foreach (var i in awards.Stardust)
+                    if (i > 0) Logger.Write($"Received {i} Stardust!", LogLevel.Info);
+
+        }
+        public async Task TutorialCapture()
+        {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.PokemonCapture)) return;
+            tutorialAttempts.Add(TutorialState.PokemonCapture);
+
+            //hummanize
+            Logger.Write("We have not finished the pokemon capture tutorial... Pausing to pretend we are thinking hard about it.");
+            await RandomDelay(10000, 30000);
+
+            var result = await _inventory.TutorialPokemonCapture(_settings.TutorialPokmonId);
+            if (result.Result == EncounterTutorialCompleteResponse.Types.Result.Success)
+            {
+                //remove cached tutorial entry, so we do not try again before player data is updated.
+                _playerProfile.PlayerData.TutorialState.Remove(TutorialState.PokemonCapture);
+
+                Logger.Write($"Completed the pokemon capture tutorial", LogLevel.Tutorial);
+                Logger.Write($"Received {result.PokemonData.GetMinStats()}", LogLevel.Pokemon);
+                ProcessCaptureAward(result.CaptureAward);
+
+                //hummanize
+                Logger.Write("We are now waiting for the pokedex entry...");
+                await RandomDelay(10000, 30000);
+
+            }
+            else
+            {
+                Logger.Write($"Could not complete the pokemon capture tutorial - {result.Result}.", LogLevel.Error);
+            }
+            await RandomDelay(10000, 20000);
+        }
+
         public async Task TutorialSetCodename()
         {
+            //1 attempt per session
+            if (tutorialAttempts.Contains(TutorialState.NameSelection)) return;
+            tutorialAttempts.Add(TutorialState.NameSelection);
+
             var name = _settings.TutorialCodename;
             if (_settings.TutorialGenerateCodename)
             {
-                var suggestedNames = await _inventory.GetSuggestedCodenames();
+                var suggestedNames = await _inventory.TutorialGetSuggestedCodenames();
                 if (suggestedNames.Success && suggestedNames.Codenames != null && suggestedNames.Codenames.Count > 0)
                 {
                     var randomIndex = Random.Next(0, suggestedNames.Codenames.Count - 1);
                     name = suggestedNames.Codenames[randomIndex];
-                    await RandomDelay();
                 }
                 else
                 {
-                    Logger.Write($"Failed to generate and claim a Codename. No suggested names returned.", LogLevel.Error);
+                    Logger.Write($"Failed to generate a name, no suggested names returned.", LogLevel.Error);
                     return;
                 }
             }
@@ -3170,12 +3315,12 @@ namespace PokeRoadie
                     //remove cached tutorial entry, so we do not try again before player data is updated.
                     _playerProfile.PlayerData.TutorialState.Remove(TutorialState.NameSelection);
 
-                    Logger.Write($"Codename generated : {name}", LogLevel.Tutorial);
+                    Logger.Write($"Name claimed : {name}", LogLevel.Tutorial);
                     await RandomDelay();
                 }
                 else
                 {
-                    Logger.Write($"Failed to claim Codename {name}. {response.Status} - {response.UserMessage}", LogLevel.Error);
+                    Logger.Write($"Failed to claim name {name}. {response.Status} - {response.UserMessage}", LogLevel.Error);
                 }
             }
         }

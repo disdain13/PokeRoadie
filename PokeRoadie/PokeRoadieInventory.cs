@@ -222,9 +222,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToRevive()
         {
-            var myPokemon = await GetPokemons();
-            var pokemons = myPokemon.ToList();
-            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == 0).OrderByDescending(n => n.CalculatePokemonValue());
+            return (await GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == 0).OrderByDescending(n => n.CalculatePokemonValue());
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsVNotDeployed(int limit)
@@ -551,11 +549,6 @@ namespace PokeRoadie
             return await _client.Player.GetLevelUpRewards(level);
         }
 
-        public async Task<EncounterTutorialCompleteResponse> TutorialComplete(PokemonId pokemonId)
-        {
-            return await _client.Encounter.EncounterTutorialComplete(pokemonId);
-        }
-
         public async Task<CollectDailyDefenderBonusResponse> CollectDailyDefenderBonus()
         {
             return await _client.Player.CollectDailyDefenderBonus();
@@ -570,32 +563,48 @@ namespace PokeRoadie
         {
             return await _client.Player.SetPlayerTeam(team);
         }
-        public async Task<EncounterTutorialCompleteResponse> TutorialMarkComplete(IEnumerable<TutorialState> tutorialStates)
-        {
-            return await _client.Misc.MarkTutorialComplete(tutorialStates, false, false);
-        }
-        public async Task<ClaimCodenameResponse> ClaimCodeName(string codeName)
-        {
-            return await _client.Misc.ClaimCodename(codeName);
-        }
-        public async Task<GetSuggestedCodenamesResponse> GetSuggestedCodenames()
-        {
-            return await _client.Misc.GetSuggestedCodenames();
-        }
-        public async Task<SetAvatarResponse> SetAvatar(PlayerAvatar avatar)
-        {
-            return await _client.Player.SetAvatar(avatar);
-        }
-        public async Task<SetContactSettingsResponse> SetContactSettings(ContactSettings contactSettings)
-        {
-            return await _client.Player.SetContactSetting(contactSettings);
-        }
+
         public async Task<CheckAwardedBadgesResponse> GetNewlyAwardedBadges()
         {
             return await _client.Player.GetNewlyAwardedBadges();
         }
+
         #endregion
-        #region " Export "
+        #region " Tutorial Methods "
+
+        public async Task<MarkTutorialCompleteResponse> TutorialMarkComplete(TutorialState tutorialState, bool sendMarketing, bool pushNotifications)
+        {
+            var list = new List<TutorialState>();
+            list.Add(tutorialState);
+            return await TutorialMarkComplete(new List<TutorialState>(list), sendMarketing, pushNotifications);
+        }
+        public async Task<MarkTutorialCompleteResponse> TutorialMarkComplete(IEnumerable<TutorialState> tutorialStates,bool sendMarketing, bool pushNotifications)
+        {
+            return await _client.Misc.MarkTutorialComplete(tutorialStates, true, true);
+        }
+        public async Task<ClaimCodenameResponse> TutorialClaimCodeName(string codeName)
+        {
+            return await _client.Misc.ClaimCodename(codeName);
+        }
+        public async Task<GetSuggestedCodenamesResponse> TutorialGetSuggestedCodenames()
+        {
+            return await _client.Misc.GetSuggestedCodenames();
+        }
+        public async Task<SetAvatarResponse> TutorialSetAvatar(PlayerAvatar avatar)
+        {
+            return await _client.Player.SetAvatar(avatar);
+        }
+        public async Task<SetContactSettingsResponse> TutorialSetContactSettings(ContactSettings contactSettings)
+        {
+            return await _client.Player.SetContactSetting(contactSettings);
+        }
+        public async Task<EncounterTutorialCompleteResponse> TutorialPokemonCapture(PokemonId pokemonId)
+        {
+            return await _client.Encounter.EncounterTutorialComplete(pokemonId);
+        }
+
+        #endregion
+        #region " Export Methods "
 
         public async Task ExportPokemonToCSV(PlayerData player, string filename = "PokeList.csv")
         {

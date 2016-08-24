@@ -49,12 +49,12 @@ namespace PokemonGo.RocketAPI.Rpc
             return await PostProtoPayload<Request, EchoResponse>(RequestType.Echo, new EchoMessage());
         }
 
-        public async Task<EncounterTutorialCompleteResponse> MarkTutorialComplete(IEnumerable<TutorialState> tutorialStates,bool sendMarketingEmails, bool sendPushNotifications)
+        public async Task<MarkTutorialCompleteResponse> MarkTutorialComplete(IEnumerable<TutorialState> tutorialStates,bool sendMarketingEmails, bool sendPushNotifications)
         {
             var message = new MarkTutorialCompleteMessage()
             {
-                SendMarketingEmails = sendMarketingEmails,
-                SendPushNotifications = sendPushNotifications
+                SendMarketingEmails = false,
+                SendPushNotifications = false
             };
 
             foreach (var tutorial in tutorialStates)
@@ -62,7 +62,8 @@ namespace PokemonGo.RocketAPI.Rpc
                 message.TutorialsCompleted.Add(tutorial);
             }
 
-            return await PostProtoPayload<Request, EncounterTutorialCompleteResponse>(RequestType.MarkTutorialComplete, message);
+       
+            return await PostProtoPayload<Request, MarkTutorialCompleteResponse>(RequestType.MarkTutorialComplete, message);
         }
     }
 }
