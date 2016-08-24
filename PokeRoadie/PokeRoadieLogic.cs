@@ -389,9 +389,9 @@ namespace PokeRoadie
                 //write top candy list
 			    Logger.Write("====== Top Candies ======", LogLevel.None, ConsoleColor.Yellow);
 			    var highestsPokemonCandy = await _inventory.GetHighestsCandies(_settings.DisplayTopCandy);
-			    foreach (var pokemon in highestsPokemonCandy)
+			    foreach (var candy in highestsPokemonCandy)
 			    {
-				    Logger.Write($"{pokemon.PokemonId.ToString().PadRight(19,' ')} Candy: { /*    */ }", LogLevel.None, ConsoleColor.White);
+				    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19,' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
 			    }                
                 
                 
