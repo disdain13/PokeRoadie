@@ -256,6 +256,16 @@ namespace PokeRoadie
                 Logger.Write($"Team: {_playerProfile.PlayerData.Team}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Level: {currentLevelInfos}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Pokemon: {allPokemon.Count}", LogLevel.None, ConsoleColor.White);
+                if (_settings.UseProxy)
+                {
+                    Logger.Write("====== Proxy Info ======", LogLevel.None, ConsoleColor.Yellow);
+                    Logger.Write($"Host: {_settings.UseProxyHost}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"Port: {_settings.UseProxyPort}", LogLevel.None, ConsoleColor.White);
+                    if (_settings.UseProxyAuthentication)
+                    {
+                        Logger.Write($"Username: {_settings.UseProxyUsername}", LogLevel.None, ConsoleColor.White);
+                    }
+                }
                 Logger.Write("====== Currencies ======", LogLevel.None, ConsoleColor.Yellow);
                 if (_playerProfile.PlayerData.Currencies.Any())
                 {
