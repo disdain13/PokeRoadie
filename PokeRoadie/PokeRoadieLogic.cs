@@ -1867,19 +1867,27 @@ namespace PokeRoadie
                     Logger.Write($"({encounter.Source} {catchStatus.Replace("Catch","")}) | {encounter.PokemonData.GetMinStats()} | Chance: {(encounter.Probability.HasValue ? ((float)((int)(encounter.Probability * 100)) / 100).ToString() : "Unknown")} | with a {throwData.BallName}Ball {receivedXP}", LogLevel.None, ConsoleColor.Yellow);
                     
                     //humanize pokedex add
-                    if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess && caughtPokemonResponse.CaptureAward.Xp.Sum() > 250)
+                    if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                     {
-                        Logger.Write($"First time catching a {encounter.PokemonData.PokemonId}, waiting to add it to the pokedex...", LogLevel.Info);
-                        await RandomDelay(_settings.PokedexEntryMinDelay, _settings.PokedexEntryMaxDelay);
+                        if (caughtPokemonResponse.CaptureAward.Xp.Sum() > 250)
+                        {
+                            Logger.Write($"First time catching a {encounter.PokemonData.PokemonId}, waiting to add it to the pokedex...", LogLevel.Info);
+                            await RandomDelay(_settings.PokedexEntryMinDelay, _settings.PokedexEntryMaxDelay);
+                        }
+                        else
+                        {
+                            await RandomDelay(_settings.CatchMinDelay, _settings.CatchMaxDelay);
+                        }
                     }
                 }
 
                 
                 if (caughtPokemonResponse.Status != CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
-                attemptCounter++;
-                    await RandomDelay(_settings.CatchMinDelay,_settings.CatchMaxDelay);
+                    attemptCounter++;
+                    await RandomDelay(_settings.CatchMinDelay, _settings.CatchMaxDelay);
                 }
+                
 
             }
             while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape && attemptCounter < 10);
