@@ -123,4 +123,6 @@
   <IncludeHotPokestops>false</IncludeHotPokestops>
   <TutorialGenerateCodename>true</TutorialGenerateCodename>
   <TutorialCodename></TutorialCodename>
+  <PokedexMinDelay>10000</PokedexMinDelay>
+  <PokedexMaxDelay>20000</PokedexMaxDelay>
 </PokeRoadieSettings>
