@@ -1110,7 +1110,7 @@ namespace PokeRoadie
                         }
                     }
                 }
-                await RandomDelay();
+                await RandomDelay(_settings.LocationsMinDelay, _settings.LocationsMaxDelay);
             }
             else
             {
@@ -2846,25 +2846,25 @@ namespace PokeRoadie
 
         private async Task PickupBonuses()
         {
-            if (_settings.PickupDailyBonuses)
-            {
-                if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
-                {
-                    var response = await _inventory.CollectDailyBonus();
-                    if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
-                    {
-                        Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
-                    }
-                    else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
-                    {
-                        Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-                    }
-                    else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
-                    {
-                        Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-                    }
-                }
-            }
+            //if (_settings.PickupDailyBonuses)
+            //{
+            //    if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
+            //    {
+            //        var response = await _inventory.CollectDailyBonus();
+            //        if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
+            //        {
+            //            Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
+            //        }
+            //        else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
+            //        {
+            //            Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+            //        }
+            //        else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
+            //        {
+            //            Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+            //        }
+            //    }
+            //}
 
             if (_settings.PickupDailyDefenderBonuses)
             { 
