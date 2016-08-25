@@ -2600,12 +2600,42 @@ namespace PokeRoadie
                 {
                     case PriorityTypes.CP:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+
+                        switch (_settings.TransferPriorityType2)
+                        {
+                            case PriorityTypes.V:
+                                bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                                break;
+                            default:
+                                bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
+                                break;   
+                        }
                         break;
                     case PriorityTypes.IV:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
+
+                        switch (_settings.TransferPriorityType2)
+                        {
+                            case PriorityTypes.V:
+                                bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                                break;
+                            default:
+                                bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+                                break;
+                        }
                         break;
                     default:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+
+                        switch (_settings.TransferPriorityType2)
+                        {
+                            case PriorityTypes.CP:
+                                bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+                                break;
+                            default:
+                                bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
+                                break;
+                        }
                         break;
                 }
 
