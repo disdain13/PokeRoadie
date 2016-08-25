@@ -2596,16 +2596,32 @@ namespace PokeRoadie
                 _stats.UpdateConsoleTitle(_client, _inventory);
 
                 PokemonData bestPokemonOfType = null;
-                switch (_settings.TransferPriorityType)
+                PokemonData bestPokemonOfType2 = null;
+                switch (_settings.TransferPriorityTypeTest)
                 {
-                    case PriorityTypes.CP:
+                    case PriorityTypesTest.CPIV:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+                        bestPokemonOfType2 = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
                         break;
-                    case PriorityTypes.IV:
+                    case PriorityTypesTest.CPV:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+                        bestPokemonOfType2 = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                        break;
+                    case PriorityTypesTest.IVCP:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
+                        bestPokemonOfType2 = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
+                        break;
+                    case PriorityTypesTest.IVV:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
+                        bestPokemonOfType2 = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                        break;
+                    case PriorityTypesTest.VCP:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                        bestPokemonOfType2 = await _inventory.GetHighestPokemonOfTypeByCP(pokemon);
                         break;
                     default:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
+                        bestPokemonOfType2 = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
                         break;
                 }
 
