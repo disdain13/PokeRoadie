@@ -386,10 +386,10 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("V")]
-        public string TransferPriorityTypeTest {
+        public string TransferPriorityType2 {
             get
             {
-                return ((string)(this["TransferPriorityTypeTest"]));
+                return ((string)(this["TransferPriorityType2"]));
             }
         }
 

@@ -91,7 +91,7 @@ namespace PokeRoadie
         //transfers
         public virtual bool TransferPokemon { get; set; }
         public virtual PriorityTypes TransferPriorityType { get; set; }
-        public virtual PriorityTypesTest TransferPriorityTypeTest { get; set; }
+        public virtual PriorityTypes TransferPriorityType2 { get; set; }
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual double KeepAboveIV { get; set; }
         public virtual double KeepAboveV { get; set; }
@@ -497,9 +497,9 @@ namespace PokeRoadie
             PriorityTypes outValue = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.TransferPriorityType, true, out outValue))
                 this.TransferPriorityType = outValue;
-            PriorityTypesTest out2Value = PriorityTypesTest.VIV;
-            if (Enum.TryParse<PriorityTypesTest>(UserSettings.Default.TransferPriorityTypeTest, true, out out2Value))
-                this.TransferPriorityTypeTest = out2Value;
+            PriorityTypes outValue6 = PriorityTypes.IV;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.TransferPriorityType2, true, out outValue6))
+                this.TransferPriorityType2 = outValue;
             this.Password = UserSettings.Default.Password;
             this.Username = UserSettings.Default.Username;
             this.TransferPokemon = UserSettings.Default.TransferPokemon;
@@ -776,7 +776,7 @@ namespace PokeRoadie
                     this.NotTransferPokemonsThatCanEvolve = obj.NotTransferPokemonsThatCanEvolve;
                     this.PrioritizeStopsWithLures = obj.PrioritizeStopsWithLures;
                     this.TransferPriorityType = obj.TransferPriorityType;
-                    this.TransferPriorityTypeTest = obj.TransferPriorityTypeTest;
+                    this.TransferPriorityType2 = obj.TransferPriorityType2;
                     this.Password = obj.Password;
                     this.Username = obj.Username;
                     this.TransferPokemon = obj.TransferPokemon;
