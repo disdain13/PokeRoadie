@@ -203,6 +203,8 @@ namespace PokeRoadie
         public virtual int RecycleMaxDelay { get; set; }
         public virtual int PowerUpMinDelay { get; set; }
         public virtual int PowerUpMaxDelay { get; set; }
+        public virtual int PokedexEntryMinDelay { get; set; }
+        public virtual int PokedexEntryMaxDelay { get; set; }
 
         public virtual bool ShowDebugMessages { get; set; }
        
@@ -618,6 +620,9 @@ namespace PokeRoadie
             this.TutorialCodename = UserSettings.Default.TutorialCodename;
             this.TutorialGenerateCodename = UserSettings.Default.TutorialGenerateCodename;
 
+            this.PokedexEntryMinDelay = UserSettings.Default.PokedexEntryMinDelay;
+            this.PokedexEntryMaxDelay = UserSettings.Default.PokedexEntryMaxDelay;
+
         }
 
         #endregion
@@ -881,6 +886,8 @@ namespace PokeRoadie
                     this.TutorialCodename = obj.TutorialCodename;
                     this.TutorialGenerateCodename = obj.TutorialGenerateCodename;
 
+                    this.PokedexEntryMinDelay = obj.PokedexEntryMinDelay;
+                    this.PokedexEntryMaxDelay = obj.PokedexEntryMaxDelay;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

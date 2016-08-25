@@ -139,7 +139,6 @@ namespace PokeRoadie
         private int locationAttemptCount = 0;
         private DateTime? nextTransEvoPowTime;
         private List<TutorialState> tutorialAttempts = new List<TutorialState>();
-        //private DateTime? _lastLoginTime;
 
         #endregion
         #region " Properties "
@@ -575,6 +574,7 @@ namespace PokeRoadie
         {
             await RandomHelper.RandomDelay(_settings.MinDelay, _settings.MaxDelay);
         }
+
         private async Task RandomDelay(int min, int max)
         {
             await RandomHelper.RandomDelay(min, max);
@@ -1821,8 +1821,6 @@ namespace PokeRoadie
                             OnCatch(encounter, caughtPokemonResponse);
                     }
                     _settings.Session.CatchCount++;
-                    //catch specific delay
-                    await RandomDelay(_settings.CatchMinDelay, _settings.CatchMaxDelay);
    
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
@@ -1867,13 +1865,20 @@ namespace PokeRoadie
                         : $"";
 
                     Logger.Write($"({encounter.Source} {catchStatus.Replace("Catch","")}) | {encounter.PokemonData.GetMinStats()} | Chance: {(encounter.Probability.HasValue ? ((float)((int)(encounter.Probability * 100)) / 100).ToString() : "Unknown")} | with a {throwData.BallName}Ball {receivedXP}", LogLevel.None, ConsoleColor.Yellow);
+                    
+                    //humanize pokedex add
+                    if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess && caughtPokemonResponse.CaptureAward.Xp.Sum() > 250)
+                    {
+                        Logger.Write($"First time catching a {encounter.PokemonData.PokemonId}, waiting to add it to the pokedex...", LogLevel.Info);
+                        await RandomDelay(_settings.PokedexEntryMinDelay, _settings.PokedexEntryMaxDelay);
+                    }
                 }
 
                 
                 if (caughtPokemonResponse.Status != CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
                 attemptCounter++;
-                    await RandomDelay();
+                    await RandomDelay(_settings.CatchMinDelay,_settings.CatchMaxDelay);
                 }
 
             }
@@ -2690,13 +2695,16 @@ namespace PokeRoadie
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
                 if (familyCandy.Candy_ <= 0) continue;
-                if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps) continue;
+                if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps)
+                {
+                    continue;
+                }
                 finalList.Add(pokemon);
             }
 
             if (finalList.Count == 0) return;
 
-            Logger.Write($"Found {pokemons.Count()} pokemon to power up:", LogLevel.Info);
+            Logger.Write($"Found {finalList.Count()} pokemon to power up:", LogLevel.Info);
 
             foreach (var pokemon in finalList)
             {
