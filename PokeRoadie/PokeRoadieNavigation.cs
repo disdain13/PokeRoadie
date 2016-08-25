@@ -44,9 +44,9 @@ namespace PokeRoadie
         {
 
             //randomize altitude
-            alt = Math.Round((alt < 5) ? GenRandom(alt, 1, (alt * (1 + .02))) : 
+            alt = Math.Round((alt < 5) ? GenRandom(alt, 2, (5 * (1 + .02))) : 
                   (alt > 25) ? GenRandom(alt, (alt * (1 - .02)), 1) : 
-                  GenRandom(alt, (alt * (1 - .02)), (alt * (1 + .02))),1);
+                  GenRandom(alt, (alt * (1 - .03)), (alt * (1 + .03))),1);
 
             PokeRoadieSettings.Current.CurrentLatitude = lat;
             PokeRoadieSettings.Current.CurrentLongitude = lng;
