@@ -382,17 +382,7 @@ namespace PokeRoadie {
                 return ((string)(this["TransferPriorityType"]));
             }
         }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("V")]
-        public string TransferPriorityTypeTest {
-            get
-            {
-                return ((string)(this["TransferPriorityTypeTest"]));
-            }
-        }
-
+        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]

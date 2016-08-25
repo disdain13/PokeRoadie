@@ -80,7 +80,6 @@
     <Compile Include="Data\EncounterSourceTypes.cs" />
     <Compile Include="Data\IncubatorData.cs" />
     <Compile Include="Data\LoginResultTypes.cs" />
-    <Compile Include="Data\PriorityTypesTest.cs" />
     <Compile Include="Data\SessionData.cs" />
     <Compile Include="Data\StatsData.cs" />
     <Compile Include="Data\ThrowData.cs" />
