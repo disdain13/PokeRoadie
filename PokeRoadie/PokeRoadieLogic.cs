@@ -2627,10 +2627,10 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = "NONE";
+                string bestPokemonInfo = "NONE                                   ";
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{pokemon.GetMinStats().PadRight(12, ' ')} Best: {bestPokemonInfo.PadRight(12, ' ')} {("Candy: " + FamilyCandies).PadLeft(20, ' ')}", LogLevel.Transfer);
+                Logger.Write($"{pokemon.GetMinStats().PadRight(34, ' ')} Best: {bestPokemonInfo.PadRight(34, ' ')} {("Candy: " + FamilyCandies).PadLeft(20, ' ')}", LogLevel.Transfer);
 
                 //raise event
                 if (OnTransfer != null)
