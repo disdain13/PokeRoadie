@@ -126,8 +126,12 @@ namespace PokeRoadie
         public virtual bool MoveWhenNoStops { get; set; }
         public virtual bool PrioritizeStopsWithLures { get; set; }
         public virtual bool LoiteringActive { get; set; }
+
+
         public virtual bool VisitGyms { get; set; }
         public virtual bool AutoDeployAtTeamGyms { get; set; }
+        public virtual bool PickupDailyDefenderBonuses { get; set; }
+        public virtual int MinGymsBeforeBonusPickup { get; set; }
         public virtual bool PokeBallBalancing { get; set; }
 
         //humanized throws
@@ -215,9 +219,6 @@ namespace PokeRoadie
         public virtual TeamColor TeamColor { get; set; }
         public virtual string TutorialCodename { get; set; }
         public virtual bool TutorialGenerateCodename { get; set; }
-
-        public virtual bool PickupDailyBonuses { get; set; }
-        public virtual bool PickupDailyDefenderBonuses { get; set; }
         public virtual bool IncludeHotPokestops { get; set; }
 
         [XmlIgnore()]
@@ -628,6 +629,7 @@ namespace PokeRoadie
             this.LocationsMinDelay = UserSettings.Default.LocationsMinDelay;
             this.LocationsMaxDelay = UserSettings.Default.LocationsMaxDelay;
 
+            this.MinGymsBeforeBonusPickup = UserSettings.Default.MinGymsBeforeBonusPickup;
 
         }
 
@@ -885,7 +887,6 @@ namespace PokeRoadie
                     this.TeamColor = obj.TeamColor;
                     this.TutorialPokmonId = obj.TutorialPokmonId;
 
-                    this.PickupDailyBonuses = obj.PickupDailyBonuses;
                     this.PickupDailyDefenderBonuses = obj.PickupDailyDefenderBonuses;
                     this.IncludeHotPokestops = obj.IncludeHotPokestops;
 
@@ -897,6 +898,9 @@ namespace PokeRoadie
 
                     this.LocationsMinDelay = obj.LocationsMinDelay;
                     this.LocationsMaxDelay = obj.LocationsMaxDelay;
+
+                    this.MinGymsBeforeBonusPickup = obj.MinGymsBeforeBonusPickup;
+
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

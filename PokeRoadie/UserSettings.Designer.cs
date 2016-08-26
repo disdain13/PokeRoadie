@@ -1088,15 +1088,6 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PickupDailyBonuses {
-            get {
-                return ((bool)(this["PickupDailyBonuses"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IncludeHotPokestops {
             get {
                 return ((bool)(this["IncludeHotPokestops"]));
@@ -1163,6 +1154,15 @@ namespace PokeRoadie {
         public int LocationsMaxDelay {
             get {
                 return ((int)(this["LocationsMaxDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int MinGymsBeforeBonusPickup {
+            get {
+                return ((int)(this["MinGymsBeforeBonusPickup"]));
             }
         }
     }

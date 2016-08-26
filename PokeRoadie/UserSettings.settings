@@ -356,9 +356,6 @@
     <Setting Name="PickupDailyDefenderBonuses" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="PickupDailyBonuses" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="IncludeHotPokestops" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -382,6 +379,9 @@
     </Setting>
     <Setting Name="LocationsMaxDelay" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">20000</Value>
+    </Setting>
+    <Setting Name="MinGymsBeforeBonusPickup" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

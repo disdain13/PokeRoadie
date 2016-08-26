@@ -54,7 +54,7 @@ namespace PokeRoadie
 
         //fort events
         public event Action<LocationData, List<FortData>> OnVisitForts;
-
+        public event Action<LocationData, CollectDailyDefenderBonusResponse> OnPickupDailyDefenderBonus;
         //pokestop events
         public event Action<LocationData, List<FortData>> OnGetAllNearbyPokestops;
         public event Action<LocationData, FortDetailsResponse> OnTravelingToPokestop;
@@ -807,7 +807,7 @@ namespace PokeRoadie
             //await CompleteTutorials();
 
             //pickup bonuses
-            if (_settings.PickupDailyBonuses || _settings.PickupDailyDefenderBonuses)
+            if (_settings.PickupDailyDefenderBonuses)
                 await PickupBonuses();
 
             //revive
@@ -2876,11 +2876,17 @@ namespace PokeRoadie
                     var response = await _inventory.CollectDailyDefenderBonus();
                     if (response.Result == CollectDailyDefenderBonusResponse.Types.Result.Success)
                     {
+                        //update cached date to prevent error
+                        _playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs = DateTime.UtcNow.AddDays(1).ToUnixTime();
+
                         Logger.Write($"(BONUS) Daily Defender Bonus Collected!", LogLevel.None, ConsoleColor.Green);
                         if (response.CurrencyType.Count() > 0)
                         {
                             for (int i = 0;i< response.CurrencyType.Count();i++)
                             {
+                                //add gained xp
+                                if (response.CurrencyType[i] == "XP")
+                                    _stats.AddExperience(response.CurrencyAwarded[i]);
                                 Logger.Write($"{response.CurrencyAwarded[i]} {response.CurrencyType[i]}", LogLevel.None, ConsoleColor.Green);
                             }
                         }

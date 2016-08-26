@@ -119,6 +119,7 @@
   <TutorialPokmonId>Squirtle</TutorialPokmonId>
   <TeamColor>Blue</TeamColor>
   <PickupDailyDefenderBonuses>false</PickupDailyDefenderBonuses>
+  <MinGymsBeforeBonusPickup>3</MinGymsBeforeBonusPickup>
   <IncludeHotPokestops>false</IncludeHotPokestops>
   <TutorialGenerateCodename>true</TutorialGenerateCodename>
   <TutorialCodename></TutorialCodename>
