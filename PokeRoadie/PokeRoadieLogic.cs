@@ -2762,7 +2762,7 @@ namespace PokeRoadie
                 //this will not work, pokemon.id is a ulong, but the proto only takes a long.
                 //already tried the conversion and the id's are too large to convert. have to wait
                 //till the proto is updated, or start managing my own proto lib generation.
-                var response = await _client.Inventory.SetFavoritePokemon(Convert.ToInt64(pokemon.Id), true);
+                var response = await _client.Inventory.SetFavoritePokemon(pokemon.Id, true);
                 if (response.Result == SetFavoritePokemonResponse.Types.Result.Success)
                 {
                     PokeRoadieInventory.IsDirty = true;

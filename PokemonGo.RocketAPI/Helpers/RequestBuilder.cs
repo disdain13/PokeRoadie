@@ -111,14 +111,14 @@ namespace PokemonGo.RocketAPI.Helpers
                 );
             }
 
-            requestEnvelope.Unknown6 = new Unknown6()
+            requestEnvelope.Unknown6.Add(new Unknown6()
             {
                 RequestType = 6,
                 Unknown2 = new Unknown6.Types.Unknown2()
                 {
                      EncryptedSignature = ByteString.CopyFrom(Crypt.Encrypt(sig.ToByteArray()))
                 }
-            };
+            });
 
             return requestEnvelope;
         }
@@ -137,7 +137,8 @@ namespace PokemonGo.RocketAPI.Helpers
                 Longitude = _client.CurrentLongitude, //8
                 Altitude = _client.CurrentAltitude, //9
                 AuthTicket = _client.AuthTicket, //11
-                Unknown12 = 989 //12
+
+                MsSinceLastLocationfix = rnd.Next(980, 1200) // 989 //12
             });
         }
 
@@ -163,7 +164,7 @@ namespace PokemonGo.RocketAPI.Helpers
                         Unknown2 = 14
                     }
                 }, //10
-                Unknown12 = 989 //12
+                MsSinceLastLocationfix = rnd.Next(3000, 4000) //3352
             };
         }
 
