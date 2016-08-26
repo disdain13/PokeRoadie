@@ -118,11 +118,12 @@
   <ShowDebugMessages>false</ShowDebugMessages>
   <TutorialPokmonId>Squirtle</TutorialPokmonId>
   <TeamColor>Blue</TeamColor>
-  <PickupDailyBonuses>false</PickupDailyBonuses>
   <PickupDailyDefenderBonuses>false</PickupDailyDefenderBonuses>
   <IncludeHotPokestops>false</IncludeHotPokestops>
   <TutorialGenerateCodename>true</TutorialGenerateCodename>
   <TutorialCodename></TutorialCodename>
   <PokedexMinDelay>10000</PokedexMinDelay>
   <PokedexMaxDelay>20000</PokedexMaxDelay>
+  <LocationsMinDelay>10000</LocationsMinDelay>
+  <LocationsMaxDelay>20000</LocationsMaxDelay>
 </PokeRoadieSettings>
