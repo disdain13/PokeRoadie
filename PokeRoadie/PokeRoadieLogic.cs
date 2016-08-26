@@ -2652,23 +2652,23 @@ namespace PokeRoadie
                 switch (_settings.TransferPriorityType)
                 {
                     case PriorityTypes.CP:
-                        query = query.OrderBy(x => x.Cp);
+                        var orderedQuery = query.OrderBy(x => x.Cp);
                         if (_settings.TransferPriorityType2 == PriorityTypes.NONE)
                         {
-                            query = query.ThenBy(x => x.Stamina);
+                            query = orderedQuery.ThenBy(x => x.Stamina);
                         }
                         else if (_settings.TransferPriorityType2 == PriorityTypes.CP)
                         {
-                            Logger.Write($"Transfer Warning - Akready have { _settings.TransferPriorityType} as your First Priority Type, will treat Second Priority as 'NONE'.", LogLevel.Error);
-                            query = query.ThenBy(x => x.Stamina);
+                            Logger.Write($"Transfer Warning - Akready have {_settings.TransferPriorityType} as your First Priority Type, will treat Second Priority as 'NONE'.", LogLevel.Error);
+                            query = orderedQuery.ThenBy(x => x.Stamina);
                         }
                         else if (_settings.TransferPriorityType2 == PriorityTypes.V)
                         {
-                            query = query.ThenBy(x => x.CalculatePokemonValue());
+                            query = orderedQuery.ThenBy(x => x.CalculatePokemonValue());
                         }
                         else if (_settings.TransferPriorityType2 == PriorityTypes.IV)
                         {
-                            query = query.ThenBy(PokemonInfo.CalculatePokemonPerfection);
+                            query = orderedQuery.ThenBy(PokemonInfo.CalculatePokemonPerfection);
                         }
                         break;
                     case PriorityTypes.IV:
