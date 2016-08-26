@@ -75,9 +75,10 @@ namespace PokeRoadie
             //Build Transfer Below List. These will always transfer, and overrides
             //the Keep list.
             var results1 = query.Where(x =>
-                (PokeRoadieSettings.Current.TransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.TransferBelowCp) ||
+                !_settings.PokemonsNotToTransfer.Contains(x.PokemonId) &&
+                ((PokeRoadieSettings.Current.TransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.TransferBelowCp) ||
                 (PokeRoadieSettings.Current.TransferBelowIV > 0 && x.GetPerfection() < PokeRoadieSettings.Current.TransferBelowIV) ||
-                (PokeRoadieSettings.Current.TransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.TransferBelowV)
+                (PokeRoadieSettings.Current.TransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.TransferBelowV))
             );
 
 
