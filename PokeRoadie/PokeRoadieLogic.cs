@@ -2652,16 +2652,67 @@ namespace PokeRoadie
                 switch (_settings.TransferPriorityType)
                 {
                     case PriorityTypes.CP:
-                        query = query.OrderBy(x => x.Cp)
+                        if (_settings.TransferPriorityType2 == PriorityTypes.NONE)
+                        {
+                            query = query.OrderBy(x => x.Cp)
                                      .ThenBy(x => x.Stamina);
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.CP)
+                        {
+                            Logger.Write($"Transfer Warning - Akready have { _settings.TransferPriorityType} as your First Priority Type, will treat Second Priority as 'NONE'.", LogLevel.Error);
+                            query = query.OrderBy(x => x.Cp)
+                                     .ThenBy(x => x.Stamina);
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.V)
+                        {
+
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.IV)
+                        {
+
+                        }
                         break;
                     case PriorityTypes.IV:
-                        query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
+                        if (_settings.TransferPriorityType2 == PriorityTypes.NONE)
+                        {
+                            query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
                                      .ThenBy(n => n.StaminaMax);
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.CP)
+                        {
+
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.V)
+                        {
+
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.IV)
+                        {
+                            Logger.Write($"Transfer Warning - Akready have { _settings.TransferPriorityType} as your First Priority Type, will treat Second Priority as 'NONE'.", LogLevel.Error);
+                            query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
+                                     .ThenBy(n => n.StaminaMax);
+                        }
                         break;
                     default:
-                        query = query.OrderBy(x => x.CalculatePokemonValue())
+                        if (_settings.TransferPriorityType2 == PriorityTypes.NONE)
+                        {
+                            query = query.OrderBy(x => x.CalculatePokemonValue())
                                      .ThenBy(n => n.StaminaMax);
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.CP)
+                        {
+
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.V)
+                        {
+                            Logger.Write($"Transfer Warning - Akready have { _settings.TransferPriorityType} as your First Priority Type, will treat Second Priority as 'NONE'.", LogLevel.Error);
+                            query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
+                                     .ThenBy(n => n.StaminaMax);
+                        }
+                        else if (_settings.TransferPriorityType2 == PriorityTypes.IV)
+                        {
+
+                        }
                         break;
                 }
 
