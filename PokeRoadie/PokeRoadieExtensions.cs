@@ -107,7 +107,7 @@ namespace PokeRoadie.Extensions
 
         public static string GetStats(this PokemonData pokemon)
         {
-            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} True Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00").PadLeft(6, ' ')}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Stamina.ToString().PadLeft(3, ' ')}/{pokemon.StaminaMax.ToString().PadRight(1, ' ')} Hp | {pokemon.Move1.GetMoveName()}({CalculateMoveValue(pokemon.Move1.GetMoveName())})/{pokemon.Move2.GetMoveName()}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
+            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue()} True Value | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00").PadLeft(6, ' ')}% Perfect | Lvl {pokemon.GetLevel().ToString("00")} | {pokemon.Stamina.ToString().PadLeft(3, ' ')}/{pokemon.StaminaMax.ToString().PadRight(1, ' ')} Hp | {pokemon.Move1.GetMoveName().PadRight(12, ' ')}({CalculateMoveValue(pokemon.Move1.GetMoveName())})/{pokemon.Move2.GetMoveName().PadRight(12, ' ')}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
         }
 
         public static string GetMinStats(this PokemonData pokemon)
