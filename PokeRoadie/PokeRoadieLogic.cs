@@ -831,7 +831,7 @@ namespace PokeRoadie
                 if (_settings.PowerUpPokemon) await PowerUpPokemon();
 
                 //favorite
-                //if (_settings.FavoritePokemon) await FavoritePokemon();
+                if (_settings.FavoritePokemon) await FavoritePokemon();
 
                 //transfer
                 if (_settings.TransferPokemon) await TransferPokemon();
