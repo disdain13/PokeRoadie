@@ -1869,7 +1869,7 @@ namespace PokeRoadie
                     //humanize pokedex add
                     if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                     {
-                        if (caughtPokemonResponse.CaptureAward.Xp.Sum() > 250)
+                        if (caughtPokemonResponse.CaptureAward.Xp.Sum() > 499)
                         {
                             Logger.Write($"First time catching a {encounter.PokemonData.PokemonId}, waiting to add it to the pokedex...", LogLevel.Info);
                             await RandomDelay(_settings.PokedexEntryMinDelay, _settings.PokedexEntryMaxDelay);
