@@ -477,6 +477,24 @@ namespace PokemonGo.RocketAPI
                     { "HardwareModel", "SM-T705" }
                 }
             },
+            { "oneplus",
+                new Dictionary<string, string>()
+                {
+                    { "AndroidBoardName", "MSM8974AC" },
+                    { "AndroidBootloader", "unknown" },
+                    { "DeviceBrand", "OnePlus" },
+                    { "DeviceId", "bc61289b8b6ea43d" },
+                    { "DeviceModel", "OnePlus" },
+                    { "DeviceModelBoot", "qcom" },
+                    { "DeviceModelIdentifier", "A0001" },
+                    { "FirmwareBrand", "OnePlus" },
+                    { "FirmwareFingerprint", "oneplus/bacon/A0001:5.1.1/LMY48B/YOG4PAS3JL:user/release-keys" },
+                    { "FirmwareTags", "dev-keys" },
+                    { "FirmwareType", "user" },
+                    { "HardwareManufacturer", "OnePlus" },
+                    { "HardwareModel", "A0001" }
+                }
+            }
 
         };
     }

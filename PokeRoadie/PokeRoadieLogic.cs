@@ -831,7 +831,7 @@ namespace PokeRoadie
                 if (_settings.PowerUpPokemon) await PowerUpPokemon();
 
                 //favorite
-                //if (_settings.FavoritePokemon) await FavoritePokemon();
+                if (_settings.FavoritePokemon) await FavoritePokemon();
 
                 //transfer
                 if (_settings.TransferPokemon) await TransferPokemon();
@@ -1110,7 +1110,7 @@ namespace PokeRoadie
                         }
                     }
                 }
-                await RandomDelay();
+                await RandomDelay(_settings.LocationsMinDelay, _settings.LocationsMaxDelay);
             }
             else
             {
@@ -1887,7 +1887,7 @@ namespace PokeRoadie
                     //humanize pokedex add
                     if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                     {
-                        if (caughtPokemonResponse.CaptureAward.Xp.Sum() > 250)
+                        if (caughtPokemonResponse.CaptureAward.Xp.Sum() > 499)
                         {
                             Logger.Write($"First time catching a {encounter.PokemonData.PokemonId}, waiting to add it to the pokedex...", LogLevel.Info);
                             await RandomDelay(_settings.PokedexEntryMinDelay, _settings.PokedexEntryMaxDelay);
@@ -2798,7 +2798,7 @@ namespace PokeRoadie
                 //this will not work, pokemon.id is a ulong, but the proto only takes a long.
                 //already tried the conversion and the id's are too large to convert. have to wait
                 //till the proto is updated, or start managing my own proto lib generation.
-                var response = await _client.Inventory.SetFavoritePokemon(Convert.ToInt64(pokemon.Id), true);
+                var response = await _client.Inventory.SetFavoritePokemon(pokemon.Id, true);
                 if (response.Result == SetFavoritePokemonResponse.Types.Result.Success)
                 {
                     PokeRoadieInventory.IsDirty = true;
@@ -2882,25 +2882,25 @@ namespace PokeRoadie
 
         private async Task PickupBonuses()
         {
-            if (_settings.PickupDailyBonuses)
-            {
-                if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
-                {
-                    var response = await _inventory.CollectDailyBonus();
-                    if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
-                    {
-                        Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
-                    }
-                    else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
-                    {
-                        Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-                    }
-                    else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
-                    {
-                        Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-                    }
-                }
-            }
+            //if (_settings.PickupDailyBonuses)
+            //{
+            //    if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
+            //    {
+            //        var response = await _inventory.CollectDailyBonus();
+            //        if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
+            //        {
+            //            Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
+            //        }
+            //        else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
+            //        {
+            //            Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+            //        }
+            //        else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
+            //        {
+            //            Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+            //        }
+            //    }
+            //}
 
             if (_settings.PickupDailyDefenderBonuses)
             { 

@@ -1157,5 +1157,23 @@ namespace PokeRoadie {
                 return ((int)(this["PokedexEntryMaxDelay"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        public int LocationsMinDelay {
+            get {
+                return ((int)(this["LocationsMinDelay"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20000")]
+        public int LocationsMaxDelay {
+            get {
+                return ((int)(this["LocationsMaxDelay"]));
+            }
+        }
     }
 }

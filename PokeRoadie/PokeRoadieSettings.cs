@@ -206,6 +206,8 @@ namespace PokeRoadie
         public virtual int PowerUpMaxDelay { get; set; }
         public virtual int PokedexEntryMinDelay { get; set; }
         public virtual int PokedexEntryMaxDelay { get; set; }
+        public virtual int LocationsMinDelay { get; set; }
+        public virtual int LocationsMaxDelay { get; set; }
 
         public virtual bool ShowDebugMessages { get; set; }
        
@@ -617,7 +619,7 @@ namespace PokeRoadie
             if (Enum.TryParse<TeamColor>(UserSettings.Default.TeamColor, true, out outValue5))
                 this.TeamColor = outValue5;
 
-            this.PickupDailyBonuses = UserSettings.Default.PickupDailyBonuses;
+            //this.PickupDailyBonuses = UserSettings.Default.PickupDailyBonuses;
             this.PickupDailyDefenderBonuses = UserSettings.Default.PickupDailyDefenderBonuses;
             this.IncludeHotPokestops = UserSettings.Default.IncludeHotPokestops;
 
@@ -626,6 +628,10 @@ namespace PokeRoadie
 
             this.PokedexEntryMinDelay = UserSettings.Default.PokedexEntryMinDelay;
             this.PokedexEntryMaxDelay = UserSettings.Default.PokedexEntryMaxDelay;
+
+            this.LocationsMinDelay = UserSettings.Default.LocationsMinDelay;
+            this.LocationsMaxDelay = UserSettings.Default.LocationsMaxDelay;
+
 
         }
 
@@ -893,6 +899,9 @@ namespace PokeRoadie
 
                     this.PokedexEntryMinDelay = obj.PokedexEntryMinDelay;
                     this.PokedexEntryMaxDelay = obj.PokedexEntryMaxDelay;
+
+                    this.LocationsMinDelay = obj.LocationsMinDelay;
+                    this.LocationsMaxDelay = obj.LocationsMaxDelay;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
