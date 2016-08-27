@@ -297,7 +297,7 @@ namespace PokeRoadie
             LastKnownSpeed = walkingSpeedInKilometersPerHour;
 
             //log distance and time
-            if (seconds > 60)
+            if (seconds > 300)
             {
                 Logger.Write($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.None, ConsoleColor.Red);
             }
@@ -437,7 +437,7 @@ namespace PokeRoadie
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
                 await Task.Delay(500);
-            } while (LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30);
+            } while (LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 13);
 
             return result;
         }

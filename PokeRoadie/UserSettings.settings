@@ -383,5 +383,8 @@
     <Setting Name="MinGymsBeforeBonusPickup" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">3</Value>
     </Setting>
+    <Setting Name="PokeballRefillDelayMinutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -220,6 +220,7 @@ namespace PokeRoadie
         public virtual string TutorialCodename { get; set; }
         public virtual bool TutorialGenerateCodename { get; set; }
         public virtual bool IncludeHotPokestops { get; set; }
+        public virtual int PokeballRefillDelayMinutes { get; set; }
 
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -630,7 +631,7 @@ namespace PokeRoadie
             this.LocationsMaxDelay = UserSettings.Default.LocationsMaxDelay;
 
             this.MinGymsBeforeBonusPickup = UserSettings.Default.MinGymsBeforeBonusPickup;
-
+            this.PokeballRefillDelayMinutes = UserSettings.Default.PokeballRefillDelayMinutes;
         }
 
         #endregion
@@ -900,7 +901,7 @@ namespace PokeRoadie
                     this.LocationsMaxDelay = obj.LocationsMaxDelay;
 
                     this.MinGymsBeforeBonusPickup = obj.MinGymsBeforeBonusPickup;
-
+                    this.PokeballRefillDelayMinutes = obj.PokeballRefillDelayMinutes;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {

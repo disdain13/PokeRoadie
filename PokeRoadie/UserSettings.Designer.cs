@@ -1165,5 +1165,14 @@ namespace PokeRoadie {
                 return ((int)(this["MinGymsBeforeBonusPickup"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int PokeballRefillDelayMinutes {
+            get {
+                return ((int)(this["PokeballRefillDelayMinutes"]));
+            }
+        }
     }
 }

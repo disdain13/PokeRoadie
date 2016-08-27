@@ -138,7 +138,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 Altitude = _client.CurrentAltitude, //9
                 AuthTicket = _client.AuthTicket, //11
 
-                MsSinceLastLocationfix = rnd.Next(980, 1200) // 989 //12
+                MsSinceLastLocationfix = rnd.Next(980, 1200) //989
             });
         }
 
@@ -164,7 +164,7 @@ namespace PokemonGo.RocketAPI.Helpers
                         Unknown2 = 14
                     }
                 }, //10
-                MsSinceLastLocationfix = rnd.Next(3000, 4000) //3352
+                MsSinceLastLocationfix = rnd.Next(980, 2000) //3352
             };
         }
 
