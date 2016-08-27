@@ -1273,7 +1273,7 @@ namespace PokeRoadie
             var gymCount = pokeStopList.Where(x => x.Type == FortType.Gym).Count();
             var lureCount = pokeStopList.Where(x => x.LureInfo != null).Count();
 
-            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( CanVisitGyms && gymCount > 0 ? " | " + (_settings.AutoDeployAtTeamGyms ? gymTries.Count.ToString() + "\\" : string.Empty) + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") : string.Empty)}", LogLevel.Info);
+            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( CanVisitGyms && gymCount > 0 ? " | " + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") + " (" + gymTries.Count.ToString() + " Visited)" : string.Empty)}", LogLevel.Info);
             if (lureCount > 0) Logger.Write($"(INFO) Found {lureCount} with lure!", LogLevel.None, ConsoleColor.DarkMagenta);
 
             if (lureCount > 0)
