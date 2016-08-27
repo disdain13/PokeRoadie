@@ -151,6 +151,7 @@ namespace PokeRoadie
         public virtual int GreatThrowChance { get; set; }
         public virtual int NiceThrowChance { get; set; }
         public virtual double CurveThrowChance { get; set; }
+        public virtual double MissThrowChance { get; set; }
 
         //inventory
         public virtual bool UseLuckyEggs { get; set; }
@@ -594,6 +595,7 @@ namespace PokeRoadie
             this.GreatThrowChance = UserSettings.Default.GreatThrowChance;
             this.NiceThrowChance = UserSettings.Default.NiceThrowChance;
             this.CurveThrowChance = UserSettings.Default.CurveThrowChance;
+            this.MissThrowChance = UserSettings.Default.MissThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
@@ -875,6 +877,7 @@ namespace PokeRoadie
                     this.GreatThrowChance = obj.GreatThrowChance;
                     this.NiceThrowChance = obj.NiceThrowChance;
                     this.CurveThrowChance = obj.CurveThrowChance;
+                    this.MissThrowChance = obj.MissThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
 
                     this.DisplayPokemonCount = obj.DisplayPokemonCount;

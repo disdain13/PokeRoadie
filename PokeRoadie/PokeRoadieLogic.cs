@@ -2362,6 +2362,9 @@ namespace PokeRoadie
                 var pokemonIv = pokemon.GetPerfection();
                 var pokemonV = pokemon.CalculatePokemonValue();
 
+                //_settings.MissThrowChance
+                
+
                 if ((_settings.ForceExcellentThrowOverCp > 0 && pokemon.Cp > _settings.ForceExcellentThrowOverCp) ||
                     (_settings.ForceExcellentThrowOverIV > 0 && pokemonIv > _settings.ForceExcellentThrowOverIV) ||
                     (_settings.ForceExcellentThrowOverV > 0 && pokemonV > _settings.ForceExcellentThrowOverV))

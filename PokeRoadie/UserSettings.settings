@@ -275,6 +275,9 @@
     <Setting Name="CurveThrowChance" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">35</Value>
     </Setting>
+    <Setting Name="MissThrowChance" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
     <Setting Name="DevicePackageName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">htc10</Value>
     </Setting>

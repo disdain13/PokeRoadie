@@ -332,18 +332,18 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double AlwaysTransferBelowIV {
+        public double AlwaysTransferBelowV {
             get {
-                return ((double)(this["AlwaysTransferBelowIV"]));
+                return ((double)(this["AlwaysTransferBelowV"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double AlwaysTransferBelowLV {
+        public double AlwaysTransferBelowIV {
             get {
-                return ((double)(this["AlwaysTransferBelowLV"]));
+                return ((double)(this["AlwaysTransferBelowIV"]));
             }
         }
         
@@ -844,6 +844,15 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double MissThrowChance {
+            get {
+                return ((double)(this["MissThrowChance"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("htc10")]
         public string DevicePackageName {
             get {
@@ -1205,9 +1214,9 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double AlwaysTransferBelowV {
+        public double AlwaysTransferBelowLV {
             get {
-                return ((double)(this["AlwaysTransferBelowV"]));
+                return ((double)(this["AlwaysTransferBelowLV"]));
             }
         }
         
