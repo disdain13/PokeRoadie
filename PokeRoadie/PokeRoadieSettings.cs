@@ -83,6 +83,7 @@ namespace PokeRoadie
         //evolution
         public virtual bool EvolvePokemon { get; set; }
         public PriorityTypes EvolvePriorityType { get; set; }
+        public PriorityTypes EvolvePriorityType2 { get; set; }
         public virtual double EvolveAboveIV { get; set; }
         public virtual double EvolveAboveV { get; set; }
         public virtual int EvolveAboveCp { get; set; }
@@ -105,6 +106,7 @@ namespace PokeRoadie
         //power-ups
         public virtual bool PowerUpPokemon { get; set; }
         public virtual PriorityTypes PowerUpPriorityType { get; set; }
+        public virtual PriorityTypes PowerUpPriorityType2 { get; set; }
         public virtual double PowerUpAboveIV { get; set; }
         public virtual double PowerUpAboveV { get; set; }
         public virtual int PowerUpAboveCp { get; set; }
@@ -524,6 +526,9 @@ namespace PokeRoadie
             PriorityTypes outValue2 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType, true, out outValue2))
                 this.EvolvePriorityType = outValue;
+            PriorityTypes outValue7 = PriorityTypes.V;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType2, true, out outValue7))
+                this.EvolvePriorityType2 = outValue;
             this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
             this.EvolveAboveIV = UserSettings.Default.EvolveAboveIV;
             this.EvolveAboveV = UserSettings.Default.EvolveAboveV;
@@ -544,6 +549,9 @@ namespace PokeRoadie
             PriorityTypes outValue3 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType, true, out outValue3))
                 this.PowerUpPriorityType = outValue;
+            PriorityTypes outValue8 = PriorityTypes.V;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType2, true, out outValue8))
+                this.PowerUpPriorityType2 = outValue;
             this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
             this.PowerUpAboveIV = UserSettings.Default.PowerUpAboveIV;
             this.PowerUpAboveV = UserSettings.Default.PowerUpAboveV;
@@ -803,6 +811,7 @@ namespace PokeRoadie
                     this.VisitPokestops = obj.VisitPokestops;
 
                     this.EvolvePriorityType = obj.EvolvePriorityType;
+                    this.EvolvePriorityType2 = obj.EvolvePriorityType2;
                     this.EvolveAboveCp = obj.EvolveAboveCp;
                     this.EvolveAboveIV = obj.EvolveAboveIV;
                     this.EvolveAboveV = obj.EvolveAboveV;
@@ -821,6 +830,7 @@ namespace PokeRoadie
                     this.WaitOnStart = obj.WaitOnStart;
                     this.PowerUpPokemon = obj.PowerUpPokemon;
                     this.PowerUpPriorityType = obj.PowerUpPriorityType;
+                    this.PowerUpPriorityType2 = obj.PowerUpPriorityType2;
                     this.PowerUpAboveCp = obj.PowerUpAboveCp;
                     this.PowerUpAboveIV = obj.PowerUpAboveIV;
                     this.PowerUpAboveV = obj.PowerUpAboveV;

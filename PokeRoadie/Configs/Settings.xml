@@ -24,6 +24,7 @@
   <EnableWandering>false</EnableWandering>
   <EvolvePokemon>false</EvolvePokemon>
   <EvolvePriorityType>V</EvolvePriorityType>
+  <EvolvePriorityType2>IV</EvolvePriorityType2>
   <EvolveAboveIV>0</EvolveAboveIV>
   <EvolveAboveV>0</EvolveAboveV>
   <EvolveAboveCp>0</EvolveAboveCp>
@@ -42,6 +43,7 @@
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
   <PowerUpPokemon>false</PowerUpPokemon>
   <PowerUpPriorityType>V</PowerUpPriorityType>
+  <PowerUpPriorityType2>IV</PowerUpPriorityType2>
   <PowerUpAboveIV>0</PowerUpAboveIV>
   <PowerUpAboveV>0</PowerUpAboveV>
   <PowerUpAboveCp>0</PowerUpAboveCp>
