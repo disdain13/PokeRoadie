@@ -142,7 +142,7 @@ namespace PokeRoadie
         private DateTime noWorkTimer = DateTime.Now;
         private DateTime mapsTimer = DateTime.Now;
         private GetMapObjectsResponse _map = null;
-
+        private List<ulong> _recentEncounters = new List<ulong>();
         #endregion
         #region " Helper Properties "
 
@@ -1064,10 +1064,11 @@ namespace PokeRoadie
             var pokeStopList = GetPokestops(GetCurrentLocation(), dynamicDistance, mapObjects);
             var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
-            if (_settings.VisitGyms) totalActivecount += gymsList.Count;
+            var unvisitedGymList = gymsList.Where(x => !gymTries.Contains(x.Id)).ToList();
+            if (_settings.VisitGyms) totalActivecount += unvisitedGymList.Count;
             if (_settings.VisitPokestops) totalActivecount += stopList.Count;
 
-            if (totalActivecount == 0)
+            if (totalActivecount < 1)
             {
 
                 locationAttemptCount++;
@@ -1146,7 +1147,7 @@ namespace PokeRoadie
 
         private List<FortData> GetPokestops(LocationData location, int maxDistance, GetMapObjectsResponse mapObjects)
         {
-            var fullPokestopList = PokeRoadieNavigation.pathByNearestNeighbour(
+            var fullPokestopList = PokeRoadieNavigation.PathByNearestNeighbour(
                 mapObjects.MapCells.SelectMany(i => i.Forts)
                     .Where(i =>
                         (maxDistance == 0 ||
@@ -1202,14 +1203,23 @@ namespace PokeRoadie
                     i =>
                     LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
+            //clean up old encounter tracking 
+            while (_recentEncounters != null && _recentEncounters.Count > 100)
+            {
+                _recentEncounters.RemoveAt(0); 
+            }
+
             //incense pokemon
             if (CanCatch && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
             {
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
                 {
-                    if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(incenseRequest.PokemonId))
+                    if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(incenseRequest.PokemonId) && !_recentEncounters.Contains(incenseRequest.EncounterId))
+                    {
+                        _recentEncounters.Add(incenseRequest.EncounterId);
                         await ProcessIncenseEncounter(new LocationData(incenseRequest.Latitude, incenseRequest.Longitude, _client.CurrentAltitude), incenseRequest.EncounterId, incenseRequest.EncounterLocation);
+                    }
                     else
                         Logger.Write($"Incense encounter with {incenseRequest.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
                 }
@@ -1235,8 +1245,11 @@ namespace PokeRoadie
                 if (!isRunning) break;
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
 
-                if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokemon.PokemonId))
+                if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokemon.PokemonId) && !_recentEncounters.Contains(pokemon.EncounterId))
+                {
+                    _recentEncounters.Add(pokemon.EncounterId);
                     await ProcessEncounter(new LocationData(pokemon.Latitude, pokemon.Longitude, _client.CurrentAltitude), pokemon.EncounterId, pokemon.SpawnPointId, EncounterSourceTypes.Wild);
+                }    
                 else
                     Logger.Write($"Wild encounter with {pokemon.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
 
@@ -1269,17 +1282,23 @@ namespace PokeRoadie
         {
 
             if (pokeStopList.Count == 0) return;
+            var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
+            var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
+            var unvisitedGymList = gymsList.Where(x => !gymTries.Contains(x.Id)).ToList();
             var pokestopCount = pokeStopList.Where(x => x.Type != FortType.Gym).Count();
             var gymCount = pokeStopList.Where(x => x.Type == FortType.Gym).Count();
-            var lureCount = pokeStopList.Where(x => x.LureInfo != null).Count();
+            var visitedGymCount = gymsList.Where(x => gymTries.Contains(x.Id)).Count();
+            var lureCount = stopList.Where(x => x.LureInfo != null).Count();
 
-            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( CanVisitGyms && gymCount > 0 ? " | " + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") + " (" + gymTries.Count.ToString() + " Visited)" : string.Empty)}", LogLevel.Info);
+
+            Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( CanVisitGyms && gymCount > 0 ? " | " + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") + " (" + visitedGymCount.ToString() + " Visited)" : string.Empty)}", LogLevel.Info);
             if (lureCount > 0) Logger.Write($"(INFO) Found {lureCount} with lure!", LogLevel.None, ConsoleColor.DarkMagenta);
 
+            var priorityList = new List<FortData>();
             if (lureCount > 0)
             {
-                var pokestopListWithLures = pokeStopList.Where(x => x.LureInfo != null).ToList();
-                if (pokestopListWithLures.Count > 0)
+                var stopListWithLures = stopList.Where(x => x.LureInfo != null).ToList();
+                if (stopListWithLures.Count > 0)
                 {
             
                     //if we are prioritizing stops with lures
@@ -1288,9 +1307,11 @@ namespace PokeRoadie
                         int counter = 0;
                         for (int i = 0; i < 3; i++)
                         {
-                            for (int x = 0; x < pokestopListWithLures.Count; x++)
+                            for (int x = 0; x < stopListWithLures.Count; x++)
                             {
-                                pokeStopList.Insert(counter, pokestopListWithLures[x]);
+                                var lureStop = stopListWithLures[x];
+                                stopList.Remove(lureStop);
+                                priorityList.Insert(counter, lureStop);
                                 counter++;
                             }
                         }
@@ -1298,16 +1319,32 @@ namespace PokeRoadie
                 }
             }
 
+            //merge location lists
+            var tempList = new List<FortData>(stopList);
+            tempList.AddRange(unvisitedGymList);
+            tempList = PokeRoadieNavigation.PathByNearestNeighbour(tempList.ToArray()).ToList();
+
+            List<FortData> finalList = null;
+            if (priorityList.Count > 0)
+            {
+               finalList = new List<FortData>(priorityList);
+               finalList.AddRange(tempList);
+            }
+            else
+            {
+                finalList = tempList;
+            }
+
             //raise event
             if (OnVisitForts != null)
             {
                 var location = new LocationData(_client.CurrentLatitude, _client.CurrentLongitude, _client.CurrentAltitude);
-                if (!RaiseSyncEvent(OnVisitForts, location, pokeStopList))
-                    OnVisitForts(location, pokeStopList);
+                if (!RaiseSyncEvent(OnVisitForts, location, finalList))
+                    OnVisitForts(location, finalList);
             }
 
        
-            while (pokeStopList.Any())
+            while (finalList.Any())
             {
                 if (!isRunning) break;
                 if (_settings.DestinationsEnabled && _settings.DestinationEndDate.HasValue && DateTime.Now > _settings.DestinationEndDate.Value)
@@ -1318,8 +1355,8 @@ namespace PokeRoadie
                 await WriteStats();
                 await Export();
 
-                var pokeStop = pokeStopList[0];
-                pokeStopList.RemoveAt(0);
+                var pokeStop = finalList[0];
+                finalList.RemoveAt(0);
                 if (pokeStop.Type != FortType.Gym)
                 {
                     await ProcessPokeStop(pokeStop, mapObjects);
@@ -1568,7 +1605,9 @@ namespace PokeRoadie
             if (CanCatch && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
             {
                 if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
+                {
                     await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
+                }
                 else
                     Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
             }
@@ -2564,10 +2603,11 @@ namespace PokeRoadie
             var pokeStopList = GetPokestops(GetCurrentLocation(), path ? _settings.MaxDistanceForLongTravel : _settings.MaxDistance, mapObjects);
             var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
-            if (_settings.VisitGyms) totalActivecount += gymsList.Count;
+            var unvisitedGymList = gymsList.Where(x => !gymTries.Contains(x.Id)).ToList();
+            if (_settings.VisitGyms) totalActivecount += unvisitedGymList.Count;
             if (_settings.VisitPokestops) totalActivecount += stopList.Count;
 
-            if (totalActivecount > 0 && stopList.Count > 0 || gymsList.Where(x=> !gymTries.Contains(x.Id)).Count() > 0)
+            if (totalActivecount > 0)
             {
                 if (inTravel) Logger.Write($"Slight course change...", LogLevel.Info);
                 await ProcessFortList(pokeStopList, mapObjects);

@@ -442,7 +442,7 @@ namespace PokeRoadie
             return result;
         }
 
-        public static FortData[] pathByNearestNeighbour(FortData[] pokeStops)
+        public static FortData[] PathByNearestNeighbour(FortData[] pokeStops)
         {
             for (var i = 1; i < pokeStops.Length - 1; i++)
             {

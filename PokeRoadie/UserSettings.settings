@@ -386,5 +386,8 @@
     <Setting Name="PokeballRefillDelayMinutes" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">15</Value>
     </Setting>
+    <Setting Name="TransferPriorityType2" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IV</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
