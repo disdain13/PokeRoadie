@@ -2869,7 +2869,7 @@ namespace PokeRoadie
             if (_settings.PickupDailyDefenderBonuses)
             { 
                 var pokemonDefendingCount = (await _inventory.GetPokemons()).Where(x => !string.IsNullOrEmpty(x.DeployedFortId)).Count();
-                if (pokemonDefendingCount == 0) return;
+                if (pokemonDefendingCount == 0 || pokemonDefendingCount < _settings.MinGymsBeforeBonusPickup) return;
 
                 if (_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs < DateTime.UtcNow.ToUnixTime())
                 {
