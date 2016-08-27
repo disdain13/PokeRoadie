@@ -123,8 +123,8 @@
   <IncludeHotPokestops>false</IncludeHotPokestops>
   <TutorialGenerateCodename>true</TutorialGenerateCodename>
   <TutorialCodename></TutorialCodename>
-  <PokedexMinDelay>10000</PokedexMinDelay>
-  <PokedexMaxDelay>20000</PokedexMaxDelay>
+  <PokedexEntryMinDelay>10000</PokedexEntryMinDelay>
+  <PokedexEntryMaxDelay>20000</PokedexEntryMaxDelay>
   <LocationsMinDelay>10000</LocationsMinDelay>
   <LocationsMaxDelay>20000</LocationsMaxDelay>
   <PokeballRefillDelayMinutes>15</PokeballRefillDelayMinutes>
