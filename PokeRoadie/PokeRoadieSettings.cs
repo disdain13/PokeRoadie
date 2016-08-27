@@ -530,7 +530,7 @@ namespace PokeRoadie
             PriorityTypes outValue2 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType, true, out outValue2))
                 this.EvolvePriorityType = outValue;
-            PriorityTypes outValue7 = PriorityTypes.V;
+            PriorityTypes outValue7 = PriorityTypes.IV;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType2, true, out outValue7))
                 this.EvolvePriorityType2 = outValue;
             this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
@@ -553,7 +553,7 @@ namespace PokeRoadie
             PriorityTypes outValue3 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType, true, out outValue3))
                 this.PowerUpPriorityType = outValue;
-            PriorityTypes outValue8 = PriorityTypes.V;
+            PriorityTypes outValue8 = PriorityTypes.IV;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType2, true, out outValue8))
                 this.PowerUpPriorityType2 = outValue;
             this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
