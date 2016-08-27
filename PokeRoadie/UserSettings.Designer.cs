@@ -323,27 +323,27 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int TransferBelowCP {
+        public int AlwaysTransferBelowCP {
             get {
-                return ((int)(this["TransferBelowCP"]));
+                return ((int)(this["AlwaysTransferBelowCP"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double TransferBelowV {
+        public double AlwaysTransferBelowIV {
             get {
-                return ((double)(this["TransferBelowV"]));
+                return ((double)(this["AlwaysTransferBelowIV"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double TransferBelowIV {
+        public double AlwaysTransferBelowLV {
             get {
-                return ((double)(this["TransferBelowIV"]));
+                return ((double)(this["AlwaysTransferBelowLV"]));
             }
         }
         
@@ -1199,6 +1199,24 @@ namespace PokeRoadie {
         public string EvolvePriorityType2 {
             get {
                 return ((string)(this["EvolvePriorityType2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double AlwaysTransferBelowV {
+            get {
+                return ((double)(this["AlwaysTransferBelowV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double KeepAboveLV {
+            get {
+                return ((double)(this["KeepAboveLV"]));
             }
         }
     }

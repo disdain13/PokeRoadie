@@ -76,15 +76,20 @@ namespace PokeRoadie
             //the Keep list.
             var results1 = query.Where(x =>
                 !_settings.PokemonsNotToTransfer.Contains(x.PokemonId) &&
-                ((PokeRoadieSettings.Current.TransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.TransferBelowCp) ||
-                (PokeRoadieSettings.Current.TransferBelowIV > 0 && x.GetPerfection() < PokeRoadieSettings.Current.TransferBelowIV) ||
-                (PokeRoadieSettings.Current.TransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.TransferBelowV))
+                ((PokeRoadieSettings.Current.AlwaysTransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.AlwaysTransferBelowCp) ||
+                (PokeRoadieSettings.Current.AlwaysTransferBelowIV > 0 && x.GetPerfection() < PokeRoadieSettings.Current.AlwaysTransferBelowIV) ||
+                (PokeRoadieSettings.Current.AlwaysTransferBelowLV > 0 && x.GetLevel() < PokeRoadieSettings.Current.AlwaysTransferBelowLV) ||
+                (PokeRoadieSettings.Current.AlwaysTransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.AlwaysTransferBelowV))
             );
 
 
             //Keep By CP filter
-            if (PokeRoadieSettings.Current.KeepAboveCp > 0)
-                query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCp);
+            if (PokeRoadieSettings.Current.KeepAboveCP > 0)
+                query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCP);
+
+            //Keep By LV filter
+            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
+                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
 
             //Keep By IV filter
             if (PokeRoadieSettings.Current.KeepAboveIV > 0)

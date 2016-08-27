@@ -95,11 +95,13 @@ namespace PokeRoadie
         public virtual PriorityTypes TransferPriorityType2 { get; set; }
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual double KeepAboveIV { get; set; }
+        public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
-        public virtual int KeepAboveCp { get; set; }
-        public virtual double TransferBelowIV { get; set; }
-        public virtual double TransferBelowV { get; set; }
-        public virtual int TransferBelowCp { get; set; }
+        public virtual int KeepAboveCP { get; set; }
+        public virtual int AlwaysTransferBelowCp { get; set; }
+        public virtual double AlwaysTransferBelowIV { get; set; }
+        public virtual double AlwaysTransferBelowLV { get; set; }
+        public virtual double AlwaysTransferBelowV { get; set; }
         public virtual int TransferTrimFatCount { get; set; }
         public virtual bool NotTransferPokemonsThatCanEvolve { get; set; }
 
@@ -490,8 +492,9 @@ namespace PokeRoadie
             //this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
             this.LongDistanceSpeed = UserSettings.Default.LongDistanceSpeed;
             this.GPXFile = UserSettings.Default.GPXFile;
-            this.KeepAboveCp = UserSettings.Default.KeepAboveCP;
+            this.KeepAboveCP = UserSettings.Default.KeepAboveCP;
             this.KeepAboveIV = UserSettings.Default.KeepAboveIV;
+            this.KeepAboveLV = UserSettings.Default.KeepAboveLV;
             this.KeepAboveV = UserSettings.Default.KeepAboveV;
             this.LoiteringActive = UserSettings.Default.LoiteringActive;
             this.MaxSecondsBetweenStops = UserSettings.Default.MaxSecondsBetweenStops;
@@ -515,9 +518,10 @@ namespace PokeRoadie
             this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
             this.MinSpeed = UserSettings.Default.MinSpeed;
             this.MaxSpeed = UserSettings.Default.MaxSpeed;
-            this.TransferBelowCp = UserSettings.Default.TransferBelowCP;
-            this.TransferBelowIV = UserSettings.Default.TransferBelowIV;
-            this.TransferBelowV = UserSettings.Default.TransferBelowV;
+            this.AlwaysTransferBelowCp = UserSettings.Default.AlwaysTransferBelowCP;
+            this.AlwaysTransferBelowIV = UserSettings.Default.AlwaysTransferBelowIV;
+            this.AlwaysTransferBelowLV = UserSettings.Default.AlwaysTransferBelowLV;
+            this.AlwaysTransferBelowV = UserSettings.Default.AlwaysTransferBelowV;
             this.AutoDeployAtTeamGyms = UserSettings.Default.AutoDeployAtTeamGyms;
             this.VisitGyms = UserSettings.Default.VisitGyms;
             this.VisitPokestops = UserSettings.Default.VisitPokestops;
@@ -782,8 +786,9 @@ namespace PokeRoadie
                     //this.FlyingEnabled = obj.FlyingEnabled;
                     this.LongDistanceSpeed = obj.LongDistanceSpeed;
                     this.GPXFile = obj.GPXFile;
-                    this.KeepAboveCp = obj.KeepAboveCp;
+                    this.KeepAboveCP = obj.KeepAboveCP;
                     this.KeepAboveIV = obj.KeepAboveIV;
+                    this.KeepAboveLV = obj.KeepAboveLV;
                     this.KeepAboveV = obj.KeepAboveV;
                     this.LoiteringActive = obj.LoiteringActive;
                     this.MaxSecondsBetweenStops = obj.MaxSecondsBetweenStops;
@@ -803,9 +808,10 @@ namespace PokeRoadie
                     this.UsePokemonToNotCatchList = obj.UsePokemonToNotCatchList;
                     this.MinSpeed = obj.MinSpeed;
                     this.MaxSpeed = obj.MaxSpeed;
-                    this.TransferBelowCp = obj.TransferBelowCp;
-                    this.TransferBelowIV = obj.TransferBelowIV;
-                    this.TransferBelowV = obj.TransferBelowV;
+                    this.AlwaysTransferBelowCp = obj.AlwaysTransferBelowCp;
+                    this.AlwaysTransferBelowIV = obj.AlwaysTransferBelowIV;
+                    this.AlwaysTransferBelowLV = obj.AlwaysTransferBelowLV;
+                    this.AlwaysTransferBelowV = obj.AlwaysTransferBelowV;
                     this.AutoDeployAtTeamGyms = obj.AutoDeployAtTeamGyms;
                     this.VisitGyms = obj.VisitGyms;
                     this.VisitPokestops = obj.VisitPokestops;

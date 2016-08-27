@@ -101,13 +101,13 @@
     <Setting Name="TransferPokemon" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="TransferBelowCP" Type="System.Int32" Scope="Application">
+    <Setting Name="AlwaysTransferBelowCP" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="TransferBelowV" Type="System.Double" Scope="Application">
+    <Setting Name="AlwaysTransferBelowV" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="TransferBelowIV" Type="System.Double" Scope="Application">
+    <Setting Name="AlwaysTransferBelowIV" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="AutoDeployAtTeamGyms" Type="System.Boolean" Scope="Application">
@@ -394,6 +394,12 @@
     </Setting>
     <Setting Name="EvolvePriorityType2" Type="System.String" Scope="Application">
       <Value Profile="(Default)">IV</Value>
+    </Setting>
+    <Setting Name="AlwaysTransferBelowLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="KeepAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

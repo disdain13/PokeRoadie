@@ -35,10 +35,12 @@
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
   <KeepAboveIV>0</KeepAboveIV>
   <KeepAboveV>0</KeepAboveV>
-  <KeepAboveCp>0</KeepAboveCp>
-  <TransferBelowIV>0</TransferBelowIV>
-  <TransferBelowV>0</TransferBelowV>
-  <TransferBelowCp>0</TransferBelowCp>
+  <KeepAboveCP>0</KeepAboveCP>
+  <KeepAboveLV>0</KeepAboveLV>
+  <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
+  <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
+  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
+  <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
   <PowerUpPokemon>false</PowerUpPokemon>
