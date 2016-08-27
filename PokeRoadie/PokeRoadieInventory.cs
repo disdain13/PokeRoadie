@@ -328,21 +328,39 @@ namespace PokeRoadie
             if (query.Count() == 0) return new List<PokemonData>();
 
             //ordering
-            switch (PokeRoadieSettings.Current.EvolvePriorityType)
+            Func<PokemonData, double> orderBy = null;
+            switch (_settings.EvolvePriorityType)
             {
                 case PriorityTypes.CP:
-                    query = query.OrderByDescending(x => x.Cp)
-                                 .ThenBy(x => x.Stamina);
+                    orderBy = new Func<PokemonData, double>(x => x.Cp);
                     break;
                 case PriorityTypes.IV:
-                    query = query.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
-                                 .ThenBy(n => n.StaminaMax);
+                    orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.V:
+                    orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                     break;
                 default:
-                    query = query.OrderByDescending(x => x.CalculatePokemonValue())
-                                 .ThenBy(n => n.StaminaMax);
                     break;
             }
+
+            Func<PokemonData, double> thenBy = null;
+            switch (_settings.EvolvePriorityType2)
+            {
+                case PriorityTypes.CP:
+                    thenBy = new Func<PokemonData, double>(x => x.Cp);
+                    break;
+                case PriorityTypes.IV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.V:
+                    thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                default:
+                    break;
+            }
+
+            query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
 
             var pokemons = query.ToList();
 
@@ -404,21 +422,39 @@ namespace PokeRoadie
             if (query.Count() == 0) return new List<PokemonData>();
 
             //ordering
-            switch (PokeRoadieSettings.Current.PowerUpPriorityType)
+            Func<PokemonData, double> orderBy = null;
+            switch (_settings.PowerUpPriorityType)
             {
                 case PriorityTypes.CP:
-                    query = query.OrderByDescending(x => x.Cp)
-                                 .ThenBy(x => x.Stamina);
+                    orderBy = new Func<PokemonData, double>(x => x.Cp);
                     break;
                 case PriorityTypes.IV:
-                    query = query.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
-                                 .ThenBy(n => n.StaminaMax);
+                    orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.V:
+                    orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                     break;
                 default:
-                    query = query.OrderByDescending(x => x.CalculatePokemonValue())
-                                 .ThenBy(n => n.StaminaMax);
                     break;
             }
+
+            Func<PokemonData, double> thenBy = null;
+            switch (_settings.PowerUpPriorityType2)
+            {
+                case PriorityTypes.CP:
+                    thenBy = new Func<PokemonData, double>(x => x.Cp);
+                    break;
+                case PriorityTypes.IV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.V:
+                    thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                default:
+                    break;
+            }
+
+            query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
 
             return query.ToList();
 
