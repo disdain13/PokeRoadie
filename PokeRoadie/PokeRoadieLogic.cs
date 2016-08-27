@@ -1648,21 +1648,39 @@ namespace PokeRoadie
                     var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                     //ordering
+                    Func<PokemonData, double> orderBy = null;
                     switch (_settings.TransferPriorityType)
                     {
                         case PriorityTypes.CP:
-                            query = query.OrderBy(x => x.Cp)
-                                         .ThenBy(x => x.Stamina);
+                            orderBy = new Func<PokemonData, double>(x => x.Cp);
                             break;
                         case PriorityTypes.IV:
-                            query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
-                                         .ThenBy(n => n.StaminaMax);
+                            orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                            break;
+                        case PriorityTypes.V:
+                            orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                             break;
                         default:
-                            query = query.OrderBy(x => x.CalculatePokemonValue())
-                                         .ThenBy(n => n.StaminaMax);
                             break;
                     }
+
+                    Func<PokemonData, double> thenBy = null;
+                    switch (_settings.TransferPriorityType2)
+                    {
+                        case PriorityTypes.CP:
+                            thenBy = new Func<PokemonData, double>(x => x.Cp);
+                            break;
+                        case PriorityTypes.IV:
+                            thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                            break;
+                        case PriorityTypes.V:
+                            thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                            break;
+                        default:
+                            break;
+                    }
+
+                    query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
 
                     await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
                     
@@ -2649,10 +2667,10 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = "NONE";
+                string bestPokemonInfo = "NONE                                   ";
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{pokemon.GetMinStats()}    Best: {bestPokemonInfo}   Candy: {FamilyCandies}", LogLevel.Transfer);
+                Logger.Write($"{pokemon.GetMinStats().PadRight(34, ' ')} Best: {bestPokemonInfo.PadRight(34, ' ')} {("Candy: " + FamilyCandies).PadLeft(20, ' ')}", LogLevel.Transfer);
 
                 //raise event
                 if (OnTransfer != null)
@@ -2689,21 +2707,39 @@ namespace PokeRoadie
                 var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
                 //ordering
+                Func<PokemonData, double> orderBy = null;
                 switch (_settings.TransferPriorityType)
                 {
                     case PriorityTypes.CP:
-                        query = query.OrderBy(x => x.Cp)
-                                     .ThenBy(x => x.Stamina);
+                        orderBy = new Func<PokemonData, double>(x => x.Cp);
                         break;
                     case PriorityTypes.IV:
-                        query = query.OrderBy(PokemonInfo.CalculatePokemonPerfection)
-                                     .ThenBy(n => n.StaminaMax);
+                        orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                        break;
+                    case PriorityTypes.V:
+                        orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                         break;
                     default:
-                        query = query.OrderBy(x => x.CalculatePokemonValue())
-                                     .ThenBy(n => n.StaminaMax);
                         break;
                 }
+
+                Func<PokemonData, double> thenBy = null;
+                switch (_settings.TransferPriorityType2)
+                {
+                    case PriorityTypes.CP:
+                        thenBy = new Func<PokemonData, double>(x => x.Cp);
+                        break;
+                    case PriorityTypes.IV:
+                        thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                        break;
+                    case PriorityTypes.V:
+                        thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                        break;
+                    default:
+                        break;
+                }
+
+                query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
 
                 await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
 

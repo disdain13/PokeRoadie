@@ -117,7 +117,7 @@ namespace PokeRoadie
                     var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
                     var amountToSkip = PokeRoadieSettings.Current.KeepDuplicateAmount;
 
-                    if (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip)
+                    if (_settings.NotTransferPokemonsThatCanEvolve && (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip))
                         amountToSkip = familyCandy.Candy_ / settings.CandyToEvolve;
 
                     switch (PokeRoadieSettings.Current.TransferPriorityType)

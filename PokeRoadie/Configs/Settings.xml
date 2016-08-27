@@ -30,6 +30,7 @@
   <UsePokemonsToEvolveList>false</UsePokemonsToEvolveList>
   <TransferPokemon>false</TransferPokemon>
   <TransferPriorityType>V</TransferPriorityType>
+  <TransferPriorityType2>IV</TransferPriorityType2>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
   <KeepAboveIV>0</KeepAboveIV>
   <KeepAboveV>0</KeepAboveV>
