@@ -112,6 +112,7 @@ namespace PokeRoadie.Extensions
 
         public static string GetMinStats(this PokemonData pokemon)
         {
+            return $"{pokemon.PokemonId.ToString().PadRight(19, ' ')} ({pokemon.CalculatePokemonValue().ToString().PadLeft(3)}V-{pokemon.Cp.ToString().PadLeft(4,'-')}CP-{pokemon.GetPerfection().ToString("0.00").PadLeft(6,'-')}%-LV{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString().PadLeft(3,'-')}HP)";
         }
 
         public static string GetMoveName(this PokemonMove move)

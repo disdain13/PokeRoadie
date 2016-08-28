@@ -2705,6 +2705,7 @@ namespace PokeRoadie
                 string bestPokemonInfo = "NONE";
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
+                Logger.Write($"{pokemon.PokemonId.ToString().PadRight(19, ' ')} {pokemon.GetMinStats()} Best: {bestPokemonInfo} Candy: {FamilyCandies}", LogLevel.Transfer);
 
 
                 //raise event
