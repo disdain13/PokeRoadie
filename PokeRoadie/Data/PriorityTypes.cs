@@ -10,6 +10,7 @@ namespace PokeRoadie
     {
         CP,
         IV,
+        LV,
         V,
         NONE
     }

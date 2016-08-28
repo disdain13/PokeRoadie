@@ -1,30 +1,31 @@
 <?xml version="1.0"?>
 <PokeRoadieSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <AuthType>Ptc</AuthType>
-  <Username>woshikie96</Username>
-  <Password>kiekie</Password>
+  <AuthType>Google</AuthType>
+  <Username></Username>
+  <Password></Password>
   <DestinationsEnabled>false</DestinationsEnabled>
   <MinutesPerDestination>30</MinutesPerDestination>
   <DestinationIndex>0</DestinationIndex>
-  <CurrentLatitude>1.2636838671618482</CurrentLatitude>
-  <CurrentLongitude>103.82257266511428</CurrentLongitude>
-  <CurrentAltitude>6.8</CurrentAltitude>
+  <CurrentLatitude>0</CurrentLatitude>
+  <CurrentLongitude>0</CurrentLongitude>
+  <CurrentAltitude>10</CurrentAltitude>
   <MinSpeed>3</MinSpeed>
-  <MaxSpeed>10</MaxSpeed>
-  <MaxDistance>200</MaxDistance>
+  <MaxSpeed>15</MaxSpeed>
+  <MaxDistance>3000</MaxDistance>
   <MaxDistanceForLongTravel>65</MaxDistanceForLongTravel>
   <EnableSpeedAdjustment>true</EnableSpeedAdjustment>
   <EnableSpeedRandomizer>true</EnableSpeedRandomizer>
   <MaxSecondsBetweenStops>120</MaxSecondsBetweenStops>
   <MaxLocationAttempts>5</MaxLocationAttempts>
-  <LongDistanceSpeed>10</LongDistanceSpeed>
+  <LongDistanceSpeed>65</LongDistanceSpeed>
   <SpeedCurveDistance>40</SpeedCurveDistance>
   <UseGPXPathing>false</UseGPXPathing>
   <GPXFile>GPXFILE.gpx</GPXFile>
-  <EnableWandering>true</EnableWandering>
-  <EvolvePokemon>true</EvolvePokemon>
-  <EvolvePriorityType>IV</EvolvePriorityType>
-  <EvolveAboveIV>95</EvolveAboveIV>
+  <EnableWandering>false</EnableWandering>
+  <EvolvePokemon>false</EvolvePokemon>
+  <EvolvePriorityType>V</EvolvePriorityType>
+  <EvolvePriorityType2>IV</EvolvePriorityType2>
+  <EvolveAboveIV>0</EvolveAboveIV>
   <EvolveAboveV>0</EvolveAboveV>
   <EvolveAboveCp>0</EvolveAboveCp>
   <UsePokemonsToEvolveList>false</UsePokemonsToEvolveList>
@@ -32,35 +33,38 @@
   <TransferPriorityType>V</TransferPriorityType>
   <TransferPriorityType2>IV</TransferPriorityType2>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
-  <KeepAboveIV>95</KeepAboveIV>
-  <KeepAboveV>350</KeepAboveV>
-  <KeepAboveCp>0</KeepAboveCp>
-  <TransferBelowIV>0</TransferBelowIV>
-  <TransferBelowV>0</TransferBelowV>
-  <TransferBelowCp>0</TransferBelowCp>
+  <KeepAboveIV>0</KeepAboveIV>
+  <KeepAboveV>0</KeepAboveV>
+  <KeepAboveCP>0</KeepAboveCP>
+  <KeepAboveLV>0</KeepAboveLV>
+  <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
+  <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
+  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
+  <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
-  <PowerUpPokemon>true</PowerUpPokemon>
-  <PowerUpPriorityType>IV</PowerUpPriorityType>
-  <PowerUpAboveIV>97.5</PowerUpAboveIV>
+  <PowerUpPokemon>false</PowerUpPokemon>
+  <PowerUpPriorityType>V</PowerUpPriorityType>
+  <PowerUpPriorityType2>IV</PowerUpPriorityType2>
+  <PowerUpAboveIV>0</PowerUpAboveIV>
   <PowerUpAboveV>0</PowerUpAboveV>
   <PowerUpAboveCp>0</PowerUpAboveCp>
   <MinStarDustForPowerUps>0</MinStarDustForPowerUps>
   <UsePokemonsToPowerUpList>false</UsePokemonsToPowerUpList>
   <MinCandyForPowerUps>0</MinCandyForPowerUps>
   <MaxPowerUpsPerRound>0</MaxPowerUpsPerRound>
-  <FavoritePokemon>true</FavoritePokemon>
+  <FavoritePokemon>false</FavoritePokemon>
   <FavoriteAboveCp>0</FavoriteAboveCp>
-  <FavoriteAboveIV>95</FavoriteAboveIV>
+  <FavoriteAboveIV>0</FavoriteAboveIV>
   <FavoriteAboveV>0</FavoriteAboveV>
   <CatchPokemon>true</CatchPokemon>
   <MaxCatchSpeed>45</MaxCatchSpeed>
   <VisitPokestops>true</VisitPokestops>
-  <MoveWhenNoStops>true</MoveWhenNoStops>
-  <PrioritizeStopsWithLures>true</PrioritizeStopsWithLures>
-  <LoiteringActive>true</LoiteringActive>
-  <VisitGyms>true</VisitGyms>
-  <AutoDeployAtTeamGyms>true</AutoDeployAtTeamGyms>
+  <MoveWhenNoStops>false</MoveWhenNoStops>
+  <PrioritizeStopsWithLures>false</PrioritizeStopsWithLures>
+  <LoiteringActive>false</LoiteringActive>
+  <VisitGyms>false</VisitGyms>
+  <AutoDeployAtTeamGyms>false</AutoDeployAtTeamGyms>
   <PokeBallBalancing>true</PokeBallBalancing>
   <EnableHumanizedThrows>true</EnableHumanizedThrows>
   <ForceExcellentThrowOverCp>600</ForceExcellentThrowOverCp>
@@ -69,23 +73,24 @@
   <ForceGreatThrowOverCp>400</ForceGreatThrowOverCp>
   <ForceGreatThrowOverIV>65</ForceGreatThrowOverIV>
   <ForceGreatThrowOverV>150</ForceGreatThrowOverV>
-  <ExcellentThrowChance>65</ExcellentThrowChance>
-  <GreatThrowChance>50</GreatThrowChance>
-  <NiceThrowChance>50</NiceThrowChance>
-  <CurveThrowChance>90</CurveThrowChance>
+  <ExcellentThrowChance>15</ExcellentThrowChance>
+  <GreatThrowChance>25</GreatThrowChance>
+  <NiceThrowChance>25</NiceThrowChance>
+  <CurveThrowChance>35</CurveThrowChance>
+  <MissThrowChance>10</MissThrowChance>
   <UseLuckyEggs>false</UseLuckyEggs>
   <UseIncense>false</UseIncense>
-  <UseRevives>true</UseRevives>
-  <UsePotions>true</UsePotions>
-  <UseEggIncubators>true</UseEggIncubators>
+  <UseRevives>false</UseRevives>
+  <UsePotions>false</UsePotions>
+  <UseEggIncubators>false</UseEggIncubators>
   <UsePokemonToNotCatchList>false</UsePokemonToNotCatchList>
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
-  <DisplayAggregateLog>true</DisplayAggregateLog>
-  <DisplayAllPokemonInLog>true</DisplayAllPokemonInLog>
-  <WaitOnStart>true</WaitOnStart>
-  <WaypointLatitude>1.264178</WaypointLatitude>
-  <WaypointLongitude>103.822456</WaypointLongitude>
-  <WaypointAltitude>11</WaypointAltitude>
+  <DisplayAggregateLog>false</DisplayAggregateLog>
+  <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
+  <WaitOnStart>false</WaitOnStart>
+  <WaypointLatitude>0</WaypointLatitude>
+  <WaypointLongitude>0</WaypointLongitude>
+  <WaypointAltitude>0</WaypointAltitude>
   <UseProxy>false</UseProxy>
   <UseProxyHost />
   <UseProxyPort>0</UseProxyPort>
@@ -97,9 +102,9 @@
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
   <DisplayPokemonCount>20</DisplayPokemonCount>
-  <DisplayTopCandy>20</DisplayTopCandy>
-  <MaxRunTimespan>02:00:00</MaxRunTimespan>
-  <MinBreakTimespan>00:25:00</MinBreakTimespan>
+  <DisplayTopCandy>10</DisplayTopCandy>
+  <MaxRunTimespan>22:00:00</MaxRunTimespan>
+  <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
   <MaxPokestopVisits>975</MaxPokestopVisits>
   <MinDelay>2500</MinDelay>
@@ -119,9 +124,9 @@
   <ShowDebugMessages>false</ShowDebugMessages>
   <TutorialPokmonId>Squirtle</TutorialPokmonId>
   <TeamColor>Blue</TeamColor>
-  <PickupDailyDefenderBonuses>true</PickupDailyDefenderBonuses>
-  <MinGymsBeforeBonusPickup>0</MinGymsBeforeBonusPickup>
-  <IncludeHotPokestops>true</IncludeHotPokestops>
+  <PickupDailyDefenderBonuses>false</PickupDailyDefenderBonuses>
+  <MinGymsBeforeBonusPickup>3</MinGymsBeforeBonusPickup>
+  <IncludeHotPokestops>false</IncludeHotPokestops>
   <TutorialGenerateCodename>true</TutorialGenerateCodename>
   <TutorialCodename></TutorialCodename>
   <PokedexEntryMinDelay>10000</PokedexEntryMinDelay>
