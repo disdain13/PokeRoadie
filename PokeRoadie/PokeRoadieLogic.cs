@@ -2803,7 +2803,7 @@ namespace PokeRoadie
 
             foreach (var pokemon in pokemons)
             {
-                if (pokemon.GetMaxCP() == pokemon.Cp) continue;
+                //if (pokemon.GetMaxCP() == pokemon.Cp) continue;
 
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
@@ -2841,9 +2841,10 @@ namespace PokeRoadie
                 }
                 else
                 {
+                    Logger.Write($"(POWER) Unable to powerup {pokemon.GetMinStats()}! Not enough Candies/Stardust or Max Level reached! {upgradeResult.Result.ToString()}", LogLevel.None, ConsoleColor.Red);
                     await RandomDelay();
                 }
-                if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
+                if (upgradedNumber >= _settings.MaxPowerUpsPerRound && _settings.MaxPowerUpsPerRound > 0)
                     break;
             }
         }
