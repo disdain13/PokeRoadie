@@ -1195,19 +1195,6 @@ namespace PokeRoadie
 
         private async Task ProcessNearby(GetMapObjectsResponse mapObjects)
         {
-            
-
-            var pokemons =
-                mapObjects.MapCells.SelectMany(i => i.CatchablePokemons)
-                .OrderBy(
-                    i =>
-                    LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
-
-            //clean up old encounter tracking 
-            //while (_recentEncounters != null && _recentEncounters.Count > 100)
-            //{
-            //    _recentEncounters.RemoveAt(0); 
-            //}
 
             //incense pokemon
             if (CanCatch && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
@@ -1223,21 +1210,23 @@ namespace PokeRoadie
                 }
             }
 
-            if (_settings.UsePokemonToNotCatchList)
-            {
-                ICollection<PokemonId> filter = _settings.PokemonsNotToCatch;
-                pokemons = mapObjects.MapCells.SelectMany(i => i.CatchablePokemons).Where(p => !filter.Contains(p.PokemonId)).OrderBy(i => LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
-            }
+            //wild pokemon
+            var pokemons =
+                mapObjects.MapCells.SelectMany(i => i.CatchablePokemons)
+                .Where(x=> !_recentEncounters.Contains(x.EncounterId))
+                .OrderBy(i => LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
-            if (pokemons != null && pokemons.Any())
-            {
-                Logger.Write($"Found {pokemons.Count()} catchable Pokemon", LogLevel.Info);
-            }  
-            else
-            {
-                return;
-            }
-               
+            //filter out not to catch list
+            if (_settings.UsePokemonToNotCatchList)
+                pokemons = pokemons.Where(p => !_settings.PokemonsNotToCatch.Contains(p.PokemonId)).OrderBy(i => LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
+
+            //clean up old recent encounters
+            while (_recentEncounters != null && _recentEncounters.Count > 100)
+             _recentEncounters.RemoveAt(0);
+
+            if (pokemons == null || !pokemons.Any()) return;
+            Logger.Write($"Found {pokemons.Count()} catchable Pokemon", LogLevel.Info);
+
             foreach (var pokemon in pokemons)
             {
                 if (!isRunning) break;
