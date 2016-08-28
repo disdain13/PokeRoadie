@@ -2808,13 +2808,14 @@ namespace PokeRoadie
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
                 
-                if (familyCandy.Candy_ < (pokemon.GetLevel()/10)) continue;
+                if (familyCandy.Candy_ < ((pokemon.GetLevel() /10) + 1)) continue;
                 if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps)
                 {
                     continue;
                 }
-
+                
                 if (pokemon.GetLevel() - _stats.Currentlevel >= 2) continue;
+                if (finalList.Where(x => x.Id.Equals(pokemon.Id)) != null) continue;
                 finalList.Add(pokemon);
             }
 
@@ -2822,8 +2823,10 @@ namespace PokeRoadie
 
             Logger.Write($"Found {finalList.Count()} pokemon to power up:", LogLevel.Info);
 
-            foreach (var pokemon in finalList)
+            //foreach (var pokemon in finalList)
+            for(int i = 0; i < finalList.Count; i++)
             {
+                var pokemon = finalList[i];
                 var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
@@ -2839,7 +2842,7 @@ namespace PokeRoadie
 
                     //power up specific delay
                     await RandomDelay(_settings.PowerUpMinDelay, _settings.PowerUpMaxDelay);
-
+                    i--;
                 }
                 else
                 {
