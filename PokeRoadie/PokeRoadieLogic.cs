@@ -2824,6 +2824,7 @@ namespace PokeRoadie
                 {
                     continue;
                 }
+                
                 finalList.Add(pokemon);
             }
 
