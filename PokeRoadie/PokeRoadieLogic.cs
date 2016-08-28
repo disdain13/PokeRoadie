@@ -2801,20 +2801,39 @@ namespace PokeRoadie
             var upgradedNumber = 0;
             var finalList = new List<PokemonData>();
 
+
+            //fixed by woshikie! Thanks!
             foreach (var pokemon in pokemons)
             {
-                if (pokemon.GetMaxCP() == pokemon.Cp) continue;
+                //if (pokemon.GetMaxCP() == pokemon.Cp) continue;
 
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
-                if (familyCandy.Candy_ <= 0) continue;
+                if (familyCandy.Candy_ < (pokemon.GetLevel() / 10)) continue;
                 if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps)
                 {
                     continue;
                 }
+
+                if (pokemon.GetLevel() - _stats.Currentlevel >= 2) continue;
                 finalList.Add(pokemon);
             }
+
+            //foreach (var pokemon in pokemons)
+            //{
+            //    if (pokemon.GetMaxCP() == pokemon.Cp) continue;
+
+            //    var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+            //    var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+
+            //    if (familyCandy.Candy_ <= 0) continue;
+            //    if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps)
+            //    {
+            //        continue;
+            //    }
+            //    finalList.Add(pokemon);
+            //}
 
             if (finalList.Count == 0) return;
 
@@ -2841,9 +2860,11 @@ namespace PokeRoadie
                 }
                 else
                 {
+                    Logger.Write($"(POWER ERROR) Unable to powerup {pokemon.GetMinStats()}! Not enough Candies/Stardust or Max Level reached, we should not be hitting this code - {upgradeResult.Result.ToString()}", LogLevel.None, ConsoleColor.Red);
                     await RandomDelay();
                 }
-                if (upgradedNumber >= _settings.MaxPowerUpsPerRound)
+                //fixed by woshikie! Thanks!
+                if (_settings.MaxPowerUpsPerRound > 0 && upgradedNumber >= _settings.MaxPowerUpsPerRound)
                     break;
             }
         }
