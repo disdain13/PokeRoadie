@@ -323,27 +323,27 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int TransferBelowCP {
+        public int AlwaysTransferBelowCP {
             get {
-                return ((int)(this["TransferBelowCP"]));
+                return ((int)(this["AlwaysTransferBelowCP"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double TransferBelowV {
+        public double AlwaysTransferBelowV {
             get {
-                return ((double)(this["TransferBelowV"]));
+                return ((double)(this["AlwaysTransferBelowV"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double TransferBelowIV {
+        public double AlwaysTransferBelowIV {
             get {
-                return ((double)(this["TransferBelowIV"]));
+                return ((double)(this["AlwaysTransferBelowIV"]));
             }
         }
         
@@ -844,6 +844,15 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double MissThrowChance {
+            get {
+                return ((double)(this["MissThrowChance"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("htc10")]
         public string DevicePackageName {
             get {
@@ -1181,6 +1190,42 @@ namespace PokeRoadie {
         public string TransferPriorityType2 {
             get {
                 return ((string)(this["TransferPriorityType2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("IV")]
+        public string PowerUpPriorityType2 {
+            get {
+                return ((string)(this["PowerUpPriorityType2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("IV")]
+        public string EvolvePriorityType2 {
+            get {
+                return ((string)(this["EvolvePriorityType2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double AlwaysTransferBelowLV {
+            get {
+                return ((double)(this["AlwaysTransferBelowLV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double KeepAboveLV {
+            get {
+                return ((double)(this["KeepAboveLV"]));
             }
         }
     }

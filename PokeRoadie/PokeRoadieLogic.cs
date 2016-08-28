@@ -318,12 +318,14 @@ namespace PokeRoadie
                     if (_settings.TransferPokemon)
                     {
                         Logger.Write("====== Transfer Settings ======", LogLevel.None, ConsoleColor.Yellow);
-                        Logger.Write($"{("Keep Above CP:").PadRight(25)}{_settings.KeepAboveCp}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Keep Above CP:").PadRight(25)}{_settings.KeepAboveCP}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Keep Above IV:").PadRight(25)}{_settings.KeepAboveLV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Keep Above IV:").PadRight(25)}{_settings.KeepAboveIV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Keep Above V:").PadRight(25)}{_settings.KeepAboveV}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Transfer Below CP:").PadRight(25)}{_settings.TransferBelowCp}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.TransferBelowIV}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Transfer Below V:").PadRight(25)}{_settings.TransferBelowV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below CP:").PadRight(25)}{_settings.AlwaysTransferBelowCp}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.AlwaysTransferBelowIV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.AlwaysTransferBelowLV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below V:").PadRight(25)}{_settings.AlwaysTransferBelowV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!_settings.NotTransferPokemonsThatCanEvolve}", LogLevel.None, ConsoleColor.White);
                         if (_settings.PokemonsNotToTransfer.Count > 0)
                         {
@@ -2382,6 +2384,9 @@ namespace PokeRoadie
                 var pokemonIv = pokemon.GetPerfection();
                 var pokemonV = pokemon.CalculatePokemonValue();
 
+                //_settings.MissThrowChance
+                
+
                 if ((_settings.ForceExcellentThrowOverCp > 0 && pokemon.Cp > _settings.ForceExcellentThrowOverCp) ||
                     (_settings.ForceExcellentThrowOverIV > 0 && pokemonIv > _settings.ForceExcellentThrowOverIV) ||
                     (_settings.ForceExcellentThrowOverV > 0 && pokemonV > _settings.ForceExcellentThrowOverV))
@@ -2697,10 +2702,10 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = "NONE                                   ";
+                string bestPokemonInfo = "NONE";
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{pokemon.GetMinStats().PadRight(34, ' ')} Best: {bestPokemonInfo.PadRight(34, ' ')} {("Candy: " + FamilyCandies).PadLeft(20, ' ')}", LogLevel.Transfer);
+                Logger.Write($"{(pokemon.GetMinStats().ToString()).PadRight(33) + " Best: " + (bestPokemonInfo.ToString()).PadRight(33) + " Candy: " + FamilyCandies}", LogLevel.Transfer);
 
                 //raise event
                 if (OnTransfer != null)
