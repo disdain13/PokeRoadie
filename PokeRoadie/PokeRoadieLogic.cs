@@ -1204,10 +1204,10 @@ namespace PokeRoadie
                     LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //clean up old encounter tracking 
-            while (_recentEncounters != null && _recentEncounters.Count > 100)
-            {
-                _recentEncounters.RemoveAt(0); 
-            }
+            //while (_recentEncounters != null && _recentEncounters.Count > 100)
+            //{
+            //    _recentEncounters.RemoveAt(0); 
+            //}
 
             //incense pokemon
             if (CanCatch && _settings.UseIncense && (_nextIncenseTime.HasValue && _nextIncenseTime.Value >= DateTime.Now))
@@ -1215,13 +1215,11 @@ namespace PokeRoadie
                 var incenseRequest = await _client.Map.GetIncensePokemons();
                 if (incenseRequest.Result == GetIncensePokemonResponse.Types.Result.IncenseEncounterAvailable)
                 {
-                    if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(incenseRequest.PokemonId) && !_recentEncounters.Contains(incenseRequest.EncounterId))
+                    if (!_recentEncounters.Contains(incenseRequest.EncounterId) && (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(incenseRequest.PokemonId)))
                     {
                         _recentEncounters.Add(incenseRequest.EncounterId);
                         await ProcessIncenseEncounter(new LocationData(incenseRequest.Latitude, incenseRequest.Longitude, _client.CurrentAltitude), incenseRequest.EncounterId, incenseRequest.EncounterLocation);
                     }
-                    else
-                        Logger.Write($"Incense encounter with {incenseRequest.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
                 }
             }
 
@@ -1245,14 +1243,12 @@ namespace PokeRoadie
                 if (!isRunning) break;
                 var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
 
-                if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokemon.PokemonId) && !_recentEncounters.Contains(pokemon.EncounterId))
+                if (!_recentEncounters.Contains(pokemon.EncounterId) && (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokemon.PokemonId)))
                 {
                     _recentEncounters.Add(pokemon.EncounterId);
                     await ProcessEncounter(new LocationData(pokemon.Latitude, pokemon.Longitude, _client.CurrentAltitude), pokemon.EncounterId, pokemon.SpawnPointId, EncounterSourceTypes.Wild);
                 }    
-                else
-                    Logger.Write($"Wild encounter with {pokemon.PokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
-
+           
                 if (!Equals(pokemons.ElementAtOrDefault(pokemons.Count() - 1), pokemon))
                     // If pokemon is not last pokemon in list, create delay between catches, else keep moving.
                     await RandomDelay();
@@ -1600,16 +1596,14 @@ namespace PokeRoadie
  
             }
  
-
             //catch lure pokemon 8)
             if (CanCatch && pokeStop.LureInfo != null && (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId))
             {
-                if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
+                if (!_recentEncounters.Contains(pokeStop.LureInfo.EncounterId) && (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId)))
                 {
+                    _recentEncounters.Add(pokeStop.LureInfo.EncounterId);
                     await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
                 }
-                else
-                    Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
             }
 
             if (CanCatch && _settings.LoiteringActive && pokeStop.LureInfo != null && pokeStop.LureInfo.LureExpiresTimestampMs < DateTime.UtcNow.ToUnixTime())
@@ -1630,11 +1624,11 @@ namespace PokeRoadie
 
                     if (lastEnconterId == 0 || lastEnconterId != pokeStop.LureInfo.EncounterId)
                     {
-                        if (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId))
+                        if (!_recentEncounters.Contains(pokeStop.LureInfo.EncounterId) && (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokeStop.LureInfo.ActivePokemonId)))
+                        {
+                            _recentEncounters.Add(pokeStop.LureInfo.EncounterId);
                             await ProcessLureEncounter(new LocationData(pokeStop.Latitude, pokeStop.Longitude, _client.CurrentAltitude), pokeStop);
-                        else
-                            Logger.Write($"Lure encounter with {pokeStop.LureInfo.ActivePokemonId} ignored based on PokemonToNotCatchList.ini", LogLevel.Info);
-               
+                        }              
                     }
                     if (CanVisit)
                     {
@@ -2609,9 +2603,16 @@ namespace PokeRoadie
 
             if (totalActivecount > 0)
             {
-                if (inTravel) Logger.Write($"Slight course change...", LogLevel.Info);
+                if (inTravel) Logger.Write($"Slight course change...", LogLevel.Navigation);
                 await ProcessFortList(pokeStopList, mapObjects);
-                if (inTravel) Logger.Write($"Returning to long distance travel...", LogLevel.Info);
+                if (inTravel)
+                {
+                    var speedInMetersPerSecond = _settings.LongDistanceSpeed / 3.6;
+                    var sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
+                    var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, new GeoCoordinate(_settings.WaypointLatitude, _settings.WaypointLongitude));
+                    var seconds = distanceToTarget / speedInMetersPerSecond;
+                    Logger.Write($"Returning to long distance travel: {(_settings.DestinationsEnabled ? _settings.Destinations[_settings.DestinationIndex].Name + " " : String.Empty )}{distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(_settings.LongDistanceSpeed)} at {_settings.LongDistanceSpeed}kmh", LogLevel.Navigation);
+                }
             }
         }
 
