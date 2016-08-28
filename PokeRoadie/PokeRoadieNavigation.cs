@@ -277,9 +277,13 @@ namespace PokeRoadie
                 }
             }
 
+            
             var speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
             var sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
             var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
+            var dynamicLandingDistance = distanceToTarget > 18 ? random.Next(3, 18) : distanceToTarget > 3 ? random.Next(1, 3) : 2;
+            distanceToTarget = distanceToTarget - dynamicLandingDistance;
+            if (distanceToTarget < 1) distanceToTarget = 1;
             var seconds = distanceToTarget / speedInMetersPerSecond;
             //adjust speed to try and keep the trip under a minute, might not be possible
             if (walkingSpeedInKilometersPerHour < PokeRoadieSettings.Current.MaxSpeed && PokeRoadieSettings.Current.EnableSpeedAdjustment)
@@ -321,6 +325,7 @@ namespace PokeRoadie
 
             var minMetersPerSecond = _client.Settings.MinSpeed / 3.6;
             var enableCurve = distanceToTarget > (_client.Settings.SpeedCurveDistance * 2);
+            
             do
             {
                 var millisecondsUntilGetUpdatePlayerLocationResponse =
@@ -353,7 +358,7 @@ namespace PokeRoadie
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
                 await Task.Delay(500);
-            } while (LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30);
+            } while (LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= dynamicLandingDistance);
 
             return result;
         }
