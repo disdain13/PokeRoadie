@@ -70,6 +70,8 @@ namespace PokemonGo.RocketAPI.Extensions
             return result;
         }
 
+        private static int invalidCount = 0;
+
         public static async Task<TResponsePayload> PostProtoPayload<TRequest, TResponsePayload>(this System.Net.Http.HttpClient client,
             string url, RequestEnvelope requestEnvelope, IApiFailureStrategy strategy) where TRequest : IMessage<TRequest>
             where TResponsePayload : IMessage<TResponsePayload>, new()
@@ -89,7 +91,15 @@ namespace PokemonGo.RocketAPI.Extensions
             }
 
             if (response.Returns.Count == 0)
-                throw new InvalidResponseException();
+            {
+                invalidCount++;
+                if (invalidCount > 2) throw new InvalidResponseException();
+            }
+            else
+            {
+                invalidCount = 0;
+            }
+                
 
             strategy.HandleApiSuccess(requestEnvelope, response);
 
