@@ -43,7 +43,7 @@ namespace PokeRoadie.Utils
                 return ApiOperation.Abort;
 
             //I do not like hard delays
-            await Task.Delay(500);
+            await Task.Delay(1000);
 
             _retryCount++;
 
@@ -102,7 +102,7 @@ namespace PokeRoadie.Utils
             if (_retryCount == 11)
                 return ApiOperation.Abort;
 
-            await Task.Delay(500);
+            await Task.Delay(1000);
             _retryCount++;
 
             if (_retryCount % 5 == 0)
