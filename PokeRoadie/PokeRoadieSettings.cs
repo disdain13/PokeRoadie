@@ -83,6 +83,7 @@ namespace PokeRoadie
         //evolution
         public virtual bool EvolvePokemon { get; set; }
         public PriorityTypes EvolvePriorityType { get; set; }
+        public PriorityTypes EvolvePriorityType2 { get; set; }
         public virtual double EvolveAboveIV { get; set; }
         public virtual double EvolveAboveV { get; set; }
         public virtual int EvolveAboveCp { get; set; }
@@ -94,17 +95,20 @@ namespace PokeRoadie
         public virtual PriorityTypes TransferPriorityType2 { get; set; }
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual double KeepAboveIV { get; set; }
+        public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
-        public virtual int KeepAboveCp { get; set; }
-        public virtual double TransferBelowIV { get; set; }
-        public virtual double TransferBelowV { get; set; }
-        public virtual int TransferBelowCp { get; set; }
+        public virtual int KeepAboveCP { get; set; }
+        public virtual int AlwaysTransferBelowCp { get; set; }
+        public virtual double AlwaysTransferBelowIV { get; set; }
+        public virtual double AlwaysTransferBelowLV { get; set; }
+        public virtual double AlwaysTransferBelowV { get; set; }
         public virtual int TransferTrimFatCount { get; set; }
         public virtual bool NotTransferPokemonsThatCanEvolve { get; set; }
 
         //power-ups
         public virtual bool PowerUpPokemon { get; set; }
         public virtual PriorityTypes PowerUpPriorityType { get; set; }
+        public virtual PriorityTypes PowerUpPriorityType2 { get; set; }
         public virtual double PowerUpAboveIV { get; set; }
         public virtual double PowerUpAboveV { get; set; }
         public virtual int PowerUpAboveCp { get; set; }
@@ -147,6 +151,7 @@ namespace PokeRoadie
         public virtual int GreatThrowChance { get; set; }
         public virtual int NiceThrowChance { get; set; }
         public virtual double CurveThrowChance { get; set; }
+        public virtual double MissThrowChance { get; set; }
 
         //inventory
         public virtual bool UseLuckyEggs { get; set; }
@@ -488,8 +493,9 @@ namespace PokeRoadie
             //this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
             this.LongDistanceSpeed = UserSettings.Default.LongDistanceSpeed;
             this.GPXFile = UserSettings.Default.GPXFile;
-            this.KeepAboveCp = UserSettings.Default.KeepAboveCP;
+            this.KeepAboveCP = UserSettings.Default.KeepAboveCP;
             this.KeepAboveIV = UserSettings.Default.KeepAboveIV;
+            this.KeepAboveLV = UserSettings.Default.KeepAboveLV;
             this.KeepAboveV = UserSettings.Default.KeepAboveV;
             this.LoiteringActive = UserSettings.Default.LoiteringActive;
             this.MaxSecondsBetweenStops = UserSettings.Default.MaxSecondsBetweenStops;
@@ -513,9 +519,10 @@ namespace PokeRoadie
             this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
             this.MinSpeed = UserSettings.Default.MinSpeed;
             this.MaxSpeed = UserSettings.Default.MaxSpeed;
-            this.TransferBelowCp = UserSettings.Default.TransferBelowCP;
-            this.TransferBelowIV = UserSettings.Default.TransferBelowIV;
-            this.TransferBelowV = UserSettings.Default.TransferBelowV;
+            this.AlwaysTransferBelowCp = UserSettings.Default.AlwaysTransferBelowCP;
+            this.AlwaysTransferBelowIV = UserSettings.Default.AlwaysTransferBelowIV;
+            this.AlwaysTransferBelowLV = UserSettings.Default.AlwaysTransferBelowLV;
+            this.AlwaysTransferBelowV = UserSettings.Default.AlwaysTransferBelowV;
             this.AutoDeployAtTeamGyms = UserSettings.Default.AutoDeployAtTeamGyms;
             this.VisitGyms = UserSettings.Default.VisitGyms;
             this.VisitPokestops = UserSettings.Default.VisitPokestops;
@@ -524,6 +531,9 @@ namespace PokeRoadie
             PriorityTypes outValue2 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType, true, out outValue2))
                 this.EvolvePriorityType = outValue;
+            PriorityTypes outValue7 = PriorityTypes.IV;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.EvolvePriorityType2, true, out outValue7))
+                this.EvolvePriorityType2 = outValue;
             this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
             this.EvolveAboveIV = UserSettings.Default.EvolveAboveIV;
             this.EvolveAboveV = UserSettings.Default.EvolveAboveV;
@@ -544,6 +554,9 @@ namespace PokeRoadie
             PriorityTypes outValue3 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType, true, out outValue3))
                 this.PowerUpPriorityType = outValue;
+            PriorityTypes outValue8 = PriorityTypes.IV;
+            if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType2, true, out outValue8))
+                this.PowerUpPriorityType2 = outValue;
             this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
             this.PowerUpAboveIV = UserSettings.Default.PowerUpAboveIV;
             this.PowerUpAboveV = UserSettings.Default.PowerUpAboveV;
@@ -582,6 +595,7 @@ namespace PokeRoadie
             this.GreatThrowChance = UserSettings.Default.GreatThrowChance;
             this.NiceThrowChance = UserSettings.Default.NiceThrowChance;
             this.CurveThrowChance = UserSettings.Default.CurveThrowChance;
+            this.MissThrowChance = UserSettings.Default.MissThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
@@ -774,8 +788,9 @@ namespace PokeRoadie
                     //this.FlyingEnabled = obj.FlyingEnabled;
                     this.LongDistanceSpeed = obj.LongDistanceSpeed;
                     this.GPXFile = obj.GPXFile;
-                    this.KeepAboveCp = obj.KeepAboveCp;
+                    this.KeepAboveCP = obj.KeepAboveCP;
                     this.KeepAboveIV = obj.KeepAboveIV;
+                    this.KeepAboveLV = obj.KeepAboveLV;
                     this.KeepAboveV = obj.KeepAboveV;
                     this.LoiteringActive = obj.LoiteringActive;
                     this.MaxSecondsBetweenStops = obj.MaxSecondsBetweenStops;
@@ -795,14 +810,16 @@ namespace PokeRoadie
                     this.UsePokemonToNotCatchList = obj.UsePokemonToNotCatchList;
                     this.MinSpeed = obj.MinSpeed;
                     this.MaxSpeed = obj.MaxSpeed;
-                    this.TransferBelowCp = obj.TransferBelowCp;
-                    this.TransferBelowIV = obj.TransferBelowIV;
-                    this.TransferBelowV = obj.TransferBelowV;
+                    this.AlwaysTransferBelowCp = obj.AlwaysTransferBelowCp;
+                    this.AlwaysTransferBelowIV = obj.AlwaysTransferBelowIV;
+                    this.AlwaysTransferBelowLV = obj.AlwaysTransferBelowLV;
+                    this.AlwaysTransferBelowV = obj.AlwaysTransferBelowV;
                     this.AutoDeployAtTeamGyms = obj.AutoDeployAtTeamGyms;
                     this.VisitGyms = obj.VisitGyms;
                     this.VisitPokestops = obj.VisitPokestops;
 
                     this.EvolvePriorityType = obj.EvolvePriorityType;
+                    this.EvolvePriorityType2 = obj.EvolvePriorityType2;
                     this.EvolveAboveCp = obj.EvolveAboveCp;
                     this.EvolveAboveIV = obj.EvolveAboveIV;
                     this.EvolveAboveV = obj.EvolveAboveV;
@@ -821,6 +838,7 @@ namespace PokeRoadie
                     this.WaitOnStart = obj.WaitOnStart;
                     this.PowerUpPokemon = obj.PowerUpPokemon;
                     this.PowerUpPriorityType = obj.PowerUpPriorityType;
+                    this.PowerUpPriorityType2 = obj.PowerUpPriorityType2;
                     this.PowerUpAboveCp = obj.PowerUpAboveCp;
                     this.PowerUpAboveIV = obj.PowerUpAboveIV;
                     this.PowerUpAboveV = obj.PowerUpAboveV;
@@ -859,6 +877,7 @@ namespace PokeRoadie
                     this.GreatThrowChance = obj.GreatThrowChance;
                     this.NiceThrowChance = obj.NiceThrowChance;
                     this.CurveThrowChance = obj.CurveThrowChance;
+                    this.MissThrowChance = obj.MissThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
 
                     this.DisplayPokemonCount = obj.DisplayPokemonCount;
