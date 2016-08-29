@@ -167,9 +167,6 @@ namespace PokeRoadie
         public virtual int DisplayRefreshMinutes { get; set; }
         public virtual bool DisplayAggregateLog { get; set; }
         public virtual bool DisplayAllPokemonInLog { get; set; }
-        public virtual int DisplayPokemonCount { get; set; }
-        public virtual int DisplayTopCandy { get; set; }
-        public virtual string DisplayStyle { get; set; }
 
         //system
         public virtual bool WaitOnStart { get; set; }
@@ -194,6 +191,8 @@ namespace PokeRoadie
         public virtual string DeviceId { get; set; }
 
         //session
+        public virtual int DisplayPokemonCount { get; set; }
+        public virtual int DisplayTopCandy { get; set; }
         public virtual string MaxRunTimespan { get; set; }
         public virtual string MinBreakTimespan { get; set; }
         public virtual int MaxPokemonCatches { get; set; }
@@ -489,9 +488,6 @@ namespace PokeRoadie
             this.DisplayRefreshMinutes = UserSettings.Default.DisplayRefreshMinutes;
             this.EnableSpeedAdjustment = UserSettings.Default.EnableSpeedAdjustment;
             this.EnableSpeedRandomizer = UserSettings.Default.EnableSpeedRandomizer;
-            this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
-            this.DisplayTopCandy = UserSettings.Default.DisplayTopCandy;
-            this.DisplayStyle = UserSettings.Default.DisplayStyle;
             //this.EvolveOnlyPokemonAboveIV = UserSettings.Default.EvolveOnlyPokemonAboveIV;
             //this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
             this.EvolvePokemon = UserSettings.Default.EvolvePokemon;
@@ -603,6 +599,8 @@ namespace PokeRoadie
             this.MissThrowChance = UserSettings.Default.MissThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
+            this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
+            this.DisplayTopCandy = UserSettings.Default.DisplayTopCandy;
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
@@ -785,9 +783,6 @@ namespace PokeRoadie
                     this.DestinationsEnabled = obj.DestinationsEnabled;
                     this.DisplayAllPokemonInLog = obj.DisplayAllPokemonInLog;
                     this.DisplayAggregateLog = obj.DisplayAggregateLog;
-                    this.DisplayPokemonCount = obj.DisplayPokemonCount;
-                    this.DisplayTopCandy = obj.DisplayTopCandy;
-                    this.DisplayStyle = obj.DisplayStyle;
                     this.DisplayRefreshMinutes = obj.DisplayRefreshMinutes;
                     this.EnableSpeedAdjustment = obj.EnableSpeedAdjustment;
                     this.EnableSpeedRandomizer = obj.EnableSpeedRandomizer;
@@ -889,6 +884,8 @@ namespace PokeRoadie
                     this.MissThrowChance = obj.MissThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
 
+                    this.DisplayPokemonCount = obj.DisplayPokemonCount;
+                    this.DisplayTopCandy = obj.DisplayTopCandy;
                     this.MaxRunTimespan = obj.MaxRunTimespan;
                     this.MinBreakTimespan = obj.MinBreakTimespan;
                     this.MaxPokemonCatches = obj.MaxPokemonCatches;

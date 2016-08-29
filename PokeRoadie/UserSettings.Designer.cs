@@ -1237,14 +1237,5 @@ namespace PokeRoadie {
                 return ((bool)(this["CompleteTutorials"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("disdain")]
-        public string DisplayStyle {
-            get {
-                return ((string)(this["DisplayStyle"]));
-            }
-        }
     }
 }
