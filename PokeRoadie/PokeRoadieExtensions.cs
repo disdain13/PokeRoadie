@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
+using PokemonGo.RocketAPI.Enums;		
 using PokemonGo.RocketAPI.Extensions;
 using PokemonGo.RocketAPI.Helpers;
 using PokemonGo.RocketAPI.Logging;
@@ -17,9 +17,9 @@ using POGOProtos.Inventory.Item;
 using POGOProtos.Networking.Responses;
 using POGOProtos.Data;
 using POGOProtos.Enums;
-using POGOProtos.Map.Fort;
-using POGOProtos.Map.Pokemon;
-
+using POGOProtos.Map.Fort;		
+using POGOProtos.Map.Pokemon;		
+		
 using PokeRoadie.Extensions;
 
 #endregion
@@ -101,20 +101,18 @@ namespace PokeRoadie.Extensions
                 move.Effect = "Unknown";
                 move.Accuracy = 75;
             }
-                
+
             return move;
         }
 
         public static string GetStats(this PokemonData pokemon)
         {
-            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue().ToString().PadRight(3, ' ')} V | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00").PadLeft(6, ' ')}% IV | Lvl {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString() + " Hp").PadLeft(10,' ')} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {pokemon.Move1.GetMoveName().PadRight(14, ' ')}{CalculateMoveValue(pokemon.Move1.GetMoveName())} | {pokemon.Move2.GetMoveName().PadRight(14, ' ')}{CalculateMoveValue(pokemon.Move2.GetMoveName())}";
+            return $"{((String.IsNullOrWhiteSpace(pokemon.DeployedFortId) ? "" : "^") + (pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(20)} {pokemon.CalculatePokemonValue().ToString().PadRight(3)} V | {pokemon.Cp.ToString().PadLeft(4)} CP | {pokemon.GetPerfection().ToString("0.00").PadLeft(6)} IV | LV {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString()+" HP").PadLeft(10)} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {pokemon.Move1.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move1.GetMoveName())}) | {pokemon.Move2.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
         }
 
         public static string GetMinStats(this PokemonData pokemon)
         {
-            var name = pokemon.PokemonId.ToString();
-            if (name.Length > 10) name = name.Substring(0, 10); 
-            return $"{pokemon.PokemonId.ToString()} " + $"({pokemon.CalculatePokemonValue()}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}Hp)";
+            return $"{pokemon.PokemonId.ToString().PadRight(20)} " + $"({pokemon.CalculatePokemonValue()}V-{pokemon.Cp.ToString()}CP-{pokemon.GetPerfection().ToString("0.00")}IV-LV{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}HP)".PadRight(32);
         }
 
         public static string GetMoveName(this PokemonMove move)
@@ -138,11 +136,11 @@ namespace PokeRoadie.Extensions
 
         public static double CalculatePokemonValue(this PokemonData pokemon)
         {
-            var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon) * 1.5);
+            var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon));
             var cp = Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * oneHundred);
-            var m1 = CalculateMoveValue(pokemon.Move1.GetMoveName()) * .5;
-            var m2 = CalculateMoveValue(pokemon.Move2.GetMoveName()) * .5;
-            var l = (pokemon.GetLevel() == 0 ? 0 : pokemon.GetLevel() * 3.5);
+            var m1 = CalculateMoveValue(pokemon.Move1.GetMoveName());
+            var m2 = CalculateMoveValue(pokemon.Move2.GetMoveName());
+            var l = (pokemon.GetLevel() == 0 ? 0 : (pokemon.GetLevel() / 40) * oneHundred);
             return Math.Round(p + cp + m1 + m2 + l, 0);
         }
 
@@ -175,7 +173,7 @@ namespace PokeRoadie.Extensions
             //write data file
             try
             {
-                var data = new Xml.Gym2();
+                var data = new Xml.Gym();
                 data.Id = fortInfo.FortId;
                 data.Latitude = fortDetails.GymState.FortData.Latitude;
                 data.Longitude = fortDetails.GymState.FortData.Longitude;
@@ -192,30 +190,24 @@ namespace PokeRoadie.Extensions
                 {
                     foreach (var membership in fortDetails.GymState.Memberships)
                     {
-                        var m = new Xml.Membership2();
+                        var m = new Xml.Membership();
                         m.Player.Name = membership.TrainerPublicProfile.Name;
                         m.Player.Level = membership.TrainerPublicProfile.Level;
                         m.Pokemon.BattlesAttacked = membership.PokemonData.BattlesAttacked;
                         m.Pokemon.BattlesDefended = membership.PokemonData.BattlesDefended;
                         m.Pokemon.Cp = membership.PokemonData.Cp;
-                        m.Pokemon.Hp = membership.PokemonData.StaminaMax;
+                        m.Pokemon.Favorite = membership.PokemonData.Favorite;
                         m.Pokemon.HeightM = membership.PokemonData.HeightM;
-                        m.Pokemon.WeightKg = membership.PokemonData.WeightKg;
                         m.Pokemon.Id = membership.PokemonData.Id;
                         m.Pokemon.IndividualAttack = membership.PokemonData.IndividualAttack;
                         m.Pokemon.IndividualDefense = membership.PokemonData.IndividualDefense;
                         m.Pokemon.IndividualStamina = membership.PokemonData.IndividualStamina;
-                        m.Pokemon.PlayerLevel = membership.TrainerPublicProfile.Level;
-                        m.Pokemon.PlayerTeam = fortDetails.GymState.FortData.OwnedByTeam.ToString();
-                        m.Pokemon.IV = membership.PokemonData.GetPerfection();
-                        m.Pokemon.Nickname = membership.PokemonData.Nickname;
-                        m.Pokemon.V = membership.PokemonData.CalculatePokemonValue();
+                        m.Pokemon.IsEgg = membership.PokemonData.IsEgg;
                         m.Pokemon.Move1 = membership.PokemonData.Move1.ToString();
                         m.Pokemon.Move2 = membership.PokemonData.Move2.ToString();
                         m.Pokemon.Nickname = membership.PokemonData.Nickname;
-                        m.Pokemon.Level = membership.PokemonData.NumUpgrades;
-                        m.Pokemon.Origin = membership.PokemonData.Origin;
-                        m.Pokemon.Type = membership.PokemonData.PokemonId.ToString();
+                        m.Pokemon.NumUpgrades = membership.PokemonData.NumUpgrades;
+                        m.Pokemon.BattlesAttacked = membership.PokemonData.BattlesAttacked;
                         data.Memberships.Add(m);
                     }
                 }
