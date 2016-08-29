@@ -434,7 +434,7 @@ namespace PokeRoadie
                 var highestsPokemonCandy = await _inventory.GetHighestsCandies(_settings.DisplayTopCandy);
                 foreach (var candy in highestsPokemonCandy)
                 {
-                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19,' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19)} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
                 }                
                 
                 
@@ -463,7 +463,7 @@ namespace PokeRoadie
                 if (_settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
-                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
+                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId.ToString()).ThenByDescending(x => x.Cp))
                     {
                         Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                     }
@@ -2778,10 +2778,10 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = "NONE";
+                string bestPokemonInfo = "NONE".PadRight(53);
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
+                Logger.Write($"{pokemon.GetMinStats()} Best: {bestPokemonInfo} Candy: {FamilyCandies}", LogLevel.Transfer);
 
                 //raise event
                 if (OnTransfer != null)
