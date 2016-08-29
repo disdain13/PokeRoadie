@@ -48,6 +48,7 @@ namespace PokeRoadie
         public DateTime InitSessionDateTime;
         public PokeRoadieInventory _inventory = null;
         public TimeSpan Duration;
+        public DateTime nextTitleUpdate = DateTime.Now;
 
         public Statistics(PokeRoadieInventory inventory)
         {
@@ -92,10 +93,10 @@ namespace PokeRoadie
 
                         if (items.Any<ItemAward>())
                         {
-                            Logger.Write("- Received Bonus Items -", LogLevel.Info);
+                            Logger.Write("Received Bonus Items:", LogLevel.None, ConsoleColor.Green);
                             foreach (ItemAward item in items)
                             {
-                                Logger.Write($"{item.ItemId} x {item.ItemCount} ", LogLevel.Info);
+                                Logger.Write($"{item.ItemId} x {item.ItemCount} ", LogLevel.None, ConsoleColor.Green);
                             }
                         }
                     }
@@ -150,6 +151,8 @@ namespace PokeRoadie
 
         public async void UpdateConsoleTitle(PokeRoadieClient _client, PokeRoadieInventory _inventory)
         {
+            if (nextTitleUpdate > DateTime.Now) return;
+            nextTitleUpdate.AddSeconds(1);
             //appears to give incorrect info?		
             var pokes = await _inventory.GetPokemons();
             TotalPokesInBag = pokes.Count();

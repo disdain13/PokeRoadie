@@ -21,20 +21,6 @@ namespace PokemonGo.RocketAPI.Helpers
             return Math.Abs(longRand % (max - min)) + min;
         }
 
-        public static async Task RandomDelay(int maxDelay = 5000)
-        {
-            await Task.Delay(_random.Next((maxDelay > 500) ? 500 : 0, maxDelay));
-        }
-
-        public static async Task RandomDelay(int min, int max)
-        {
-            await Task.Delay(_random.Next(min, max));
-        }
-        public static async Task RandomDelay(int min, int max, CancellationToken cancellationToken)
-        {
-            await Task.Delay(_random.Next(min, max), cancellationToken);
-        }
-
         public static void RandomSleep(int min, int max)
         {
             Thread.Sleep(_random.Next(min, max));

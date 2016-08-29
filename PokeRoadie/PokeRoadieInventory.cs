@@ -103,6 +103,43 @@ namespace PokeRoadie
             if (PokeRoadieSettings.Current.PokemonsNotToTransfer != null)
                 query = query.Where(p => !PokeRoadieSettings.Current.PokemonsNotToTransfer.Contains(p.PokemonId));
 
+
+            //ordering
+            Func<PokemonData, double> orderBy = null;
+            switch (_settings.TransferPriorityType)
+            {
+                case PriorityTypes.CP:
+                    orderBy = new Func<PokemonData, double>(x => x.Cp);
+                    break;
+                case PriorityTypes.IV:
+                    orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.V:
+                    orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                default:
+                    break;
+            }
+
+            Func<PokemonData, double> thenBy = null;
+            switch (_settings.TransferPriorityType2)
+            {
+                case PriorityTypes.CP:
+                    thenBy = new Func<PokemonData, double>(x => x.Cp);
+                    break;
+                case PriorityTypes.IV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.V:
+                    thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                default:
+                    break;
+            }
+
+            query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
+
+
             //Not transfer if they can evolve
             if (PokeRoadieSettings.Current.NotTransferPokemonsThatCanEvolve)
             {
@@ -125,80 +162,30 @@ namespace PokeRoadie
                     if (_settings.NotTransferPokemonsThatCanEvolve && (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip))
                         amountToSkip = familyCandy.Candy_ / settings.CandyToEvolve;
 
-                    switch (PokeRoadieSettings.Current.TransferPriorityType)
-                    {
-                        case PriorityTypes.CP:
-                            results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
-                                .OrderByDescending(x => x.Cp)
-                                .ThenBy(n => n.StaminaMax)
-                                .Skip(amountToSkip)
-                                .ToList());
-                            break;
-                        case PriorityTypes.IV:
-                            results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
-                                .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
-                                .ThenBy(n => n.StaminaMax)
-                                .Skip(amountToSkip)
-                                .ToList());
-                            break;
-                        case PriorityTypes.V:
-                            results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
-                                .OrderByDescending(x => x.CalculatePokemonValue())
-                                .ThenBy(n => n.StaminaMax)
-                                .Skip(amountToSkip)
-                                .ToList());
-                            break;
-                    }
+                    results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
+                        .Skip(amountToSkip)
+                        .ToList());
+
                 }
                 return results;
             }
 
-            List<PokemonData> results2 = null;
-            switch (PokeRoadieSettings.Current.TransferPriorityType)
-            {
-                case PriorityTypes.CP:
 
-                    results2 = query
+            List<PokemonData> results2 = (thenBy == null) ? 
+                query
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
-                    .SelectMany(p =>
-
-                                p.OrderByDescending(x => x.Cp)
-                                .ThenBy(n => n.StaminaMax)
-                                .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
-                                .ToList()
-
-                                ).ToList();
-                    break;
-                case PriorityTypes.IV:
-
-                    results2 = query
+                    .SelectMany(p => p.OrderByDescending(orderBy)
+                    .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
+                    .ToList()).ToList() 
+                : 
+                query
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
-                    .SelectMany(p =>
-
-                                p.OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
-                                .ThenBy(n => n.StaminaMax)
-                                .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
-                                .ToList()
-
-                                ).ToList();
-                    break;
-                default:
-
-                    results2 = query
-                    .GroupBy(p => p.PokemonId)
-                    .Where(x => x.Count() > 1)
-                    .SelectMany(p =>
-
-                                p.OrderByDescending(x => x.CalculatePokemonValue())
-                                .ThenBy(n => n.StaminaMax)
-                                .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
-                                .ToList()
-
-                                ).ToList();
-                    break;
-            }
+                    .SelectMany(p => p.OrderByDescending(orderBy)
+                    .ThenByDescending(thenBy)
+                    .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
+                    .ToList()).ToList();
 
             //merge together the two lists
             foreach (var result in results1)
@@ -365,7 +352,7 @@ namespace PokeRoadie
                     break;
             }
 
-            query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
+            query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
 
             var pokemons = query.ToList();
 
