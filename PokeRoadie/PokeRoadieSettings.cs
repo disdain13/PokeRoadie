@@ -219,8 +219,9 @@ namespace PokeRoadie
         public virtual int LocationsMaxDelay { get; set; }
 
         public virtual bool ShowDebugMessages { get; set; }
-       
+
         //tutorials
+        public virtual bool CompleteTutorials { get; set; }
         public virtual PokemonId TutorialPokmonId { get; set; }
         public virtual TeamColor TeamColor { get; set; }
         public virtual string TutorialCodename { get; set; }
@@ -650,6 +651,9 @@ namespace PokeRoadie
 
             this.MinGymsBeforeBonusPickup = UserSettings.Default.MinGymsBeforeBonusPickup;
             this.PokeballRefillDelayMinutes = UserSettings.Default.PokeballRefillDelayMinutes;
+
+            this.CompleteTutorials = UserSettings.Default.CompleteTutorials;
+
         }
 
         #endregion
@@ -926,6 +930,8 @@ namespace PokeRoadie
 
                     this.MinGymsBeforeBonusPickup = obj.MinGymsBeforeBonusPickup;
                     this.PokeballRefillDelayMinutes = obj.PokeballRefillDelayMinutes;
+
+                    this.CompleteTutorials = obj.CompleteTutorials;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
