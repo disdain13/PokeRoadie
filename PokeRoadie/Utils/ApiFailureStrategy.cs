@@ -94,6 +94,22 @@ namespace PokeRoadie.Utils
         }
         public void HandleApiSuccess(RequestEnvelope request, ResponseEnvelope response)
         {
+            if (response.StatusCode == 3)
+            {
+                for (int i = 0; i < request.Requests.Count; i++)
+                {
+                    //detect ban based on empty inventory
+                    if (request.Requests[i].RequestType == RequestType.GetInventory && response.Returns[i].IsEmpty)
+                    {
+                        Logger.Write($"(BAN) No inventory response was returned from the server, which generally means you have been banned. Shutting down the application...", LogLevel.None, ConsoleColor.Red);
+                        //wait
+                        for (int y = 0; y < 20; y++)
+                            System.Threading.Thread.Sleep(1000);
+                        //exit
+                        Environment.Exit(0);
+                    }
+                }
+            }
             _retryCount = 0;
         }
 
@@ -102,7 +118,7 @@ namespace PokeRoadie.Utils
             if (_retryCount == 11)
                 return ApiOperation.Abort;
 
-            await Task.Delay(1000);
+            await Task.Delay(500);
             _retryCount++;
 
             if (_retryCount % 5 == 0)

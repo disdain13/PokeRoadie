@@ -1228,5 +1228,14 @@ namespace PokeRoadie {
                 return ((double)(this["KeepAboveLV"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CompleteTutorials {
+            get {
+                return ((bool)(this["CompleteTutorials"]));
+            }
+        }
     }
 }

@@ -122,11 +122,12 @@
   <PowerUpMinDelay>2500</PowerUpMinDelay>
   <PowerUpMaxDelay>5000</PowerUpMaxDelay>
   <ShowDebugMessages>false</ShowDebugMessages>
-  <TutorialPokmonId>Squirtle</TutorialPokmonId>
   <TeamColor>Blue</TeamColor>
   <PickupDailyDefenderBonuses>false</PickupDailyDefenderBonuses>
   <MinGymsBeforeBonusPickup>3</MinGymsBeforeBonusPickup>
   <IncludeHotPokestops>false</IncludeHotPokestops>
+  <CompleteTutorials>false</CompleteTutorials>
+  <TutorialPokmonId>Squirtle</TutorialPokmonId>
   <TutorialGenerateCodename>true</TutorialGenerateCodename>
   <TutorialCodename></TutorialCodename>
   <PokedexEntryMinDelay>10000</PokedexEntryMinDelay>
