@@ -87,6 +87,9 @@
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
+  <DisplayPokemonCount>20</DisplayPokemonCount>
+  <DisplayTopCandy>10</DisplayTopCandy>
+  <DisplayStyle>disdain</DisplayStyle>
   <WaitOnStart>false</WaitOnStart>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
@@ -101,8 +104,6 @@
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
-  <DisplayPokemonCount>20</DisplayPokemonCount>
-  <DisplayTopCandy>10</DisplayTopCandy>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>

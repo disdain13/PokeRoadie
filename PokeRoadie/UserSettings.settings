@@ -407,5 +407,8 @@
     <Setting Name="CompleteTutorials" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="DisplayStyle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">disdain</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
