@@ -1,15 +1,26 @@
 ﻿#region " Imports "
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using PokemonGo.RocketAPI;
+using PokemonGo.RocketAPI.Enums;		
+using PokemonGo.RocketAPI.Extensions;
 using PokemonGo.RocketAPI.Helpers;
 using PokemonGo.RocketAPI.Logging;
+using PokemonGo.RocketAPI.Exceptions;
+
+using POGOProtos.Inventory.Item;
 using POGOProtos.Networking.Responses;
 using POGOProtos.Data;
 using POGOProtos.Enums;
+using POGOProtos.Map.Fort;		
+using POGOProtos.Map.Pokemon;		
+		
+using PokeRoadie.Extensions;
 
 #endregion
 
@@ -127,9 +138,9 @@ namespace PokeRoadie.Extensions
         {
             var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon));
             var cp = Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * oneHundred);
-            var m1 = CalculateMoveValue(pokemon.Move1.GetMoveName()) * .5;
-            var m2 = CalculateMoveValue(pokemon.Move2.GetMoveName()) * 05;
-            var l = (pokemon.GetLevel() == 0 ? 0 : pokemon.GetLevel() * 3.5);
+            var m1 = CalculateMoveValue(pokemon.Move1.GetMoveName());
+            var m2 = CalculateMoveValue(pokemon.Move2.GetMoveName());
+            var l = (pokemon.GetLevel() == 0 ? 0 : (pokemon.GetLevel() / 40) * oneHundred);
             return Math.Round(p + cp + m1 + m2 + l, 0);
         }
 

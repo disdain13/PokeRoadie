@@ -422,7 +422,7 @@ namespace PokeRoadie
                 var highestsPokemonCandy = await _inventory.GetHighestsCandies(_settings.DisplayTopCandy);
                 foreach (var candy in highestsPokemonCandy)
                 {
-                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19, ' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19)} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
                 }
 
 
