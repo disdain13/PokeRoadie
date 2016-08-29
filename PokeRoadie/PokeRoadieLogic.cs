@@ -1962,12 +1962,6 @@ namespace PokeRoadie
                             OnCatch(encounter, caughtPokemonResponse);
                     }
                     _settings.Session.CatchCount++;
-
-                }
-                else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed)
-                {
-                    //soft ban check
-                    //raise event
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
                 {
@@ -2473,7 +2467,7 @@ namespace PokeRoadie
                          (_settings.ForceGreatThrowOverIV > 0 &&  pokemonIv >= _settings.ForceGreatThrowOverIV) ||
                          (_settings.ForceGreatThrowOverV > 0 && pokemonV >= _settings.ForceGreatThrowOverV))
                 {
-                    throwData.NormalizedRecticleSize = Random.NextDouble() * (1.7 - 1.3) + 1.3;
+                    throwData.NormalizedRecticleSize = Random.NextDouble() * (1.95 - 1.3) + 1.3;
                     throwData.HitText = "Great";
                 }
                 else
@@ -2483,14 +2477,7 @@ namespace PokeRoadie
                                               _settings.NiceThrowChance);
                     var rnd = Random.Next(1, 101);
 
-                    var missThrow = Random.Next(1, 101);
-
-                    if (missThrow <= _settings.MissThrowChance)
-                    {
-                        throwData.NormalizedRecticleSize = 0;
-                        throwData.HitText = "Miss";
-                    }
-                    else if (rnd <= regularThrow)
+                    if (rnd <= regularThrow)
                     {
                         throwData.NormalizedRecticleSize = Random.NextDouble() * (1 - 0.1) + 0.1;
                         throwData.HitText = "Ordinary";
