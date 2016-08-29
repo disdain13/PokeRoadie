@@ -453,7 +453,7 @@ namespace PokeRoadie
                 if (_settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
-                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
+                    foreach (var pokemon in allPokemon.OrderBy(x => (x.PokemonId.ToString())).ThenByDescending(x => x.Cp))
                     {
                         Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                     }
