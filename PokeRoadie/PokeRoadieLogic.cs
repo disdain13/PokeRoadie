@@ -2917,7 +2917,7 @@ namespace PokeRoadie
                 await PokeRoadieInventory.GetCachedInventory(_client);
                 if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps)
                 {
-                    Logger.Write($"(POWER) NOT ENOUGH STARDUSTS TO CONTINUE!",LogLevel.None,ConsoleColor.Red);
+                    Logger.Write($"Not enough stardust to continue...",LogLevel.Info);
                     break;
                 }
 
@@ -2933,24 +2933,26 @@ namespace PokeRoadie
                             OnPowerUp(pokemon);
                     }
 
-                    //power up specific delay
-                    await RandomDelay(_settings.PowerUpMinDelay, _settings.PowerUpMaxDelay);
-                    i--; //This is so that the first pokemon on the list gets to be powered up until unable to anymore.
+                    //will put in later, needs to be on a setting ~ disdain13
+                    //i--; //This is so that the first pokemon on the list gets to be powered up until unable to anymore.
                 }
                 else
                 {
-                    Logger.Write($"(POWER ERROR) Unable to powerup {pokemon.GetMinStats()}! Not enough Candies/Stardust or Max Level reached, we should not be hitting this code - {upgradeResult.Result.ToString()}", LogLevel.None, ConsoleColor.Red);
                     switch (upgradeResult.Result)
                     {
                         case UpgradePokemonResponse.Types.Result.ErrorInsufficientResources:
-                            Logger.Write($"(POWER) NOT ENOUGH CANDIES",LogLevel.Debug,ConsoleColor.Red);
+                            Logger.Write($"(POWER) Ran out of candies to powerup {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.Red);
                             break;
                         case UpgradePokemonResponse.Types.Result.ErrorUpgradeNotAvailable:
-                            Logger.Write($"(POWER) POKEMON AT MAX LEVEL: {pokemon.GetLevel()}");
+                            Logger.Write($"(POWER) Reached max level {pokemon.GetMinStats()}", LogLevel.None, ConsoleColor.Green);
+                            break;
+                        default:
+                            Logger.Write($"(POWER ERROR) Unable to powerup {pokemon.GetMinStats()} - {upgradeResult.Result.ToString()}", LogLevel.None, ConsoleColor.Red);
                             break;
                     }
-                    await RandomDelay();
                 }
+
+                await RandomDelay(_settings.PowerUpMinDelay, _settings.PowerUpMaxDelay);
                 //fixed by woshikie! Thanks!
                 if (_settings.MaxPowerUpsPerRound > 0 && upgradedNumber >= _settings.MaxPowerUpsPerRound)
                     break;
