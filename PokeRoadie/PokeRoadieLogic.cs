@@ -2886,43 +2886,41 @@ namespace PokeRoadie
             //fixed by woshikie! Thanks!
             foreach (var pokemon in pokemons)
             {
-                //if (pokemon.GetMaxCP() == pokemon.Cp) continue;
+                if (pokemon.GetMaxCP() == pokemon.Cp) continue;
 
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
-                if (familyCandy.Candy_ < (pokemon.GetLevel() / 10)) continue;
-                if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps)
+                if (familyCandy.Candy_ < (pokemon.GetLevel() / 10)) continue; //Checking if enough candies
+                
+                if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps) //Checking if enough candies as specified by user
                 {
                     continue;
                 }
 
-                if (pokemon.GetLevel() - _stats.Currentlevel >= 2) continue;
+                if (pokemon.GetLevel() - _stats.Currentlevel >= 2) continue;//Checking is pokemon level is at max that user's level can level up to.
+                //Checking is Pokemon is a duplicate. Do not want to power up duplicates!
+                if (finalList.FindAll(x => x.PokemonId == pokemon.PokemonId).Count > 0) continue;
                 finalList.Add(pokemon);
             }
-
-            //foreach (var pokemon in pokemons)
-            //{
-            //    if (pokemon.GetMaxCP() == pokemon.Cp) continue;
-
-            //    var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
-            //    var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-
-            //    if (familyCandy.Candy_ <= 0) continue;
-            //    if (_settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < _settings.MinCandyForPowerUps)
-            //    {
-            //        continue;
-            //    }
-            //    finalList.Add(pokemon);
-            //}
 
             if (finalList.Count == 0) return;
 
             Logger.Write($"Found {finalList.Count()} pokemon to power up:", LogLevel.Info);
 
-            foreach (var pokemon in finalList)
+            //foreach (var pokemon in finalList)
+            for(int i = 0; i < finalList.Count; i++)
             {
+                var pokemon = finalList[i];
                 var upgradeResult = await _client.Inventory.UpgradePokemon(pokemon.Id);
+                //Still need to check if there are enough stardust to powerup after every powerup
+                await PokeRoadieInventory.GetCachedInventory(_client);
+                if (await _inventory.GetStarDust() <= _settings.MinStarDustForPowerUps)
+                {
+                    Logger.Write($"(POWER) NOT ENOUGH STARDUSTS TO CONTINUE!",LogLevel.None,ConsoleColor.Red);
+                    break;
+                }
+
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
                     PokeRoadieInventory.IsDirty = true;
@@ -2937,11 +2935,20 @@ namespace PokeRoadie
 
                     //power up specific delay
                     await RandomDelay(_settings.PowerUpMinDelay, _settings.PowerUpMaxDelay);
-
+                    i--; //This is so that the first pokemon on the list gets to be powered up until unable to anymore.
                 }
                 else
                 {
                     Logger.Write($"(POWER ERROR) Unable to powerup {pokemon.GetMinStats()}! Not enough Candies/Stardust or Max Level reached, we should not be hitting this code - {upgradeResult.Result.ToString()}", LogLevel.None, ConsoleColor.Red);
+                    switch (upgradeResult.Result)
+                    {
+                        case UpgradePokemonResponse.Types.Result.ErrorInsufficientResources:
+                            Logger.Write($"(POWER) NOT ENOUGH CANDIES",LogLevel.Debug,ConsoleColor.Red);
+                            break;
+                        case UpgradePokemonResponse.Types.Result.ErrorUpgradeNotAvailable:
+                            Logger.Write($"(POWER) POKEMON AT MAX LEVEL: {pokemon.GetLevel()}");
+                            break;
+                    }
                     await RandomDelay();
                 }
                 //fixed by woshikie! Thanks!

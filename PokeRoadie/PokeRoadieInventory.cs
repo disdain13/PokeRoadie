@@ -459,8 +459,8 @@ namespace PokeRoadie
                     break;
             }
 
-            query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
-
+            query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
+            
             return query.ToList();
 
         }
