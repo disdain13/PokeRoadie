@@ -2790,10 +2790,21 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = "NONE".PadRight(53);
+                string bestPokemonInfo = null;
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{pokemon.GetMinStats()} Best: {bestPokemonInfo} Candy: {FamilyCandies}", LogLevel.Transfer);
+                if (_settings.DisplayStyle == "disdain")
+                {
+                    if (bestPokemonOfType == null)
+                        bestPokemonInfo = "NONE";
+                    Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
+                }
+                else if (_settings.DisplayStyle == "spastic")
+                {
+                    if (bestPokemonOfType == null)
+                        bestPokemonInfo = "NONE".PadRight(53);
+                    Logger.Write($"{pokemon.GetMinStats()} | Best {bestPokemonInfo} | Candy {FamilyCandies}", LogLevel.Transfer);
+                }
 
                 //raise event
                 if (OnTransfer != null)
