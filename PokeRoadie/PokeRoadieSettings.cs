@@ -99,10 +99,10 @@ namespace PokeRoadie
         public virtual PriorityTypes TransferPriorityType { get; set; }
         public virtual PriorityTypes TransferPriorityType2 { get; set; }
         public virtual int KeepDuplicateAmount { get; set; }
+        public virtual int KeepAboveCP { get; set; }
         public virtual double KeepAboveIV { get; set; }
         public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
-        public virtual int KeepAboveCP { get; set; }
         public virtual int AlwaysTransferBelowCp { get; set; }
         public virtual double AlwaysTransferBelowIV { get; set; }
         public virtual double AlwaysTransferBelowLV { get; set; }

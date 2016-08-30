@@ -331,12 +331,12 @@ namespace PokeRoadie
                     {
                         Logger.Write("====== Transfer Settings ======", LogLevel.None, ConsoleColor.Yellow);
                         Logger.Write($"{("Keep Above CP:").PadRight(25)}{_settings.KeepAboveCP}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Keep Above IV:").PadRight(25)}{_settings.KeepAboveLV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Keep Above IV:").PadRight(25)}{_settings.KeepAboveIV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Keep Above LV:").PadRight(25)}{_settings.KeepAboveLV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Keep Above V:").PadRight(25)}{_settings.KeepAboveV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Transfer Below CP:").PadRight(25)}{_settings.AlwaysTransferBelowCp}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.AlwaysTransferBelowIV}", LogLevel.None, ConsoleColor.White);
-                        Logger.Write($"{("Transfer Below IV:").PadRight(25)}{_settings.AlwaysTransferBelowLV}", LogLevel.None, ConsoleColor.White);
+                        Logger.Write($"{("Transfer Below LV:").PadRight(25)}{_settings.AlwaysTransferBelowLV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Transfer Below V:").PadRight(25)}{_settings.AlwaysTransferBelowV}", LogLevel.None, ConsoleColor.White);
                         Logger.Write($"{("Transfer Evolvable:").PadRight(25)}{!_settings.NotTransferPokemonsThatCanEvolve}", LogLevel.None, ConsoleColor.White);
                         if (_settings.PokemonsNotToTransfer.Count > 0)
@@ -1771,6 +1771,9 @@ namespace PokeRoadie
                         case PriorityTypes.IV:
                             orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                             break;
+                        case PriorityTypes.LV:
+                            orderBy = new Func<PokemonData, double>(x => x.GetLevel());
+                            break;
                         case PriorityTypes.V:
                             orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                             break;
@@ -1786,6 +1789,9 @@ namespace PokeRoadie
                             break;
                         case PriorityTypes.IV:
                             thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                            break;
+                        case PriorityTypes.LV:
+                            thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                             break;
                         case PriorityTypes.V:
                             thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
@@ -2795,6 +2801,9 @@ namespace PokeRoadie
                     case PriorityTypes.IV:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByIV(pokemon);
                         break;
+                    case PriorityTypes.LV:
+                        bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByLV(pokemon);
+                        break;
                     default:
                         bestPokemonOfType = await _inventory.GetHighestPokemonOfTypeByV(pokemon);
                         break;
@@ -2849,6 +2858,9 @@ namespace PokeRoadie
                     case PriorityTypes.IV:
                         orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                         break;
+                    case PriorityTypes.LV:
+                        orderBy = new Func<PokemonData, double>(x => x.GetLevel());
+                        break;
                     case PriorityTypes.V:
                         orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                         break;
@@ -2864,6 +2876,9 @@ namespace PokeRoadie
                         break;
                     case PriorityTypes.IV:
                         thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                        break;
+                    case PriorityTypes.LV:
+                        thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                         break;
                     case PriorityTypes.V:
                         thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());

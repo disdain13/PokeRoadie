@@ -87,13 +87,13 @@ namespace PokeRoadie
             if (PokeRoadieSettings.Current.KeepAboveCP > 0)
                 query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCP);
 
-            //Keep By LV filter
-            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
-                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
-
             //Keep By IV filter
             if (PokeRoadieSettings.Current.KeepAboveIV > 0)
                 query = query.Where(p => p.GetPerfection() < PokeRoadieSettings.Current.KeepAboveIV);
+
+            //Keep By LV filter
+            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
+                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
 
             //Keep By V filter
             if (PokeRoadieSettings.Current.KeepAboveV > 0)
@@ -114,6 +114,9 @@ namespace PokeRoadie
                 case PriorityTypes.IV:
                     orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                     break;
+                case PriorityTypes.LV:
+                    orderBy = new Func<PokemonData, double>(x => x.GetLevel());
+                    break;
                 case PriorityTypes.V:
                     orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                     break;
@@ -129,6 +132,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.IV:
                     thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.LV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 case PriorityTypes.V:
                     thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
@@ -254,6 +260,15 @@ namespace PokeRoadie
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
                 .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
+                .FirstOrDefault();
+        }
+
+        public async Task<PokemonData> GetHighestPokemonOfTypeByLV(PokemonData pokemon)
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
+                .OrderByDescending(PokemonInfo.GetLevel)
                 .FirstOrDefault();
         }
 
