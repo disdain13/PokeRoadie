@@ -89,9 +89,10 @@ namespace PokeRoadie
         public virtual bool EvolvePokemon { get; set; }
         public PriorityTypes EvolvePriorityType { get; set; }
         public PriorityTypes EvolvePriorityType2 { get; set; }
+        public virtual int EvolveAboveCp { get; set; }
         public virtual double EvolveAboveIV { get; set; }
         public virtual double EvolveAboveV { get; set; }
-        public virtual int EvolveAboveCp { get; set; }
+        public virtual double EvolveAboveLV { get; set; }
         public virtual bool UsePokemonsToEvolveList { get; set; }
 
         //transfers
@@ -101,8 +102,8 @@ namespace PokeRoadie
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual int KeepAboveCP { get; set; }
         public virtual double KeepAboveIV { get; set; }
-        public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
+        public virtual double KeepAboveLV { get; set; }
         public virtual int AlwaysTransferBelowCp { get; set; }
         public virtual double AlwaysTransferBelowIV { get; set; }
         public virtual double AlwaysTransferBelowLV { get; set; }
@@ -114,9 +115,10 @@ namespace PokeRoadie
         public virtual bool PowerUpPokemon { get; set; }
         public virtual PriorityTypes PowerUpPriorityType { get; set; }
         public virtual PriorityTypes PowerUpPriorityType2 { get; set; }
+        public virtual int PowerUpAboveCp { get; set; }
         public virtual double PowerUpAboveIV { get; set; }
         public virtual double PowerUpAboveV { get; set; }
-        public virtual int PowerUpAboveCp { get; set; }
+        public virtual double PowerUpAboveLV { get; set; }
         public virtual int MinStarDustForPowerUps { get; set; }
         public virtual bool UsePokemonsToPowerUpList { get; set; }
         public virtual int MinCandyForPowerUps { get; set; }
@@ -127,6 +129,7 @@ namespace PokeRoadie
         public virtual int FavoriteAboveCp { get; set; }
         public virtual double FavoriteAboveIV { get; set; }
         public virtual double FavoriteAboveV { get; set; }
+        public virtual double FavoriteAboveLV { get; set; }
 
         //pokestops
         public virtual bool VisitPokestops { get; set; }
@@ -653,6 +656,11 @@ namespace PokeRoadie
             this.CompleteTutorials = UserSettings.Default.CompleteTutorials;
             this.PokemonProcessDelayMinutes = UserSettings.Default.PokemonProcessDelayMinutes;
             this.PrioritizeGyms = UserSettings.Default.PrioritizeGyms;
+
+            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
+            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
+            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
+
 
         }
 
