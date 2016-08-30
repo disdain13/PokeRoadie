@@ -511,15 +511,6 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool WaitOnStart {
-            get {
-                return ((bool)(this["WaitOnStart"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int MinStarDustForPowerUps {
             get {
@@ -1124,9 +1115,9 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int DisplayTopCandy {
+        public int DisplayTopCandyCount {
             get {
-                return ((int)(this["DisplayTopCandy"]));
+                return ((int)(this["DisplayTopCandyCount"]));
             }
         }
         
@@ -1237,7 +1228,25 @@ namespace PokeRoadie {
                 return ((bool)(this["CompleteTutorials"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int PokemonProcessDelayMinutes {
+            get {
+                return ((int)(this["PokemonProcessDelayMinutes"]));
+            }
+        }
         
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PrioritizeGyms {
+            get {
+                return ((bool)(this["PrioritizeGyms"]));
+            }
+        }
+
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("disdain")]

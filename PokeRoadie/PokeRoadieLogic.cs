@@ -430,12 +430,12 @@ namespace PokeRoadie
                 }
                             
                 //write top candy list
-                Logger.Write("====== Top Candies ======", LogLevel.None, ConsoleColor.Yellow);
-                var highestsPokemonCandy = await _inventory.GetHighestsCandies(_settings.DisplayTopCandy);
-                foreach (var candy in highestsPokemonCandy)
-                {
-                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19)} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
-                }                
+			    Logger.Write("====== Top Candies ======", LogLevel.None, ConsoleColor.Yellow);
+			    var highestsPokemonCandy = await _inventory.GetHighestsCandies(_settings.DisplayTopCandyCount);
+			    foreach (var candy in highestsPokemonCandy)
+			    {
+				    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19,' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
+			    }
                 
                 
                 Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
@@ -916,7 +916,9 @@ namespace PokeRoadie
 
                 //transfer
                 if (_settings.TransferPokemon) await TransferPokemon();
-                nextTransEvoPowTime = DateTime.Now.AddMinutes(5);
+
+                //delay till next process time
+                nextTransEvoPowTime = DateTime.Now.AddMinutes(_settings.PokemonProcessDelayMinutes);
             }
 
 
@@ -1343,7 +1345,11 @@ namespace PokeRoadie
             Logger.Write($"Found {pokestopCount} {(pokestopCount == 1 ? "Pokestop" : "Pokestops")}{( CanVisitGyms && gymCount > 0 ? " | " + gymCount.ToString() + " " + (gymCount == 1 ? "Gym" : "Gyms") + " (" + visitedGymCount.ToString() + " Visited)" : string.Empty)}", LogLevel.Info);
             if (lureCount > 0) Logger.Write($"(INFO) Found {lureCount} with lure!", LogLevel.None, ConsoleColor.DarkMagenta);
 
+
+            //priority list!
             var priorityList = new List<FortData>();
+
+            //prioritize lure stops
             if (lureCount > 0)
             {
                 var stopListWithLures = stopList.Where(x => x.LureInfo != null).ToList();
@@ -1353,17 +1359,29 @@ namespace PokeRoadie
                     //if we are prioritizing stops with lures
                     if (_settings.PrioritizeStopsWithLures)
                     {
-                        int counter = 0;
                         for (int i = 0; i < 3; i++)
                         {
                             for (int x = 0; x < stopListWithLures.Count; x++)
                             {
                                 var lureStop = stopListWithLures[x];
                                 stopList.Remove(lureStop);
-                                priorityList.Insert(counter, lureStop);
-                                counter++;
+                                priorityList.Add(lureStop);
                             }
                         }
+                    }
+                }
+            }
+
+            //prioritize gyms
+            if (_settings.PrioritizeGyms && unvisitedGymList.Count > 0)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    for (int x = 0; x < unvisitedGymList.Count; x++)
+                    {
+                        var gym = unvisitedGymList[x];
+                        unvisitedGymList.Remove(gym);
+                        priorityList.Add(gym);
                     }
                 }
             }

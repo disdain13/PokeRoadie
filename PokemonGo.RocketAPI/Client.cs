@@ -42,10 +42,17 @@ namespace PokemonGo.RocketAPI
         internal readonly PokemonHttpClient PokemonHttpClient;
         internal string ApiUrl { get; set; }
         internal AuthTicket AuthTicket { get; set; }
+        private Random Random { get; set; }
         public static WebProxy Proxy { get; set; }
+        public byte[] SessionHash { get; set; }
+
 
         public Client(ISettings settings, IApiFailureStrategy apiFailureStrategy)
         {
+            //handle initial session hash
+            Random = new Random(DateTime.Now.Millisecond);
+            GenerateNewSessionHash();
+            //setup
             Settings = settings;
             ApiFailure = apiFailureStrategy;
             if (settings.UseProxy) InitProxy(settings);
@@ -58,7 +65,7 @@ namespace PokemonGo.RocketAPI
             Fort = new Rpc.Fort(this);
             Encounter = new Rpc.Encounter(this);
             Misc = new Rpc.Misc(this);
-
+            //player coords
             Player.SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
         }
 
@@ -69,6 +76,15 @@ namespace PokemonGo.RocketAPI
             if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) && !string.IsNullOrWhiteSpace(settings.UseProxyPassword))
                 Proxy.Credentials = new NetworkCredential(settings.UseProxyUsername, settings.UseProxyPassword);
 
+        }
+
+        public void GenerateNewSessionHash()
+        {
+            SessionHash = new byte[16] { GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte() };
+        }
+        private byte GenRandomByte()
+        {
+            return System.Convert.ToByte(Random.Next(0, 255));
         }
     }
 }
