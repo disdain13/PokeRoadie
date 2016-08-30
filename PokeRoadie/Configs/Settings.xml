@@ -101,7 +101,7 @@
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
   <DisplayPokemonCount>20</DisplayPokemonCount>
-  <DisplayTopCandy>10</DisplayTopCandy>
+  <DisplayTopCandyCount>10</DisplayTopCandyCount>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
@@ -136,4 +136,5 @@
   <PokeballRefillDelayMinutes>15</PokeballRefillDelayMinutes>
   <PokemonProcessDelayMinutes>5</PokemonProcessDelayMinutes>
   <PrioritizeGyms>false</PrioritizeGyms>
+
 </PokeRoadieSettings>
