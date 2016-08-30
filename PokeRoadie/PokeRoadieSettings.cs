@@ -217,7 +217,7 @@ namespace PokeRoadie
         public virtual bool DisplayAggregateLog { get; set; }
         public virtual bool DisplayAllPokemonInLog { get; set; }
         public virtual int DisplayPokemonCount { get; set; }
-        public virtual int DisplayTopCandy { get; set; }
+        public virtual int DisplayTopCandyCount { get; set; }
 
         //system
         public virtual bool ShowDebugMessages { get; set; }
@@ -543,7 +543,6 @@ namespace PokeRoadie
             this.WaypointLatitude = UserSettings.Default.WaypointLatitude;
             this.WaypointLongitude = UserSettings.Default.WaypointLongitude;
             this.WaypointAltitude = UserSettings.Default.WaypointAltitude;
-            //this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
             this.TransferTrimFatCount = UserSettings.Default.TransferTrimFatCount;
             this.PokeBallBalancing = UserSettings.Default.PokeBallBalancing;
 
@@ -596,7 +595,7 @@ namespace PokeRoadie
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
-            this.DisplayTopCandy = UserSettings.Default.DisplayTopCandy;
+            this.DisplayTopCandyCount = UserSettings.Default.DisplayTopCandyCount;
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
@@ -880,7 +879,7 @@ namespace PokeRoadie
                     this.DevicePackageName = obj.DevicePackageName;
 
                     this.DisplayPokemonCount = obj.DisplayPokemonCount;
-                    this.DisplayTopCandy = obj.DisplayTopCandy;
+                    this.DisplayTopCandyCount = obj.DisplayTopCandyCount;
                     this.MaxRunTimespan = obj.MaxRunTimespan;
                     this.MinBreakTimespan = obj.MinBreakTimespan;
                     this.MaxPokemonCatches = obj.MaxPokemonCatches;

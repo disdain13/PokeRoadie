@@ -1115,9 +1115,9 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int DisplayTopCandy {
+        public int DisplayTopCandyCount {
             get {
-                return ((int)(this["DisplayTopCandy"]));
+                return ((int)(this["DisplayTopCandyCount"]));
             }
         }
         
