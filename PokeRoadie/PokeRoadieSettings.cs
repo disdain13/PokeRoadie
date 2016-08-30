@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
@@ -1145,9 +1146,9 @@ namespace PokeRoadie
                             {
                                 try
                                 {
-                                    double temp_lat = Convert.ToDouble(latlng[0]);
-                                    double temp_long = Convert.ToDouble(latlng[1]);
-                                    double temp_alt = Convert.ToDouble(latlng[2]);
+                                    double temp_lat = Convert.ToDouble(latlng[0], new CultureInfo("en-US"));
+                                    double temp_long = Convert.ToDouble(latlng[1], new CultureInfo("en-US"));
+                                    double temp_alt = Convert.ToDouble(latlng[2], new CultureInfo("en-US"));
                                     if (temp_lat >= -90 && temp_lat <= 90 && temp_long >= -180 && temp_long <= 180)
                                     {
                                         //SetCoordinates(Convert.ToDouble(latlng[0]), Convert.ToDouble(latlng[1]), Settings.DefaultAltitude);
