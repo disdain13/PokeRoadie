@@ -19,10 +19,10 @@ namespace PokemonGo.RocketAPI.Rpc
     {
         //public event GoogleDeviceCodeDelegate GoogleDeviceCodeEvent;
         private ILoginType login;
-
         public Login(Client client) : base(client)
         {
-            login = SetLoginType(client.Settings);
+            _client = client;
+            login = SetLoginType(_client.Settings);
         }
 
         private static ILoginType SetLoginType(ISettings settings)
