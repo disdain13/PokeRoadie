@@ -3142,6 +3142,13 @@ namespace PokeRoadie
                                 if (response.CurrencyType[i] == "XP")
                                     _stats.AddExperience(response.CurrencyAwarded[i]);
                                 Logger.Write($"{response.CurrencyAwarded[i]} {response.CurrencyType[i]}", LogLevel.None, ConsoleColor.Green);
+
+                                //raise event
+                                if (OnPickupDailyDefenderBonus != null)
+                                {
+                                    if (!RaiseSyncEvent(OnPickupDailyDefenderBonus, GetCurrentLocation(), response))
+                                        OnPickupDailyDefenderBonus(GetCurrentLocation(), response);
+                                }
                             }
                         }
 
