@@ -87,7 +87,6 @@
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
-  <WaitOnStart>false</WaitOnStart>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
   <WaypointAltitude>0</WaypointAltitude>
@@ -135,4 +134,6 @@
   <LocationsMinDelay>10000</LocationsMinDelay>
   <LocationsMaxDelay>20000</LocationsMaxDelay>
   <PokeballRefillDelayMinutes>15</PokeballRefillDelayMinutes>
+  <PokemonProcessDelayMinutes>5</PokemonProcessDelayMinutes>
+  <PrioritizeGyms>false</PrioritizeGyms>
 </PokeRoadieSettings>

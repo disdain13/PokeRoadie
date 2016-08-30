@@ -511,15 +511,6 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool WaitOnStart {
-            get {
-                return ((bool)(this["WaitOnStart"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int MinStarDustForPowerUps {
             get {
@@ -1235,6 +1226,24 @@ namespace PokeRoadie {
         public bool CompleteTutorials {
             get {
                 return ((bool)(this["CompleteTutorials"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int PokemonProcessDelayMinutes {
+            get {
+                return ((int)(this["PokemonProcessDelayMinutes"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PrioritizeGyms {
+            get {
+                return ((bool)(this["PrioritizeGyms"]));
             }
         }
     }
