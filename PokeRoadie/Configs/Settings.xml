@@ -33,14 +33,14 @@
   <TransferPriorityType>V</TransferPriorityType>
   <TransferPriorityType2>IV</TransferPriorityType2>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
-  <KeepAboveIV>0</KeepAboveIV>
-  <KeepAboveV>0</KeepAboveV>
   <KeepAboveCP>0</KeepAboveCP>
+  <KeepAboveIV>0</KeepAboveIV>
   <KeepAboveLV>0</KeepAboveLV>
-  <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
-  <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
+  <KeepAboveV>0</KeepAboveV>
   <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
+  <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
   <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
+  <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
   <PowerUpPokemon>false</PowerUpPokemon>
@@ -87,6 +87,9 @@
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
+  <DisplayPokemonCount>20</DisplayPokemonCount>
+  <DisplayTopCandy>10</DisplayTopCandy>
+  <DisplayStyle>disdain</DisplayStyle>
   <WaitOnStart>false</WaitOnStart>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
@@ -101,8 +104,6 @@
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
-  <DisplayPokemonCount>20</DisplayPokemonCount>
-  <DisplayTopCandy>10</DisplayTopCandy>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
