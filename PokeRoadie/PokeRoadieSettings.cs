@@ -230,8 +230,12 @@ namespace PokeRoadie
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
 
+        #endregion
+        #region " Session/State Properties "
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
+
         [XmlIgnore()]
         public SessionData Session
         {
@@ -737,6 +741,7 @@ namespace PokeRoadie
             session.StartDate = DateTime.Now;
             return session;
         }
+
         private PokeRoadieSettings Load()
         {
             //check for base path
@@ -931,11 +936,13 @@ namespace PokeRoadie
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
+                    Logger.Write($"No Username or Password defined in the Settings.xml file.", LogLevel.Warning);
                     createNew = true;
                 }
             }
             else
             {
+                Logger.Write($"The Settings.Xml file does not exist. One will be created for you", LogLevel.Warning);
                 createNew = true;
             }
 
@@ -980,11 +987,11 @@ namespace PokeRoadie
 
             if (createNew)
             {
-                Logger.Write($"The {fileName} file could not be found, it will be recreated.", LogLevel.Warning);
+                
                 var result = PromptForCredentials();
                 if (!result)
                 {
-                    Logger.Write($"Quit before providing login credentials.", LogLevel.Warning);
+                    Logger.Write($"User quit before providing login credentials.", LogLevel.Warning);
                     Program.ExitApplication(1);
                 }
             }
