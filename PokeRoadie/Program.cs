@@ -18,11 +18,8 @@ namespace PokeRoadie
 {
     internal class Program
     {
-        static int exitCode = 0;
-
         public static void ExitApplication(int exitCode)
         {
-            Program.exitCode = exitCode;
             Application.Exit();
         }
 
@@ -30,6 +27,15 @@ namespace PokeRoadie
         {
             var logic = new PokeRoadieLogic();
             logic.OnPromptForCredentials += PokeRoadieSettings.Current.PromptForCredentials;
+            logic.OnPromptForCoords += PokeRoadieSettings.Current.PromptForCoords;
+            try
+            {
+                logic.Initialize();
+            }
+            catch (Exception ex)
+            {
+                Logger.Write($"Logic Initialization Exception: {ex}", LogLevel.Error);
+            }
             return logic;
         }
 
@@ -50,7 +56,7 @@ namespace PokeRoadie
                 += delegate (object sender, UnhandledExceptionEventArgs eargs)
                 {
                     Exception exception = (Exception)eargs.ExceptionObject;
-                    System.Console.WriteLine("Unhandled exception: " + exception);
+                    System.Console.WriteLine("Unhandled Exception: " + exception);
                     //Environment.Exit(1);
                 };
 
@@ -63,22 +69,9 @@ namespace PokeRoadie
                 {
                     CreateLogic().Execute().Wait();
                 }
-                catch (PtcOfflineException)
-                {
-                    Logger.Write("PTC Servers are probably down OR your credentials are wrong. Try google", LogLevel.Error);
-                    Logger.Write("Trying again in 60 seconds...");
-                    Thread.Sleep(60000);
-                    CreateLogic().Execute().Wait();
-                }
-                catch (AccountNotVerifiedException)
-                {
-                    Logger.Write("Account not verified. - Exiting");
-                    Environment.Exit(0);
-                }
                 catch (Exception ex)
                 {
-                    Logger.Write($"Unhandled exception: {ex}", LogLevel.Error);
-                    CreateLogic().Execute().Wait();
+                    Logger.Write($"Fatal Exception: {ex}", LogLevel.Error);
                 }
             });
             System.Console.ReadLine();

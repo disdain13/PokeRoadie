@@ -13,6 +13,7 @@ using PokemonGo.RocketAPI.Extensions;
 using PokemonGo.RocketAPI.Helpers;
 using PokemonGo.RocketAPI.Logging;
 using PokemonGo.RocketAPI.Exceptions;
+using PokemonGo.RocketAPI.Rpc;
 
 using POGOProtos.Inventory;
 using POGOProtos.Inventory.Item;
@@ -41,6 +42,7 @@ namespace PokeRoadie
 
         //system events
         public event Func<bool> OnPromptForCredentials;
+        public event Func<bool> OnPromptForCoords;
 
         //encounter events
         public event Action<EncounterData> OnEncounter;
@@ -219,10 +221,11 @@ namespace PokeRoadie
 
         private async Task CloseApplication(int exitCode)
         {
-            for (int i = 3; i > 0; i--)
+            Logger.Write($"PokeRoadie will be closed in 15 seconds...", LogLevel.Warning);
+            for (int i = 14; i > 0; i--)
             {
-                Logger.Write($"PokeRoadie will be closed in {i * 5} seconds!", LogLevel.Warning);
-                await Task.Delay(5000);
+                await Task.Delay(1000);
+                Logger.Append(".");
             }
             await Task.Delay(15000);
             System.Environment.Exit(exitCode);
@@ -230,20 +233,6 @@ namespace PokeRoadie
 
         #endregion
         #region " Maintenance/Utility Methods "
-
-        private void Maintenance()
-        {
-
-            //delete old temp files
-            DeleteOldFiles(pokestopsDir);
-
-            //clear old temp files
-            DeleteOldFiles(gymDir);
-
-            //run temp data serializer on own thread
-            Task.Run(new Action(Xlo));
-
-        }
 
         private void DeleteOldFiles(string dir)
         {
@@ -712,61 +701,6 @@ namespace PokeRoadie
             }
         }
 
-        public static bool CheckForInternetConnection()
-        {
-            var hasConnection = false;
-            var c = 0;
-            while (!hasConnection && c < 120)
-            {
-                c++; //i like writing that
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        using (var stream = client.OpenRead("http://www.google.com"))
-                        {
-                            hasConnection= true;
-                            break;
-                        }
-                    }
-                }
-                catch
-                {
-                    hasConnection = false;
-                }
-
-                if (!hasConnection)
-                {
-                    switch (c)
-                    {
-                        case 1:
-                            Logger.Write("Lost internet connection, waiting to re-establish...", LogLevel.Warning);
-                            break;
-                        default:
-                            Logger.Append(".");
-                            break;
-                    }
-                }
-                else
-                {
-                    if (c > 1)
-                    {
-                        Logger.Write("Internet connection re-established!", LogLevel.Warning);
-                    }
-                }
-
-                var i = 0;
-                while(i<30)
-                {
-                    i++;
-                    System.Threading.Thread.Sleep(1000);
-                }
-
-            }
-            return hasConnection; 
-
-        }
-
         #endregion
         #region " Navigation Methods "
 
@@ -791,7 +725,7 @@ namespace PokeRoadie
         #endregion
         #region " Primary Execution Methods "
 
-        public async Task Execute()
+        public void Initialize()
         {
 
             //check version
@@ -804,44 +738,70 @@ namespace PokeRoadie
             //check lat long
             if (_settings.CurrentLongitude == 0 && _settings.CurrentLatitude == 0)
             {
-                Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
-                if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
-                await CloseApplication(1);
+
+                //show credentials form
+                if (OnPromptForCoords != null)
+                {
+                    //raise event
+                    bool result = false;
+
+                    if (_invoker != null && _invoker.InvokeRequired)
+                        result = (bool)_invoker.Invoke(OnPromptForCoords, new object[] { });
+                    else
+                        result = OnPromptForCoords.Invoke();
+
+                    if (!result)
+                    {
+                        Logger.Write("User did not provide starting coordinates.");
+                        CloseApplication(4).Wait();
+                    }
+                }
+                //Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
+                //if (_settings.MoveWhenNoStops && _client != null) _settings.DestinationEndDate = DateTime.Now;
+                //CloseApplication(1).Wait();
             }
 
             //do maint
-            Maintenance();
+            //delete old temp files
+            DeleteOldFiles(pokestopsDir);
 
+            //clear old temp files
+            DeleteOldFiles(gymDir);
+
+            //run temp data serializer on own thread
+            Task.Run(new Action(Xlo));
+
+            //write login type
             Logger.Write($"Logging in via: {_settings.AuthType}", LogLevel.Info);
+
+        }
+        public async Task Execute()
+        {
+
+            //keep it running
+            var silentLogin = false;
             while (isRunning)
             {
-                try
+                
+                int delay = 15000;
+                int exitCode = 0;
+
+                //LOGIN
+                //notes: this is a stateless protocol, there is no persistant connection.
+                //just a session hash and a new call at the auth ticket issuance.
+
+                var loginResponse = await _client.Login.AttemptLogin();
+                switch (loginResponse.Result)
                 {
-                    await _client.Login.DoLogin();
-                    await PostLoginExecute();
-                }
-                catch(PtcOfflineException e)
-                {
-                    var eMessage = e.Message;
-                    Logger.Write($"(LOGIN ERROR) The Ptc servers are currently offline - {eMessage}. Waiting 30 seconds... ", LogLevel.None, ConsoleColor.Red);
-                    await Task.Delay(30000);
-                    e = null;
-                }
-                catch (Exception e)
-                {
-                    if (e.Message.Contains("NeedsBrowser"))
-                    {
-                        Logger.Write("(LOGIN ERROR) Please login to your google account and turn off 'Two-Step Authentication' under security settings. If you do NOT want to disable your two-factor auth, please visit the following link and setup an app password. This is the only way of using the bot without disabling two-factor authentication: https://security.google.com/settings/security/apppasswords. Trying automatic restart in 15 seconds...", LogLevel.None, ConsoleColor.Red);
-                        await Task.Delay(15000);
-                    }
-                    else if (e.Message.Contains("BadAuthentication") || e is LoginFailedException)
-                    {
-                        Logger.Write("(LOGIN ERROR) The username and password provided failed. " + e.Message, LogLevel.None, ConsoleColor.Red);
-                        //raise event
+                    //login failed
+                    case LoginResponseTypes.LoginFailed:
+
+                        //show credentials form
                         if (OnPromptForCredentials != null)
                         {
                             //raise event
                             bool result = false;
+
                             if (_invoker != null && _invoker.InvokeRequired)
                                 result = (bool)_invoker.Invoke(OnPromptForCredentials, new object[] { });
                             else
@@ -849,24 +809,109 @@ namespace PokeRoadie
 
                             if (!result)
                             {
+                                exitCode = 1;
                                 Logger.Write("Username and password for login not provided. Login screen closed.");
-                                await CloseApplication(0);
                             }
                         }
-                    }
-                    else if (e.Message.Contains("Object reference"))
+                        break;
+                    case LoginResponseTypes.GoogleOffline:
+                        delay = 30000;
+                        break;
+                    case LoginResponseTypes.PtcOffline:
+                        delay = 30000;
+                        break;
+                    case LoginResponseTypes.GoogleTwoStepAuthError:
+                        exitCode = 2;
+                        break;
+                    case LoginResponseTypes.AccessTokenExpired:
+                        break;
+                    case LoginResponseTypes.UnhandledException:
+                        break;
+                    case LoginResponseTypes.AccountNotVerified:
+                        exitCode = 3;
+                        break;
+                    case LoginResponseTypes.InvalidResponse:
+                        break;
+                    default:
+                        break;
+                }
+
+                //handle login response
+                if (loginResponse.Result == LoginResponseTypes.Success)
+                {
+
+                    //handle silent login and debug error messages
+                    if (silentLogin)
                     {
-                        Logger.Write($"(PGO SERVER) It appears the PokemonGo servers are down, or not taking our requests. Let's wait one minute.", LogLevel.None, ConsoleColor.Red);
-                        await Task.Delay(60000);
+                        if (_settings.ShowDebugMessages)
+                            Logger.Write($"Auth ticket renewed", LogLevel.Debug);
                     }
                     else
                     {
-                        Logger.Write($"(FATAL ERROR) Unhandled exception encountered: {e.Message.ToString()}.", LogLevel.None, ConsoleColor.Red);
-                        Logger.Write("Restarting the application due to error...", LogLevel.Warning);
-                        await Task.Delay(15000);
+                        silentLogin = true;
+                        Logger.Write($"Client logged in", LogLevel.Info);
                     }
-                    await Execute();
-                }          
+                      
+                    //PROCESS
+                    //notes: separated initialization, login, and post-login execution. This way we can 
+                    //make more intelligent exception handling desicions, instead of just throwing-up
+                    //all over the screen. If you want the vomit, turn on ShowDebugMessages
+
+                    try
+                    {
+                        await PostLoginExecute();
+                    }
+                    catch (AggregateException ae)
+                    {
+                        Logger.Write($"Aggregate Exception | {ae.Flatten().InnerException.ToString()}", LogLevel.Error);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Logger.Write($"Null Reference Exception | Causing Method: {nre.TargetSite} | Source: {nre.Source} | Data: {nre.Data}", LogLevel.Error);
+                    }
+                    catch (AccountNotVerifiedException)
+                    {
+                        Logger.Write($"Your {_client.Settings.AuthType} account does not seem to be verified yet, please check your email.", LogLevel.Error);
+                    }
+                    catch (AccessTokenExpiredException)
+                    {
+                        //login expired, soft login with new session hash
+                        silentLogin = true;
+                        delay = Random.Next(3000, 8000);
+                    }
+                    catch (PtcOfflineException)
+                    {
+                        Logger.Write($"The Ptc authentication server is currently offline.", LogLevel.Error);
+                    }
+                    catch (GoogleOfflineException)
+                    {
+                        Logger.Write($"The Google authentication server is currently offline.", LogLevel.Error);
+                    }
+                    catch (InvalidResponseException)
+                    {
+                        //login expired, soft login with new session hash
+                        silentLogin = true;
+                        delay = Random.Next(3000,8000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write($"{ex.GetType().Name} - {ex.Message} | Causing Method: {ex.TargetSite} | Source: {ex.Source} | Data: {ex.Data}");
+                    }
+
+                }
+                else
+                {
+                    //write debug error message
+                    if (_settings.ShowDebugMessages)
+                        Logger.Write($"{loginResponse.Result} {loginResponse.Message}", LogLevel.Debug);
+                }
+
+                //count down exit
+                if (exitCode > 0) await CloseApplication(exitCode);
+
+                await Task.Delay(delay);
+                
+
             }
             isRunning = false;
         }
@@ -903,7 +948,7 @@ namespace PokeRoadie
             //delay transfer/power ups/evolutions with a 5 minute window unless needed.
             var pokemonCount = (await _inventory.GetPokemons()).Count();
             var maxPokemonCount = _playerProfile.PlayerData.MaxPokemonStorage;
-            if (maxPokemonCount - pokemonCount < 20 ||  !nextTransEvoPowTime.HasValue || nextTransEvoPowTime.Value <= DateTime.Now)
+            if (!nextTransEvoPowTime.HasValue || nextTransEvoPowTime.Value <= DateTime.Now)
             {
                 //evolve
                 if (_settings.EvolvePokemon) await EvolvePokemon();
@@ -944,7 +989,7 @@ namespace PokeRoadie
 
         public async Task PostLoginExecute()
         {
-            Logger.Write($"Client logged in", LogLevel.Info);
+            
             while (true)
             {
 
@@ -1359,15 +1404,7 @@ namespace PokeRoadie
                     //if we are prioritizing stops with lures
                     if (_settings.PrioritizeStopsWithLures)
                     {
-                        for (int i = 0; i < 3; i++)
-                        {
-                            for (int x = 0; x < stopListWithLures.Count; x++)
-                            {
-                                var lureStop = stopListWithLures[x];
-                                stopList.Remove(lureStop);
-                                priorityList.Add(lureStop);
-                            }
-                        }
+                        priorityList.AddRange(Navigation.PathByNearestNeighbour(stopListWithLures.ToArray()).ToList());
                     }
                 }
             }
@@ -1375,20 +1412,12 @@ namespace PokeRoadie
             //prioritize gyms
             if (_settings.PrioritizeGyms && unvisitedGymList.Count > 0)
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int x = 0; x < unvisitedGymList.Count; x++)
-                    {
-                        var gym = unvisitedGymList[x];
-                        unvisitedGymList.Remove(gym);
-                        priorityList.Add(gym);
-                    }
-                }
+                priorityList.AddRange(Navigation.PathByNearestNeighbour(unvisitedGymList.ToArray()).ToList());
             }
 
             //merge location lists
             var tempList = new List<FortData>(stopList);
-            tempList.AddRange(unvisitedGymList);
+            if (unvisitedGymList.Count > 0) tempList.AddRange(unvisitedGymList);
             tempList = Navigation.PathByNearestNeighbour(tempList.ToArray()).ToList();
 
             List<FortData> finalList = null;
@@ -1461,8 +1490,8 @@ namespace PokeRoadie
                             OnTravelingToGym(location, fortInfo);
                     }
 
-                    var name = $"{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance";
-                    Logger.Write(name, LogLevel.Pokestop);
+                    var name = $"(GYM) {fortInfo.Name} in {distance:0.##} m distance";
+                    Logger.Write(name, LogLevel.None, ConsoleColor.Cyan);
                     await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _settings.MinSpeed, GetShortTask());
     
                     var fortDetails = await _client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);

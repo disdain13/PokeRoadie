@@ -1245,6 +1245,22 @@ namespace PokeRoadie
 
             return result == System.Windows.Forms.DialogResult.OK;
         }
+        public bool PromptForCoords()
+        {
+            var d = new CoordsForm();
+            var result = d.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.CurrentLatitude = d.Latitude;
+                this.CurrentLongitude = d.Longitude;
+                this.CurrentAltitude = 13;
+                this.Save();
+            }
+            d.Dispose();
+            d = null;
+
+            return result == System.Windows.Forms.DialogResult.OK;
+        }
 
         #endregion
 

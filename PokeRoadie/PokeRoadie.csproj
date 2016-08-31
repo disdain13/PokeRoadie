@@ -86,6 +86,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CoordsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CoordsForm.Designer.cs">
+      <DependentUpon>CoordsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logging\Providers\ConsoleLogProvider.cs" />
     <Compile Include="Logging\Providers\FlatFileLogProvider.cs" />
     <Compile Include="Logging\Providers\ILogProvider.cs" />
@@ -168,6 +174,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CoordsForm.resx">
+      <DependentUpon>CoordsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UsernamePasswordForm.resx">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
