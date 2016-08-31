@@ -87,7 +87,7 @@ namespace PokeRoadie.Extensions
 
         public static string GetStats(this PokemonData pokemon)
         {
-            return $"{((String.IsNullOrWhiteSpace(pokemon.DeployedFortId) ? "" : "^")+(pokemon.Favorite == 1 ? "*" : "")+pokemon.PokemonId.ToString()).PadRight(21)} {pokemon.CalculatePokemonValue().ToString().PadRight(3)} V | {pokemon.Cp.ToString().PadLeft(4)} CP | {pokemon.GetPerfection().ToString("0.00").PadLeft(6)} % | LV {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString()+" HP").PadLeft(10)} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {pokemon.Move1.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move1.GetMoveName())}) | {pokemon.Move2.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
+            return $"{((String.IsNullOrWhiteSpace(pokemon.DeployedFortId) ? "" : "^")+(pokemon.Favorite == 1 ? "*" : "")+pokemon.PokemonId.ToString()).PadRight(21)} {pokemon.CalculatePokemonValue().ToString().PadRight(3)} V | {pokemon.Cp.ToString().PadLeft(4)} CP | {pokemon.GetPerfection().ToString("0.00").PadLeft(6)} % | LV {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "\" + pokemon.StaminaMax.ToString()+" HP").PadLeft(10)} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {pokemon.Move1.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move1.GetMoveName())}) | {pokemon.Move2.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
         }
 
         public static string GetMinStats(this PokemonData pokemon)
@@ -106,8 +106,6 @@ namespace PokeRoadie.Extensions
             {
                 return $"Please enter value disdain or spastic in <DisplayStyle></DisplayStyle>!";
             }
-
-            return move;
         }
 
         #endregion
@@ -137,7 +135,6 @@ namespace PokeRoadie.Extensions
                 
             return move;
         }
-
 
         public static string GetMoveName(this PokemonMove move)
         {
