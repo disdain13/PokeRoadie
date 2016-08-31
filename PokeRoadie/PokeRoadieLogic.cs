@@ -1835,7 +1835,7 @@ namespace PokeRoadie
                             break;
                     }
 
-                    query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
+                    query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
 
                     await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
                     
@@ -2843,7 +2843,9 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = bestPokemonOfType.GetMinStats();
+                string bestPokemonInfo = "";
+                if (bestPokemonOfType != null)
+                    bestPokemonInfo = bestPokemonOfType.GetMinStats();
                 if (_settings.DisplayStyle == "disdain")
                 {
                     if (bestPokemonOfType == null)
@@ -2930,7 +2932,7 @@ namespace PokeRoadie
                         break;
                 }
 
-                query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenBy(thenBy);
+                query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
 
                 await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
 
