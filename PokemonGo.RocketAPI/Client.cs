@@ -15,6 +15,7 @@ using POGOProtos.Networking.Envelopes;
 using POGOProtos.Networking.Requests;
 using POGOProtos.Networking.Requests.Messages;
 using POGOProtos.Networking.Responses;
+using PokemonGo.RocketAPI.Logging;
 
 namespace PokemonGo.RocketAPI
 {
@@ -52,6 +53,7 @@ namespace PokemonGo.RocketAPI
             //handle initial session hash
             Random = new Random(DateTime.Now.Millisecond);
             GenerateNewSessionHash();
+
             //setup
             Settings = settings;
             ApiFailure = apiFailureStrategy;
@@ -65,6 +67,7 @@ namespace PokemonGo.RocketAPI
             Fort = new Rpc.Fort(this);
             Encounter = new Rpc.Encounter(this);
             Misc = new Rpc.Misc(this);
+
             //player coords
             Player.SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
         }
@@ -82,9 +85,31 @@ namespace PokemonGo.RocketAPI
         {
             SessionHash = new byte[16] { GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte() };
         }
+
         private byte GenRandomByte()
         {
             return System.Convert.ToByte(Random.Next(0, 255));
         }
+
+        public bool CheckForInternetConnection()
+        {
+            if(!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                Logger.Write("Lost internet connection, waiting to re-establish...", LogLevel.Error);
+                while (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    Logger.Append(".");
+                }
+                
+                
+                Logger.Write("Internet connection re-established!", LogLevel.Warning);
+                return false;
+            }
+            return true;
+        }
+
+ 
+
     }
 }

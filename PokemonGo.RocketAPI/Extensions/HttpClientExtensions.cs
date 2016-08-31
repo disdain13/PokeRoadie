@@ -30,6 +30,8 @@ namespace PokemonGo.RocketAPI.Extensions
             IApiFailureStrategy strategy,
             params Type[] responseTypes) where TRequest : IMessage<TRequest>
         {
+
+
             var result = new IMessage[responseTypes.Length];
             for (var i = 0; i < responseTypes.Length; i++)
             {
@@ -58,7 +60,7 @@ namespace PokemonGo.RocketAPI.Extensions
             }
 
             //set _delay time ahed 350ms
-            _delayTime = DateTime.Now.AddMilliseconds(350);
+            _delayTime = DateTime.Now.AddMilliseconds(450);
 
             strategy.HandleApiSuccess(requestEnvelope, response);
 
@@ -69,8 +71,6 @@ namespace PokemonGo.RocketAPI.Extensions
             }
             return result;
         }
-
-        private static int invalidCount = 0;
 
         public static async Task<TResponsePayload> PostProtoPayload<TRequest, TResponsePayload>(this System.Net.Http.HttpClient client,
             string url, RequestEnvelope requestEnvelope, IApiFailureStrategy strategy) where TRequest : IMessage<TRequest>
@@ -90,16 +90,9 @@ namespace PokemonGo.RocketAPI.Extensions
                 response = await PostProto<TRequest>(client, url, requestEnvelope);
             }
 
+            //auth ticket expired
             if (response.Returns.Count == 0)
-            {
-                invalidCount++;
-                if (invalidCount > 2) throw new InvalidResponseException();
-            }
-            else
-            {
-                invalidCount = 0;
-            }
-                
+                throw new InvalidResponseException();
 
             strategy.HandleApiSuccess(requestEnvelope, response);
 

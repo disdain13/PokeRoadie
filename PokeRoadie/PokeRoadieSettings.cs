@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
@@ -89,9 +90,10 @@ namespace PokeRoadie
         public virtual bool EvolvePokemon { get; set; }
         public PriorityTypes EvolvePriorityType { get; set; }
         public PriorityTypes EvolvePriorityType2 { get; set; }
+        public virtual int EvolveAboveCp { get; set; }
         public virtual double EvolveAboveIV { get; set; }
         public virtual double EvolveAboveV { get; set; }
-        public virtual int EvolveAboveCp { get; set; }
+        public virtual double EvolveAboveLV { get; set; }
         public virtual bool UsePokemonsToEvolveList { get; set; }
 
         //transfers
@@ -101,8 +103,8 @@ namespace PokeRoadie
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual int KeepAboveCP { get; set; }
         public virtual double KeepAboveIV { get; set; }
-        public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
+        public virtual double KeepAboveLV { get; set; }
         public virtual int AlwaysTransferBelowCp { get; set; }
         public virtual double AlwaysTransferBelowIV { get; set; }
         public virtual double AlwaysTransferBelowLV { get; set; }
@@ -114,9 +116,10 @@ namespace PokeRoadie
         public virtual bool PowerUpPokemon { get; set; }
         public virtual PriorityTypes PowerUpPriorityType { get; set; }
         public virtual PriorityTypes PowerUpPriorityType2 { get; set; }
+        public virtual int PowerUpAboveCp { get; set; }
         public virtual double PowerUpAboveIV { get; set; }
         public virtual double PowerUpAboveV { get; set; }
-        public virtual int PowerUpAboveCp { get; set; }
+        public virtual double PowerUpAboveLV { get; set; }
         public virtual int MinStarDustForPowerUps { get; set; }
         public virtual bool UsePokemonsToPowerUpList { get; set; }
         public virtual int MinCandyForPowerUps { get; set; }
@@ -127,6 +130,7 @@ namespace PokeRoadie
         public virtual int FavoriteAboveCp { get; set; }
         public virtual double FavoriteAboveIV { get; set; }
         public virtual double FavoriteAboveV { get; set; }
+        public virtual double FavoriteAboveLV { get; set; }
 
         //pokestops
         public virtual bool VisitPokestops { get; set; }
@@ -230,8 +234,12 @@ namespace PokeRoadie
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
 
+        #endregion
+        #region " Session/State Properties "
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
+
         [XmlIgnore()]
         public SessionData Session
         {
@@ -650,6 +658,11 @@ namespace PokeRoadie
             this.PokemonProcessDelayMinutes = UserSettings.Default.PokemonProcessDelayMinutes;
             this.PrioritizeGyms = UserSettings.Default.PrioritizeGyms;
 
+            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
+            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
+            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
+
+
         }
 
         #endregion
@@ -737,6 +750,7 @@ namespace PokeRoadie
             session.StartDate = DateTime.Now;
             return session;
         }
+
         private PokeRoadieSettings Load()
         {
             //check for base path
@@ -931,11 +945,13 @@ namespace PokeRoadie
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
+                    Logger.Write($"No Username or Password defined in the Settings.xml file.", LogLevel.Warning);
                     createNew = true;
                 }
             }
             else
             {
+                Logger.Write($"The Settings.Xml file does not exist. One will be created for you", LogLevel.Warning);
                 createNew = true;
             }
 
@@ -980,11 +996,11 @@ namespace PokeRoadie
 
             if (createNew)
             {
-                Logger.Write($"The {fileName} file could not be found, it will be recreated.", LogLevel.Warning);
+                
                 var result = PromptForCredentials();
                 if (!result)
                 {
-                    Logger.Write($"Quit before providing login credentials.", LogLevel.Warning);
+                    Logger.Write($"User quit before providing login credentials.", LogLevel.Warning);
                     Program.ExitApplication(1);
                 }
             }
@@ -1147,9 +1163,9 @@ namespace PokeRoadie
                             {
                                 try
                                 {
-                                    double temp_lat = Convert.ToDouble(latlng[0]);
-                                    double temp_long = Convert.ToDouble(latlng[1]);
-                                    double temp_alt = Convert.ToDouble(latlng[2]);
+                                    double temp_lat = Convert.ToDouble(latlng[0], new CultureInfo("en-US"));
+                                    double temp_long = Convert.ToDouble(latlng[1], new CultureInfo("en-US"));
+                                    double temp_alt = Convert.ToDouble(latlng[2], new CultureInfo("en-US"));
                                     if (temp_lat >= -90 && temp_lat <= 90 && temp_long >= -180 && temp_long <= 180)
                                     {
                                         //SetCoordinates(Convert.ToDouble(latlng[0]), Convert.ToDouble(latlng[1]), Settings.DefaultAltitude);
@@ -1223,6 +1239,22 @@ namespace PokeRoadie
                 AuthType parserValue = AuthType.Google;
                 if (Enum.TryParse<AuthType>(d.AuthType, true, out parserValue))
                     this.AuthType = parserValue;
+                this.Save();
+            }
+            d.Dispose();
+            d = null;
+
+            return result == System.Windows.Forms.DialogResult.OK;
+        }
+        public bool PromptForCoords()
+        {
+            var d = new CoordsForm();
+            var result = d.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.CurrentLatitude = d.Latitude;
+                this.CurrentLongitude = d.Longitude;
+                this.CurrentAltitude = 13;
                 this.Save();
             }
             d.Dispose();

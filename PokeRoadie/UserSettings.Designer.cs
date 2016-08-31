@@ -1246,5 +1246,32 @@ namespace PokeRoadie {
                 return ((bool)(this["PrioritizeGyms"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double PowerUpAboveLV {
+            get {
+                return ((double)(this["PowerUpAboveLV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double EvolveAboveLV {
+            get {
+                return ((double)(this["EvolveAboveLV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double FavoriteAboveLV {
+            get {
+                return ((double)(this["FavoriteAboveLV"]));
+            }
+        }
     }
 }
