@@ -29,9 +29,15 @@ namespace PokeRoadie.Extensions
 {
     public static class PokeRoadieExtensions
     {
+
+        #region " Constants "
+
         const double twoThousand = 2000d;
         const double twoHundred = 200d;
         const double oneHundred = 100d;
+
+        #endregion
+        #region " PokemonData Extensions "
 
         public static double GetPerfection(this PokemonData pokemon)
         {
@@ -63,7 +69,6 @@ namespace PokeRoadie.Extensions
             return PokemonInfo.CalculateMinCPMultiplier(pokemon);
         }
 
-
         public static int GetPowerUpLevel(this PokemonData pokemon)
         {
             return PokemonInfo.GetPowerUpLevel(pokemon);
@@ -79,6 +84,21 @@ namespace PokeRoadie.Extensions
             return PokemonInfo.CalculateCP(pokemon);
         }
 
+
+        public static string GetStats(this PokemonData pokemon)
+        {
+            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19,' ')} {pokemon.CalculatePokemonValue().ToString().PadRight(3, ' ')} V | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00").PadLeft(6, ' ')}% IV | Lvl {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString() + " Hp").PadLeft(10,' ')} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {pokemon.Move1.GetMoveName().PadRight(14, ' ')}{CalculateMoveValue(pokemon.Move1.GetMoveName())} | {pokemon.Move2.GetMoveName().PadRight(14, ' ')}{CalculateMoveValue(pokemon.Move2.GetMoveName())}";
+        }
+
+        public static string GetMinStats(this PokemonData pokemon)
+        {
+            var name = pokemon.PokemonId.ToString();
+            if (name.Length > 10) name = name.Substring(0, 10); 
+            return $"{pokemon.PokemonId.ToString()} " + $"({pokemon.CalculatePokemonValue()}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}Hp)";
+        }
+
+        #endregion
+        #region " Move Extensions "
         public static MoveData GetMove(this ICollection<MoveData> list, string name)
         {
             var filteredName = name.ToLower();
@@ -101,20 +121,8 @@ namespace PokeRoadie.Extensions
                 move.Effect = "Unknown";
                 move.Accuracy = 75;
             }
-                
+
             return move;
-        }
-
-        public static string GetStats(this PokemonData pokemon)
-        {
-            return $"{((String.IsNullOrWhiteSpace(pokemon.DeployedFortId) ? "" : "^") + (pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(20)} {pokemon.CalculatePokemonValue().ToString().PadRight(3)} V | {pokemon.Cp.ToString().PadLeft(4)} CP | {pokemon.GetPerfection().ToString("0.00").PadLeft(6)} IV | LV {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString()+" HP").PadLeft(10)} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {pokemon.Move1.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move1.GetMoveName())}) | {pokemon.Move2.GetMoveName().PadRight(14)}({CalculateMoveValue(pokemon.Move2.GetMoveName())})";
-        }
-
-        public static string GetMinStats(this PokemonData pokemon)
-        {
-            var name = pokemon.PokemonId.ToString();
-            if (name.Length > 10) name = name.Substring(0, 10);
-            return $"{pokemon.PokemonId.ToString().PadRight(20)} ({pokemon.CalculatePokemonValue()}V-{pokemon.Cp.ToString()}CP-{pokemon.GetPerfection().ToString("0.00")}IV-LV{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}HP)".PadRight(32);
         }
 
         public static string GetMoveName(this PokemonMove move)
@@ -124,6 +132,18 @@ namespace PokeRoadie.Extensions
             return val;
         }
 
+        #endregion
+        #region " True Value Extensions "
+
+        public static double CalculatePokemonValue(this PokemonData pokemon)
+        {
+            var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon) * 1.5);
+            var cp = Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * oneHundred);
+            var m1 = CalculateMoveValue(pokemon.Move1.GetMoveName()) * .5;
+            var m2 = CalculateMoveValue(pokemon.Move2.GetMoveName()) * .5;
+            var l = (pokemon.GetLevel() == 0 ? 0 : pokemon.GetLevel() * 3.5);
+            return Math.Round(p + cp + m1 + m2 + l, 0);
+        }
         private static int CalculateMoveValue(string moveName)
         {
             var m1a = 100;
@@ -136,15 +156,8 @@ namespace PokeRoadie.Extensions
             return Convert.ToInt32(m1a / m1b);
         }
 
-        public static double CalculatePokemonValue(this PokemonData pokemon)
-        {
-            var p = System.Convert.ToInt32(PokemonInfo.CalculatePokemonPerfection(pokemon) * 1.5);
-            var cp = Convert.ToInt32(pokemon.Cp == 0 ? 0 : pokemon.Cp / twoThousand * oneHundred);
-            var m1 = CalculateMoveValue(pokemon.Move1.GetMoveName()) * .5;
-            var m2 = CalculateMoveValue(pokemon.Move2.GetMoveName()) * .5;
-            var l = (pokemon.GetLevel() == 0 ? 0 : pokemon.GetLevel() * 3.5);
-            return Math.Round(p + cp + m1 + m2 + l, 0);
-        }
+        #endregion
+        #region " Xlo Extesnions "
 
         public static void Save(this FortDetailsResponse fortInfo, string filePath, double currentAltitude)
         {
@@ -260,5 +273,96 @@ namespace PokeRoadie.Extensions
                 //Logger.Write($"Could not save the encounter information file for {encounterId} - {e.ToString()}", LogLevel.Error);
             }
         }
+
+        #endregion
+        #region " Location Extensions "
+
+        //for backwards compatibility
+        public static double CalculateDistanceInMeters(this GeoCoordinate sourceLocation, GeoCoordinate destinationLocation)
+        {
+            return sourceLocation.GetDistanceTo(destinationLocation);
+        }
+
+        public static GeoCoordinate CreateWaypoint(this GeoCoordinate sourceLocation, double distanceInMeters, double bearingDegrees)
+        //from http://stackoverflow.com/a/17545955
+        {
+            var distanceKm = distanceInMeters / 1000.0;
+            var distanceRadians = distanceKm / 6371; //6371 = Earth's radius in km
+
+            var bearingRadians = ToRad(bearingDegrees);
+            var sourceLatitudeRadians = ToRad(sourceLocation.Latitude);
+            var sourceLongitudeRadians = ToRad(sourceLocation.Longitude);
+
+            var targetLatitudeRadians = Math.Asin(Math.Sin(sourceLatitudeRadians) * Math.Cos(distanceRadians)
+                                                  +
+                                                  Math.Cos(sourceLatitudeRadians) * Math.Sin(distanceRadians) *
+                                                  Math.Cos(bearingRadians));
+
+            var targetLongitudeRadians = sourceLongitudeRadians + Math.Atan2(Math.Sin(bearingRadians)
+                                                                             * Math.Sin(distanceRadians) *
+                                                                             Math.Cos(sourceLatitudeRadians),
+                Math.Cos(distanceRadians)
+                - Math.Sin(sourceLatitudeRadians) * Math.Sin(targetLatitudeRadians));
+
+            // adjust toLonRadians to be in the range -180 to +180...
+            targetLongitudeRadians = (targetLongitudeRadians + 3 * Math.PI) % (2 * Math.PI) - Math.PI;
+
+            return new GeoCoordinate(ToDegrees(targetLatitudeRadians), ToDegrees(targetLongitudeRadians));
+        }
+
+        public static GeoCoordinate CreateWaypoint(this GeoCoordinate sourceLocation, double distanceInMeters, double bearingDegrees, double altitude)
+        //from http://stackoverflow.com/a/17545955
+        {
+            var distanceKm = distanceInMeters / 1000.0;
+            var distanceRadians = distanceKm / 6371; //6371 = Earth's radius in km
+
+            var bearingRadians = ToRad(bearingDegrees);
+            var sourceLatitudeRadians = ToRad(sourceLocation.Latitude);
+            var sourceLongitudeRadians = ToRad(sourceLocation.Longitude);
+
+            var targetLatitudeRadians = Math.Asin(Math.Sin(sourceLatitudeRadians) * Math.Cos(distanceRadians)
+                                                  +
+                                                  Math.Cos(sourceLatitudeRadians) * Math.Sin(distanceRadians) *
+                                                  Math.Cos(bearingRadians));
+
+            var targetLongitudeRadians = sourceLongitudeRadians + Math.Atan2(Math.Sin(bearingRadians)
+                                                                             * Math.Sin(distanceRadians) *
+                                                                             Math.Cos(sourceLatitudeRadians),
+                Math.Cos(distanceRadians)
+                - Math.Sin(sourceLatitudeRadians) * Math.Sin(targetLatitudeRadians));
+
+            // adjust toLonRadians to be in the range -180 to +180...
+            targetLongitudeRadians = (targetLongitudeRadians + 3 * Math.PI) % (2 * Math.PI) - Math.PI;
+
+            return new GeoCoordinate(ToDegrees(targetLatitudeRadians), ToDegrees(targetLongitudeRadians), altitude);
+        }
+
+        public static double DegreeBearing(this GeoCoordinate sourceLocation, GeoCoordinate targetLocation)
+        // from http://stackoverflow.com/questions/2042599/direction-between-2-latitude-longitude-points-in-c-sharp
+        {
+            var dLon = ToRad(targetLocation.Longitude - sourceLocation.Longitude);
+            var dPhi = Math.Log(
+                Math.Tan(ToRad(targetLocation.Latitude) / 2 + Math.PI / 4) /
+                Math.Tan(ToRad(sourceLocation.Latitude) / 2 + Math.PI / 4));
+            if (Math.Abs(dLon) > Math.PI)
+                dLon = dLon > 0 ? -(2 * Math.PI - dLon) : 2 * Math.PI + dLon;
+            return ToBearing(Math.Atan2(dLon, dPhi));
+        }
+        private static double ToBearing(double radians)
+        {
+            // convert radians to degrees (as bearing: 0...360)
+            return (ToDegrees(radians) + 360) % 360;
+        }
+        private static double ToDegrees(double radians)
+        {
+            return radians * 180 / Math.PI;
+        }
+        private static double ToRad(double degrees)
+        {
+            return degrees * (Math.PI / 180);
+        }
+
+        #endregion
+
     }
 }

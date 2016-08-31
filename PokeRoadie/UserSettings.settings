@@ -164,9 +164,6 @@
     <Setting Name="PokeBallBalancing" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="WaitOnStart" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="MinStarDustForPowerUps" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -368,7 +365,7 @@
     <Setting Name="TutorialGenerateCodename" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="DisplayTopCandy" Type="System.Int32" Scope="Application">
+    <Setting Name="DisplayTopCandyCount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="PokedexEntryMinDelay" Type="System.Int32" Scope="Application">
@@ -406,6 +403,21 @@
     </Setting>
     <Setting Name="CompleteTutorials" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PokemonProcessDelayMinutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="PrioritizeGyms" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PowerUpAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EvolveAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FavoriteAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -87,10 +87,6 @@ namespace PokeRoadie
             if (PokeRoadieSettings.Current.KeepAboveCP > 0)
                 query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCP);
 
-            //Keep By LV filter
-            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
-                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
-
             //Keep By IV filter
             if (PokeRoadieSettings.Current.KeepAboveIV > 0)
                 query = query.Where(p => p.GetPerfection() < PokeRoadieSettings.Current.KeepAboveIV);
@@ -98,6 +94,10 @@ namespace PokeRoadie
             //Keep By V filter
             if (PokeRoadieSettings.Current.KeepAboveV > 0)
                 query = query.Where(p => p.CalculatePokemonValue() < PokeRoadieSettings.Current.KeepAboveV);
+
+            //Keep By LV filter
+            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
+                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
 
             //Not to transfer list filter
             if (PokeRoadieSettings.Current.PokemonsNotToTransfer != null)
@@ -113,6 +113,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.IV:
                     orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                    break;
+                case PriorityTypes.LV:
+                    orderBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 case PriorityTypes.V:
                     orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
@@ -132,6 +135,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.V:
                     thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                case PriorityTypes.LV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 default:
                     break;
@@ -257,6 +263,15 @@ namespace PokeRoadie
                 .FirstOrDefault();
         }
 
+        public async Task<PokemonData> GetHighestPokemonOfTypeByLV(PokemonData pokemon)
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.ToList();
+            return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
+                .OrderByDescending(PokemonInfo.GetLevel)
+                .FirstOrDefault();
+        }
+
         public async Task<PokemonData> GetHighestPokemonOfTypeByV(PokemonData pokemon)
         {
             var myPokemon = await GetPokemons();
@@ -319,6 +334,11 @@ namespace PokeRoadie
                 query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.EvolveAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
+            //Evolve By LV filter
+            if (PokeRoadieSettings.Current.EvolveAboveLV > 0)
+                query = query.Where(p => p.GetLevel() > PokeRoadieSettings.Current.EvolveAboveLV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
             //ordering
             Func<PokemonData, double> orderBy = null;
             switch (_settings.EvolvePriorityType)
@@ -331,6 +351,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.V:
                     orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                case PriorityTypes.LV:
+                    orderBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 default:
                     break;
@@ -347,6 +370,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.V:
                     thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                case PriorityTypes.LV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 default:
                     break;
@@ -413,6 +439,12 @@ namespace PokeRoadie
                 query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.PowerUpAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
+            //PowerUp By LV filter
+            if (PokeRoadieSettings.Current.PowerUpAboveLV > 0)
+                query = query.Where(p => p.GetLevel() > PokeRoadieSettings.Current.PowerUpAboveLV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+
             //ordering
             Func<PokemonData, double> orderBy = null;
             switch (_settings.PowerUpPriorityType)
@@ -425,6 +457,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.V:
                     orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                case PriorityTypes.LV:
+                    orderBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 default:
                     break;
@@ -441,6 +476,9 @@ namespace PokeRoadie
                     break;
                 case PriorityTypes.V:
                     thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    break;
+                case PriorityTypes.LV:
+                    thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 default:
                     break;
@@ -470,6 +508,11 @@ namespace PokeRoadie
             //Favorite By V filter
             if (PokeRoadieSettings.Current.FavoriteAboveV > 0)
                 query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.FavoriteAboveV);
+            if (query.Count() == 0) return new List<PokemonData>();
+
+            //Favorite By LV filter
+            if (PokeRoadieSettings.Current.FavoriteAboveLV > 0)
+                query = query.Where(p => p.GetLevel() > PokeRoadieSettings.Current.FavoriteAboveLV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             return query.ToList();

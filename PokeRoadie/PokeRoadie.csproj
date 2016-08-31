@@ -86,6 +86,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CoordsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CoordsForm.Designer.cs">
+      <DependentUpon>CoordsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logging\Providers\ConsoleLogProvider.cs" />
     <Compile Include="Logging\Providers\FlatFileLogProvider.cs" />
     <Compile Include="Logging\Providers\ILogProvider.cs" />
@@ -93,7 +99,7 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="PokeRoadieInventory.cs" />
     <Compile Include="PokeRoadieLogic.cs" />
-    <Compile Include="PokeRoadieNavigation.cs" />
+    <Compile Include="Navigation.cs" />
     <Compile Include="PokeRoadieSettings.cs" />
     <Compile Include="PokeRoadieClient.cs" />
     <Compile Include="Data\LocationData.cs" />
@@ -108,6 +114,8 @@
     <Compile Include="Forms\UsernamePasswordForm.Designer.cs">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Session.cs" />
+    <Compile Include="State.cs" />
     <Compile Include="UserSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -115,7 +123,6 @@
     </Compile>
     <Compile Include="Utils\ApiFailureStrategy.cs" />
     <Compile Include="Utils\GPXReader.cs" />
-    <Compile Include="Utils\LocationUtils.cs" />
     <Compile Include="Utils\RouteUtils.cs" />
     <Compile Include="Utils\Statistics.cs" />
     <Compile Include="Utils\StringUtils.cs" />
@@ -167,6 +174,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CoordsForm.resx">
+      <DependentUpon>CoordsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UsernamePasswordForm.resx">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>

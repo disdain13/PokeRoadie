@@ -87,7 +87,6 @@
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
-  <WaitOnStart>false</WaitOnStart>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
   <WaypointAltitude>0</WaypointAltitude>
@@ -102,7 +101,7 @@
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
   <DisplayPokemonCount>20</DisplayPokemonCount>
-  <DisplayTopCandy>10</DisplayTopCandy>
+  <DisplayTopCandyCount>10</DisplayTopCandyCount>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
@@ -135,4 +134,7 @@
   <LocationsMinDelay>10000</LocationsMinDelay>
   <LocationsMaxDelay>20000</LocationsMaxDelay>
   <PokeballRefillDelayMinutes>15</PokeballRefillDelayMinutes>
+  <PokemonProcessDelayMinutes>5</PokemonProcessDelayMinutes>
+  <PrioritizeGyms>false</PrioritizeGyms>
+
 </PokeRoadieSettings>
