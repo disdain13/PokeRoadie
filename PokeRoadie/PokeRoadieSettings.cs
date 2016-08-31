@@ -89,9 +89,10 @@ namespace PokeRoadie
         public virtual bool EvolvePokemon { get; set; }
         public PriorityTypes EvolvePriorityType { get; set; }
         public PriorityTypes EvolvePriorityType2 { get; set; }
+        public virtual int EvolveAboveCp { get; set; }
         public virtual double EvolveAboveIV { get; set; }
         public virtual double EvolveAboveV { get; set; }
-        public virtual int EvolveAboveCp { get; set; }
+        public virtual double EvolveAboveLV { get; set; }
         public virtual bool UsePokemonsToEvolveList { get; set; }
 
         //transfers
@@ -101,8 +102,8 @@ namespace PokeRoadie
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual int KeepAboveCP { get; set; }
         public virtual double KeepAboveIV { get; set; }
-        public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
+        public virtual double KeepAboveLV { get; set; }
         public virtual int AlwaysTransferBelowCp { get; set; }
         public virtual double AlwaysTransferBelowIV { get; set; }
         public virtual double AlwaysTransferBelowLV { get; set; }
@@ -114,9 +115,10 @@ namespace PokeRoadie
         public virtual bool PowerUpPokemon { get; set; }
         public virtual PriorityTypes PowerUpPriorityType { get; set; }
         public virtual PriorityTypes PowerUpPriorityType2 { get; set; }
+        public virtual int PowerUpAboveCp { get; set; }
         public virtual double PowerUpAboveIV { get; set; }
         public virtual double PowerUpAboveV { get; set; }
-        public virtual int PowerUpAboveCp { get; set; }
+        public virtual double PowerUpAboveLV { get; set; }
         public virtual int MinStarDustForPowerUps { get; set; }
         public virtual bool UsePokemonsToPowerUpList { get; set; }
         public virtual int MinCandyForPowerUps { get; set; }
@@ -127,6 +129,7 @@ namespace PokeRoadie
         public virtual int FavoriteAboveCp { get; set; }
         public virtual double FavoriteAboveIV { get; set; }
         public virtual double FavoriteAboveV { get; set; }
+        public virtual double FavoriteAboveLV { get; set; }
 
         //pokestops
         public virtual bool VisitPokestops { get; set; }
@@ -231,8 +234,12 @@ namespace PokeRoadie
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
 
+        #endregion
+        #region " Session/State Properties "
+
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
+
         [XmlIgnore()]
         public SessionData Session
         {
@@ -536,6 +543,7 @@ namespace PokeRoadie
             this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
             this.EvolveAboveIV = UserSettings.Default.EvolveAboveIV;
             this.EvolveAboveV = UserSettings.Default.EvolveAboveV;
+            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
             this.UsePokemonsToEvolveList = UserSettings.Default.UsePokemonsToEvolveList;
             this.UseIncense = UserSettings.Default.UseIncense;
             this.UseRevives = UserSettings.Default.UseRevives;
@@ -557,6 +565,7 @@ namespace PokeRoadie
             this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
             this.PowerUpAboveIV = UserSettings.Default.PowerUpAboveIV;
             this.PowerUpAboveV = UserSettings.Default.PowerUpAboveV;
+            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
             this.MinStarDustForPowerUps = UserSettings.Default.MinStarDustForPowerUps;
             this.UsePokemonsToPowerUpList = UserSettings.Default.UsePokemonsToPowerUpList;
             this.MinCandyForPowerUps = UserSettings.Default.MinCandyForPowerUps;
@@ -578,6 +587,7 @@ namespace PokeRoadie
             this.FavoriteAboveCp = UserSettings.Default.FavoriteAboveCp;
             this.FavoriteAboveIV = UserSettings.Default.FavoriteAboveIV;
             this.FavoriteAboveV = UserSettings.Default.FavoriteAboveV;
+            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
             this.RenamePokemon = UserSettings.Default.RenamePokemon;
             this.RenameFormat = UserSettings.Default.RenameFormat;
 
@@ -652,7 +662,6 @@ namespace PokeRoadie
             this.CompleteTutorials = UserSettings.Default.CompleteTutorials;
             this.PokemonProcessDelayMinutes = UserSettings.Default.PokemonProcessDelayMinutes;
             this.PrioritizeGyms = UserSettings.Default.PrioritizeGyms;
-
         }
 
         #endregion
@@ -740,6 +749,7 @@ namespace PokeRoadie
             session.StartDate = DateTime.Now;
             return session;
         }
+
         private PokeRoadieSettings Load()
         {
             //check for base path
@@ -936,11 +946,13 @@ namespace PokeRoadie
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
+                    Logger.Write($"No Username or Password defined in the Settings.xml file.", LogLevel.Warning);
                     createNew = true;
                 }
             }
             else
             {
+                Logger.Write($"The Settings.Xml file does not exist. One will be created for you", LogLevel.Warning);
                 createNew = true;
             }
 
@@ -985,11 +997,10 @@ namespace PokeRoadie
 
             if (createNew)
             {
-                Logger.Write($"The {fileName} file could not be found, it will be recreated.", LogLevel.Warning);
                 var result = PromptForCredentials();
                 if (!result)
                 {
-                    Logger.Write($"Quit before providing login credentials.", LogLevel.Warning);
+                    Logger.Write($"User quit before providing login credentials.", LogLevel.Warning);
                     Program.ExitApplication(1);
                 }
             }

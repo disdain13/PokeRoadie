@@ -413,5 +413,14 @@
     <Setting Name="DisplayStyle" Type="System.String" Scope="Application">
       <Value Profile="(Default)">disdain</Value>
     </Setting>
+    <Setting Name="PowerUpAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EvolveAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FavoriteAboveLV" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+	</Setting>
   </Settings>
 </SettingsFile>

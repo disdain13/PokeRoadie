@@ -113,7 +113,7 @@ namespace PokeRoadie
         private readonly PokeRoadieClient _client;
         private readonly PokeRoadieInventory _inventory;
         private readonly Statistics _stats;
-        private readonly PokeRoadieNavigation _navigation;
+        private readonly Navigation _navigation;
         private readonly PokeRoadieSettings _settings;
 
         #endregion
@@ -205,7 +205,7 @@ namespace PokeRoadie
             _apiFailureStrategy.Client = _client;
             _inventory = new PokeRoadieInventory(_client, _settings);
             _stats = new Statistics(_inventory);
-            _navigation = new PokeRoadieNavigation(_client);
+            _navigation = new Navigation(_client);
             _navigation.OnChangeLocation += RelayLocation;
         }
 
@@ -405,7 +405,7 @@ namespace PokeRoadie
 
                                 var sourceLocation = new GeoCoordinate(lastDestination.Latitude, lastDestination.Longitude, lastDestination.Altitude);
                                 var targetLocation = new GeoCoordinate(destination.Latitude, destination.Longitude, destination.Altitude);
-                                var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
+                                var distanceToTarget = sourceLocation.CalculateDistanceInMeters(targetLocation);
                                 var speed = _settings.LongDistanceSpeed;
                                 var speedInMetersPerSecond = speed / 3.6;
                                 var seconds = distanceToTarget / speedInMetersPerSecond;
@@ -997,7 +997,7 @@ namespace PokeRoadie
                         {
                             if (!isRunning) break;
                             var nextPoint = trackPoints.ElementAt(curTrkPt);
-                            var distance_check = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude,
+                            var distance_check = Navigation.CalculateDistanceInMeters(_client.CurrentLatitude,
                                 _client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat), Convert.ToDouble(nextPoint.Lon));
 
                             //if (distance_check > 5000)
@@ -1048,7 +1048,7 @@ namespace PokeRoadie
 
             var wayPointGeo = GetWaypointGeo();
 
-            var distanceFromStart = LocationUtils.CalculateDistanceInMeters(
+            var distanceFromStart = Navigation.CalculateDistanceInMeters(
             _client.CurrentLatitude, _client.CurrentLongitude,
             wayPointGeo.Latitude, wayPointGeo.Longitude);
 
@@ -1213,13 +1213,13 @@ namespace PokeRoadie
 
         private List<FortData> GetPokestops(LocationData location, int maxDistance, GetMapObjectsResponse mapObjects)
         {
-            var fullPokestopList = PokeRoadieNavigation.PathByNearestNeighbour(
+            var fullPokestopList = Navigation.PathByNearestNeighbour(
                 mapObjects.MapCells.SelectMany(i => i.Forts)
                     .Where(i =>
                         (maxDistance == 0 ||
-                        LocationUtils.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude) < maxDistance))
+                        Navigation.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude) < maxDistance))
                     .OrderBy(i =>
-                         LocationUtils.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude)).ToArray());
+                         Navigation.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude)).ToArray());
 
             var stops = fullPokestopList.Where(x => x.Type != FortType.Gym);
             if (stops.Count() > 0)
@@ -1280,11 +1280,11 @@ namespace PokeRoadie
             var pokemons =
                 mapObjects.MapCells.SelectMany(i => i.CatchablePokemons)
                 .Where(x=> !_recentEncounters.Contains(x.EncounterId))
-                .OrderBy(i => LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
+                .OrderBy(i => Navigation.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //filter out not to catch list
             if (_settings.UsePokemonToNotCatchList)
-                pokemons = pokemons.Where(p => !_settings.PokemonsNotToCatch.Contains(p.PokemonId)).OrderBy(i => LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
+                pokemons = pokemons.Where(p => !_settings.PokemonsNotToCatch.Contains(p.PokemonId)).OrderBy(i => Navigation.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //clean up old recent encounters
             while (_recentEncounters != null && _recentEncounters.Count > 100)
@@ -1296,7 +1296,7 @@ namespace PokeRoadie
             foreach (var pokemon in pokemons)
             {
                 if (!isRunning) break;
-                var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
+                var distance = Navigation.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
 
                 if (!_recentEncounters.Contains(pokemon.EncounterId) && (!_settings.UsePokemonToNotCatchList || !_settings.PokemonsNotToCatch.Contains(pokemon.PokemonId)))
                 {
@@ -1389,7 +1389,7 @@ namespace PokeRoadie
             //merge location lists
             var tempList = new List<FortData>(stopList);
             tempList.AddRange(unvisitedGymList);
-            tempList = PokeRoadieNavigation.PathByNearestNeighbour(tempList.ToArray()).ToList();
+            tempList = Navigation.PathByNearestNeighbour(tempList.ToArray()).ToList();
 
             List<FortData> finalList = null;
             if (priorityList.Count > 0)
@@ -1448,7 +1448,7 @@ namespace PokeRoadie
                 if (CanCatch)
                     await ProcessNearby(mapObjects);
 
-                var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
+                var distance = Navigation.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
                 var fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                 if (fortInfo != null)
                 {
@@ -1595,7 +1595,7 @@ namespace PokeRoadie
             if (CanCatch)
                 await ProcessNearby(mapObjects);
 
-            var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
+            var distance = Navigation.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokeStop.Latitude, pokeStop.Longitude);
             
             //get fort info
             var fortInfo = await _client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
@@ -1771,6 +1771,9 @@ namespace PokeRoadie
                         case PriorityTypes.IV:
                             orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                             break;
+                        case PriorityTypes.LV:
+                            orderBy = new Func<PokemonData, double>(x => x.GetLevel());
+                            break;
                         case PriorityTypes.V:
                             orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                             break;
@@ -1786,6 +1789,9 @@ namespace PokeRoadie
                             break;
                         case PriorityTypes.IV:
                             thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                            break;
+                        case PriorityTypes.LV:
+                            thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                             break;
                         case PriorityTypes.V:
                             thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
@@ -2143,7 +2149,7 @@ namespace PokeRoadie
 
         private async Task CheckWaypoint()
         {
-            var distanceFromStart = LocationUtils.CalculateDistanceInMeters(
+            var distanceFromStart = Navigation.CalculateDistanceInMeters(
             _client.CurrentLatitude, _client.CurrentLongitude, _settings.WaypointLatitude, _settings.WaypointLongitude);
 
             // Edge case for when the client somehow ends up outside the defined radius
@@ -2206,7 +2212,7 @@ namespace PokeRoadie
         private async Task Travel(GeoCoordinate source, GeoCoordinate destination, string name = "")
         {
             //get distance
-            var distance = LocationUtils.CalculateDistanceInMeters(source, destination);
+            var distance = source.CalculateDistanceInMeters(destination);
             if (distance > 0)
             {
                 //write travel plan
@@ -2608,7 +2614,7 @@ namespace PokeRoadie
         }
 
         #endregion
-        #region " Travel Task Methods "
+        #region " Travel Task Delegate Methods "
 
         private Func<Task> GetLongTask()
         {
@@ -2643,18 +2649,21 @@ namespace PokeRoadie
         {
             await CatchNearbyPokemonsAndStops(false);
         }
+
         private async Task CatchNearbyPokemons()
         {
             var mapObjects = await GetMapObjects();
             _stats.UpdateConsoleTitle(_client, _inventory);
             await ProcessNearby(mapObjects);
         }
+
         private async Task CatchNearbyStops()
         {
             var mapObjects = await GetMapObjects();
             _stats.UpdateConsoleTitle(_client, _inventory);
             await CatchNearbyStops(mapObjects, false);
         }
+
         private async Task GpxCatchNearbyStops()
         {
             var mapObjects = await GetMapObjects();
@@ -2669,6 +2678,7 @@ namespace PokeRoadie
             await ProcessNearby(mapObjects);
             await CatchNearbyStops(mapObjects, true);
         }
+
         private async Task CatchNearbyPokemonsAndStops(bool path)
         {
             var mapObjects = await GetMapObjects();
@@ -2696,7 +2706,7 @@ namespace PokeRoadie
                 {
                     var speedInMetersPerSecond = _settings.LongDistanceSpeed / 3.6;
                     var sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
-                    var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, new GeoCoordinate(_settings.WaypointLatitude, _settings.WaypointLongitude));
+                    var distanceToTarget = sourceLocation.CalculateDistanceInMeters(new GeoCoordinate(_settings.WaypointLatitude, _settings.WaypointLongitude));
                     var seconds = distanceToTarget / speedInMetersPerSecond;
                     Logger.Write($"Returning to long distance travel: {(_settings.DestinationsEnabled ? _settings.Destinations[_settings.DestinationIndex].Name + " " : String.Empty )}{distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(_settings.LongDistanceSpeed)} at {_settings.LongDistanceSpeed}kmh", LogLevel.Navigation);
                 }
@@ -2856,6 +2866,9 @@ namespace PokeRoadie
                     case PriorityTypes.IV:
                         orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                         break;
+                    case PriorityTypes.LV:
+                        orderBy = new Func<PokemonData, double>(x => x.GetLevel());
+                        break;
                     case PriorityTypes.V:
                         orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
                         break;
@@ -2871,6 +2884,9 @@ namespace PokeRoadie
                         break;
                     case PriorityTypes.IV:
                         thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
+                        break;
+                    case PriorityTypes.LV:
+                        thenBy = new Func<PokemonData, double>(x => x.GetLevel());
                         break;
                     case PriorityTypes.V:
                         thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
@@ -3134,6 +3150,13 @@ namespace PokeRoadie
                                 if (response.CurrencyType[i] == "XP")
                                     _stats.AddExperience(response.CurrencyAwarded[i]);
                                 Logger.Write($"{response.CurrencyAwarded[i]} {response.CurrencyType[i]}", LogLevel.None, ConsoleColor.Green);
+
+                                //raise event
+                                if (OnPickupDailyDefenderBonus != null)
+                                {
+                                    if (!RaiseSyncEvent(OnPickupDailyDefenderBonus, GetCurrentLocation(), response))
+                                        OnPickupDailyDefenderBonus(GetCurrentLocation(), response);
+                                }
                             }
                         }
 

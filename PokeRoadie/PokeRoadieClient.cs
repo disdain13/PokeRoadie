@@ -17,12 +17,19 @@ namespace PokeRoadie
     public class PokeRoadieClient : Client
     {
 
+        #region " Shadowed Properties "
+
+        new public PokeRoadieSettings Settings { get { return (PokeRoadieSettings)base.Settings; } }
+
+        #endregion
+        #region " Constructors "
+
         public PokeRoadieClient(PokeRoadieSettings settings, ApiFailureStrategy apiFailureStrategy) 
             : base(settings, apiFailureStrategy)
         {
         }
 
-        new public PokeRoadieSettings Settings { get { return (PokeRoadieSettings)base.Settings; } }
+        #endregion
 
     }
 }
