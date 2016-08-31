@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
@@ -1163,9 +1164,9 @@ namespace PokeRoadie
                             {
                                 try
                                 {
-                                    double temp_lat = Convert.ToDouble(latlng[0]);
-                                    double temp_long = Convert.ToDouble(latlng[1]);
-                                    double temp_alt = Convert.ToDouble(latlng[2]);
+                                    double temp_lat = Convert.ToDouble(latlng[0], new CultureInfo("en-US"));
+                                    double temp_long = Convert.ToDouble(latlng[1], new CultureInfo("en-US"));
+                                    double temp_alt = Convert.ToDouble(latlng[2], new CultureInfo("en-US"));
                                     if (temp_lat >= -90 && temp_lat <= 90 && temp_long >= -180 && temp_long <= 180)
                                     {
                                         //SetCoordinates(Convert.ToDouble(latlng[0]), Convert.ToDouble(latlng[1]), Settings.DefaultAltitude);
@@ -1239,6 +1240,22 @@ namespace PokeRoadie
                 AuthType parserValue = AuthType.Google;
                 if (Enum.TryParse<AuthType>(d.AuthType, true, out parserValue))
                     this.AuthType = parserValue;
+                this.Save();
+            }
+            d.Dispose();
+            d = null;
+
+            return result == System.Windows.Forms.DialogResult.OK;
+        }
+        public bool PromptForCoords()
+        {
+            var d = new CoordsForm();
+            var result = d.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.CurrentLatitude = d.Latitude;
+                this.CurrentLongitude = d.Longitude;
+                this.CurrentAltitude = 13;
                 this.Save();
             }
             d.Dispose();

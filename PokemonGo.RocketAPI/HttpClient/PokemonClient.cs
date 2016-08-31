@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Helpers;
 
@@ -27,5 +28,6 @@ namespace PokemonGo.RocketAPI.HttpClient
             DefaultRequestHeaders.TryAddWithoutValidation("Accept", "*/*");
             DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
         }
+
     }
 }
