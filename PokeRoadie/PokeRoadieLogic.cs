@@ -452,7 +452,7 @@ namespace PokeRoadie
                 if (_settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
-                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId.ToString()).ThenByDescending(x => x.Cp))
+                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
                     {
                         Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                     }
@@ -2855,19 +2855,10 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                if (_settings.DisplayStyle == "disdain")
-                {
-                    if (bestPokemonOfType == null)
-                        bestPokemonInfo = "NONE";
+                string bestPokemonInfo = "NONE";
+                if (bestPokemonOfType == null)
+					bestPokemonInfo = bestPokemonOfType.GetMinStats();
                     Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
-                }
-                else if (_settings.DisplayStyle == "spastic")
-                {
-                    if (bestPokemonOfType == null)
-                        bestPokemonInfo = "NONE".PadRight(55);
-                    Logger.Write($"{pokemon.GetMinStats()} | Best {bestPokemonInfo} | Candy {FamilyCandies}", LogLevel.Transfer);
-                }
 
                 //raise event
                 if (OnTransfer != null)

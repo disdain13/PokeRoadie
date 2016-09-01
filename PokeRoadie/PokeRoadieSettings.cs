@@ -217,7 +217,11 @@ namespace PokeRoadie
         public virtual bool TutorialGenerateCodename { get; set; }
 
         //logging
-        public virtual int DisplayTopCandyCount { get; set; }
+		public virtual int DisplayRefreshMinutes { get; set; }
+		public virtual bool DisplayAggregateLog { get; set; }
+		public virtual bool DisplayAllPokemonInLog { get; set; }
+		public virtual int DisplayPokemonCount { get; set; }
+		public virtual int DisplayTopCandyCount { get; set; }
 
         //system
         public virtual bool ShowDebugMessages { get; set; }
@@ -789,9 +793,6 @@ namespace PokeRoadie
                     this.DestinationsEnabled = obj.DestinationsEnabled;
                     this.DisplayAllPokemonInLog = obj.DisplayAllPokemonInLog;
                     this.DisplayAggregateLog = obj.DisplayAggregateLog;
-                    this.DisplayPokemonCount = obj.DisplayPokemonCount;
-                    this.DisplayTopCandy = obj.DisplayTopCandy;
-                    this.DisplayStyle = obj.DisplayStyle;
                     this.DisplayRefreshMinutes = obj.DisplayRefreshMinutes;
                     this.EnableSpeedAdjustment = obj.EnableSpeedAdjustment;
                     this.EnableSpeedRandomizer = obj.EnableSpeedRandomizer;

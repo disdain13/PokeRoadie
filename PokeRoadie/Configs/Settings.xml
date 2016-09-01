@@ -100,6 +100,7 @@
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
+  <DisplayTopCandyCount>10</DisplayTopCandyCount>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
   <MaxPokemonCatches>975</MaxPokemonCatches>
