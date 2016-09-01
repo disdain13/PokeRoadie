@@ -217,11 +217,11 @@ namespace PokeRoadie
         public virtual bool TutorialGenerateCodename { get; set; }
 
         //logging
-		public virtual int DisplayRefreshMinutes { get; set; }
-		public virtual bool DisplayAggregateLog { get; set; }
-		public virtual bool DisplayAllPokemonInLog { get; set; }
-		public virtual int DisplayPokemonCount { get; set; }
-		public virtual int DisplayTopCandyCount { get; set; }
+        public virtual int DisplayRefreshMinutes { get; set; }
+        public virtual bool DisplayAggregateLog { get; set; }
+        public virtual bool DisplayAllPokemonInLog { get; set; }
+        public virtual int DisplayPokemonCount { get; set; }
+        public virtual int DisplayTopCandyCount { get; set; }
 
         //system
         public virtual bool ShowDebugMessages { get; set; }

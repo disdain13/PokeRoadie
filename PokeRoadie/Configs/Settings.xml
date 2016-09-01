@@ -33,13 +33,13 @@
   <TransferPriorityType>V</TransferPriorityType>
   <TransferPriorityType2>IV</TransferPriorityType2>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
-  <KeepAboveIV>0</KeepAboveIV>  
+  <KeepAboveIV>0</KeepAboveIV>
   <KeepAboveV>0</KeepAboveV>
   <KeepAboveCP>0</KeepAboveCP>
   <KeepAboveLV>0</KeepAboveLV>
   <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
-  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
   <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
+  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
   <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
@@ -136,4 +136,5 @@
   <PokeballRefillDelayMinutes>15</PokeballRefillDelayMinutes>
   <PokemonProcessDelayMinutes>5</PokemonProcessDelayMinutes>
   <PrioritizeGyms>false</PrioritizeGyms>
+
 </PokeRoadieSettings>

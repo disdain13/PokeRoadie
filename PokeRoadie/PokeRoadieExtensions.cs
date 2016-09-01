@@ -121,6 +121,7 @@ namespace PokeRoadie.Extensions
                 move.Effect = "Unknown";
                 move.Accuracy = 75;
             }
+
             return move;
         }
 
