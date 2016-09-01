@@ -511,15 +511,6 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool WaitOnStart {
-            get {
-                return ((bool)(this["WaitOnStart"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int MinStarDustForPowerUps {
             get {
@@ -1124,9 +1115,9 @@ namespace PokeRoadie {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int DisplayTopCandy {
+        public int DisplayTopCandyCount {
             get {
-                return ((int)(this["DisplayTopCandy"]));
+                return ((int)(this["DisplayTopCandyCount"]));
             }
         }
         
@@ -1240,11 +1231,56 @@ namespace PokeRoadie {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("disdain")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int PokemonProcessDelayMinutes {
+            get {
+                return ((int)(this["PokemonProcessDelayMinutes"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PrioritizeGyms {
+            get {
+                return ((bool)(this["PrioritizeGyms"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double PowerUpAboveLV {
+            get {
+                return ((double)(this["PowerUpAboveLV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double EvolveAboveLV {
+            get {
+                return ((double)(this["EvolveAboveLV"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double FavoriteAboveLV {
+            get {
+                return ((double)(this["FavoriteAboveLV"]));
+            }
+        }
+		
+		[global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("disdain")]
         public string DisplayStyle {
             get {
                 return ((string)(this["DisplayStyle"]));
             }
-        }
+		}
     }
 }

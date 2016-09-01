@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
@@ -65,6 +66,11 @@ namespace PokeRoadie
         public virtual double CurrentLongitude { get; set; }
         public virtual double CurrentAltitude { get; set; }
 
+        //waypoints - being moved to State object
+        public virtual double WaypointLatitude { get; set; }
+        public virtual double WaypointLongitude { get; set; }
+        public virtual double WaypointAltitude { get; set; }
+
         //movement related
         public virtual double MinSpeed { get; set; }
         public virtual int MaxSpeed { get; set; }
@@ -84,9 +90,10 @@ namespace PokeRoadie
         public virtual bool EvolvePokemon { get; set; }
         public PriorityTypes EvolvePriorityType { get; set; }
         public PriorityTypes EvolvePriorityType2 { get; set; }
+        public virtual int EvolveAboveCp { get; set; }
         public virtual double EvolveAboveIV { get; set; }
         public virtual double EvolveAboveV { get; set; }
-        public virtual int EvolveAboveCp { get; set; }
+        public virtual double EvolveAboveLV { get; set; }
         public virtual bool UsePokemonsToEvolveList { get; set; }
 
         //transfers
@@ -96,8 +103,8 @@ namespace PokeRoadie
         public virtual int KeepDuplicateAmount { get; set; }
         public virtual int KeepAboveCP { get; set; }
         public virtual double KeepAboveIV { get; set; }
-        public virtual double KeepAboveLV { get; set; }
         public virtual double KeepAboveV { get; set; }
+        public virtual double KeepAboveLV { get; set; }
         public virtual int AlwaysTransferBelowCp { get; set; }
         public virtual double AlwaysTransferBelowIV { get; set; }
         public virtual double AlwaysTransferBelowLV { get; set; }
@@ -109,35 +116,35 @@ namespace PokeRoadie
         public virtual bool PowerUpPokemon { get; set; }
         public virtual PriorityTypes PowerUpPriorityType { get; set; }
         public virtual PriorityTypes PowerUpPriorityType2 { get; set; }
+        public virtual int PowerUpAboveCp { get; set; }
         public virtual double PowerUpAboveIV { get; set; }
         public virtual double PowerUpAboveV { get; set; }
-        public virtual int PowerUpAboveCp { get; set; }
+        public virtual double PowerUpAboveLV { get; set; }
         public virtual int MinStarDustForPowerUps { get; set; }
         public virtual bool UsePokemonsToPowerUpList { get; set; }
         public virtual int MinCandyForPowerUps { get; set; }
         public virtual int MaxPowerUpsPerRound { get; set; }
-
 
         //favorites
         public virtual bool FavoritePokemon { get; set; }
         public virtual int FavoriteAboveCp { get; set; }
         public virtual double FavoriteAboveIV { get; set; }
         public virtual double FavoriteAboveV { get; set; }
+        public virtual double FavoriteAboveLV { get; set; }
 
-        //player behavior
-        public virtual bool CatchPokemon { get; set; }
-        public virtual double MaxCatchSpeed { get; set; }
+        //pokestops
         public virtual bool VisitPokestops { get; set; }
+        public virtual bool IncludeHotPokestops { get; set; }
         public virtual bool MoveWhenNoStops { get; set; }
         public virtual bool PrioritizeStopsWithLures { get; set; }
         public virtual bool LoiteringActive { get; set; }
 
-
-        public virtual bool VisitGyms { get; set; }
-        public virtual bool AutoDeployAtTeamGyms { get; set; }
-        public virtual bool PickupDailyDefenderBonuses { get; set; }
-        public virtual int MinGymsBeforeBonusPickup { get; set; }
+        //catching - general
+        public virtual bool CatchPokemon { get; set; }
+        public virtual double MaxCatchSpeed { get; set; }
+        public virtual bool UsePokemonToNotCatchList { get; set; }
         public virtual bool PokeBallBalancing { get; set; }
+        public virtual int PokeballRefillDelayMinutes { get; set; }
 
         //humanized throws
         public virtual bool EnableHumanizedThrows { get; set; }
@@ -160,9 +167,6 @@ namespace PokeRoadie
         public virtual bool UsePotions { get; set; }
         public virtual bool UseEggIncubators { get; set; }
 
-        //config options
-        public virtual bool UsePokemonToNotCatchList { get; set; }
-
         //logging
         public virtual int DisplayRefreshMinutes { get; set; }
         public virtual bool DisplayAggregateLog { get; set; }
@@ -171,20 +175,13 @@ namespace PokeRoadie
         public virtual int DisplayTopCandy { get; set; }
         public virtual string DisplayStyle { get; set; }
 
-        //system
-        public virtual bool WaitOnStart { get; set; }
-        public virtual double WaypointLatitude { get; set; }
-        public virtual double WaypointLongitude { get; set; }
-        public virtual double WaypointAltitude { get; set; }
+        //gyms
+        public virtual bool VisitGyms { get; set; }
+        public virtual bool PrioritizeGyms { get; set; }
+        public virtual bool AutoDeployAtTeamGyms { get; set; }
+        public virtual bool PickupDailyDefenderBonuses { get; set; }
+        public virtual int MinGymsBeforeBonusPickup { get; set; }
 
-        //proxy
-        public virtual bool UseProxy { get; set; }
-        public virtual string UseProxyHost { get; set; }
-        public virtual int UseProxyPort { get; set; }
-        public virtual bool UseProxyAuthentication { get; set; }
-        public virtual string UseProxyUsername { get; set; }
-        public virtual string UseProxyPassword { get; set; }
-        
         //rename
         public virtual bool RenamePokemon { get; set; }
         public virtual string RenameFormat { get; set; }
@@ -218,8 +215,7 @@ namespace PokeRoadie
         public virtual int PokedexEntryMaxDelay { get; set; }
         public virtual int LocationsMinDelay { get; set; }
         public virtual int LocationsMaxDelay { get; set; }
-
-        public virtual bool ShowDebugMessages { get; set; }
+        public virtual int PokemonProcessDelayMinutes { get; set; }
 
         //tutorials
         public virtual bool CompleteTutorials { get; set; }
@@ -227,8 +223,23 @@ namespace PokeRoadie
         public virtual TeamColor TeamColor { get; set; }
         public virtual string TutorialCodename { get; set; }
         public virtual bool TutorialGenerateCodename { get; set; }
-        public virtual bool IncludeHotPokestops { get; set; }
-        public virtual int PokeballRefillDelayMinutes { get; set; }
+
+        //logging
+        public virtual int DisplayTopCandyCount { get; set; }
+
+        //system
+        public virtual bool ShowDebugMessages { get; set; }
+
+        //proxy
+        public virtual bool UseProxy { get; set; }
+        public virtual string UseProxyHost { get; set; }
+        public virtual int UseProxyPort { get; set; }
+        public virtual bool UseProxyAuthentication { get; set; }
+        public virtual string UseProxyUsername { get; set; }
+        public virtual string UseProxyPassword { get; set; }
+
+        #endregion
+        #region " Session/State Properties "
 
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
@@ -489,13 +500,7 @@ namespace PokeRoadie
             this.DisplayRefreshMinutes = UserSettings.Default.DisplayRefreshMinutes;
             this.EnableSpeedAdjustment = UserSettings.Default.EnableSpeedAdjustment;
             this.EnableSpeedRandomizer = UserSettings.Default.EnableSpeedRandomizer;
-            this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
-            this.DisplayTopCandy = UserSettings.Default.DisplayTopCandy;
-            this.DisplayStyle = UserSettings.Default.DisplayStyle;
-            //this.EvolveOnlyPokemonAboveIV = UserSettings.Default.EvolveOnlyPokemonAboveIV;
-            //this.EvolveOnlyPokemonAboveIVValue = UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
             this.EvolvePokemon = UserSettings.Default.EvolvePokemon;
-            //this.FlyingEnabled = UserSettings.Default.FlyingEnabled;
             this.LongDistanceSpeed = UserSettings.Default.LongDistanceSpeed;
             this.GPXFile = UserSettings.Default.GPXFile;
             this.KeepAboveCP = UserSettings.Default.KeepAboveCP;
@@ -550,11 +555,9 @@ namespace PokeRoadie
             this.WaypointLatitude = UserSettings.Default.WaypointLatitude;
             this.WaypointLongitude = UserSettings.Default.WaypointLongitude;
             this.WaypointAltitude = UserSettings.Default.WaypointAltitude;
-            //this.FlyLikeCaptKirk = UserSettings.Default.FlyLikeCaptKirk;
             this.TransferTrimFatCount = UserSettings.Default.TransferTrimFatCount;
             this.PokeBallBalancing = UserSettings.Default.PokeBallBalancing;
 
-            this.WaitOnStart = UserSettings.Default.WaitOnStart;
             this.PowerUpPokemon = UserSettings.Default.PowerUpPokemon;
             PriorityTypes outValue3 = PriorityTypes.V;
             if (Enum.TryParse<PriorityTypes>(UserSettings.Default.PowerUpPriorityType, true, out outValue3))
@@ -603,6 +606,9 @@ namespace PokeRoadie
             this.MissThrowChance = UserSettings.Default.MissThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
+            this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
+            this.DisplayTopCandyCount = UserSettings.Default.DisplayTopCandyCount;
+			this.DisplayStyle = UserSettings.Default.DisplayStyle;
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
@@ -638,7 +644,6 @@ namespace PokeRoadie
             if (Enum.TryParse<TeamColor>(UserSettings.Default.TeamColor, true, out outValue5))
                 this.TeamColor = outValue5;
 
-            //this.PickupDailyBonuses = UserSettings.Default.PickupDailyBonuses;
             this.PickupDailyDefenderBonuses = UserSettings.Default.PickupDailyDefenderBonuses;
             this.IncludeHotPokestops = UserSettings.Default.IncludeHotPokestops;
 
@@ -655,6 +660,13 @@ namespace PokeRoadie
             this.PokeballRefillDelayMinutes = UserSettings.Default.PokeballRefillDelayMinutes;
 
             this.CompleteTutorials = UserSettings.Default.CompleteTutorials;
+            this.PokemonProcessDelayMinutes = UserSettings.Default.PokemonProcessDelayMinutes;
+            this.PrioritizeGyms = UserSettings.Default.PrioritizeGyms;
+
+            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
+            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
+            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
+
 
         }
 
@@ -743,6 +755,7 @@ namespace PokeRoadie
             session.StartDate = DateTime.Now;
             return session;
         }
+
         private PokeRoadieSettings Load()
         {
             //check for base path
@@ -843,8 +856,6 @@ namespace PokeRoadie
                     this.TransferTrimFatCount = obj.TransferTrimFatCount;
                     this.PokeBallBalancing = obj.PokeBallBalancing;
 
-                    this.WaitOnStart = obj.WaitOnStart;
-                    this.WaitOnStart = obj.WaitOnStart;
                     this.PowerUpPokemon = obj.PowerUpPokemon;
                     this.PowerUpPriorityType = obj.PowerUpPriorityType;
                     this.PowerUpPriorityType2 = obj.PowerUpPriorityType2;
@@ -889,6 +900,8 @@ namespace PokeRoadie
                     this.MissThrowChance = obj.MissThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
 
+                    this.DisplayPokemonCount = obj.DisplayPokemonCount;
+                    this.DisplayTopCandyCount = obj.DisplayTopCandyCount;
                     this.MaxRunTimespan = obj.MaxRunTimespan;
                     this.MinBreakTimespan = obj.MinBreakTimespan;
                     this.MaxPokemonCatches = obj.MaxPokemonCatches;
@@ -935,14 +948,18 @@ namespace PokeRoadie
                     this.PokeballRefillDelayMinutes = obj.PokeballRefillDelayMinutes;
 
                     this.CompleteTutorials = obj.CompleteTutorials;
+                    this.PokemonProcessDelayMinutes = obj.PokemonProcessDelayMinutes;
+                    this.PrioritizeGyms = obj.PrioritizeGyms;
                 }
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
                 {
+                    Logger.Write($"No Username or Password defined in the Settings.xml file.", LogLevel.Warning);
                     createNew = true;
                 }
             }
             else
             {
+                Logger.Write($"The Settings.Xml file does not exist. One will be created for you", LogLevel.Warning);
                 createNew = true;
             }
 
@@ -987,11 +1004,11 @@ namespace PokeRoadie
 
             if (createNew)
             {
-                Logger.Write($"The {fileName} file could not be found, it will be recreated.", LogLevel.Warning);
+                
                 var result = PromptForCredentials();
                 if (!result)
                 {
-                    Logger.Write($"Quit before providing login credentials.", LogLevel.Warning);
+                    Logger.Write($"User quit before providing login credentials.", LogLevel.Warning);
                     Program.ExitApplication(1);
                 }
             }
@@ -1154,9 +1171,9 @@ namespace PokeRoadie
                             {
                                 try
                                 {
-                                    double temp_lat = Convert.ToDouble(latlng[0]);
-                                    double temp_long = Convert.ToDouble(latlng[1]);
-                                    double temp_alt = Convert.ToDouble(latlng[2]);
+                                    double temp_lat = Convert.ToDouble(latlng[0], new CultureInfo("en-US"));
+                                    double temp_long = Convert.ToDouble(latlng[1], new CultureInfo("en-US"));
+                                    double temp_alt = Convert.ToDouble(latlng[2], new CultureInfo("en-US"));
                                     if (temp_lat >= -90 && temp_lat <= 90 && temp_long >= -180 && temp_long <= 180)
                                     {
                                         //SetCoordinates(Convert.ToDouble(latlng[0]), Convert.ToDouble(latlng[1]), Settings.DefaultAltitude);
@@ -1230,6 +1247,22 @@ namespace PokeRoadie
                 AuthType parserValue = AuthType.Google;
                 if (Enum.TryParse<AuthType>(d.AuthType, true, out parserValue))
                     this.AuthType = parserValue;
+                this.Save();
+            }
+            d.Dispose();
+            d = null;
+
+            return result == System.Windows.Forms.DialogResult.OK;
+        }
+        public bool PromptForCoords()
+        {
+            var d = new CoordsForm();
+            var result = d.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.CurrentLatitude = d.Latitude;
+                this.CurrentLongitude = d.Longitude;
+                this.CurrentAltitude = 13;
                 this.Save();
             }
             d.Dispose();
