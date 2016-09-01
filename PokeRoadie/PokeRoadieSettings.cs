@@ -167,14 +167,6 @@ namespace PokeRoadie
         public virtual bool UsePotions { get; set; }
         public virtual bool UseEggIncubators { get; set; }
 
-        //logging
-        public virtual int DisplayRefreshMinutes { get; set; }
-        public virtual bool DisplayAggregateLog { get; set; }
-        public virtual bool DisplayAllPokemonInLog { get; set; }
-        public virtual int DisplayPokemonCount { get; set; }
-        public virtual int DisplayTopCandy { get; set; }
-        public virtual string DisplayStyle { get; set; }
-
         //gyms
         public virtual bool VisitGyms { get; set; }
         public virtual bool PrioritizeGyms { get; set; }
@@ -608,7 +600,6 @@ namespace PokeRoadie
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
             this.DisplayTopCandyCount = UserSettings.Default.DisplayTopCandyCount;
-			this.DisplayStyle = UserSettings.Default.DisplayStyle;
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;

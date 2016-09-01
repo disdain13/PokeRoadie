@@ -25,8 +25,7 @@ namespace PokemonGo.RocketAPI.Helpers
         private ulong _nextRequestId;
         private static readonly Random rnd = new Random();
         private static Signature.Types.DeviceInfo deviceInfo = null;
-        private static byte[] sessionHash = new byte[16] { GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte(), GenRandomByte() };
-
+        
         public RequestBuilder(Client client)
         {
             _client = client;
@@ -101,7 +100,7 @@ namespace PokemonGo.RocketAPI.Helpers
               
             });
 
-            sig.SessionHash = ByteString.CopyFrom(sessionHash);
+            sig.SessionHash = ByteString.CopyFrom(_client.SessionHash);
             sig.Unknown25 = BitConverter.ToUInt32(new System.Data.HashFunction.xxHash(64, 0x88533787).ComputeHash(System.Text.Encoding.ASCII.GetBytes("\"b8fa9757195897aae92c53dbcf8a60fb3d86d745\"")), 0);
 
             foreach (var request in requestEnvelope.Requests)
@@ -185,10 +184,6 @@ namespace PokemonGo.RocketAPI.Helpers
             var randomMax = (num * (1 + randomFactor));
             var randomizedDelay = rnd.NextDouble() * (randomMax - randomMin) + randomMin; ;
             return randomizedDelay; ;
-        }
-        public static byte GenRandomByte()
-        {
-            return System.Convert.ToByte(rnd.Next(0, 255));
         }
         public Signature.Types.DeviceInfo GetDeviceInfo()
         {

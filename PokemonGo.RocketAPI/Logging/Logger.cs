@@ -31,7 +31,7 @@ namespace PokemonGo.RocketAPI.Logging
                 DirectoryInfo di = Directory.CreateDirectory(path);
             }
             _currentFile = DateTime.Now.ToString("yyyy-MM-dd - HH.mm.ss");
-            Log($"Initializing Rocket logger @ {DateTime.Now}...");
+            Log($"Initializing PokrRoadie Logger @ {DateTime.Now}...");
         }
 
         public static void Append(string text)
@@ -115,7 +115,7 @@ namespace PokemonGo.RocketAPI.Logging
             Log(string.Concat($"[{DateTime.Now.ToString("HH:mm:ss")}] ", message));
         }
 
-        private static void Log(string message)
+        public static void Log(string message)
         {
             // maybe do a new log rather than appending?
             using (var log = File.AppendText(Path.Combine(path, _currentFile + ".txt")))
