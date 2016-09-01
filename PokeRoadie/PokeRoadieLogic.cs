@@ -2856,9 +2856,9 @@ namespace PokeRoadie
                 }
 
                 string bestPokemonInfo = "NONE";
-                if (bestPokemonOfType == null)
+                if (bestPokemonOfType != null)
 					bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                    Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
+				Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
 
                 //raise event
                 if (OnTransfer != null)

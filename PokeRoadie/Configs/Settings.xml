@@ -33,14 +33,14 @@
   <TransferPriorityType>V</TransferPriorityType>
   <TransferPriorityType2>IV</TransferPriorityType2>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
-  <KeepAboveCP>0</KeepAboveCP>
-  <KeepAboveIV>0</KeepAboveIV>
-  <KeepAboveLV>0</KeepAboveLV>
+  <KeepAboveIV>0</KeepAboveIV>  
   <KeepAboveV>0</KeepAboveV>
-  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
+  <KeepAboveCP>0</KeepAboveCP>
+  <KeepAboveLV>0</KeepAboveLV>
   <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
-  <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
+  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
   <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
+  <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
   <PowerUpPokemon>false</PowerUpPokemon>
@@ -100,6 +100,7 @@
   <RenameFormat>{V}-{IV}-{N}</RenameFormat>
   <DevicePackageName>htc10</DevicePackageName>
   <DeviceId />
+  <DisplayPokemonCount>20</DisplayPokemonCount>
   <DisplayTopCandyCount>10</DisplayTopCandyCount>
   <MaxRunTimespan>22:00:00</MaxRunTimespan>
   <MinBreakTimespan>02:00:00</MinBreakTimespan>
