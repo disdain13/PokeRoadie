@@ -2483,13 +2483,12 @@ namespace PokeRoadie
                                               _settings.NiceThrowChance);
                     var rnd = Random.Next(1, 101);
 
-                    var missThrow = Random.Next(1, 101);
-
-                    if (missThrow <= _settings.MissThrowChance)
+                    if (Random.NextDouble() * 100 < _settings.MissThrowChance)
                     {
                         throwData.NormalizedRecticleSize = 0;
                         throwData.HitText = "Miss";
                     }
+
                     else if (rnd <= regularThrow)
                     {
                         throwData.NormalizedRecticleSize = Random.NextDouble() * (1 - 0.1) + 0.1;
