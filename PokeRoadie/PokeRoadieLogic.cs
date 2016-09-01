@@ -425,8 +425,15 @@ namespace PokeRoadie
 			    {
 				    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19,' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
 			    }
-                
-                
+
+                Logger.Write("====== Gym ======", LogLevel.None, ConsoleColor.Yellow);
+                foreach (var pokemon in allPokemon.Where(x => !String.IsNullOrWhiteSpace(x.DeployedFortId))
+                    .OrderByDescending(x => x.PokemonId.ToString())
+                    .ThenByDescending(x => x.Cp))
+                {
+                    Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
+                }
+
                 Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
                 var highestsPokemonV = await _inventory.GetHighestsV(_settings.DisplayPokemonCount);
                 foreach (var pokemon in highestsPokemonV) {
@@ -461,12 +468,12 @@ namespace PokeRoadie
                 {
                     Logger.Write("====== Aggregate Data ======", LogLevel.None, ConsoleColor.Yellow);
                     Logger.Write($"{allPokemon.Count} Total Pokemon", LogLevel.None, ConsoleColor.White);
-                    Logger.Write("====== Cp ======", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"< 100 Cp: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"100-499 Cp: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"500-999 Cp: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"1000-1499 Cp: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"> 1499 Cp: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write("====== CP======", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"< 100 CP: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"100-499 CP: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"500-999 CP: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"1000-1499 CP: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"> 1499 CP: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write("====== IV ======", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"24% or less: {allPokemon.Where(x => x.GetPerfection() < 25).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"25%-49%: {allPokemon.Where(x => x.GetPerfection() > 24 && x.GetPerfection() < 50).Count()}", LogLevel.None, ConsoleColor.White);
@@ -474,11 +481,16 @@ namespace PokeRoadie
                     Logger.Write($"75%-89%: {allPokemon.Where(x => x.GetPerfection() > 74 && x.GetPerfection() < 90).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"90%-100%: {allPokemon.Where(x => x.GetPerfection() > 89).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write("====== V ======", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"< 100 Cp: {allPokemon.Where(x => x.CalculatePokemonValue() < 100).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"100-199 Cp: {allPokemon.Where(x => x.CalculatePokemonValue() >= 100 && x.CalculatePokemonValue() < 200).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"200-299 Cp: {allPokemon.Where(x => x.CalculatePokemonValue() >= 200 && x.CalculatePokemonValue() < 300).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"300-399 Cp: {allPokemon.Where(x => x.CalculatePokemonValue() >= 300 && x.CalculatePokemonValue() < 400).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"> 400 Cp: {allPokemon.Where(x => x.CalculatePokemonValue() >= 400).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"< 100 V: {allPokemon.Where(x => x.CalculatePokemonValue() < 100).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"100-199 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 100 && x.CalculatePokemonValue() < 200).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"200-299 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 200 && x.CalculatePokemonValue() < 300).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"300-399 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 300 && x.CalculatePokemonValue() < 400).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"> 400 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 400).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write("====== LV ======", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"< 10 LV: {allPokemon.Where(x => x.GetLevel() < 10).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"10-20 LV: {allPokemon.Where(x => x.GetLevel() >= 10 && x.GetLevel() < 20).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"20-30 LV: {allPokemon.Where(x => x.GetLevel() >= 20 && x.GetLevel() < 30).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"> 30 LV: {allPokemon.Where(x => x.GetLevel() >= 30).Count()}", LogLevel.None, ConsoleColor.White);
                 }
 
                 _nextWriteStatsTime = DateTime.Now.AddMinutes(_settings.DisplayRefreshMinutes);
