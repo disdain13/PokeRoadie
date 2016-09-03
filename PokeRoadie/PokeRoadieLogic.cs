@@ -424,9 +424,16 @@ namespace PokeRoadie
 			    foreach (var candy in highestsPokemonCandy)
 			    {
 				    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19,' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
-			    }                
-                
-                
+			    }
+
+                Logger.Write("====== Gym ======", LogLevel.None, ConsoleColor.Yellow);
+                foreach (var pokemon in allPokemon.Where(x => !String.IsNullOrWhiteSpace(x.DeployedFortId))
+                    .OrderByDescending(x => x.PokemonId.ToString())
+                    .ThenByDescending(x => x.Cp))
+                {
+                    Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
+                }
+
                 Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
                 var highestsPokemonV = await _inventory.GetHighestsV(_settings.DisplayPokemonCount);
                 foreach (var pokemon in highestsPokemonV) {
@@ -452,7 +459,7 @@ namespace PokeRoadie
                 if (_settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
-                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp))
+                    foreach (var pokemon in allPokemon.OrderBy(x => x.PokemonId.ToString()).ThenByDescending(x => x.Cp))
                     {
                         Logger.Write(pokemon.GetStats(), LogLevel.None, ConsoleColor.White);
                     }
@@ -461,12 +468,12 @@ namespace PokeRoadie
                 {
                     Logger.Write("====== Aggregate Data ======", LogLevel.None, ConsoleColor.Yellow);
                     Logger.Write($"{allPokemon.Count} Total Pokemon", LogLevel.None, ConsoleColor.White);
-                    Logger.Write("====== Cp ======", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"< 100 Cp: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"100-499 Cp: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"500-999 Cp: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"1000-1499 Cp: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
-                    Logger.Write($"> 1499 Cp: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write("====== CP======", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"< 100 CP: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"100-499 CP: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"500-999 CP: {allPokemon.Where(x => x.Cp >= 500 && x.Cp < 1000).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"1000-1499 CP: {allPokemon.Where(x => x.Cp >= 1000 && x.Cp < 1500).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"> 1499 CP: {allPokemon.Where(x => x.Cp >= 1500).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write("====== IV ======", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"24% or less: {allPokemon.Where(x => x.GetPerfection() < 25).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"25%-49%: {allPokemon.Where(x => x.GetPerfection() > 24 && x.GetPerfection() < 50).Count()}", LogLevel.None, ConsoleColor.White);
@@ -479,6 +486,11 @@ namespace PokeRoadie
                     Logger.Write($"200-299 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 200 && x.CalculatePokemonValue() < 300).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"300-399 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 300 && x.CalculatePokemonValue() < 400).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"> 400 V: {allPokemon.Where(x => x.CalculatePokemonValue() >= 400).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write("====== LV ======", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"< 10 LV: {allPokemon.Where(x => x.GetLevel() < 10).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"10-20 LV: {allPokemon.Where(x => x.GetLevel() >= 10 && x.GetLevel() < 20).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"20-30 LV: {allPokemon.Where(x => x.GetLevel() >= 20 && x.GetLevel() < 30).Count()}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"> 30 LV: {allPokemon.Where(x => x.GetLevel() >= 30).Count()}", LogLevel.None, ConsoleColor.White);
                 }
 
                 _nextWriteStatsTime = DateTime.Now.AddMinutes(_settings.DisplayRefreshMinutes);
@@ -1687,7 +1699,7 @@ namespace PokeRoadie
 
                         _settings.Session.VisitCount++;
 
-                        if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                        if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded).Replace("Item","")}", LogLevel.Pokestop);
                         recycleCounter++;
 
                     }
@@ -1993,8 +2005,8 @@ namespace PokeRoadie
                 //log throw attempt
                 Logger.Write($"(THROW) {throwData.HitText} {throwData.BallName} ball {throwData.SpinText} toss...", LogLevel.None, ConsoleColor.Yellow);
 
-                caughtPokemonResponse = await _client.Encounter.CatchPokemon(encounter.EncounterId, encounter.SpawnPointId, throwData.ItemId, throwData.NormalizedRecticleSize,throwData.SpinModifier);
-                
+                caughtPokemonResponse = await _client.Encounter.CatchPokemon(encounter.EncounterId, encounter.SpawnPointId, throwData.ItemId, throwData.NormalizedRecticleSize, throwData.SpinModifier);
+
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
                     PokeRoadieInventory.IsDirty = true;
@@ -2021,7 +2033,6 @@ namespace PokeRoadie
                             OnCatch(encounter, caughtPokemonResponse);
                     }
                     _settings.Session.CatchCount++;
-   
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)
                 {
@@ -2844,10 +2855,21 @@ namespace PokeRoadie
                         break;
                 }
 
-                string bestPokemonInfo = "NONE";
+                string bestPokemonInfo = "";
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = bestPokemonOfType.GetMinStats();
-                Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
+                if (_settings.DisplayStyle == "disdain")
+                {
+                    if (bestPokemonOfType == null)
+                        bestPokemonInfo = "NONE";
+                    Logger.Write($"{(pokemon.GetMinStats().ToString())} | Candy: {FamilyCandies} | Best {bestPokemonInfo.ToString()} ", LogLevel.Transfer);
+                }
+                else if (_settings.DisplayStyle == "spastic")
+                {
+                    if (bestPokemonOfType == null)
+                        bestPokemonInfo = "NONE".PadRight(55);
+                    Logger.Write($"{pokemon.GetMinStats()} | Best {bestPokemonInfo} | Candy {FamilyCandies}", LogLevel.Transfer);
+                }
 
                 //raise event
                 if (OnTransfer != null)
@@ -3716,4 +3738,3 @@ namespace PokeRoadie
         #endregion
     }
 }
- 

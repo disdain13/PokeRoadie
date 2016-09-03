@@ -222,6 +222,7 @@ namespace PokeRoadie
         public virtual bool DisplayAllPokemonInLog { get; set; }
         public virtual int DisplayPokemonCount { get; set; }
         public virtual int DisplayTopCandyCount { get; set; }
+        public virtual string DisplayStyle { get; set; }
 
         //system
         public virtual bool ShowDebugMessages { get; set; }
@@ -543,6 +544,7 @@ namespace PokeRoadie
             this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
             this.EvolveAboveIV = UserSettings.Default.EvolveAboveIV;
             this.EvolveAboveV = UserSettings.Default.EvolveAboveV;
+            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
             this.UsePokemonsToEvolveList = UserSettings.Default.UsePokemonsToEvolveList;
             this.UseIncense = UserSettings.Default.UseIncense;
             this.UseRevives = UserSettings.Default.UseRevives;
@@ -564,6 +566,7 @@ namespace PokeRoadie
             this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
             this.PowerUpAboveIV = UserSettings.Default.PowerUpAboveIV;
             this.PowerUpAboveV = UserSettings.Default.PowerUpAboveV;
+            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
             this.MinStarDustForPowerUps = UserSettings.Default.MinStarDustForPowerUps;
             this.UsePokemonsToPowerUpList = UserSettings.Default.UsePokemonsToPowerUpList;
             this.MinCandyForPowerUps = UserSettings.Default.MinCandyForPowerUps;
@@ -585,6 +588,7 @@ namespace PokeRoadie
             this.FavoriteAboveCp = UserSettings.Default.FavoriteAboveCp;
             this.FavoriteAboveIV = UserSettings.Default.FavoriteAboveIV;
             this.FavoriteAboveV = UserSettings.Default.FavoriteAboveV;
+            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
             this.RenamePokemon = UserSettings.Default.RenamePokemon;
             this.RenameFormat = UserSettings.Default.RenameFormat;
 
@@ -604,6 +608,8 @@ namespace PokeRoadie
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
             this.DisplayTopCandyCount = UserSettings.Default.DisplayTopCandyCount;
+            this.DisplayStyle = UserSettings.Default.DisplayStyle;
+
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
@@ -657,12 +663,6 @@ namespace PokeRoadie
             this.CompleteTutorials = UserSettings.Default.CompleteTutorials;
             this.PokemonProcessDelayMinutes = UserSettings.Default.PokemonProcessDelayMinutes;
             this.PrioritizeGyms = UserSettings.Default.PrioritizeGyms;
-
-            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
-            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
-            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
-
-
         }
 
         #endregion
@@ -894,6 +894,8 @@ namespace PokeRoadie
 
                     this.DisplayPokemonCount = obj.DisplayPokemonCount;
                     this.DisplayTopCandyCount = obj.DisplayTopCandyCount;
+                    this.DisplayStyle = obj.DisplayStyle;
+                    
                     this.MaxRunTimespan = obj.MaxRunTimespan;
                     this.MinBreakTimespan = obj.MinBreakTimespan;
                     this.MaxPokemonCatches = obj.MaxPokemonCatches;
@@ -996,7 +998,6 @@ namespace PokeRoadie
 
             if (createNew)
             {
-                
                 var result = PromptForCredentials();
                 if (!result)
                 {

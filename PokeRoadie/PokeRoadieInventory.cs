@@ -91,6 +91,10 @@ namespace PokeRoadie
             if (PokeRoadieSettings.Current.KeepAboveIV > 0)
                 query = query.Where(p => p.GetPerfection() < PokeRoadieSettings.Current.KeepAboveIV);
 
+            //Keep By LV filter
+            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
+                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
+
             //Keep By V filter
             if (PokeRoadieSettings.Current.KeepAboveV > 0)
                 query = query.Where(p => p.CalculatePokemonValue() < PokeRoadieSettings.Current.KeepAboveV);

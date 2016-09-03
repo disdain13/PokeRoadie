@@ -410,6 +410,9 @@
     <Setting Name="PrioritizeGyms" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="DisplayStyle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">disdain</Value>
+    </Setting>
     <Setting Name="PowerUpAboveLV" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -418,6 +421,6 @@
     </Setting>
     <Setting Name="FavoriteAboveLV" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">0</Value>
-    </Setting>
+	</Setting>
   </Settings>
 </SettingsFile>
