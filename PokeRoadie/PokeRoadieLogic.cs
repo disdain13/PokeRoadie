@@ -1793,60 +1793,12 @@ namespace PokeRoadie
 
                 if (_settings.TransferPokemon && _settings.TransferTrimFatCount > 0)
                 {
-                    Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-                    var query = (await _inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !_settings.PokemonsNotToTransfer.Contains(x.PokemonId));
-
-                    //ordering
-                    Func<PokemonData, double> orderBy = null;
-                    switch (_settings.TransferPriorityType)
-                    {
-                        case PriorityTypes.CP:
-                            orderBy = new Func<PokemonData, double>(x => x.Cp);
-                            break;
-                        case PriorityTypes.IV:
-                            orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
-                            break;
-                        case PriorityTypes.LV:
-                            orderBy = new Func<PokemonData, double>(x => x.GetLevel());
-                            break;
-                        case PriorityTypes.V:
-                            orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
-                            break;
-                        default:
-                            break;
-                    }
-
-                    Func<PokemonData, double> thenBy = null;
-                    switch (_settings.TransferPriorityType2)
-                    {
-                        case PriorityTypes.CP:
-                            thenBy = new Func<PokemonData, double>(x => x.Cp);
-                            break;
-                        case PriorityTypes.IV:
-                            thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
-                            break;
-                        case PriorityTypes.LV:
-                            thenBy = new Func<PokemonData, double>(x => x.GetLevel());
-                            break;
-                        case PriorityTypes.V:
-                            thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
-                            break;
-                        default:
-                            break;
-                    }
-
-                    query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
-
-                    await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
-                    
+                    //trim the fat
+                    await TransferTrimTheFat();
                     //try again after trimming the fat
                     var encounter2 = await _client.Encounter.EncounterPokemon(encounterId, spawnPointId);
                     if (encounter2.Status == EncounterResponse.Types.Status.EncounterSuccess)
                         await ProcessCatch(new EncounterData(location, encounterId, encounter2?.WildPokemon?.PokemonData, probability, spawnPointId, source));
-                }
-                else
-                {
-                    Logger.Write($"Pokemon inventory full. You should consider turning on TransferPokemon, and set a value for TransferTrimFatCount. This will prevent the inventory from filling up.", LogLevel.Warning);
                 }
             }
 
@@ -2877,7 +2829,7 @@ namespace PokeRoadie
 
         private async Task TransferTrimTheFat()
         {
-            if (!_settings.TransferPokemon || _settings.TransferTrimFatCount == 0)
+            if (!_settings.TransferPokemon || _settings.TransferTrimFatCount > 0)
             {
                 await PokeRoadieInventory.GetCachedInventory(_client);
                 Logger.Write($"Pokemon inventory full, trimming the fat by {_settings.TransferTrimFatCount}:", LogLevel.Info);
@@ -2926,6 +2878,10 @@ namespace PokeRoadie
 
                 await TransferPokemon(query.Take(_settings.TransferTrimFatCount).ToList());
 
+            }
+            else
+            {
+            	Logger.Write($"Pokemon inventory full. You should consider turning on TransferPokemon, and set a value for TransferTrimFatCount. This will prevent the inventory from filling up.", LogLevel.Warning);
             }
         }
 
