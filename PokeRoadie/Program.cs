@@ -25,9 +25,22 @@ namespace PokeRoadie
 
         private static PokeRoadieLogic CreateLogic()
         {
-            var logic = new PokeRoadieLogic();
-            logic.OnPromptForCredentials += PokeRoadieSettings.Current.PromptForCredentials;
-            logic.OnPromptForCoords += PokeRoadieSettings.Current.PromptForCoords;
+            //load settings
+            var settings = new PokeRoadieSettings();
+            //set singleton - this will be removed once extensions is removed.
+            PokeRoadieSettings.Current = settings;
+            settings.Load();
+
+            //create context
+            var context = new Context(settings);
+            
+            //create logic class
+            var logic = new PokeRoadieLogic(context);
+
+            //add custom event wiring
+            logic.OnPromptForCredentials += settings.PromptForCredentials;
+            logic.OnPromptForCoords += settings.PromptForCoords;
+
             try
             {
                 logic.Initialize();
@@ -52,6 +65,8 @@ namespace PokeRoadie
 
         private static void Main()
         {
+
+            //unhandled exception...uh.. handler? does that make sense?
             AppDomain.CurrentDomain.UnhandledException
                 += delegate (object sender, UnhandledExceptionEventArgs eargs)
                 {
@@ -60,8 +75,12 @@ namespace PokeRoadie
                     //Environment.Exit(1);
                 };
 
+            //set validation callback 
             ServicePointManager.ServerCertificateValidationCallback = Validator;
+
+            //configure logging
             Logger.SetLogger();
+
 
             Task.Run(() =>
             {

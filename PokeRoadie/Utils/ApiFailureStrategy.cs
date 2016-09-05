@@ -33,7 +33,7 @@ namespace PokeRoadie.Utils
         private int _retryCount;
         public PokeRoadieClient Client { get; set; }
 
-        public ApiFailureStrategy()
+        public ApiFailureStrategy(Context context)
         {
         }
 

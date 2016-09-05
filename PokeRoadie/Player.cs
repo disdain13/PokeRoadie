@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace PokeRoadie
 {
-    class State
+    public class Player
     {
+
     }
 }

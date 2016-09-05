@@ -32,8 +32,6 @@ namespace PokeRoadie
 
         #region " Members "
 
-        private readonly PokeRoadieClient _client;
-        private readonly PokeRoadieSettings _settings;
         public static DateTime _lastRefresh;
         public static GetInventoryResponse _cachedInventory;
         private string export_path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
@@ -42,15 +40,16 @@ namespace PokeRoadie
         #endregion
         #region " Properties "
 
+        public Context Context { get; private set; }
+
         public static bool IsDirty { get; set; }
 
         #endregion
         #region " Constructors "
 
-        public PokeRoadieInventory(PokeRoadieClient client, PokeRoadieSettings settings)
+        public PokeRoadieInventory(Context context)
         {
-            _client = client;
-            _settings = settings;
+            Context = context;
         }
 
         #endregion
@@ -58,7 +57,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<PokemonData>> GetPokemons()
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(Context.Client);
             if (inventory == null || inventory.InventoryDelta == null) return new List<PokemonData>();
             return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData).Where(p => p != null && p.PokemonId > 0);
         }
@@ -75,38 +74,38 @@ namespace PokeRoadie
             //Build Transfer Below List. These will always transfer, and overrides
             //the Keep list.
             var results1 = query.Where(x =>
-                !_settings.PokemonsNotToTransfer.Contains(x.PokemonId) &&
-                ((PokeRoadieSettings.Current.AlwaysTransferBelowCp > 0 && x.Cp < PokeRoadieSettings.Current.AlwaysTransferBelowCp) ||
-                (PokeRoadieSettings.Current.AlwaysTransferBelowIV > 0 && x.GetPerfection() < PokeRoadieSettings.Current.AlwaysTransferBelowIV) ||
-                (PokeRoadieSettings.Current.AlwaysTransferBelowLV > 0 && x.GetLevel() < PokeRoadieSettings.Current.AlwaysTransferBelowLV) ||
-                (PokeRoadieSettings.Current.AlwaysTransferBelowV > 0 && x.CalculatePokemonValue() < PokeRoadieSettings.Current.AlwaysTransferBelowV))
+                !Context.Settings.PokemonsNotToTransfer.Contains(x.PokemonId) &&
+                ((Context.Settings.AlwaysTransferBelowCp > 0 && x.Cp < Context.Settings.AlwaysTransferBelowCp) ||
+                (Context.Settings.AlwaysTransferBelowIV > 0 && x.GetPerfection() < Context.Settings.AlwaysTransferBelowIV) ||
+                (Context.Settings.AlwaysTransferBelowLV > 0 && x.GetLevel() < Context.Settings.AlwaysTransferBelowLV) ||
+                (Context.Settings.AlwaysTransferBelowV > 0 && x.CalculatePokemonValue() < Context.Settings.AlwaysTransferBelowV))
             );
 
 
             //Keep By CP filter
-            if (PokeRoadieSettings.Current.KeepAboveCP > 0)
-                query = query.Where(p => p.Cp < PokeRoadieSettings.Current.KeepAboveCP);
+            if (Context.Settings.KeepAboveCP > 0)
+                query = query.Where(p => p.Cp < Context.Settings.KeepAboveCP);
 
             //Keep By IV filter
-            if (PokeRoadieSettings.Current.KeepAboveIV > 0)
-                query = query.Where(p => p.GetPerfection() < PokeRoadieSettings.Current.KeepAboveIV);
+            if (Context.Settings.KeepAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() < Context.Settings.KeepAboveIV);
 
             //Keep By V filter
-            if (PokeRoadieSettings.Current.KeepAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() < PokeRoadieSettings.Current.KeepAboveV);
+            if (Context.Settings.KeepAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() < Context.Settings.KeepAboveV);
 
             //Keep By LV filter
-            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
-                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
+            if (Context.Settings.KeepAboveLV > 0)
+                query = query.Where(p => p.GetLevel() < Context.Settings.KeepAboveLV);
 
             //Not to transfer list filter
-            if (PokeRoadieSettings.Current.PokemonsNotToTransfer != null)
-                query = query.Where(p => !PokeRoadieSettings.Current.PokemonsNotToTransfer.Contains(p.PokemonId));
+            if (Context.Settings.PokemonsNotToTransfer != null)
+                query = query.Where(p => !Context.Settings.PokemonsNotToTransfer.Contains(p.PokemonId));
 
 
             //ordering
             Func<PokemonData, double> orderBy = null;
-            switch (_settings.TransferPriorityType)
+            switch (Context.Settings.TransferPriorityType)
             {
                 case PriorityTypes.CP:
                     orderBy = new Func<PokemonData, double>(x => x.Cp);
@@ -125,7 +124,7 @@ namespace PokeRoadie
             }
 
             Func<PokemonData, double> thenBy = null;
-            switch (_settings.TransferPriorityType2)
+            switch (Context.Settings.TransferPriorityType2)
             {
                 case PriorityTypes.CP:
                     thenBy = new Func<PokemonData, double>(x => x.Cp);
@@ -147,7 +146,7 @@ namespace PokeRoadie
 
 
             //Not transfer if they can evolve
-            if (PokeRoadieSettings.Current.NotTransferPokemonsThatCanEvolve)
+            if (Context.Settings.NotTransferPokemonsThatCanEvolve)
             {
                 var results = new List<PokemonData>();
                 var pokemonsThatCanBeTransfered = query.GroupBy(p => p.PokemonId)
@@ -163,9 +162,9 @@ namespace PokeRoadie
                 {
                     var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.Key);
                     var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-                    var amountToSkip = PokeRoadieSettings.Current.KeepDuplicateAmount;
+                    var amountToSkip = Context.Settings.KeepDuplicateAmount;
 
-                    if (_settings.NotTransferPokemonsThatCanEvolve && (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip))
+                    if (Context.Settings.NotTransferPokemonsThatCanEvolve && (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip))
                         amountToSkip = familyCandy.Candy_ / settings.CandyToEvolve;
 
                     results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
@@ -182,7 +181,7 @@ namespace PokeRoadie
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
                     .SelectMany(p => p.OrderByDescending(orderBy)
-                    .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
+                    .Skip(Context.Settings.KeepDuplicateAmount)
                     .ToList()).ToList() 
                 : 
                 query
@@ -190,7 +189,7 @@ namespace PokeRoadie
                     .Where(x => x.Count() > 1)
                     .SelectMany(p => p.OrderByDescending(orderBy)
                     .ThenByDescending(thenBy)
-                    .Skip(PokeRoadieSettings.Current.KeepDuplicateAmount)
+                    .Skip(Context.Settings.KeepDuplicateAmount)
                     .ToList()).ToList();
 
             //merge together the two lists
@@ -290,7 +289,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<Candy>> GetPokemonFamilies()
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(Context.Client);
             return
                 inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Candy)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
@@ -298,7 +297,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<PokemonSettings>> GetPokemonSettings()
         {
-            var templates = await _client.Download.GetItemTemplates();
+            var templates = await Context.Client.Download.GetItemTemplates();
             return
                 templates.ItemTemplates.Select(i => i.PokemonSettings)
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
@@ -310,38 +309,38 @@ namespace PokeRoadie
             String.IsNullOrWhiteSpace(p.DeployedFortId));
 
             //list filter
-            if (PokeRoadieSettings.Current.UsePokemonsToEvolveList)
+            if (Context.Settings.UsePokemonsToEvolveList)
             {
-                if (PokeRoadieSettings.Current.PokemonsToEvolve.Count() == 0)
+                if (Context.Settings.PokemonsToEvolve.Count() == 0)
                     return new List<PokemonData>();
 
-                query = query.Where(x => PokeRoadieSettings.Current.PokemonsToEvolve.Contains(x.PokemonId));
+                query = query.Where(x => Context.Settings.PokemonsToEvolve.Contains(x.PokemonId));
                 if (query.Count() == 0) return new List<PokemonData>();
             }
 
             //Evolve By CP filter
-            if (PokeRoadieSettings.Current.EvolveAboveCp > 0)
-                query = query.Where(p => p.Cp > PokeRoadieSettings.Current.EvolveAboveCp);
+            if (Context.Settings.EvolveAboveCp > 0)
+                query = query.Where(p => p.Cp > Context.Settings.EvolveAboveCp);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Evolve By IV filter
-            if (PokeRoadieSettings.Current.EvolveAboveIV > 0)
-                query = query.Where(p => p.GetPerfection() > PokeRoadieSettings.Current.EvolveAboveIV);
+            if (Context.Settings.EvolveAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() > Context.Settings.EvolveAboveIV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Evolve By V filter
-            if (PokeRoadieSettings.Current.EvolveAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.EvolveAboveV);
+            if (Context.Settings.EvolveAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() > Context.Settings.EvolveAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Evolve By LV filter
-            if (PokeRoadieSettings.Current.EvolveAboveLV > 0)
-                query = query.Where(p => p.GetLevel() > PokeRoadieSettings.Current.EvolveAboveLV);
+            if (Context.Settings.EvolveAboveLV > 0)
+                query = query.Where(p => p.GetLevel() > Context.Settings.EvolveAboveLV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //ordering
             Func<PokemonData, double> orderBy = null;
-            switch (_settings.EvolvePriorityType)
+            switch (Context.Settings.EvolvePriorityType)
             {
                 case PriorityTypes.CP:
                     orderBy = new Func<PokemonData, double>(x => x.Cp);
@@ -360,7 +359,7 @@ namespace PokeRoadie
             }
 
             Func<PokemonData, double> thenBy = null;
-            switch (_settings.EvolvePriorityType2)
+            switch (Context.Settings.EvolvePriorityType2)
             {
                 case PriorityTypes.CP:
                     thenBy = new Func<PokemonData, double>(x => x.Cp);
@@ -415,39 +414,39 @@ namespace PokeRoadie
                   String.IsNullOrWhiteSpace(p.DeployedFortId));
 
             //list filter
-            if (PokeRoadieSettings.Current.UsePokemonsToPowerUpList)
+            if (Context.Settings.UsePokemonsToPowerUpList)
             {
-                if (PokeRoadieSettings.Current.PokemonsToPowerUp.Count() == 0)
+                if (Context.Settings.PokemonsToPowerUp.Count() == 0)
                     return new List<PokemonData>();
 
-                query = query.Where(x => PokeRoadieSettings.Current.PokemonsToPowerUp.Contains(x.PokemonId));
+                query = query.Where(x => Context.Settings.PokemonsToPowerUp.Contains(x.PokemonId));
                 if (query.Count() == 0) return new List<PokemonData>();
             }
 
             //PowerUp By CP filter
-            if (PokeRoadieSettings.Current.PowerUpAboveCp > 0)
-                query = query.Where(p => p.Cp > PokeRoadieSettings.Current.PowerUpAboveCp);
+            if (Context.Settings.PowerUpAboveCp > 0)
+                query = query.Where(p => p.Cp > Context.Settings.PowerUpAboveCp);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //PowerUp By IV filter
-            if (PokeRoadieSettings.Current.PowerUpAboveIV > 0)
-                query = query.Where(p => p.GetPerfection() > PokeRoadieSettings.Current.PowerUpAboveIV);
+            if (Context.Settings.PowerUpAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() > Context.Settings.PowerUpAboveIV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //PowerUp By V filter
-            if (PokeRoadieSettings.Current.PowerUpAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.PowerUpAboveV);
+            if (Context.Settings.PowerUpAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() > Context.Settings.PowerUpAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //PowerUp By LV filter
-            if (PokeRoadieSettings.Current.PowerUpAboveLV > 0)
-                query = query.Where(p => p.GetLevel() > PokeRoadieSettings.Current.PowerUpAboveLV);
+            if (Context.Settings.PowerUpAboveLV > 0)
+                query = query.Where(p => p.GetLevel() > Context.Settings.PowerUpAboveLV);
             if (query.Count() == 0) return new List<PokemonData>();
 
 
             //ordering
             Func<PokemonData, double> orderBy = null;
-            switch (_settings.PowerUpPriorityType)
+            switch (Context.Settings.PowerUpPriorityType)
             {
                 case PriorityTypes.CP:
                     orderBy = new Func<PokemonData, double>(x => x.Cp);
@@ -466,7 +465,7 @@ namespace PokeRoadie
             }
 
             Func<PokemonData, double> thenBy = null;
-            switch (_settings.PowerUpPriorityType2)
+            switch (Context.Settings.PowerUpPriorityType2)
             {
                 case PriorityTypes.CP:
                     thenBy = new Func<PokemonData, double>(x => x.Cp);
@@ -496,23 +495,23 @@ namespace PokeRoadie
                   String.IsNullOrWhiteSpace(p.DeployedFortId) && p.Favorite == 0);
 
             //Favorite By CP filter
-            if (PokeRoadieSettings.Current.FavoriteAboveCp > 0)
-                query = query.Where(p => p.Cp > PokeRoadieSettings.Current.FavoriteAboveCp);
+            if (Context.Settings.FavoriteAboveCp > 0)
+                query = query.Where(p => p.Cp > Context.Settings.FavoriteAboveCp);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Favorite By IV filter
-            if (PokeRoadieSettings.Current.FavoriteAboveIV > 0)
-                query = query.Where(p => p.GetPerfection() > PokeRoadieSettings.Current.FavoriteAboveIV);
+            if (Context.Settings.FavoriteAboveIV > 0)
+                query = query.Where(p => p.GetPerfection() > Context.Settings.FavoriteAboveIV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Favorite By V filter
-            if (PokeRoadieSettings.Current.FavoriteAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() > PokeRoadieSettings.Current.FavoriteAboveV);
+            if (Context.Settings.FavoriteAboveV > 0)
+                query = query.Where(p => p.CalculatePokemonValue() > Context.Settings.FavoriteAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Favorite By LV filter
-            if (PokeRoadieSettings.Current.FavoriteAboveLV > 0)
-                query = query.Where(p => p.GetLevel() > PokeRoadieSettings.Current.FavoriteAboveLV);
+            if (Context.Settings.FavoriteAboveLV > 0)
+                query = query.Where(p => p.GetLevel() > Context.Settings.FavoriteAboveLV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             return query.ToList();
@@ -535,7 +534,7 @@ namespace PokeRoadie
             try
             {
                 _lastRefresh = now.AddSeconds(30);
-                //_cachedInventory = await _client.GetInventory();
+                //_cachedInventory = await Context.Client.GetInventory();
 
                 try
                 {
@@ -563,7 +562,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<ItemData>> GetItems()
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(Context.Client);
             return inventory.InventoryDelta.InventoryItems
                 .Select(i => i.InventoryItemData?.Item)
                 .Where(p => p != null);
@@ -574,20 +573,20 @@ namespace PokeRoadie
             var myItems = await GetItems();
 
             return myItems
-                .Where(x => PokeRoadieSettings.Current.ItemRecycleFilter.Any(f => f.Key == (ItemId)x.ItemId && x.Count > f.Value))
+                .Where(x => Context.Settings.ItemRecycleFilter.Any(f => f.Key == (ItemId)x.ItemId && x.Count > f.Value))
                 .Select(
                     x =>
                         new ItemData
                         {
                             ItemId = x.ItemId,
-                            Count = x.Count - PokeRoadieSettings.Current.ItemRecycleFilter.Single(f => f.Key == x.ItemId).Value,
+                            Count = x.Count - Context.Settings.ItemRecycleFilter.Single(f => f.Key == x.ItemId).Value,
                             Unseen = x.Unseen
                         });
         }
 
         public async Task<IEnumerable<EggIncubator>> GetEggIncubators()
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(Context.Client);
             return
                 inventory.InventoryDelta.InventoryItems
                     .Where(x => x.InventoryItemData.EggIncubators != null)
@@ -597,7 +596,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<PokemonData>> GetEggs()
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(Context.Client);
             return
                 inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
                     .Where(p => p != null && p.IsEgg);
@@ -608,7 +607,7 @@ namespace PokeRoadie
 
         public async Task<IEnumerable<PlayerStats>> GetPlayerStats()
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(Context.Client);
             return inventory.InventoryDelta.InventoryItems
                 .Select(i => i.InventoryItemData?.PlayerStats)
                 .Where(p => p != null);
@@ -616,7 +615,7 @@ namespace PokeRoadie
 
         public async Task<int> GetStarDust()
         {
-            var StarDust = await _client.Player.GetPlayer();
+            var StarDust = await Context.Client.Player.GetPlayer();
             var gdrfds = StarDust.PlayerData.Currencies;
             var SplitStar = gdrfds[1].Amount;
             return SplitStar;
@@ -625,27 +624,27 @@ namespace PokeRoadie
 
         public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
         {
-            return await _client.Player.GetLevelUpRewards(level);
+            return await Context.Client.Player.GetLevelUpRewards(level);
         }
 
         public async Task<CollectDailyDefenderBonusResponse> CollectDailyDefenderBonus()
         {
-            return await _client.Player.CollectDailyDefenderBonus();
+            return await Context.Client.Player.CollectDailyDefenderBonus();
         }
 
         public async Task<CollectDailyBonusResponse> CollectDailyBonus()
         {
-            return await _client.Player.CollectDailyBonus();
+            return await Context.Client.Player.CollectDailyBonus();
         }
 
         public async Task<SetPlayerTeamResponse> SetPlayerTeam(TeamColor team)
         {
-            return await _client.Player.SetPlayerTeam(team);
+            return await Context.Client.Player.SetPlayerTeam(team);
         }
 
         public async Task<CheckAwardedBadgesResponse> GetNewlyAwardedBadges()
         {
-            return await _client.Player.GetNewlyAwardedBadges();
+            return await Context.Client.Player.GetNewlyAwardedBadges();
         }
 
         #endregion
@@ -659,27 +658,27 @@ namespace PokeRoadie
         }
         public async Task<MarkTutorialCompleteResponse> TutorialMarkComplete(IEnumerable<TutorialState> tutorialStates,bool sendMarketing, bool pushNotifications)
         {
-            return await _client.Misc.MarkTutorialComplete(tutorialStates, true, true);
+            return await Context.Client.Misc.MarkTutorialComplete(tutorialStates, true, true);
         }
         public async Task<ClaimCodenameResponse> TutorialClaimCodeName(string codeName)
         {
-            return await _client.Misc.ClaimCodename(codeName);
+            return await Context.Client.Misc.ClaimCodename(codeName);
         }
         public async Task<GetSuggestedCodenamesResponse> TutorialGetSuggestedCodenames()
         {
-            return await _client.Misc.GetSuggestedCodenames();
+            return await Context.Client.Misc.GetSuggestedCodenames();
         }
         public async Task<SetAvatarResponse> TutorialSetAvatar(PlayerAvatar avatar)
         {
-            return await _client.Player.SetAvatar(avatar);
+            return await Context.Client.Player.SetAvatar(avatar);
         }
         public async Task<SetContactSettingsResponse> TutorialSetContactSettings(ContactSettings contactSettings)
         {
-            return await _client.Player.SetContactSetting(contactSettings);
+            return await Context.Client.Player.SetContactSetting(contactSettings);
         }
         public async Task<EncounterTutorialCompleteResponse> TutorialPokemonCapture(PokemonId pokemonId)
         {
-            return await _client.Encounter.EncounterTutorialComplete(pokemonId);
+            return await Context.Client.Encounter.EncounterTutorialComplete(pokemonId);
         }
 
         #endregion

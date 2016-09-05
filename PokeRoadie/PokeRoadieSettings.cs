@@ -27,8 +27,13 @@ namespace PokeRoadie
 
         #region " Singleton "
 
+        //this is going to be removed, extensions is preventing the removal of this.
         private static PokeRoadieSettings _current = null;
-        public static PokeRoadieSettings Current { get{ _current = _current ?? (new PokeRoadieSettings()).Load(); return _current; }}
+        public static PokeRoadieSettings Current
+        {
+            get { _current = _current ?? (new PokeRoadieSettings()).Load(); return _current; }
+            set { _current = value; }
+        }
         
         #endregion
         #region " Members "
@@ -751,7 +756,7 @@ namespace PokeRoadie
             return session;
         }
 
-        private PokeRoadieSettings Load()
+        public PokeRoadieSettings Load()
         {
             //check for base path
             if (!Directory.Exists(configs_path))
