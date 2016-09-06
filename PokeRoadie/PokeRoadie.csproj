@@ -131,6 +131,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>UserSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utility.cs" />
     <Compile Include="Utils\ApiFailureStrategy.cs" />
     <Compile Include="Utils\GPXReader.cs" />
     <Compile Include="Utils\RouteUtils.cs" />

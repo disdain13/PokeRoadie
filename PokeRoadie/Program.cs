@@ -28,8 +28,8 @@ namespace PokeRoadie
             //load settings
             var settings = new PokeRoadieSettings();
 
-            //set singleton - this will be removed once extensions is removed.
-            PokeRoadieSettings.Current = settings;
+            //load settings
+            settings.Load();
 
             //create context
             var context = new Context(settings);
@@ -39,13 +39,7 @@ namespace PokeRoadie
 
             //add custom event wiring
             logic.OnPromptForCredentials += settings.PromptForCredentials;
-            logic.OnPromptForCoords += settings.PromptForCoords;
-
-            //finally load settings
-            settings.Load();
-
-            //set login type
-            context.Client.Login.SetLoginType(settings);
+            //logic.OnPromptForCoords += settings.PromptForCoords;
 
             try
             {

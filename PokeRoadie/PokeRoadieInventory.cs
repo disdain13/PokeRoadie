@@ -78,7 +78,7 @@ namespace PokeRoadie
                 ((Context.Settings.AlwaysTransferBelowCp > 0 && x.Cp < Context.Settings.AlwaysTransferBelowCp) ||
                 (Context.Settings.AlwaysTransferBelowIV > 0 && x.GetPerfection() < Context.Settings.AlwaysTransferBelowIV) ||
                 (Context.Settings.AlwaysTransferBelowLV > 0 && x.GetLevel() < Context.Settings.AlwaysTransferBelowLV) ||
-                (Context.Settings.AlwaysTransferBelowV > 0 && x.CalculatePokemonValue() < Context.Settings.AlwaysTransferBelowV))
+                (Context.Settings.AlwaysTransferBelowV > 0 && Context.Utility.CalculatePokemonValue(x) < Context.Settings.AlwaysTransferBelowV))
             );
 
 
@@ -92,7 +92,7 @@ namespace PokeRoadie
 
             //Keep By V filter
             if (Context.Settings.KeepAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() < Context.Settings.KeepAboveV);
+                query = query.Where(p => Context.Utility.CalculatePokemonValue(p) < Context.Settings.KeepAboveV);
 
             //Keep By LV filter
             if (Context.Settings.KeepAboveLV > 0)
@@ -117,7 +117,7 @@ namespace PokeRoadie
                     orderBy = new Func<PokemonData, double>(x => x.GetLevel());
                     break;
                 case PriorityTypes.V:
-                    orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    orderBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
                     break;
                 default:
                     break;
@@ -133,7 +133,7 @@ namespace PokeRoadie
                     thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
                     break;
                 case PriorityTypes.V:
-                    thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    thenBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
                     break;
                 case PriorityTypes.LV:
                     thenBy = new Func<PokemonData, double>(x => x.GetLevel());
@@ -208,26 +208,26 @@ namespace PokeRoadie
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.OrderByDescending(x => x.CalculatePokemonValue()).ThenBy(n => n.StaminaMax).Take(limit);
+            return pokemons.OrderByDescending(x => Context.Utility.CalculatePokemonValue(x)).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToHeal()
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina > 0 && x.Stamina < x.StaminaMax).OrderByDescending(n => n.CalculatePokemonValue()).ThenBy(n => n.Stamina);
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina > 0 && x.Stamina < x.StaminaMax).OrderByDescending(n => Context.Utility.CalculatePokemonValue(n)).ThenBy(n => n.Stamina);
         }
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToRevive()
         {
-            return (await GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == 0).OrderByDescending(n => n.CalculatePokemonValue());
+            return (await GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == 0).OrderByDescending(n => Context.Utility.CalculatePokemonValue(n));
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsVNotDeployed(int limit)
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax).OrderByDescending(x => x.CalculatePokemonValue()).ThenBy(n => n.StaminaMax).Take(limit);
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax).OrderByDescending(x => Context.Utility.CalculatePokemonValue(x)).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsCP(int limit)
@@ -276,7 +276,7 @@ namespace PokeRoadie
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
-                .OrderByDescending(x => x.CalculatePokemonValue())
+                .OrderByDescending(x => Context.Utility.CalculatePokemonValue(x))
                 .FirstOrDefault();
         }
         
@@ -330,7 +330,7 @@ namespace PokeRoadie
 
             //Evolve By V filter
             if (Context.Settings.EvolveAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() > Context.Settings.EvolveAboveV);
+                query = query.Where(p => Context.Utility.CalculatePokemonValue(p) > Context.Settings.EvolveAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Evolve By LV filter
@@ -349,7 +349,7 @@ namespace PokeRoadie
                     orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                     break;
                 case PriorityTypes.V:
-                    orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    orderBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
                     break;
                 case PriorityTypes.LV:
                     orderBy = new Func<PokemonData, double>(x => x.GetLevel());
@@ -368,7 +368,7 @@ namespace PokeRoadie
                     thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
                     break;
                 case PriorityTypes.V:
-                    thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    thenBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
                     break;
                 case PriorityTypes.LV:
                     thenBy = new Func<PokemonData, double>(x => x.GetLevel());
@@ -435,7 +435,7 @@ namespace PokeRoadie
 
             //PowerUp By V filter
             if (Context.Settings.PowerUpAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() > Context.Settings.PowerUpAboveV);
+                query = query.Where(p => Context.Utility.CalculatePokemonValue(p) > Context.Settings.PowerUpAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //PowerUp By LV filter
@@ -455,7 +455,7 @@ namespace PokeRoadie
                     orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
                     break;
                 case PriorityTypes.V:
-                    orderBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    orderBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
                     break;
                 case PriorityTypes.LV:
                     orderBy = new Func<PokemonData, double>(x => x.GetLevel());
@@ -474,7 +474,7 @@ namespace PokeRoadie
                     thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
                     break;
                 case PriorityTypes.V:
-                    thenBy = new Func<PokemonData, double>(x => x.CalculatePokemonValue());
+                    thenBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
                     break;
                 case PriorityTypes.LV:
                     thenBy = new Func<PokemonData, double>(x => x.GetLevel());
@@ -506,7 +506,7 @@ namespace PokeRoadie
 
             //Favorite By V filter
             if (Context.Settings.FavoriteAboveV > 0)
-                query = query.Where(p => p.CalculatePokemonValue() > Context.Settings.FavoriteAboveV);
+                query = query.Where(p => Context.Utility.CalculatePokemonValue(p) > Context.Settings.FavoriteAboveV);
             if (query.Count() == 0) return new List<PokemonData>();
 
             //Favorite By LV filter

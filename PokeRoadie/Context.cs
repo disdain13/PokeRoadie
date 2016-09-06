@@ -1,33 +1,6 @@
 ﻿#region " Imports "
 
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.Helpers;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Exceptions;
-using PokemonGo.RocketAPI.Rpc;
-
-using POGOProtos.Inventory;
-using POGOProtos.Inventory.Item;
-using POGOProtos.Networking.Responses;
-using POGOProtos.Data;
-using POGOProtos.Enums;
-using POGOProtos.Map.Fort;
-using POGOProtos.Data.Player;
-using POGOProtos.Map.Pokemon;
-using POGOProtos.Data.Capture;
-
-using PokeRoadie.Extensions;
 using PokeRoadie.Utils;
-//using PokeRoadie.Logging;
 using System.ComponentModel;
 
 #endregion
@@ -47,11 +20,13 @@ namespace PokeRoadie
         public Player PlayerState { get; set; }
         public Directories Directories { get; set; }
         public ISynchronizeInvoke Invoker { get; set; }
+        public Utility Utility { get; set; }
 
         public Context(PokeRoadieSettings settings)
         {
             Settings = settings;
             Directories = new Directories();
+            Utility = new Utility(this);
             ApiFailureStrategy = new ApiFailureStrategy(this);
             Client = new PokeRoadieClient(this);
             ApiFailureStrategy.Client = Client;
@@ -65,5 +40,6 @@ namespace PokeRoadie
         {
             Invoker = form;
         }
+        
     }
 }
