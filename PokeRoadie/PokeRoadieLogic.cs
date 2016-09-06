@@ -135,6 +135,7 @@ namespace PokeRoadie
         private int locationAttemptCount = 0;
         private List<TutorialState> tutorialAttempts = new List<TutorialState>();
         private List<ulong> _recentEncounters = new List<ulong>();
+        public bool NeedsNewLogin { get; set; } = false;
 
         #endregion
         #region " Properties "
@@ -151,7 +152,7 @@ namespace PokeRoadie
                 //if (Context.Settings.ShowDebugMessages) Logger.Write("Map objects pull made from server", LogLevel.Debug);
                 if (objects != null && objects.Item1 != null)
                 {
-                    mapsTimer = DateTime.Now.AddMilliseconds(3000);
+                    mapsTimer = DateTime.Now.AddMilliseconds(1500);
                     _map = objects.Item1;
 
                 }
@@ -574,7 +575,7 @@ namespace PokeRoadie
             
         }
 
-        private async Task CheckSession()
+        private async Task CheckSession(bool isStart = false)
         {
             var maxTimespan = TimeSpan.Parse(Context.Settings.MaxRunTimespan);
             var minBreakTimespan = TimeSpan.Parse(Context.Settings.MinBreakTimespan);
@@ -584,7 +585,7 @@ namespace PokeRoadie
             var totalEndDate = endDate.Add(minBreakTimespan);
 
             //session is still active
-            if (session.PlayerName == _playerProfile.PlayerData.Username && endDate > nowdate)
+            if (session.PlayerName == Context.Settings.Username && endDate > nowdate)
             {
                 if (Context.Settings.Session.CatchEnabled && Context.Settings.Session.CatchCount >= Context.Settings.MaxPokemonCatches)
                 {
@@ -599,9 +600,12 @@ namespace PokeRoadie
                 if (!Context.Settings.Session.CatchEnabled && !Context.Settings.Session.VisitEnabled)
                 {
                     var diff = totalEndDate.Subtract(nowdate);
-                    Logger.Write($"All limits reached! The bot visited {Context.Settings.Session.VisitCount} pokestops, and caught {Context.Settings.Session.CatchCount} pokemon since {session.StartDate}. The bot will wait until {totalEndDate.ToShortTimeString()} to continue...", LogLevel.Warning);
+                    Logger.Write($"All limits reached! Visited {Context.Settings.Session.VisitCount} pokestops, caught {Context.Settings.Session.CatchCount} pokemon since {session.StartDate}. Waiting until {totalEndDate.ToShortTimeString()}...", LogLevel.Warning);
                     await Task.Delay(diff);
-                    Context.Settings.Session = Context.Settings.NewSession();
+                    var s = Context.Settings.NewSession();
+                    s.PlayerName = Context.Settings.Username;
+                    Context.Settings.Session = s;
+                    if (!isStart) NeedsNewLogin = true;
                 }
                 return;
             }
@@ -610,8 +614,9 @@ namespace PokeRoadie
             if (totalEndDate < nowdate)
             {
                 var s = Context.Settings.NewSession();
-                s.PlayerName = _playerProfile.PlayerData.Username;
+                s.PlayerName = Context.Settings.Username;
                 Context.Settings.Session = s;
+                if (!isStart) NeedsNewLogin = true;
                 return;
             }
 
@@ -620,9 +625,13 @@ namespace PokeRoadie
             {
                 //must wait the difference before start
                 var diff = totalEndDate.Subtract(nowdate);
-                Logger.Write($"Your last recorded session ended {endDate.ToShortTimeString()}, but the required break time has not passed. The bot will wait until {totalEndDate.ToShortTimeString()} to continue...", LogLevel.Warning);
+                Logger.Write($"Session ended {endDate.ToShortTimeString()}. Breaking until {totalEndDate.ToShortTimeString()}...", LogLevel.Warning);
                 await Task.Delay(diff);
-                Context.Settings.Session = Context.Settings.NewSession();
+                var s = Context.Settings.NewSession();
+                s.PlayerName = Context.Settings.Username;
+                Context.Settings.Session = s;
+                if (!isStart) NeedsNewLogin = true;
+                return;
             }
         }
         
@@ -697,6 +706,8 @@ namespace PokeRoadie
         }
         public async Task Execute()
         {
+            //initial session check
+            await CheckSession(true);
 
             //keep it running
             var silentLogin = false;
@@ -761,7 +772,7 @@ namespace PokeRoadie
                 {
 
                     //handle silent login and debug error messages
-                    if (silentLogin)
+                    if (silentLogin && !NeedsNewLogin)
                     {
                         if (Context.Settings.ShowDebugMessages)
                             Logger.Write($"Auth ticket renewed", LogLevel.Debug);
@@ -771,7 +782,10 @@ namespace PokeRoadie
                         silentLogin = true;
                         Logger.Write($"Client logged in", LogLevel.Info);
                     }
-                      
+
+                    //flag needNewLogin
+                    NeedsNewLogin = false;
+
                     //PROCESS
                     //notes: separated initialization, login, and post-login execution. This way we can 
                     //make more intelligent exception handling desicions, instead of just throwing-up
@@ -779,7 +793,16 @@ namespace PokeRoadie
 
                     try
                     {
-                        await PostLoginExecute();
+                        while (!NeedsNewLogin && isRunning)
+                        {
+
+                            if (!IsInitialized)
+                            {
+                                await ProcessPeriodicals();
+                                IsInitialized = true;
+                            }
+                            await ExecuteFarming(Context.Settings.UseGPXPathing);
+                        }
                     }
                     catch (AggregateException ae)
                     {
@@ -838,6 +861,10 @@ namespace PokeRoadie
 
         public async Task ProcessPeriodicals()
         {
+
+            //check running flag
+            if (!isRunning) return;
+
             //only do this once, calling this 14 times every iteration could be
             //detectable for banning
             await PokeRoadieInventory.GetCachedInventory(Context.Client);
@@ -845,8 +872,9 @@ namespace PokeRoadie
             //write stats
             await WriteStats();
 
-            //session
+            //check session
             await CheckSession();
+            if (NeedsNewLogin) return;
 
             //handle tutorials
             if (Context.Settings.CompleteTutorials)
@@ -907,23 +935,6 @@ namespace PokeRoadie
                 
         }
 
-        public async Task PostLoginExecute()
-        {
-            
-            while (true)
-            {
-
-                if (!isRunning) break;
-                if (!IsInitialized)
-                {
-                    await ProcessPeriodicals();
-                }
-                IsInitialized = true;
-                await ExecuteFarming(Context.Settings.UseGPXPathing);
-
-            }
-        }
-
         private async Task ExecuteFarming(bool path)
         {
 
@@ -949,7 +960,15 @@ namespace PokeRoadie
                         var maxTrkPt = trackPoints.Count - 1;
                         while (curTrkPt <= maxTrkPt)
                         {
+
+                            //check running flag
                             if (!isRunning) break;
+
+                            //check session
+                            await CheckSession();
+                            if (NeedsNewLogin) return;
+
+                            //get waypoint and distance check
                             var nextPoint = trackPoints.ElementAt(curTrkPt);
                             var distance_check = Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude,
                                 Context.Client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat), Convert.ToDouble(nextPoint.Lon));
@@ -966,7 +985,8 @@ namespace PokeRoadie
                             //    $"Your desired destination is {nextPoint.Lat}, {nextPoint.Lon} your location is {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
                             //    LogLevel.Warning);
 
-                            //await CatchNearbyStops(true);
+
+                            //do path walking
                             await Context.Navigation.HumanPathWalking(
                                 trackPoints.ElementAt(curTrkPt),
                                 Context.Settings.MinSpeed,
@@ -1351,12 +1371,18 @@ namespace PokeRoadie
        
             while (finalList.Any())
             {
+                //check running flag
                 if (!isRunning) break;
-                if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
-                {
-                    break;
-                }
 
+                //check session and exit if needed
+                await CheckSession();
+                if (NeedsNewLogin) break;
+
+                //check destimations
+                if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
+                    break;
+
+                //write stats and export
                 await WriteStats();
                 await Export();
 
@@ -1630,6 +1656,17 @@ namespace PokeRoadie
                 while (Context.Settings.LoiteringActive && pokeStop.LureInfo != null && pokeStop.LureInfo.LureExpiresTimestampMs != 0)
                 {
 
+                    //check running flag
+                    if (!isRunning) break;
+
+                    //check session and exit if needed
+                    await CheckSession();
+                    if (NeedsNewLogin) break;
+
+                    //check destimations
+                    if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
+                        break;
+
                     if (Context.Settings.ShowDebugMessages)
                     {
                         var ts = new TimeSpan(pokeStop.LureInfo.LureExpiresTimestampMs - DateTime.UtcNow.ToUnixTime());
@@ -1663,6 +1700,17 @@ namespace PokeRoadie
                     {
                         await RandomDelay(2800, 3200);
                     }
+
+                    //check running flag
+                    if (!isRunning) break;
+
+                    //check session and exit if needed
+                    await CheckSession();
+                    if (NeedsNewLogin) break;
+
+                    //check destimations
+                    if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
+                        break;
 
                     await ProcessPeriodicals();
                     mapObjects = await GetMapObjects(true);
@@ -1852,7 +1900,14 @@ namespace PokeRoadie
 
             do
             {
+
+                //check running flag
                 if (!isRunning) break;
+
+                //check session
+                await CheckSession();
+                if (NeedsNewLogin) break;
+
                 //if there has not been a consistent flee, reset
                 if (fleeCounter > 0 && fleeEndTime.HasValue && fleeEndTime.Value.AddMinutes(3) < DateTime.Now && !softBan)
                 {

@@ -198,6 +198,10 @@ namespace PokeRoadie
 
                 if (functionExecutedWhileWalking != null)
                     await functionExecutedWhileWalking();// look for pokemon
+
+                //check for needs new login
+                if (Context.Logic.NeedsNewLogin) return result;
+
                 await Task.Delay(500);
             } while (sourceLocation.CalculateDistanceInMeters(targetLocation) >= dynamicLandingDistance);
 
