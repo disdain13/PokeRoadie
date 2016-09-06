@@ -25,12 +25,6 @@ namespace PokeRoadie
     public class PokeRoadieSettings : PokemonGo.RocketAPI.ISettings
     {
 
-        #region " Singleton "
-
-        private static PokeRoadieSettings _current = null;
-        public static PokeRoadieSettings Current { get{ _current = _current ?? (new PokeRoadieSettings()).Load(); return _current; }}
-        
-        #endregion
         #region " Members "
 
         private static object syncRoot = new object();
@@ -751,7 +745,7 @@ namespace PokeRoadie
             return session;
         }
 
-        private PokeRoadieSettings Load()
+        public PokeRoadieSettings Load()
         {
             //check for base path
             if (!Directory.Exists(configs_path))
@@ -975,18 +969,21 @@ namespace PokeRoadie
                     CurrentLongitude = destination.Longitude;
                     CurrentAltitude = destination.Altitude;
                 }
+                else
+                {
+                    var result = PromptForCoords();
+                    if (!result)
+                    {
+                        Logger.Write($"User quit before providing starting coordinates.", LogLevel.Warning);
+                        Program.ExitApplication(6);
+                    }
+                }
             }
 
             //resolve unknown waypoint
             if (WaypointLatitude == 0 && WaypointLongitude == 0)
             {
-                if (CurrentLatitude != 0 && CurrentLongitude != 0)
-                {
-                    WaypointLatitude = CurrentLatitude;
-                    WaypointLongitude = CurrentLongitude;
-                    WaypointAltitude = CurrentAltitude;
-                }
-                else if (DestinationsEnabled && Destinations.Any())
+                if (DestinationsEnabled && Destinations.Any())
                 {
                     var index = DestinationIndex < Destinations.Count ? DestinationIndex : 0;
                     var destination = Destinations[index];
@@ -994,6 +991,13 @@ namespace PokeRoadie
                     WaypointLongitude = destination.Longitude;
                     WaypointAltitude = destination.Altitude;
                 }
+                else if (CurrentLatitude != 0 && CurrentLongitude != 0)
+                {
+                    WaypointLatitude = CurrentLatitude;
+                    WaypointLongitude = CurrentLongitude;
+                    WaypointAltitude = CurrentAltitude;
+                }
+                
             }
 
             if (createNew)
@@ -1002,7 +1006,14 @@ namespace PokeRoadie
                 if (!result)
                 {
                     Logger.Write($"User quit before providing login credentials.", LogLevel.Warning);
-                    Program.ExitApplication(1);
+                    Program.ExitApplication(5);
+                }
+
+                var result2 = PromptForCoords();
+                if (!result2)
+                {
+                    Logger.Write($"User quit before providing starting coordinates.", LogLevel.Warning);
+                    Program.ExitApplication(6);
                 }
             }
             else
@@ -1256,6 +1267,9 @@ namespace PokeRoadie
                 this.CurrentLatitude = d.Latitude;
                 this.CurrentLongitude = d.Longitude;
                 this.CurrentAltitude = 13;
+                this.WaypointLatitude = d.Latitude;
+                this.WaypointLongitude = d.Longitude;
+                this.WaypointAltitude = 13;
                 this.Save();
             }
             d.Dispose();

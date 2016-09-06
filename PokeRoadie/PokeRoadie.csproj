@@ -55,6 +55,14 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="POGOProtos, Version=2016.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\POGOProtos.dll</HintPath>
+    </Reference>
+    <Reference Include="Pokemon.Go.Rocket.API, Version=2016.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Pokemon.Go.Rocket.API.dll</HintPath>
+    </Reference>
     <Reference Include="PokeRoadie.Xml, Version=2016.8.2.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\components\PokeRoadie.Xml.dll</HintPath>
@@ -80,6 +88,7 @@
     <Compile Include="Data\SessionData.cs" />
     <Compile Include="Data\StatsData.cs" />
     <Compile Include="Data\ThrowData.cs" />
+    <Compile Include="Directories.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,13 +123,15 @@
     <Compile Include="Forms\UsernamePasswordForm.Designer.cs">
       <DependentUpon>UsernamePasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Context.cs" />
     <Compile Include="Session.cs" />
-    <Compile Include="State.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="UserSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>UserSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utility.cs" />
     <Compile Include="Utils\ApiFailureStrategy.cs" />
     <Compile Include="Utils\GPXReader.cs" />
     <Compile Include="Utils\RouteUtils.cs" />
@@ -160,16 +171,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>UserSettings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\POGOProtos\POGOProtos.csproj">
-      <Project>{a03a7bb2-4f0b-467b-84b2-9a76e6aae6fb}</Project>
-      <Name>POGOProtos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PokemonGo.RocketAPI\PokemonGo.RocketAPI.csproj">
-      <Project>{05D2DA44-1B8E-4CF7-94ED-4D52451CD095}</Project>
-      <Name>PokemonGo.RocketAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\MainForm.resx">
@@ -743,7 +744,6 @@
     <Content Include="Images\493 arceus steel.png" />
     <Content Include="Images\493 arceus water.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
