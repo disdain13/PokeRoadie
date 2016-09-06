@@ -41,14 +41,9 @@ namespace PokeRoadie
         public string GetMinStats(PokemonData pokemon)
         {
             var name = pokemon.PokemonId.ToString();
-<<<<<<< HEAD
 
             if (name.Length > 10) name = name.Substring(0, 10);
             return $"{(String.IsNullOrWhiteSpace(pokemon.DeployedFortId) ? "" : "^") + (pokemon.Favorite == 1 ? "*" : "")}{name.PadRight(2)} " + $"({CalculatePokemonValue(pokemon)}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}Hp)";
-=======
-            if (name.Length > 10) name = name.Substring(0, 10);
-            return $"{pokemon.PokemonId.ToString()} " + $"({CalculatePokemonValue(pokemon)}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}Hp)";
->>>>>>> refs/remotes/origin/master
         }
 
         #endregion
@@ -57,10 +52,7 @@ namespace PokeRoadie
         {
             var filteredName = name.ToLower();
             var move = list.Where(x => x.Name.Replace(" ", "").ToLower() == filteredName).FirstOrDefault();
-<<<<<<< HEAD
 
-=======
->>>>>>> refs/remotes/origin/master
             if (move == null)
             {
                 if (filteredName.EndsWith("fast"))
@@ -86,10 +78,7 @@ namespace PokeRoadie
         public string GetMoveName(PokemonMove move)
         {
             var val = move.ToString();
-<<<<<<< HEAD
 
-=======
->>>>>>> refs/remotes/origin/master
             if (val.ToLower().EndsWith("fast")) val = val.Substring(0, val.Length - 4);
             return val;
         }
@@ -106,25 +95,16 @@ namespace PokeRoadie
             var l = (pokemon.GetLevel() == 0 ? 0 : pokemon.GetLevel() * 3.5);
             return Math.Round(p + cp + m1 + m2 + l, 0);
         }
-<<<<<<< HEAD
 
-=======
->>>>>>> refs/remotes/origin/master
         public int CalculateMoveValue(string moveName)
         {
             var m1a = 100;
             var move1 = GetMove(Context.Settings.PokemonMoves, moveName);
-<<<<<<< HEAD
 
             if (move1 == null) return 20;
             m1a = move1.Power + move1.Accuracy + move1.Hit;
             m1a = m1a < 51 ? 50 : m1a > 200 ? 200 : m1a;
 
-=======
-            if (move1 == null) return 20;
-            m1a = move1.Power + move1.Accuracy + move1.Hit;
-            m1a = m1a < 51 ? 50 : m1a > 200 ? 200 : m1a;
->>>>>>> refs/remotes/origin/master
             double m1b = (move1.PP > 0 && move1.PP < 15) ?
                 3.0d : 4.0d;
             return Convert.ToInt32(m1a / m1b);
@@ -212,10 +192,6 @@ namespace PokeRoadie
                     data.ImageUrls.Add(img);
                 }
                 Xml.Serializer.SerializeToFile(data, filePath);
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/origin/master
             }
             catch// (Exception e)
             {
@@ -253,8 +229,4 @@ namespace PokeRoadie
 
         #endregion
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> refs/remotes/origin/master
