@@ -152,7 +152,6 @@ namespace PokeRoadie
         public virtual int GreatThrowChance { get; set; }
         public virtual int NiceThrowChance { get; set; }
         public virtual double CurveThrowChance { get; set; }
-        public virtual double MissThrowChance { get; set; }
 
         //inventory
         public virtual bool UseLuckyEggs { get; set; }
@@ -216,7 +215,6 @@ namespace PokeRoadie
         public virtual bool DisplayAllPokemonInLog { get; set; }
         public virtual int DisplayPokemonCount { get; set; }
         public virtual int DisplayTopCandyCount { get; set; }
-        public virtual string DisplayStyle { get; set; }
 
         //system
         public virtual bool ShowDebugMessages { get; set; }
@@ -597,12 +595,10 @@ namespace PokeRoadie
             this.GreatThrowChance = UserSettings.Default.GreatThrowChance;
             this.NiceThrowChance = UserSettings.Default.NiceThrowChance;
             this.CurveThrowChance = UserSettings.Default.CurveThrowChance;
-            this.MissThrowChance = UserSettings.Default.MissThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
             this.DisplayTopCandyCount = UserSettings.Default.DisplayTopCandyCount;
-            this.DisplayStyle = UserSettings.Default.DisplayStyle;
 
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
@@ -883,12 +879,10 @@ namespace PokeRoadie
                     this.GreatThrowChance = obj.GreatThrowChance;
                     this.NiceThrowChance = obj.NiceThrowChance;
                     this.CurveThrowChance = obj.CurveThrowChance;
-                    this.MissThrowChance = obj.MissThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
 
                     this.DisplayPokemonCount = obj.DisplayPokemonCount;
                     this.DisplayTopCandyCount = obj.DisplayTopCandyCount;
-                    this.DisplayStyle = obj.DisplayStyle;
                     
                     this.MaxRunTimespan = obj.MaxRunTimespan;
                     this.MinBreakTimespan = obj.MinBreakTimespan;
@@ -1002,6 +996,7 @@ namespace PokeRoadie
 
             if (createNew)
             {
+
                 var result = PromptForCredentials();
                 if (!result)
                 {

@@ -24,10 +24,12 @@ using PokeRoadie.Extensions;
 
 #endregion
 
+
 namespace PokeRoadie.Extensions
 {
     public static class PokeRoadieExtensions
     {
+
         #region " Constants "
 
         const double twoThousand = 2000d;
@@ -82,7 +84,9 @@ namespace PokeRoadie.Extensions
             return PokemonInfo.CalculateCP(pokemon);
         }
 
+
         ////The following code was moved to the new Utility class. It can be accessed off Context.Utility.
+
 
         //public static string GetStats(this PokemonData pokemon)
         //{
@@ -237,6 +241,7 @@ namespace PokeRoadie.Extensions
         //            data.ImageUrls.Add(img);
         //        }
         //        Xml.Serializer.SerializeToFile(data, filePath);
+
         //    }
         //    catch// (Exception e)
         //    {
@@ -342,28 +347,25 @@ namespace PokeRoadie.Extensions
             var dPhi = Math.Log(
                 Math.Tan(ToRad(targetLocation.Latitude) / 2 + Math.PI / 4) /
                 Math.Tan(ToRad(sourceLocation.Latitude) / 2 + Math.PI / 4));
-
             if (Math.Abs(dLon) > Math.PI)
                 dLon = dLon > 0 ? -(2 * Math.PI - dLon) : 2 * Math.PI + dLon;
             return ToBearing(Math.Atan2(dLon, dPhi));
         }
-
         private static double ToBearing(double radians)
         {
             // convert radians to degrees (as bearing: 0...360)
             return (ToDegrees(radians) + 360) % 360;
         }
-
         private static double ToDegrees(double radians)
         {
             return radians * 180 / Math.PI;
         }
-
         private static double ToRad(double degrees)
         {
             return degrees * (Math.PI / 180);
         }
 
         #endregion
+
     }
 }
