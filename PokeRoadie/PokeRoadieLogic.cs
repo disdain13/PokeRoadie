@@ -141,8 +141,8 @@ namespace PokeRoadie
         #region " Properties "
 
         public Context Context { get; set; }
-        public bool CanCatch { get { return Context.Settings.CatchPokemon && Context.Settings.Session.CatchEnabled && !softBan && Context.Navigation.LastKnownSpeed <= Context.Settings.MaxCatchSpeed && noWorkTimer <= DateTime.Now; } }
-        public bool CanVisit { get { return Context.Settings.VisitPokestops && Context.Settings.Session.VisitEnabled && !softBan; } }
+        public bool CanCatch { get { return Context.Settings.CatchPokemon && Context.Session.Current.CatchEnabled && !softBan && Context.Navigation.LastKnownSpeed <= Context.Settings.MaxCatchSpeed && noWorkTimer <= DateTime.Now; } }
+        public bool CanVisit { get { return Context.Settings.VisitPokestops && Context.Session.Current.VisitEnabled && !softBan; } }
         public bool CanVisitGyms { get { return Context.Settings.VisitGyms && Context.Statistics.Currentlevel > 4 && !softBan; } }
         public async Task<GetMapObjectsResponse> GetMapObjects(bool force = false)
         {
@@ -435,7 +435,7 @@ namespace PokeRoadie
 
         }
 
-        public void Xlo()
+        private void Xlo()
         {
             if (xloCount > 0) return;
             lock (xloLock)
@@ -575,64 +575,10 @@ namespace PokeRoadie
             
         }
 
-        private async Task CheckSession(bool isStart = false)
+        public void SaveState()
         {
-            var maxTimespan = TimeSpan.Parse(Context.Settings.MaxRunTimespan);
-            var minBreakTimespan = TimeSpan.Parse(Context.Settings.MinBreakTimespan);
-            var nowdate = DateTime.Now;
-            var session = Context.Settings.Session;
-            var endDate = session.StartDate.Add(maxTimespan);
-            var totalEndDate = endDate.Add(minBreakTimespan);
-
-            //session is still active
-            if (session.PlayerName == Context.Settings.Username && endDate > nowdate)
-            {
-                if (Context.Settings.Session.CatchEnabled && Context.Settings.Session.CatchCount >= Context.Settings.MaxPokemonCatches)
-                {
-                    Context.Settings.Session.CatchEnabled = false;
-                    Logger.Write($"Limit reached! The bot caught {Context.Settings.Session.CatchCount} pokemon since {session.StartDate}.", LogLevel.Warning);
-                }
-                if (Context.Settings.Session.VisitEnabled && Context.Settings.Session.VisitCount >= Context.Settings.MaxPokestopVisits)
-                {
-                    Context.Settings.Session.VisitEnabled = false;
-                    Logger.Write($"Limit reached! The bot visited {Context.Settings.Session.VisitCount} pokestops since {session.StartDate}.", LogLevel.Warning);
-                }
-                if (!Context.Settings.Session.CatchEnabled && !Context.Settings.Session.VisitEnabled)
-                {
-                    var diff = totalEndDate.Subtract(nowdate);
-                    Logger.Write($"All limits reached! Visited {Context.Settings.Session.VisitCount} pokestops, caught {Context.Settings.Session.CatchCount} pokemon since {session.StartDate}. Waiting until {totalEndDate.ToShortTimeString()}...", LogLevel.Warning);
-                    await Task.Delay(diff);
-                    var s = Context.Settings.NewSession();
-                    s.PlayerName = Context.Settings.Username;
-                    Context.Settings.Session = s;
-                    if (!isStart) NeedsNewLogin = true;
-                }
-                return;
-            }
-
-            //session has expired
-            if (totalEndDate < nowdate)
-            {
-                var s = Context.Settings.NewSession();
-                s.PlayerName = Context.Settings.Username;
-                Context.Settings.Session = s;
-                if (!isStart) NeedsNewLogin = true;
-                return;
-            }
-
-            //session expired, but break not completed   
-            if (endDate < nowdate && totalEndDate > nowdate)
-            {
-                //must wait the difference before start
-                var diff = totalEndDate.Subtract(nowdate);
-                Logger.Write($"Session ended {endDate.ToShortTimeString()}. Breaking until {totalEndDate.ToShortTimeString()}...", LogLevel.Warning);
-                await Task.Delay(diff);
-                var s = Context.Settings.NewSession();
-                s.PlayerName = Context.Settings.Username;
-                Context.Settings.Session = s;
-                if (!isStart) NeedsNewLogin = true;
-                return;
-            }
+            Context.Settings.Save();
+            Context.Session.Save();
         }
         
         #endregion
@@ -707,7 +653,7 @@ namespace PokeRoadie
         public async Task Execute()
         {
             //initial session check
-            await CheckSession(true);
+            await Context.Session.Check(true);
 
             //keep it running
             var silentLogin = false;
@@ -873,7 +819,7 @@ namespace PokeRoadie
             await WriteStats();
 
             //check session
-            await CheckSession();
+            await Context.Session.Check();
             if (NeedsNewLogin) return;
 
             //handle tutorials
@@ -965,7 +911,7 @@ namespace PokeRoadie
                             if (!isRunning) break;
 
                             //check session
-                            await CheckSession();
+                            await Context.Session.Check();
                             if (NeedsNewLogin) return;
 
                             //get waypoint and distance check
@@ -1021,7 +967,6 @@ namespace PokeRoadie
             }
 
             var wayPointGeo = GetWaypointGeo();
-
             var distanceFromStart = Navigation.CalculateDistanceInMeters(
             Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
             wayPointGeo.Latitude, wayPointGeo.Longitude);
@@ -1033,7 +978,7 @@ namespace PokeRoadie
             {
                 inTravel = true;
                 Logger.Write($"We have traveled outside the max distance of {Context.Settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
-                await Context.Navigation.HumanLikeWalking(wayPointGeo,  distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distanceFromStart > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(),  distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
+                await Context.Navigation.HumanLikeWalking(wayPointGeo,  distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, GetShortTask(),  distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
                 gymTries.Clear();
                 locationAttemptCount = 0;
                 Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude,5)}", LogLevel.Navigation);
@@ -1375,12 +1320,25 @@ namespace PokeRoadie
                 if (!isRunning) break;
 
                 //check session and exit if needed
-                await CheckSession();
+                await Context.Session.Check();
                 if (NeedsNewLogin) break;
 
                 //check destimations
                 if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
                     break;
+
+                //check starting distance
+                if (Context.Settings.MaxDistance > 0)
+                {
+                    var wayPointGeo = GetWaypointGeo();
+                    var distanceFromStart = Navigation.CalculateDistanceInMeters(
+                    Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
+                    wayPointGeo.Latitude, wayPointGeo.Longitude);
+                    //break if too far from starting point
+                    if (distanceFromStart >= Context.Settings.MaxDistance)
+                        break;
+                }
+
 
                 //write stats and export
                 await WriteStats();
@@ -1614,7 +1572,7 @@ namespace PokeRoadie
                             fleeEndTime = null;
                         }
 
-                        Context.Settings.Session.VisitCount++;
+                        Context.Session.Current.VisitCount++;
 
                         if (!softBan) Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
                         recycleCounter++;
@@ -1660,7 +1618,7 @@ namespace PokeRoadie
                     if (!isRunning) break;
 
                     //check session and exit if needed
-                    await CheckSession();
+                    await Context.Session.Check();
                     if (NeedsNewLogin) break;
 
                     //check destimations
@@ -1705,7 +1663,7 @@ namespace PokeRoadie
                     if (!isRunning) break;
 
                     //check session and exit if needed
-                    await CheckSession();
+                    await Context.Session.Check();
                     if (NeedsNewLogin) break;
 
                     //check destimations
@@ -1905,7 +1863,7 @@ namespace PokeRoadie
                 if (!isRunning) break;
 
                 //check session
-                await CheckSession();
+                await Context.Session.Check();
                 if (NeedsNewLogin) break;
 
                 //if there has not been a consistent flee, reset
@@ -1978,7 +1936,7 @@ namespace PokeRoadie
                         if (!RaiseSyncEvent(OnCatch, encounter, caughtPokemonResponse))
                             OnCatch(encounter, caughtPokemonResponse);
                     }
-                    Context.Settings.Session.CatchCount++;
+                    Context.Session.Current.CatchCount++;
    
                 }
                 else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchFlee || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchError)

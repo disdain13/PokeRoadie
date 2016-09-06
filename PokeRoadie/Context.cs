@@ -16,7 +16,7 @@ namespace PokeRoadie
         public PokeRoadieSettings Settings { get; set; }
         public Statistics Statistics { get; set; }
         public Navigation Navigation { get; set; }
-        public SessionData Session { get; set; }
+        public Session Session { get; set; }
         public Player PlayerState { get; set; }
         public Directories Directories { get; set; }
         public ISynchronizeInvoke Invoker { get; set; }
@@ -27,6 +27,7 @@ namespace PokeRoadie
             Settings = settings;
             Directories = new Directories();
             Utility = new Utility(this);
+            Session = new Session(this);
             ApiFailureStrategy = new ApiFailureStrategy(this);
             Client = new PokeRoadieClient(this);
             ApiFailureStrategy.Client = Client;
