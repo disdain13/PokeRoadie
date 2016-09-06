@@ -1,4 +1,4 @@
-﻿#region " Imports "
+#region " Imports "
 
 using System;
 using System.IO;
@@ -395,8 +395,6 @@ namespace PokeRoadie
                 {
                     Logger.Write(Context.Utility.GetStats(pokemon), LogLevel.None, ConsoleColor.White);
                 }
-
-
                 if (Context.Settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
@@ -1707,6 +1705,7 @@ namespace PokeRoadie
             {
                 if (Context.Settings.TransferPokemon && Context.Settings.TransferTrimFatCount > 0)
                 {
+                    
                     Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
                     var query = (await Context.Inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !Context.Settings.PokemonsNotToTransfer.Contains(x.PokemonId));
 
@@ -2427,9 +2426,7 @@ namespace PokeRoadie
             {
                 var pokemonIv = pokemon.GetPerfection();
                 var pokemonV = Context.Utility.CalculatePokemonValue(pokemon);
-
-
-
+                
                 if ((Context.Settings.ForceExcellentThrowOverCp > 0 && pokemon.Cp > Context.Settings.ForceExcellentThrowOverCp) ||
                     (Context.Settings.ForceExcellentThrowOverIV > 0 && pokemonIv > Context.Settings.ForceExcellentThrowOverIV) ||
                     (Context.Settings.ForceExcellentThrowOverV > 0 && pokemonV > Context.Settings.ForceExcellentThrowOverV))
@@ -3450,6 +3447,8 @@ namespace PokeRoadie
             Context.Statistics.UpdateConsoleTitle(Context.Client, Context.Inventory);
 
         }
+
+        
         public async Task TutorialGeneric(TutorialState state, string name)
         {
             //1 attempt per session
@@ -3518,6 +3517,7 @@ namespace PokeRoadie
                 }
 
             }
+
             else
             {
                 Logger.Write($"Could not complete the AVATAR_SELECTION tutorial. TutorialSetAvatar:{response.Status}", LogLevel.Error);
@@ -3638,4 +3638,5 @@ namespace PokeRoadie
 
         #endregion
     }
+
 }
