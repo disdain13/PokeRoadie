@@ -32,7 +32,7 @@ using Google.Protobuf.Collections;
 
 namespace PokeRoadie
 {
-    internal class Statistics
+    public class Statistics
     {
         public int TotalExperience;
         public int TotalPokemons;
@@ -46,19 +46,24 @@ namespace PokeRoadie
         public int TotalPokesInPokedex;
         public int LevelForRewards = -1;
         public DateTime InitSessionDateTime;
-        public PokeRoadieInventory _inventory = null;
         public TimeSpan Duration;
         public DateTime nextTitleUpdate = DateTime.Now;
 
-        public Statistics(PokeRoadieInventory inventory)
+        #region " Properties "
+
+        public Context Context { get; set; }
+
+        #endregion
+
+        public Statistics(Context context)
         {
-            _inventory = inventory;
+            Context = context;
             InitSessionDateTime = DateTime.Now;
             Duration = DateTime.Now - InitSessionDateTime;
         }
-        public async Task<string> _getcurrentLevelInfos(PokeRoadieInventory _inventory)
+        public async Task<string> _getcurrentLevelInfos()
         {
-            var stats = await _inventory.GetPlayerStats();
+            var stats = await Context.Inventory.GetPlayerStats();
             var output = string.Empty;
             var stat = stats.FirstOrDefault();
             if (stat != null)
@@ -79,7 +84,7 @@ namespace PokeRoadie
 
                 if (LevelForRewards == -1 || stat.Level >= LevelForRewards)
                 {
-                    LevelUpRewardsResponse Result = await _inventory.GetLevelUpRewards(stat.Level);
+                    LevelUpRewardsResponse Result = await Context.Inventory.GetLevelUpRewards(stat.Level);
 
                     if (Result.Result == LevelUpRewardsResponse.Types.Result.AwardedAlready)
                         LevelForRewards = stat.Level + 1;
@@ -162,7 +167,7 @@ namespace PokeRoadie
             if (inventory.InventoryDelta != null)
             {
                 TotalPokesInPokedex = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokedexEntry).Where(x => x != null && x.TimesCaptured >= 1).OrderBy(k => k.PokemonId).ToArray().Length;
-                CurrentLevelInfos = await _getcurrentLevelInfos(_inventory);
+                CurrentLevelInfos = await _getcurrentLevelInfos();
             }
             Console.Title = ToString();
         }
@@ -197,7 +202,7 @@ namespace PokeRoadie
 
         public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
         {
-            return await _inventory.GetLevelUpRewards(level);
+            return await Context.Inventory.GetLevelUpRewards(level);
         }
     }
 }
