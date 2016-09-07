@@ -25,9 +25,22 @@ namespace PokeRoadie
 
         private static PokeRoadieLogic CreateLogic()
         {
-            var logic = new PokeRoadieLogic();
-            logic.OnPromptForCredentials += PokeRoadieSettings.Current.PromptForCredentials;
-            logic.OnPromptForCoords += PokeRoadieSettings.Current.PromptForCoords;
+            //load settings
+            var settings = new PokeRoadieSettings();
+
+            //load settings
+            settings.Load();
+
+            //create context
+            var context = new Context(settings);
+            
+            //create logic class
+            var logic = new PokeRoadieLogic(context);
+
+            //add custom event wiring
+            logic.OnPromptForCredentials += settings.PromptForCredentials;
+            //logic.OnPromptForCoords += settings.PromptForCoords;
+
             try
             {
                 logic.Initialize();
@@ -52,17 +65,23 @@ namespace PokeRoadie
 
         private static void Main()
         {
-            AppDomain.CurrentDomain.UnhandledException
-                += delegate (object sender, UnhandledExceptionEventArgs eargs)
-                {
-                    Exception exception = (Exception)eargs.ExceptionObject;
-                    System.Console.WriteLine("Unhandled Exception: " + exception);
-                    //Environment.Exit(1);
-                };
 
+            //unhandled exception...uh.. handler? does that make sense?
+            AppDomain.CurrentDomain.UnhandledException
+                += HandleException;
+
+            //set validation callback 
             ServicePointManager.ServerCertificateValidationCallback = Validator;
+
+            //configure logging
             Logger.SetLogger();
 
+            Start();
+
+        }
+
+        private static void Start()
+        {
             Task.Run(() =>
             {
                 try
@@ -76,7 +95,19 @@ namespace PokeRoadie
             });
             System.Console.ReadLine();
         }
-
+        private static void HandleException(object sender, UnhandledExceptionEventArgs eargs)
+        {
+            Exception exception = (Exception)eargs.ExceptionObject;
+            try
+            {
+                Logger.Write("Unhandled Exception: " + exception, LogLevel.Error);
+            }
+            catch
+            {
+                System.Console.WriteLine("Unhandled Exception: " + exception, LogLevel.Error);
+            }
+            Start();
+        }
         public static bool Validator(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
 
 

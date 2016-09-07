@@ -25,12 +25,6 @@ namespace PokeRoadie
     public class PokeRoadieSettings : PokemonGo.RocketAPI.ISettings
     {
 
-        #region " Singleton "
-
-        private static PokeRoadieSettings _current = null;
-        public static PokeRoadieSettings Current { get{ _current = _current ?? (new PokeRoadieSettings()).Load(); return _current; }}
-        
-        #endregion
         #region " Members "
 
         private static object syncRoot = new object();
@@ -45,7 +39,8 @@ namespace PokeRoadie
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
-        private SessionData _session = null;
+        [XmlIgnore()]
+        public DateTime? DestinationEndDate { get; set; }
 
         #endregion
         #region " General Properties "
@@ -234,27 +229,6 @@ namespace PokeRoadie
         public virtual bool UseProxyAuthentication { get; set; }
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
-
-        #endregion
-        #region " Session/State Properties "
-
-        [XmlIgnore()]
-        public DateTime? DestinationEndDate { get; set; }
-
-        [XmlIgnore()]
-        public SessionData Session
-        {
-            get
-            {
-                if (_session != null) return _session;
-                _session = LoadSession(Path.Combine(temp_path, "Session.xml"));
-                return _session;
-            }
-            set
-            {
-                _session = value;
-            }
-        }
 
         #endregion
         #region " Collection Properties "
@@ -688,70 +662,10 @@ namespace PokeRoadie
             catch (Exception e)
             {
                 Logger.Write("Could not save settings to file. Error: " + e.ToString(), LogLevel.Error);
-            }
-            SaveSession(Session);
+            } 
         }
 
-        public bool SaveSession(SessionData session)
-        {
-            if (!Directory.Exists(temp_path)) Directory.CreateDirectory(temp_path);
-            string fileName = "Session.xml";
-            string filePath = Path.Combine(temp_path, fileName);
-            try
-            {
-                lock (sessionRoot)
-                {
-                    if (File.Exists(filePath)) File.Delete(filePath);
-                    using (FileStream s = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
-                        x.Serialize(s, session);
-                        s.Close();
-                        return true;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Write($"Could not save {filePath}. Error: " + e.ToString(), LogLevel.Error);
-            }
-            return false;
-        }
-
-        public SessionData LoadSession(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    lock (sessionRoot)
-                    {
-                        if (!Directory.Exists(temp_path)) Directory.CreateDirectory(temp_path);
-                        using (FileStream s = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                        {
-                            var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
-                            var session = (SessionData)x.Deserialize(s);
-                            s.Close();
-                            return session;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write($"The {filePath} file could not be loaded, a new session will be created. {ex.Message} {ex.ToString()}", LogLevel.Warning);
-                }
-            }
-            return NewSession();
-        }
-
-        public SessionData NewSession()
-        {
-            var session = new SessionData();
-            session.StartDate = DateTime.Now;
-            return session;
-        }
-
-        private PokeRoadieSettings Load()
+        public PokeRoadieSettings Load()
         {
             //check for base path
             if (!Directory.Exists(configs_path))
@@ -975,18 +889,21 @@ namespace PokeRoadie
                     CurrentLongitude = destination.Longitude;
                     CurrentAltitude = destination.Altitude;
                 }
+                else
+                {
+                    var result = PromptForCoords();
+                    if (!result)
+                    {
+                        Logger.Write($"User quit before providing starting coordinates.", LogLevel.Warning);
+                        Program.ExitApplication(6);
+                    }
+                }
             }
 
             //resolve unknown waypoint
             if (WaypointLatitude == 0 && WaypointLongitude == 0)
             {
-                if (CurrentLatitude != 0 && CurrentLongitude != 0)
-                {
-                    WaypointLatitude = CurrentLatitude;
-                    WaypointLongitude = CurrentLongitude;
-                    WaypointAltitude = CurrentAltitude;
-                }
-                else if (DestinationsEnabled && Destinations.Any())
+                if (DestinationsEnabled && Destinations.Any())
                 {
                     var index = DestinationIndex < Destinations.Count ? DestinationIndex : 0;
                     var destination = Destinations[index];
@@ -994,6 +911,13 @@ namespace PokeRoadie
                     WaypointLongitude = destination.Longitude;
                     WaypointAltitude = destination.Altitude;
                 }
+                else if (CurrentLatitude != 0 && CurrentLongitude != 0)
+                {
+                    WaypointLatitude = CurrentLatitude;
+                    WaypointLongitude = CurrentLongitude;
+                    WaypointAltitude = CurrentAltitude;
+                }
+                
             }
 
             if (createNew)
@@ -1002,7 +926,14 @@ namespace PokeRoadie
                 if (!result)
                 {
                     Logger.Write($"User quit before providing login credentials.", LogLevel.Warning);
-                    Program.ExitApplication(1);
+                    Program.ExitApplication(5);
+                }
+
+                var result2 = PromptForCoords();
+                if (!result2)
+                {
+                    Logger.Write($"User quit before providing starting coordinates.", LogLevel.Warning);
+                    Program.ExitApplication(6);
                 }
             }
             else
@@ -1256,6 +1187,9 @@ namespace PokeRoadie
                 this.CurrentLatitude = d.Latitude;
                 this.CurrentLongitude = d.Longitude;
                 this.CurrentAltitude = 13;
+                this.WaypointLatitude = d.Latitude;
+                this.WaypointLongitude = d.Longitude;
+                this.WaypointAltitude = 13;
                 this.Save();
             }
             d.Dispose();
