@@ -153,7 +153,6 @@ namespace PokeRoadie
         public virtual int GreatThrowChance { get; set; }
         public virtual int NiceThrowChance { get; set; }
         public virtual double CurveThrowChance { get; set; }
-        public virtual double MissThrowChance { get; set; }
 
         //inventory
         public virtual bool UseLuckyEggs { get; set; }
@@ -517,6 +516,7 @@ namespace PokeRoadie
             this.EvolveAboveCp = UserSettings.Default.EvolveAboveCp;
             this.EvolveAboveIV = UserSettings.Default.EvolveAboveIV;
             this.EvolveAboveV = UserSettings.Default.EvolveAboveV;
+            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
             this.UsePokemonsToEvolveList = UserSettings.Default.UsePokemonsToEvolveList;
             this.UseIncense = UserSettings.Default.UseIncense;
             this.UseRevives = UserSettings.Default.UseRevives;
@@ -538,6 +538,7 @@ namespace PokeRoadie
             this.PowerUpAboveCp = UserSettings.Default.PowerUpAboveCp;
             this.PowerUpAboveIV = UserSettings.Default.PowerUpAboveIV;
             this.PowerUpAboveV = UserSettings.Default.PowerUpAboveV;
+            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
             this.MinStarDustForPowerUps = UserSettings.Default.MinStarDustForPowerUps;
             this.UsePokemonsToPowerUpList = UserSettings.Default.UsePokemonsToPowerUpList;
             this.MinCandyForPowerUps = UserSettings.Default.MinCandyForPowerUps;
@@ -559,6 +560,7 @@ namespace PokeRoadie
             this.FavoriteAboveCp = UserSettings.Default.FavoriteAboveCp;
             this.FavoriteAboveIV = UserSettings.Default.FavoriteAboveIV;
             this.FavoriteAboveV = UserSettings.Default.FavoriteAboveV;
+            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
             this.RenamePokemon = UserSettings.Default.RenamePokemon;
             this.RenameFormat = UserSettings.Default.RenameFormat;
 
@@ -573,11 +575,11 @@ namespace PokeRoadie
             this.GreatThrowChance = UserSettings.Default.GreatThrowChance;
             this.NiceThrowChance = UserSettings.Default.NiceThrowChance;
             this.CurveThrowChance = UserSettings.Default.CurveThrowChance;
-            this.MissThrowChance = UserSettings.Default.MissThrowChance;
             this.DevicePackageName = UserSettings.Default.DevicePackageName;
 
             this.DisplayPokemonCount = UserSettings.Default.DisplayPokemonCount;
             this.DisplayTopCandyCount = UserSettings.Default.DisplayTopCandyCount;
+
             this.MaxRunTimespan = UserSettings.Default.MaxRunTimespan.ToString();
             this.MinBreakTimespan = UserSettings.Default.MinBreakTimespan.ToString();
             this.MaxPokemonCatches = UserSettings.Default.MaxPokemonCatches;
@@ -631,12 +633,6 @@ namespace PokeRoadie
             this.CompleteTutorials = UserSettings.Default.CompleteTutorials;
             this.PokemonProcessDelayMinutes = UserSettings.Default.PokemonProcessDelayMinutes;
             this.PrioritizeGyms = UserSettings.Default.PrioritizeGyms;
-
-            this.PowerUpAboveLV = UserSettings.Default.PowerUpAboveLV;
-            this.EvolveAboveLV = UserSettings.Default.EvolveAboveLV;
-            this.FavoriteAboveLV = UserSettings.Default.FavoriteAboveLV;
-
-
         }
 
         #endregion
@@ -803,11 +799,11 @@ namespace PokeRoadie
                     this.GreatThrowChance = obj.GreatThrowChance;
                     this.NiceThrowChance = obj.NiceThrowChance;
                     this.CurveThrowChance = obj.CurveThrowChance;
-                    this.MissThrowChance = obj.MissThrowChance;
                     this.DevicePackageName = obj.DevicePackageName;
 
                     this.DisplayPokemonCount = obj.DisplayPokemonCount;
                     this.DisplayTopCandyCount = obj.DisplayTopCandyCount;
+                    
                     this.MaxRunTimespan = obj.MaxRunTimespan;
                     this.MinBreakTimespan = obj.MinBreakTimespan;
                     this.MaxPokemonCatches = obj.MaxPokemonCatches;
@@ -920,7 +916,7 @@ namespace PokeRoadie
 
             if (createNew)
             {
-                
+
                 var result = PromptForCredentials();
                 if (!result)
                 {
