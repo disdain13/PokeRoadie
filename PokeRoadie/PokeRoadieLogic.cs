@@ -380,7 +380,7 @@ namespace PokeRoadie
 
                 foreach (var candy in highestsPokemonCandy)
                 {
-                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19, ' ')} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"{candy.FamilyId.ToString().Replace("Family", "").PadRight(19)} Candy: { candy.Candy_ }", LogLevel.None, ConsoleColor.White);
                 }
 
                 Logger.Write("====== Most Valuable ======", LogLevel.None, ConsoleColor.Yellow);
@@ -471,7 +471,7 @@ namespace PokeRoadie
                 if (Directory.Exists(Context.Directories.PokestopsDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.PokestopsDirectory)
-                                    .Where(x => x.EndsWith(".xml")).ToList();
+                    .Where(x => x.EndsWith(".xml")).ToList();
 
                     foreach (var filePath in files)
                     {
@@ -506,7 +506,7 @@ namespace PokeRoadie
                 if (Directory.Exists(Context.Directories.GymDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.GymDirectory)
-                                    .Where(x => x.EndsWith(".xml")).ToList();
+                    .Where(x => x.EndsWith(".xml")).ToList();
 
                     foreach (var filePath in files)
                     {
@@ -538,7 +538,7 @@ namespace PokeRoadie
                 if (Directory.Exists(Context.Directories.EncountersDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.EncountersDirectory)
-                                    .Where(x => x.EndsWith(".xml")).ToList();
+                    .Where(x => x.EndsWith(".xml")).ToList();
 
                     foreach (var filePath in files)
                     {
@@ -644,26 +644,26 @@ namespace PokeRoadie
             ////check lat long
             //if (Context.Settings.CurrentLongitude == 0 && Context.Settings.CurrentLatitude == 0)
             //{
-            //    //show credentials form
-            //    if (OnPromptForCoords != null)
-            //    {
-            //        //raise event
-            //        bool result = false;
+            // //show credentials form
+            // if (OnPromptForCoords != null)
+            // {
+            // //raise event
+            // bool result = false;
 
-            //        if (Context.Invoker != null && Context.Invoker.InvokeRequired)
-            //            result = (bool)Context.Invoker.Invoke(OnPromptForCoords, new object[] { });
-            //        else
-            //            result = OnPromptForCoords.Invoke();
+            // if (Context.Invoker != null && Context.Invoker.InvokeRequired)
+            // result = (bool)Context.Invoker.Invoke(OnPromptForCoords, new object[] { });
+            // else
+            // result = OnPromptForCoords.Invoke();
 
-            //        if (!result)
-            //        {
-            //            Logger.Write("User did not provide starting coordinates.");
-            //            CloseApplication(4).Wait();
-            //        }
-            //    }
-            //    //Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
-            //    //if (Context.Settings.MoveWhenNoStops && Context.Client != null) Context.Settings.DestinationEndDate = DateTime.Now;
-            //    //CloseApplication(1).Wait();
+            // if (!result)
+            // {
+            // Logger.Write("User did not provide starting coordinates.");
+            // CloseApplication(4).Wait();
+            // }
+            // }
+            // //Logger.Write("CurrentLatitude and CurrentLongitude not set in the Configs/Settings.xml. Application will exit in 15 seconds...", LogLevel.Error);
+            // //if (Context.Settings.MoveWhenNoStops && Context.Client != null) Context.Settings.DestinationEndDate = DateTime.Now;
+            // //CloseApplication(1).Wait();
             //}
 
             //do maint
@@ -758,7 +758,7 @@ namespace PokeRoadie
                     NeedsNewLogin = false;
 
                     //PROCESS
-                    //notes: separated initialization, login, and post-login execution. This way we can 
+                    //notes: separated initialization, login, and post-login execution. This way we can
                     //make more intelligent exception handling desicions, instead of just throwing-up
                     //all over the screen. If you want the vomit, turn on ShowDebugMessages
 
@@ -940,25 +940,25 @@ namespace PokeRoadie
                             //get waypoint and distance check
                             var nextPoint = trackPoints.ElementAt(curTrkPt);
                             var distance_check = Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude,
-                                Context.Client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat), Convert.ToDouble(nextPoint.Lon));
+                            Context.Client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat), Convert.ToDouble(nextPoint.Lon));
 
                             //if (distance_check > 5000)
                             //{
-                            //    Logger.Write(
-                            //        $"Your desired destination of {nextPoint.Lat}, {nextPoint.Lon} is too far from your current position of {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
-                            //        LogLevel.Error);
-                            //    break;
+                            // Logger.Write(
+                            // $"Your desired destination of {nextPoint.Lat}, {nextPoint.Lon} is too far from your current position of {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
+                            // LogLevel.Error);
+                            // break;
                             //}
 
                             //Logger.Write(
-                            //    $"Your desired destination is {nextPoint.Lat}, {nextPoint.Lon} your location is {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
-                            //    LogLevel.Warning);
+                            // $"Your desired destination is {nextPoint.Lat}, {nextPoint.Lon} your location is {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
+                            // LogLevel.Warning);
 
                             //do path walking
                             await Context.Navigation.HumanPathWalking(
-                                trackPoints.ElementAt(curTrkPt),
-                                Context.Settings.MinSpeed,
-                                GetLongTask());
+                            trackPoints.ElementAt(curTrkPt),
+                            Context.Settings.MinSpeed,
+                            GetLongTask());
 
                             if (curTrkPt >= maxTrkPt)
                                 curTrkPt = 0;
@@ -992,7 +992,7 @@ namespace PokeRoadie
 
             // Edge case for when the client somehow ends up outside the defined radius
             if (Context.Settings.MaxDistance != 0 &&
-                distanceFromStart > Context.Settings.MaxDistance)
+            distanceFromStart > Context.Settings.MaxDistance)
             {
                 inTravel = true;
                 Logger.Write($"We have traveled outside the max distance of {Context.Settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
@@ -1149,12 +1149,12 @@ namespace PokeRoadie
         private List<FortData> GetPokestops(LocationData location, int maxDistance, GetMapObjectsResponse mapObjects)
         {
             var fullPokestopList = Navigation.PathByNearestNeighbour(
-                mapObjects.MapCells.SelectMany(i => i.Forts)
-                    .Where(i =>
-                        (maxDistance == 0 ||
-                        Navigation.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude) < maxDistance))
-                    .OrderBy(i =>
-                         Navigation.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude)).ToArray());
+            mapObjects.MapCells.SelectMany(i => i.Forts)
+            .Where(i =>
+            (maxDistance == 0 ||
+            Navigation.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude) < maxDistance))
+            .OrderBy(i =>
+            Navigation.CalculateDistanceInMeters(location.Latitude, location.Longitude, i.Latitude, i.Longitude)).ToArray());
 
             var stops = fullPokestopList.Where(x => x.Type != FortType.Gym);
 
@@ -1185,8 +1185,8 @@ namespace PokeRoadie
             }
 
             var pokeStopList = Context.Settings.IncludeHotPokestops ?
-                fullPokestopList :
-                fullPokestopList.Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime());
+            fullPokestopList :
+            fullPokestopList.Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime());
 
             if (!CanVisitGyms)
                 pokeStopList = pokeStopList.Where(x => x.Type != FortType.Gym);
@@ -1216,9 +1216,9 @@ namespace PokeRoadie
 
             //wild pokemon
             var pokemons =
-                mapObjects.MapCells.SelectMany(i => i.CatchablePokemons)
-                .Where(x => !_recentEncounters.Contains(x.EncounterId))
-                .OrderBy(i => Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude, Context.Client.CurrentLongitude, i.Latitude, i.Longitude));
+            mapObjects.MapCells.SelectMany(i => i.CatchablePokemons)
+            .Where(x => !_recentEncounters.Contains(x.EncounterId))
+            .OrderBy(i => Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude, Context.Client.CurrentLongitude, i.Latitude, i.Longitude));
 
             //filter out not to catch list
             if (Context.Settings.UsePokemonToNotCatchList)
@@ -1374,7 +1374,7 @@ namespace PokeRoadie
                     await ProcessGym(pokeStop, mapObjects);
                 }
                 //if (pokestopCount == 0 && gymCount > 0)
-                //    await RandomHelper.RandomDelay(1000, 2000);
+                // await RandomHelper.RandomDelay(1000, 2000);
                 //else
                 //await RandomHelper.RandomDelay(50, 200);
             }
@@ -1494,11 +1494,11 @@ namespace PokeRoadie
                                         }
                                         //else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)
                                         //{
-                                        //    var figureThisShitOut = pokemon;
+                                        // var figureThisShitOut = pokemon;
                                         //}
                                         //else
                                         //{
-                                        //    Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
+                                        // Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
                                         //}
                                     }
                                 }
@@ -1515,11 +1515,11 @@ namespace PokeRoadie
                     }
                     //else if (fortDetails.Result == GetGymDetailsResponse.Types.Result.ErrorNotInRange)
                     //{
-                    //    attempts++;
-                    //    Logger.Write($"(GYM) Moving closer to {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
-                    //    var ToStart = await Context.Navigation.HumanLikeWalkingGetCloser(
-                    //        new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude, Context.Client.CurrentAltitude),
-                    //        Context.Settings.FlyingEnabled ? Context.Settings.FlyingSpeed : Context.Settings.MinSpeed, GetShortWalkingTask(), 0.20);
+                    // attempts++;
+                    // Logger.Write($"(GYM) Moving closer to {fortInfo.Name} - {fortDetails.Result}", LogLevel.None, ConsoleColor.Cyan);
+                    // var ToStart = await Context.Navigation.HumanLikeWalkingGetCloser(
+                    // new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude, Context.Client.CurrentAltitude),
+                    // Context.Settings.FlyingEnabled ? Context.Settings.FlyingSpeed : Context.Settings.MinSpeed, GetShortWalkingTask(), 0.20);
                     //}
                     else
                     {
@@ -1715,64 +1715,13 @@ namespace PokeRoadie
             {
                 if (Context.Settings.TransferPokemon && Context.Settings.TransferTrimFatCount > 0)
                 {
-                    Logger.Write($"Pokemon inventory full, trimming the fat...", LogLevel.Info);
-
-                    var query = (await Context.Inventory.GetPokemons()).Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Favorite == 0 && !Context.Settings.PokemonsNotToTransfer.Contains(x.PokemonId));
-
-                    //ordering
-                    Func<PokemonData, double> orderBy = null;
-
-                    switch (Context.Settings.TransferPriorityType)
-                    {
-                        case PriorityTypes.CP:
-                            orderBy = new Func<PokemonData, double>(x => x.Cp);
-                            break;
-                        case PriorityTypes.IV:
-                            orderBy = new Func<PokemonData, double>(x => x.GetPerfection());
-                            break;
-                        case PriorityTypes.LV:
-                            orderBy = new Func<PokemonData, double>(x => x.GetLevel());
-                            break;
-                        case PriorityTypes.V:
-                            orderBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
-                            break;
-                        default:
-                            break;
-                    }
-
-                    Func<PokemonData, double> thenBy = null;
-
-                    switch (Context.Settings.TransferPriorityType2)
-                    {
-                        case PriorityTypes.CP:
-                            thenBy = new Func<PokemonData, double>(x => x.Cp);
-                            break;
-                        case PriorityTypes.IV:
-                            thenBy = new Func<PokemonData, double>(x => x.GetPerfection());
-                            break;
-                        case PriorityTypes.LV:
-                            thenBy = new Func<PokemonData, double>(x => x.GetLevel());
-                            break;
-                        case PriorityTypes.V:
-                            thenBy = new Func<PokemonData, double>(x => Context.Utility.CalculatePokemonValue(x));
-                            break;
-                        default:
-                            break;
-                    }
-
-                    query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
-
-                    await TransferPokemon(query.Take(Context.Settings.TransferTrimFatCount).ToList());
-
+                    //trim the fat
+                    await TransferTrimTheFat();
                     //try again after trimming the fat
                     var encounter2 = await Context.Client.Encounter.EncounterPokemon(encounterId, spawnPointId);
 
                     if (encounter2.Status == EncounterResponse.Types.Status.EncounterSuccess)
                         await ProcessCatch(new EncounterData(location, encounterId, encounter2?.WildPokemon?.PokemonData, probability, spawnPointId, source));
-                }
-                else
-                {
-                    Logger.Write($"Pokemon inventory full. You should consider turning on TransferPokemon, and set a value for TransferTrimFatCount. This will prevent the inventory from filling up.", LogLevel.Warning);
                 }
             }
 
@@ -1989,12 +1938,12 @@ namespace PokeRoadie
                 if (encounter.Probability.HasValue)
                 {
                     var catchStatus = attemptCounter > 1
-                        ? $"{caughtPokemonResponse.Status} Attempt #{attemptCounter}"
-                        : $"{caughtPokemonResponse.Status}";
+                    ? $"{caughtPokemonResponse.Status} Attempt #{attemptCounter}"
+                    : $"{caughtPokemonResponse.Status}";
 
                     string receivedXP = caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess
-                        ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}"
-                        : $"";
+                    ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}"
+                    : $"";
 
                     Logger.Write($"({encounter.Source} {catchStatus.Replace("Catch", "")}) | {Context.Utility.GetMinStats(encounter.PokemonData)} | Chance: {(encounter.Probability.HasValue ? ((float)((int)(encounter.Probability * 100)) / 100).ToString() : "Unknown")} | with a {throwData.BallName}Ball {receivedXP}", LogLevel.None, ConsoleColor.Yellow);
 
@@ -2050,10 +1999,10 @@ namespace PokeRoadie
 
             //get result
             await Travel(
-                GetCurrentGeo(),
-                GetWaypointGeo(),
-                destination.Name
-                );
+            GetCurrentGeo(),
+            GetWaypointGeo(),
+            destination.Name
+            );
         }
 
         private async Task CheckDestinations()
@@ -2105,9 +2054,9 @@ namespace PokeRoadie
         {
             await Travel
             (
-                GetCurrentGeo(),
-                GetWaypointGeo()
-                , "waypoint center"
+            GetCurrentGeo(),
+            GetWaypointGeo()
+            , "waypoint center"
             );
         }
 
@@ -2125,29 +2074,29 @@ namespace PokeRoadie
 
                 //if (Context.Settings.DestinationsEnabled)
                 //{
-                //    //return back the the waypoint
-                //    Logger.Write($"Returning to the start.", LogLevel.Navigation);
-                //    await GotoCurrentWaypoint();
+                // //return back the the waypoint
+                // Logger.Write($"Returning to the start.", LogLevel.Navigation);
+                // await GotoCurrentWaypoint();
                 //}
                 //else
                 //{
-                //    if (travelHistory.Count > 4)
-                //    {
-                //        Logger.Write($"Returning to the start.", LogLevel.Navigation);
-                //        var geo = travelHistory[0];
-                //        travelHistory.Clear();
-                //        SetWaypoint(geo);
-                //        await GotoCurrentWaypoint();
-                //    }
-                //    else
-                //    {
-                //        var pokeStopList = await Context.Inventory.GetPokestops(false);
-                //        if (pokeStopList != null && pokeStopList.Count() > 5)
-                //        {
-                //            Logger.Write($"Set current location as new waypoint {pokeStopList.Count()}", LogLevel.Navigation);
-                //            SetWaypoint(GetCurrentGeo());
-                //        }
-                //    }
+                // if (travelHistory.Count > 4)
+                // {
+                // Logger.Write($"Returning to the start.", LogLevel.Navigation);
+                // var geo = travelHistory[0];
+                // travelHistory.Clear();
+                // SetWaypoint(geo);
+                // await GotoCurrentWaypoint();
+                // }
+                // else
+                // {
+                // var pokeStopList = await Context.Inventory.GetPokestops(false);
+                // if (pokeStopList != null && pokeStopList.Count() > 5)
+                // {
+                // Logger.Write($"Set current location as new waypoint {pokeStopList.Count()}", LogLevel.Navigation);
+                // SetWaypoint(GetCurrentGeo());
+                // }
+                // }
                 //}
                 //Logger.Write($"Reached the edge of the waypoint", LogLevel.Navigation);
 
@@ -2207,8 +2156,8 @@ namespace PokeRoadie
                 var maxRevive = items.Where(x => x.ItemId == ItemId.ItemMaxRevive).FirstOrDefault();
 
                 var totalCount =
-                    (revive == null ? 0 : revive.Count) +
-                    (maxRevive == null ? 0 : maxRevive.Count);
+                (revive == null ? 0 : revive.Count) +
+                (maxRevive == null ? 0 : maxRevive.Count);
 
                 //count check
                 if (totalCount == 0) return ItemId.ItemUnknown;
@@ -2235,10 +2184,10 @@ namespace PokeRoadie
                 var maxPotion = items.Where(x => x.ItemId == ItemId.ItemMaxPotion).FirstOrDefault();
 
                 var totalCount =
-                    (potion == null ? 0 : potion.Count) +
-                    (superPotion == null ? 0 : superPotion.Count) +
-                    (hyperPotion == null ? 0 : hyperPotion.Count) +
-                    (maxPotion == null ? 0 : maxPotion.Count);
+                (potion == null ? 0 : potion.Count) +
+                (superPotion == null ? 0 : superPotion.Count) +
+                (hyperPotion == null ? 0 : hyperPotion.Count) +
+                (maxPotion == null ? 0 : maxPotion.Count);
 
                 //count check
                 if (totalCount == 0) return ItemId.ItemUnknown;
@@ -2302,9 +2251,9 @@ namespace PokeRoadie
             var masterBalls = items.Where(x => x.ItemId == ItemId.ItemMasterBall && x.Count > 0).FirstOrDefault();
 
             var totalCount = (pokeBalls == null ? 0 : pokeBalls.Count) +
-                             (greatBalls == null ? 0 : greatBalls.Count) +
-                             (ultraBalls == null ? 0 : ultraBalls.Count) +
-                             (masterBalls == null ? 0 : masterBalls.Count);
+            (greatBalls == null ? 0 : greatBalls.Count) +
+            (ultraBalls == null ? 0 : ultraBalls.Count) +
+            (masterBalls == null ? 0 : masterBalls.Count);
 
             if (totalCount == 0) return ItemId.ItemUnknown;
 
@@ -2437,14 +2386,14 @@ namespace PokeRoadie
                 var pokemonV = Context.Utility.CalculatePokemonValue(pokemon);
 
                 if ((Context.Settings.ForceExcellentThrowOverCp > 0 && pokemon.Cp > Context.Settings.ForceExcellentThrowOverCp) ||
-                    (Context.Settings.ForceExcellentThrowOverIV > 0 && pokemonIv > Context.Settings.ForceExcellentThrowOverIV) ||
-                    (Context.Settings.ForceExcellentThrowOverV > 0 && pokemonV > Context.Settings.ForceExcellentThrowOverV))
+                (Context.Settings.ForceExcellentThrowOverIV > 0 && pokemonIv > Context.Settings.ForceExcellentThrowOverIV) ||
+                (Context.Settings.ForceExcellentThrowOverV > 0 && pokemonV > Context.Settings.ForceExcellentThrowOverV))
                 {
                     throwData.NormalizedRecticleSize = Random.NextDouble() * (1.95 - 1.7) + 1.7;
                 }
                 else if ((Context.Settings.ForceGreatThrowOverCp > 0 && pokemon.Cp >= Context.Settings.ForceGreatThrowOverCp) ||
-                         (Context.Settings.ForceGreatThrowOverIV > 0 && pokemonIv >= Context.Settings.ForceGreatThrowOverIV) ||
-                         (Context.Settings.ForceGreatThrowOverV > 0 && pokemonV >= Context.Settings.ForceGreatThrowOverV))
+                (Context.Settings.ForceGreatThrowOverIV > 0 && pokemonIv >= Context.Settings.ForceGreatThrowOverIV) ||
+                (Context.Settings.ForceGreatThrowOverV > 0 && pokemonV >= Context.Settings.ForceGreatThrowOverV))
                 {
                     throwData.NormalizedRecticleSize = Random.NextDouble() * (1.7 - 1.3) + 1.3;
                     throwData.HitText = "Great";
@@ -2452,8 +2401,8 @@ namespace PokeRoadie
                 else
                 {
                     var regularThrow = 100 - (Context.Settings.ExcellentThrowChance +
-                                              Context.Settings.GreatThrowChance +
-                                              Context.Settings.NiceThrowChance);
+                    Context.Settings.GreatThrowChance +
+                    Context.Settings.NiceThrowChance);
                     var rnd = Random.Next(1, 101);
 
                     if (rnd <= regularThrow)
@@ -2467,8 +2416,8 @@ namespace PokeRoadie
                         throwData.HitText = "Nice";
                     }
                     else if (rnd <=
-                             regularThrow + Context.Settings.NiceThrowChance +
-                             Context.Settings.GreatThrowChance)
+                    regularThrow + Context.Settings.NiceThrowChance +
+                    Context.Settings.GreatThrowChance)
                     {
                         throwData.NormalizedRecticleSize = Random.NextDouble() * (1.7 - 1.3) + 1.3;
                         throwData.HitText = "Great";
@@ -2496,10 +2445,10 @@ namespace PokeRoadie
 
             var items = await Context.Inventory.GetItems();
             var berries = items.Where(i => (i.ItemId == ItemId.ItemRazzBerry
-                                        || i.ItemId == ItemId.ItemBlukBerry
-                                        || i.ItemId == ItemId.ItemNanabBerry
-                                        || i.ItemId == ItemId.ItemWeparBerry
-                                        || i.ItemId == ItemId.ItemPinapBerry) && i.Count > 0).GroupBy(i => (i.ItemId)).ToList();
+            || i.ItemId == ItemId.ItemBlukBerry
+            || i.ItemId == ItemId.ItemNanabBerry
+            || i.ItemId == ItemId.ItemWeparBerry
+            || i.ItemId == ItemId.ItemPinapBerry) && i.Count > 0).GroupBy(i => (i.ItemId)).ToList();
 
             if (berries.Count == 0 || pokemonCp <= 350) return ItemId.ItemUnknown;
 
@@ -2536,10 +2485,10 @@ namespace PokeRoadie
 
             var items = await Context.Inventory.GetItems();
             var berries = items.Where(i => (i.ItemId == ItemId.ItemRazzBerry
-                                        || i.ItemId == ItemId.ItemBlukBerry
-                                        || i.ItemId == ItemId.ItemNanabBerry
-                                        || i.ItemId == ItemId.ItemWeparBerry
-                                        || i.ItemId == ItemId.ItemPinapBerry) && i.Count > 0).GroupBy(i => (i.ItemId)).ToList();
+            || i.ItemId == ItemId.ItemBlukBerry
+            || i.ItemId == ItemId.ItemNanabBerry
+            || i.ItemId == ItemId.ItemWeparBerry
+            || i.ItemId == ItemId.ItemPinapBerry) && i.Count > 0).GroupBy(i => (i.ItemId)).ToList();
 
             if (berries.Count == 0 || pokemonCp <= 350) return ItemId.ItemUnknown;
 
@@ -2824,7 +2773,7 @@ namespace PokeRoadie
 
         private async Task TransferTrimTheFat()
         {
-            if (!Context.Settings.TransferPokemon || Context.Settings.TransferTrimFatCount == 0)
+            if (Context.Settings.TransferPokemon && Context.Settings.TransferTrimFatCount > 0)
             {
                 await PokeRoadieInventory.GetCachedInventory(Context.Client);
                 Logger.Write($"Pokemon inventory full, trimming the fat by {Context.Settings.TransferTrimFatCount}:", LogLevel.Info);
@@ -2876,6 +2825,10 @@ namespace PokeRoadie
 
                 await TransferPokemon(query.Take(Context.Settings.TransferTrimFatCount).ToList());
             }
+            else
+            {
+                Logger.Write($"Pokemon inventory full. You should consider turning on TransferPokemon, and set a value for TransferTrimFatCount. This will prevent the inventory from filling up.", LogLevel.Warning);
+            }
         }
 
         #endregion
@@ -2920,7 +2873,7 @@ namespace PokeRoadie
                 }
 
                 if (pokemon.GetLevel() - Context.Statistics.Currentlevel >= 2) continue;//Checking is pokemon level is at max that user's level can level up to.
-                //Checking is Pokemon is a duplicate. Do not want to power up duplicates!
+                                                                                        //Checking is Pokemon is a duplicate. Do not want to power up duplicates!
                 if (finalList.FindAll(x => x.PokemonId == pokemon.PokemonId).Count > 0) continue;
                 finalList.Add(pokemon);
             }
@@ -3090,22 +3043,22 @@ namespace PokeRoadie
         {
             //if (Context.Settings.PickupDailyBonuses)
             //{
-            //    if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
-            //    {
-            //        var response = await Context.Inventory.CollectDailyBonus();
-            //        if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
-            //        {
-            //            Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
-            //        }
-            //        else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
-            //        {
-            //            Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-            //        }
-            //        else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
-            //        {
-            //            Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
-            //        }
-            //    }
+            // if (_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs < DateTime.UtcNow.ToUnixTime())
+            // {
+            // var response = await Context.Inventory.CollectDailyBonus();
+            // if (response.Result == CollectDailyBonusResponse.Types.Result.Success)
+            // {
+            // Logger.Write($"(BONUS) Daily Bonus Collected!", LogLevel.None, ConsoleColor.Green);
+            // }
+            // else if (response.Result == CollectDailyBonusResponse.Types.Result.TooSoon)
+            // {
+            // Logger.Write($"Attempted to collect Daily Bonus too soon! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+            // }
+            // else if (response.Result == CollectDailyBonusResponse.Types.Result.Failure || response.Result == CollectDailyBonusResponse.Types.Result.Unset)
+            // {
+            // Logger.Write($"Failure to collect Daily Bonus! Timestamp is {_playerProfile.PlayerData.DailyBonus.NextCollectedTimestampMs}", LogLevel.Error);
+            // }
+            // }
             //}
 
             if (Context.Settings.PickupDailyDefenderBonuses)
@@ -3280,14 +3233,14 @@ namespace PokeRoadie
             await PokeRoadieInventory.GetCachedInventory(Context.Client);
 
             var incubators = (await Context.Inventory.GetEggIncubators())
-                .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-                .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
-                .ToList();
+            .Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+            .OrderByDescending(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited)
+            .ToList();
 
             var unusedEggs = (await Context.Inventory.GetEggs())
-                .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
-                .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
-                .ToList();
+            .Where(x => string.IsNullOrEmpty(x.EggIncubatorId))
+            .OrderBy(x => x.EggKmWalkedTarget - x.EggKmWalkedStart)
+            .ToList();
 
             var newRememberedIncubators = new List<IncubatorData>();
 
@@ -3297,8 +3250,8 @@ namespace PokeRoadie
                 {
                     // Unlimited incubators prefer short eggs, limited incubators prefer long eggs
                     var egg = incubator.ItemId == ItemId.ItemIncubatorBasicUnlimited && incubators.Count > 1
-                        ? unusedEggs.FirstOrDefault()
-                        : unusedEggs.LastOrDefault();
+                    ? unusedEggs.FirstOrDefault()
+                    : unusedEggs.LastOrDefault();
 
                     if (egg == null)
                         continue;
