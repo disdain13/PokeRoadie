@@ -30,7 +30,6 @@ namespace PokeRoadie
             Session = new Session(this);
             ApiFailureStrategy = new ApiFailureStrategy(this);
             Client = new PokeRoadieClient(this);
-            ApiFailureStrategy.Client = Client;
             Inventory = new PokeRoadieInventory(this);
             Statistics = new Statistics(this);
             Navigation = new Navigation(this);

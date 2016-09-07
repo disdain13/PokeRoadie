@@ -162,7 +162,6 @@ namespace PokeRoadie
                 Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
                 Context.Settings.WaypointLatitude, Context.Settings.WaypointLongitude);
                 Logger.Write($"{Math.Round(distanceFromStart, 1)} meters from current waypoint ({Context.Settings.MaxDistance} meters max)", LogLevel.Debug);
-
             }
 
             var nextWaypointDistance = speedInMetersPerSecond;

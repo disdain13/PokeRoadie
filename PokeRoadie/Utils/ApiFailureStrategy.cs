@@ -23,6 +23,7 @@ using POGOProtos.Map.Fort;
 using POGOProtos.Map.Pokemon;
 
 using PokeRoadie.Extensions;
+using PokemonGo.RocketAPI.Rpc;
 
 #endregion
 
@@ -31,16 +32,21 @@ namespace PokeRoadie.Utils
     public class ApiFailureStrategy : IApiFailureStrategy
     {
         private int _retryCount;
-        public PokeRoadieClient Client { get; set; }
+        public Context Context { get; private set; }
 
         public ApiFailureStrategy(Context context)
         {
+            Context = context;
         }
 
         public async Task<ApiOperation> HandleApiFailure()
         {
             if (_retryCount == 11)
+            {
+
                 return ApiOperation.Abort;
+            }
+                
 
             //I do not like hard delays
             await Task.Delay(1000);
@@ -49,10 +55,13 @@ namespace PokeRoadie.Utils
 
             if (_retryCount % 5 == 0)
             {
-                DoLogin();
+                Logger.Write($"The ApiOperation call failed {_retryCount} times, attempting re-authentication...", LogLevel.Error);
+                return (await DoLogin(_retryCount));
             }
-
-            return ApiOperation.Retry;
+            else
+            {
+                return ApiOperation.Retry;
+            }
         }
 
         public void HandleApiSuccess()
@@ -60,37 +69,53 @@ namespace PokeRoadie.Utils
             _retryCount = 0;
         }
 
-        private async void DoLogin()
+        private async Task<ApiOperation> DoLogin(int retryCount)
         {
-            try
+            //wait a second
+            await Task.Delay(1000);
+            //atempt re-auth
+            var loginResponse = await Context.Client.Login.AttemptLogin();
+            //if success return
+            if (loginResponse.Result == LoginResponseTypes.Success)
             {
-                await Client.Login.DoLogin();
+                Logger.Append("Success!");
+                return ApiOperation.Retry;
             }
-            catch (PtcOfflineException)
+            //log
+            Logger.Append("Failed!");
+            Logger.Write($"Re-Authentication failed : {loginResponse.Result}{(loginResponse.Message == null ? "" : " - " + loginResponse.Message)}", LogLevel.Error);
+            //set context for another login attempt
+            Context.Logic.NeedsNewLogin = true;
+            //determine failure response
+            var delay = 5000;
+            var exitCode = 0;
+            switch (loginResponse.Result)
             {
-                Logger.Write("(API ERROR) The Ptc servers are currently offline. Waiting 30 seconds... ", LogLevel.None, ConsoleColor.Red);
-                await Task.Delay(20000);
+                case LoginResponseTypes.GoogleOffline:
+                    delay = 30000;
+                    break;
+                case LoginResponseTypes.PtcOffline:
+                    delay = 30000;
+                    break;
+                case LoginResponseTypes.GoogleTwoStepAuthError:
+                    exitCode = 2;
+                    break;
+                case LoginResponseTypes.AccountNotVerified:
+                    exitCode = 3;
+                    break;
+                default:
+                    break;
             }
-            catch (AccessTokenExpiredException)
-            {
-                Logger.Write("(API ERROR) Access Token Expired. Waiting a couple seconds... ", LogLevel.None, ConsoleColor.Red);
-                await Task.Delay(2000);
-            }
-            catch (Exception ex) when (ex is InvalidResponseException || ex is TaskCanceledException)
-            {
-                Logger.Write("(API ERROR) They don't like us pushing it... ", LogLevel.None, ConsoleColor.Red);
-                await Task.Delay(350);
-            }
-            catch (AggregateException ae)
-            {
-                var fe = ae.Flatten()?.InnerException;
-                Logger.Write($"(API ERROR) Aggregate Exception{(fe != null ? " - " + fe.ToString() : "")}", LogLevel.None, ConsoleColor.Red);
-                await Task.Delay(1000);
-            }
-            catch (Exception ex)
-            {
-                throw ex.InnerException;
-            }
+
+            //if we have an exit code, close the application
+            if (exitCode > 0) await Context.Logic.CloseApplication(exitCode);
+
+            //wait for delay if needed
+            if (delay > 0) await Task.Delay(delay);
+
+            //return abort
+            return (retryCount > 5) ? ApiOperation.Abort : ApiOperation.Retry;
+
         }
         public void HandleApiSuccess(RequestEnvelope request, ResponseEnvelope response)
         {
@@ -118,29 +143,14 @@ namespace PokeRoadie.Utils
             if (_retryCount == 11)
                 return ApiOperation.Abort;
 
-            await Task.Delay(500);
+            await Task.Delay(1000);
             _retryCount++;
 
             if (_retryCount % 5 == 0)
             {
-                try
-                {
-                    DoLogin();
-                }
-                catch (PtcOfflineException)
-                {
-                    await Task.Delay(20000);
-                }
-                catch (AccessTokenExpiredException)
-                {
-                    await Task.Delay(2000);
-                }
-                catch (Exception ex) when (ex is InvalidResponseException || ex is TaskCanceledException)
-                {
-                    await Task.Delay(1000);
-                }
+                Logger.Write($"The API request/response call failed {_retryCount} times, attempting re-authentication...", LogLevel.Error);
+                return (await DoLogin(_retryCount));
             }
-
             return ApiOperation.Retry;
         }
     }

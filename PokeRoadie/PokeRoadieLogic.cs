@@ -183,16 +183,15 @@ namespace PokeRoadie
             isRunning = false;
         }
 
-        private async Task CloseApplication(int exitCode)
+        public async Task CloseApplication(int exitCode)
         {
             Logger.Write($"PokeRoadie will be closed in 15 seconds...", LogLevel.Warning);
-            for (int i = 14; i > 0; i--)
+            for (int i = 0; i < 15; i++)
             {
                 await Task.Delay(1000);
                 Logger.Append(".");
             }
-            await Task.Delay(15000);
-            System.Environment.Exit(exitCode);
+            Program.ExitApplication(exitCode);
         }
 
         #endregion
@@ -1348,21 +1347,26 @@ namespace PokeRoadie
                 await Context.Session.Check();
                 if (NeedsNewLogin) break;
 
-                //check destimations
-                if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
-                    break;
-
-                //check starting distance
-                if (Context.Settings.MaxDistance > 0)
+                //if we are not currently traveling long distance
+                if (!inTravel)
                 {
-                    var wayPointGeo = GetWaypointGeo();
-                    var distanceFromStart = Navigation.CalculateDistanceInMeters(
-                    Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
-                    wayPointGeo.Latitude, wayPointGeo.Longitude);
-                    //break if too far from starting point
-                    if (distanceFromStart >= Context.Settings.MaxDistance)
+                    //check destinations
+                    if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
                         break;
+
+                    //check starting distance
+                    if (Context.Settings.MaxDistance > 0)
+                    {
+                        var wayPointGeo = GetWaypointGeo();
+                        var distanceFromStart = Navigation.CalculateDistanceInMeters(
+                        Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
+                        wayPointGeo.Latitude, wayPointGeo.Longitude);
+                        //break if too far from starting point
+                        if (distanceFromStart >= Context.Settings.MaxDistance)
+                            break;
+                    }
                 }
+
 
 
                 //write stats and export
