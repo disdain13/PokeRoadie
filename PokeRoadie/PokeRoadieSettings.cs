@@ -39,7 +39,8 @@ namespace PokeRoadie
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
-        private SessionData _session = null;
+        [XmlIgnore()]
+        public DateTime? DestinationEndDate { get; set; }
 
         #endregion
         #region " General Properties "
@@ -226,27 +227,6 @@ namespace PokeRoadie
         public virtual bool UseProxyAuthentication { get; set; }
         public virtual string UseProxyUsername { get; set; }
         public virtual string UseProxyPassword { get; set; }
-
-        #endregion
-        #region " Session/State Properties "
-
-        [XmlIgnore()]
-        public DateTime? DestinationEndDate { get; set; }
-
-        [XmlIgnore()]
-        public SessionData Session
-        {
-            get
-            {
-                if (_session != null) return _session;
-                _session = LoadSession(Path.Combine(temp_path, "Session.xml"));
-                return _session;
-            }
-            set
-            {
-                _session = value;
-            }
-        }
 
         #endregion
         #region " Collection Properties "
@@ -678,67 +658,7 @@ namespace PokeRoadie
             catch (Exception e)
             {
                 Logger.Write("Could not save settings to file. Error: " + e.ToString(), LogLevel.Error);
-            }
-            SaveSession(Session);
-        }
-
-        public bool SaveSession(SessionData session)
-        {
-            if (!Directory.Exists(temp_path)) Directory.CreateDirectory(temp_path);
-            string fileName = "Session.xml";
-            string filePath = Path.Combine(temp_path, fileName);
-            try
-            {
-                lock (sessionRoot)
-                {
-                    if (File.Exists(filePath)) File.Delete(filePath);
-                    using (FileStream s = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
-                        x.Serialize(s, session);
-                        s.Close();
-                        return true;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Write($"Could not save {filePath}. Error: " + e.ToString(), LogLevel.Error);
-            }
-            return false;
-        }
-
-        public SessionData LoadSession(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    lock (sessionRoot)
-                    {
-                        if (!Directory.Exists(temp_path)) Directory.CreateDirectory(temp_path);
-                        using (FileStream s = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                        {
-                            var x = new System.Xml.Serialization.XmlSerializer(typeof(SessionData));
-                            var session = (SessionData)x.Deserialize(s);
-                            s.Close();
-                            return session;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write($"The {filePath} file could not be loaded, a new session will be created. {ex.Message} {ex.ToString()}", LogLevel.Warning);
-                }
-            }
-            return NewSession();
-        }
-
-        public SessionData NewSession()
-        {
-            var session = new SessionData();
-            session.StartDate = DateTime.Now;
-            return session;
+            } 
         }
 
         public PokeRoadieSettings Load()

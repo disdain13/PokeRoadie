@@ -55,11 +55,11 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="POGOProtos, Version=2016.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="POGOProtos, Version=2016.9.5.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\components\POGOProtos.dll</HintPath>
     </Reference>
-    <Reference Include="Pokemon.Go.Rocket.API, Version=2016.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Pokemon.Go.Rocket.API, Version=2016.9.5.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\components\Pokemon.Go.Rocket.API.dll</HintPath>
     </Reference>
