@@ -150,11 +150,21 @@ namespace PokeRoadie
             {
                 Logger.Write($"Distance to target location: {distanceToTarget:0.##} meters. Will take {StringUtils.GetSecondsDisplay(seconds)} {StringUtils.GetTravelActionString(walkingSpeedInKilometersPerHour)} at {walkingSpeedInKilometersPerHour}kmh", LogLevel.Navigation);
             }
+
+            //get next bearing
             var nextWaypointBearing = sourceLocation.DegreeBearing(targetLocation);
 
+            //log debug messages
             if (Context.Client.Settings.ShowDebugMessages)
+            {
                 Logger.Write($"From {sourceLocation} to {targetLocation} bearing {Math.Round(nextWaypointBearing,1)}", LogLevel.Debug);
-           
+                var distanceFromStart = Navigation.CalculateDistanceInMeters(
+                Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
+                Context.Settings.WaypointLatitude, Context.Settings.WaypointLongitude);
+                Logger.Write($"{Math.Round(distanceFromStart, 1)} meters from current waypoint ({Context.Settings.MaxDistance} meters max)", LogLevel.Debug);
+
+            }
+
             var nextWaypointDistance = speedInMetersPerSecond;
             var waypoint = sourceLocation.CreateWaypoint(nextWaypointDistance, nextWaypointBearing);
 

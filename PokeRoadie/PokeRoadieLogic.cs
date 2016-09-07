@@ -152,7 +152,7 @@ namespace PokeRoadie
                 //if (Context.Settings.ShowDebugMessages) Logger.Write("Map objects pull made from server", LogLevel.Debug);
                 if (objects != null && objects.Item1 != null)
                 {
-                    mapsTimer = DateTime.Now.AddMilliseconds(1500);
+                    mapsTimer = DateTime.Now.AddMilliseconds(Random.Next(1600, 2300));
                     _map = objects.Item1;
 
                 }
@@ -218,12 +218,25 @@ namespace PokeRoadie
                 var currentLevelInfos = await Context.Statistics._getcurrentLevelInfos();
                 //get all ordered by id, then cp
                 var allPokemon = (await Context.Inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
+                var deployedPokemon = allPokemon.Where(x => !string.IsNullOrEmpty(x.DeployedFortId)).ToList();
 
                 Logger.Write("====== User Info ======", LogLevel.None, ConsoleColor.Yellow);
                 Logger.Write($"Name: {playerName}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Team: {_playerProfile.PlayerData.Team}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Level: {currentLevelInfos}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Pokemon: {allPokemon.Count}", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== Deployment Summary ======", LogLevel.None, ConsoleColor.Yellow);
+                Logger.Write($"Deployed: {deployedPokemon.Count}", LogLevel.None, ConsoleColor.White);
+                Logger.Write($"Min Needed: {Context.Settings.MinGymsBeforeBonusPickup}", LogLevel.None, ConsoleColor.White);
+                if (_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs < DateTime.UtcNow.ToUnixTime())
+                {
+                    Logger.Write($"Time to Bonus: Available Now!", LogLevel.None, ConsoleColor.White);
+                }
+                else
+                {
+                    Logger.Write($"Time to Bonus: {new TimeSpan(_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs - DateTime.UtcNow.ToUnixTime())}", LogLevel.None, ConsoleColor.White);
+                }
+
                 if (Client.Proxy != null)
                 {
                     var host = Client.Proxy.Address.ToString();
@@ -398,6 +411,18 @@ namespace PokeRoadie
                 }
                 
                 
+
+                if (deployedPokemon.Count > 0)
+                {
+                    Logger.Write($"====== Deployed To Gym ({deployedPokemon.Count})======", LogLevel.None, ConsoleColor.Yellow);
+                    foreach (var pokemon in deployedPokemon.OrderBy(x => x.PokemonId))
+                    {
+                        Logger.Write(Context.Utility.GetStats(pokemon), LogLevel.None, ConsoleColor.White);
+                    }
+                }
+
+
+
                 if (Context.Settings.DisplayAllPokemonInLog)
                 {
                     Logger.Write("====== Full List ======", LogLevel.None, ConsoleColor.Yellow);
@@ -1694,7 +1719,7 @@ namespace PokeRoadie
 
             if (encounter.Status == EncounterResponse.Types.Status.EncounterSuccess)
             {
-                
+
                 await ProcessCatch(new EncounterData(location, encounterId, encounter?.WildPokemon?.PokemonData, probability, spawnPointId, source));
             }
             else if (encounter.Status == EncounterResponse.Types.Status.PokemonInventoryFull)
@@ -1747,7 +1772,7 @@ namespace PokeRoadie
                     query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
 
                     await TransferPokemon(query.Take(Context.Settings.TransferTrimFatCount).ToList());
-                    
+
                     //try again after trimming the fat
                     var encounter2 = await Context.Client.Encounter.EncounterPokemon(encounterId, spawnPointId);
                     if (encounter2.Status == EncounterResponse.Types.Status.EncounterSuccess)
@@ -1769,6 +1794,12 @@ namespace PokeRoadie
                     Logger.Write("(SOFT BAN) Detected a soft ban, let's chill out a moment.", LogLevel.None, ConsoleColor.DarkRed);
                 }
                 fleeEndTime = DateTime.Now;
+            }
+            else if (encounter.Status == EncounterResponse.Types.Status.EncounterClosed)
+            {
+                //do nothing, the encounter closed before we got to it.
+                if (encounter != null && encounter.WildPokemon != null && encounter.WildPokemon.PokemonData != null)
+                Logger.Write($"Encounter with {Context.Utility.GetMinStats(encounter.WildPokemon.PokemonData)} was closed before our capture attempt was made.", LogLevel.Pokemon);
             }
             else Logger.Write($"Encounter problem: {encounter.Status}", LogLevel.Warning);
 

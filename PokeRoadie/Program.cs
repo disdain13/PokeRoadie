@@ -68,12 +68,7 @@ namespace PokeRoadie
 
             //unhandled exception...uh.. handler? does that make sense?
             AppDomain.CurrentDomain.UnhandledException
-                += delegate (object sender, UnhandledExceptionEventArgs eargs)
-                {
-                    Exception exception = (Exception)eargs.ExceptionObject;
-                    System.Console.WriteLine("Unhandled Exception: " + exception);
-                    //Environment.Exit(1);
-                };
+                += HandleException;
 
             //set validation callback 
             ServicePointManager.ServerCertificateValidationCallback = Validator;
@@ -81,7 +76,12 @@ namespace PokeRoadie
             //configure logging
             Logger.SetLogger();
 
+            Start();
 
+        }
+
+        private static void Start()
+        {
             Task.Run(() =>
             {
                 try
@@ -95,7 +95,19 @@ namespace PokeRoadie
             });
             System.Console.ReadLine();
         }
-
+        private static void HandleException(object sender, UnhandledExceptionEventArgs eargs)
+        {
+            Exception exception = (Exception)eargs.ExceptionObject;
+            try
+            {
+                Logger.Write("Unhandled Exception: " + exception, LogLevel.Error);
+            }
+            catch
+            {
+                System.Console.WriteLine("Unhandled Exception: " + exception, LogLevel.Error);
+            }
+            Start();
+        }
         public static bool Validator(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
 
 
