@@ -146,7 +146,7 @@ namespace PokeRoadie
                     var s = Context.Session.Create();
                     s.PlayerName = Context.Settings.Username;
                     Context.Session.Current = s;
-                    if (!isStart) Context.Logic.NeedsNewLogin = true;
+                    if (!isStart) PokeRoadieLogic.NeedsNewLogin = true;
                 }
                 return;
             }
@@ -157,7 +157,7 @@ namespace PokeRoadie
                 var s = Context.Session.Create();
                 s.PlayerName = Context.Settings.Username;
                 Context.Session.Current = s;
-                if (!isStart) Context.Logic.NeedsNewLogin = true;
+                if (!isStart) PokeRoadieLogic.NeedsNewLogin = true;
                 return;
             }
 
@@ -171,7 +171,7 @@ namespace PokeRoadie
                 var s = Context.Session.Create();
                 s.PlayerName = Context.Settings.Username;
                 Context.Session.Current = s;
-                if (!isStart) Context.Logic.NeedsNewLogin = true;
+                if (!isStart) PokeRoadieLogic.NeedsNewLogin = true;
                 return;
             }
         }

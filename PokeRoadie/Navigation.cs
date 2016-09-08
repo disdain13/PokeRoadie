@@ -209,7 +209,7 @@ namespace PokeRoadie
                     await functionExecutedWhileWalking();// look for pokemon
 
                 //check for needs new login
-                if (Context.Logic.NeedsNewLogin) return result;
+                if (PokeRoadieLogic.NeedsNewLogin) return result;
 
                 await Task.Delay(500);
             } while (sourceLocation.CalculateDistanceInMeters(targetLocation) >= dynamicLandingDistance);

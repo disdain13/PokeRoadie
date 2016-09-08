@@ -75,9 +75,9 @@ namespace PokeRoadie.Utils
             //wait a second
             await Task.Delay(1000);
             //set context for another login attempt
-            Context.Logic.NeedsNewLogin = true;
+            PokeRoadieLogic.NeedsNewLogin = true;
             //disable long distance travel flag
-            Context.Logic.IsTravelingLongDistance = false;
+            PokeRoadieLogic.IsTravelingLongDistance = false;
             //abort more attempts
             return ApiOperation.Abort;
 
