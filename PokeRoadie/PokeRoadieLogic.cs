@@ -265,10 +265,57 @@ namespace PokeRoadie
 
                 var items = await Context.Inventory.GetItems();
                 Logger.Write($"====== Items ({items.Select(x => x.Count).Sum()}) ======", LogLevel.None, ConsoleColor.Yellow);
-                foreach (var item in items)
-                {
-                    Logger.Write($"{(item.ItemId).ToString().Replace("Item", "")} x {item.Count}", LogLevel.None, ConsoleColor.White);
-                }
+                var pokeBalls = items.Where(x => x.ItemId == ItemId.ItemPokeBall).FirstOrDefault();
+                var pokeBallsCount = pokeBalls == null ? 0 : pokeBalls.Count;
+                var greatBalls = items.Where(x => x.ItemId == ItemId.ItemGreatBall).FirstOrDefault();
+                var greatBallsCount = greatBalls == null ? 0 : pokeBalls.Count;
+                var ultraBalls = items.Where(x => x.ItemId == ItemId.ItemUltraBall).FirstOrDefault();
+                var ultraBallsCount = ultraBalls == null ? 0 : pokeBalls.Count;
+                var masterBalls = items.Where(x => x.ItemId == ItemId.ItemMasterBall).FirstOrDefault();
+                var masterBallsCount = masterBalls == null ? 0 : pokeBalls.Count;
+                var potions = items.Where(x => x.ItemId == ItemId.ItemPotion).FirstOrDefault();
+                var potionsCount = potions == null ? 0 : potions.Count;
+                var superPotions = items.Where(x => x.ItemId == ItemId.ItemSuperPotion).FirstOrDefault();
+                var superPotionsCount = superPotions == null ? 0 : superPotions.Count;
+                var hyperPotions = items.Where(x => x.ItemId == ItemId.ItemHyperPotion).FirstOrDefault();
+                var hyperPotionsCount = hyperPotions == null ? 0 : hyperPotions.Count;
+                var maxPotions = items.Where(x => x.ItemId == ItemId.ItemMaxPotion).FirstOrDefault();
+                var maxPotionsCount = maxPotions == null ? 0 : maxPotions.Count;
+                var revives = items.Where(x => x.ItemId == ItemId.ItemRevive).FirstOrDefault();
+                var revivesCount = revives == null ? 0 : revives.Count;
+                var maxRevives = items.Where(x => x.ItemId == ItemId.ItemMaxRevive).FirstOrDefault();
+                var maxRevivesCount = maxRevives == null ? 0 : maxRevives.Count;
+                var luckyEggs = items.Where(x => x.ItemId == ItemId.ItemLuckyEgg).FirstOrDefault();
+                var luckyEggsCount = luckyEggs == null ? 0 : luckyEggs.Count;
+                var incenseOrdinarys = items.Where(x => x.ItemId == ItemId.ItemIncenseOrdinary).FirstOrDefault();
+                var incenseOrdinarysCount = incenseOrdinarys == null ? 0 : incenseOrdinarys.Count;
+                //var incenseSpicys = items.Where(x => x.ItemId == ItemId.ItemIncenseSpicy).FirstOrDefault();
+                //var incenseSpicysCount = incenseSpicys == null ? 0 : incenseSpicys.Count;
+                //var incenseCools = items.Where(x => x.ItemId == ItemId.ItemIncenseCool).FirstOrDefault();
+                //var incenseCoolsCount = incenseCools == null ? 0 : incenseCools.Count;
+                //var incenseFlorals = items.Where(x => x.ItemId == ItemId.ItemIncenseFloral).FirstOrDefault();
+                //var incenseFloralsCount = incenseFlorals == null ? 0 : incenseFlorals.Count;
+                var troyDisks = items.Where(x => x.ItemId == ItemId.ItemTroyDisk).FirstOrDefault();
+                var troyDisksCount = troyDisks == null ? 0 : troyDisks.Count;
+                var razzBerries = items.Where(x => x.ItemId == ItemId.ItemRazzBerry).FirstOrDefault();
+                var razzBerriesCount = razzBerries == null ? 0 : razzBerries.Count;
+                //var blukBerries = items.Where(x => x.ItemId == ItemId.ItemBlukBerry).FirstOrDefault();
+                //var blukBerriesCount = blukBerries == null ? 0 : blukBerries.Count;
+                //var nanabBerries = items.Where(x => x.ItemId == ItemId.ItemNanabBerry).FirstOrDefault();
+                //var nanabBerriesCount = nanabBerries == null ? 0 : nanabBerries.Count;
+                //var weparBerries = items.Where(x => x.ItemId == ItemId.ItemWeparBerry).FirstOrDefault();
+                //var weparBerriesCount = weparBerries == null ? 0 : weparBerries.Count;
+                //var pinapBerries = items.Where(x => x.ItemId == ItemId.ItemPinapBerry).FirstOrDefault();
+                //var pinapBerriesCount = pinapBerries == null ? 0 : pinapBerries.Count;
+                var incubatorBasicUnlimiteds = items.Where(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited).FirstOrDefault();
+                var incubatorBasicUnlimitedsCount = incubatorBasicUnlimiteds == null ? 0 : incubatorBasicUnlimiteds.Count;
+                var incubatorBasics = items.Where(x => x.ItemId == ItemId.ItemIncubatorBasic).FirstOrDefault();
+                var incubatorBasicsCount = incubatorBasics == null ? 0 : incubatorBasics.Count;
+                Logger.Write($"{"Balls:".PadRight(11)} Poke x {pokeBallsCount} | Great x {greatBallsCount} | Ultra x {ultraBallsCount} | Master x {masterBallsCount}".Replace("Item", ""), LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{"Potions:".PadRight(11)} Potion x {potionsCount} | Super x {superPotionsCount} | Hyper x {hyperPotionsCount} | Max x {maxPotionsCount}".Replace("Item", ""), LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{"Revives:".PadRight(11)} Revive x {revivesCount} | Max x {maxRevivesCount}".Replace("Item", ""), LogLevel.None, ConsoleColor.White);
+                Logger.Write($"{"Power-ups:".PadRight(11)} Lucky Egg x {luckyEggsCount} | Incense x {incenseOrdinarysCount} | Lure x {troyDisksCount} | Berry x {razzBerriesCount}".Replace("Item", ""), LogLevel.None, ConsoleColor.White);
+                Logger.Write($"Incubators: Unlimited x {incubatorBasicUnlimitedsCount} | Basic x {incubatorBasicsCount}", LogLevel.None, ConsoleColor.White);
 
                 if (!hasDisplayedConfigSettings)
                 {
