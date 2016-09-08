@@ -133,8 +133,8 @@ namespace PokeRoadie
         private int locationAttemptCount = 0;
         private List<TutorialState> tutorialAttempts = new List<TutorialState>();
         private List<ulong> _recentEncounters = new List<ulong>();
-        public volatile bool NeedsNewLogin = false;
-        public volatile bool IsTravelingLongDistance;
+        public static volatile bool NeedsNewLogin = false;
+        public static volatile bool IsTravelingLongDistance;
 
         #endregion
         #region " Properties "
