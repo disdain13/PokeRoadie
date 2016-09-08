@@ -133,12 +133,12 @@ namespace PokeRoadie
         private int locationAttemptCount = 0;
         private List<TutorialState> tutorialAttempts = new List<TutorialState>();
         private List<ulong> _recentEncounters = new List<ulong>();
-        public bool NeedsNewLogin { get; set; } = false;
+        public volatile bool NeedsNewLogin = false;
+        public volatile bool IsTravelingLongDistance;
 
         #endregion
         #region " Properties "
         public Context Context { get; set; }
-        public bool IsTravelingLongDistance { get; set; }
         public bool CanCatch { get { return Context.Settings.CatchPokemon && Context.Session.Current.CatchEnabled && !softBan && Context.Navigation.LastKnownSpeed <= Context.Settings.MaxCatchSpeed && noWorkTimer <= DateTime.Now; } }
         public bool CanVisit { get { return Context.Settings.VisitPokestops && Context.Session.Current.VisitEnabled && !softBan; } }
         public bool CanVisitGyms { get { return Context.Settings.VisitGyms && Context.Statistics.Currentlevel > 4 && !softBan; } }
@@ -996,7 +996,7 @@ namespace PokeRoadie
             {
                 IsTravelingLongDistance = true;
                 Logger.Write($"We have traveled outside the max distance of {Context.Settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
-                await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distanceFromStart > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
+                await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
                 gymTries.Clear();
                 locationAttemptCount = 0;
                 Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
@@ -1479,40 +1479,62 @@ namespace PokeRoadie
                                 fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
                                 if (_playerProfile.PlayerData.Team != TeamColor.Neutral && fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
                                 {
-                                    await PokeRoadieInventory.GetCachedInventory(Context.Client);
+                                    var maxCount = 0;
+                                    var points = fortDetails.GymState.FortData.GymPoints;
+                                    if (points < 1600) maxCount = 1;
+                                    else if (points < 4000) maxCount = 2;
+                                    else if (points < 8000) maxCount = 3;
+                                    else if (points < 12000) maxCount = 4;
+                                    else if (points < 16000) maxCount = 5;
+                                    else if (points < 20000) maxCount = 6;
+                                    else if (points < 30000) maxCount = 7;
+                                    else if (points < 40000) maxCount = 8;
+                                    else if (points < 50000) maxCount = 9;
+                                    else maxCount = 10;
 
-                                    var pokemonList = await Context.Inventory.GetHighestsVNotDeployed(1);
-                                    var pokemon = pokemonList.FirstOrDefault();
+                                    var availableSlots = maxCount - fortDetails.GymState.Memberships.Count();
 
-                                    if (pokemon != null)
+                                    if (availableSlots > 0)
                                     {
-                                        var response = await Context.Client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
+                                        await PokeRoadieInventory.GetCachedInventory(Context.Client);
+                                        var pokemonList = await Context.Inventory.GetHighestsVNotDeployed(1);
+                                        var pokemon = pokemonList.FirstOrDefault();
 
-                                        if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                        if (pokemon != null)
                                         {
-                                            PokeRoadieInventory.IsDirty = true;
-                                            Logger.Write($"(GYM) Deployed {Context.Utility.GetMinStats(pokemon)} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+                                            var response = await Context.Client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
 
-                                            //raise event
-                                            if (OnDeployToGym != null)
+                                            if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
                                             {
-                                                if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
-                                                    OnDeployToGym(location, fortDetails, pokemon);
+                                                PokeRoadieInventory.IsDirty = true;
+                                                Logger.Write($"(GYM) Deployed {Context.Utility.GetMinStats(pokemon)} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+
+                                                //raise event
+                                                if (OnDeployToGym != null)
+                                                {
+                                                    if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
+                                                        OnDeployToGym(location, fortDetails, pokemon);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Red);
                                             }
                                         }
-                                        //else if (response.Result == FortDeployPokemonResponse.Types.Result.ErrorPokemonNotFullHp)
-                                        //{
-                                        // var figureThisShitOut = pokemon;
-                                        //}
-                                        //else
-                                        //{
-                                        // Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Green);
-                                        //}
+                                        else
+                                        {
+                                            Logger.Write($"(GYM) No available pokemon to deploy.", LogLevel.None, ConsoleColor.Cyan);
+                                        }
                                     }
+                                    else
+                                    {
+                                        Logger.Write($"(GYM) {fortString} is full - {fortDetails.GymState.Memberships.Count()}/{maxCount}", LogLevel.None, ConsoleColor.Cyan);
+                                    }
+
                                 }
                                 else
                                 {
-                                    Logger.Write($"(GYM) Wasted walk on {fortString}", LogLevel.None, ConsoleColor.Cyan);
+                                    Logger.Write($"(GYM) {fortString}", LogLevel.None, ConsoleColor.Cyan);
                                 }
                             }
                             else
