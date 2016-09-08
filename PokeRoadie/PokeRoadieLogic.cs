@@ -847,6 +847,13 @@ namespace PokeRoadie
             //handle tutorials
             if (Context.Settings.CompleteTutorials)
                 await CompleteTutorials();
+            else
+            {
+                //minimally force name generation
+                if (!_playerProfile.PlayerData.TutorialState.Contains(TutorialState.NameSelection))
+                    await TutorialSetCodename(true);
+            }
+
 
             //pickup bonuses
             if (Context.Settings.PickupDailyDefenderBonuses)
@@ -3613,59 +3620,170 @@ namespace PokeRoadie
             await RandomDelay(10000, 20000);
         }
 
-        public async Task TutorialSetCodename()
+        public async Task TutorialSetCodename(bool silent = false)
         {
             //1 attempt per session
             if (tutorialAttempts.Contains(TutorialState.NameSelection)) return;
             tutorialAttempts.Add(TutorialState.NameSelection);
 
             //hummanize
-            Logger.Write("We have not finished the NAME_SELECTION tutorial...");
+            if (!silent) Logger.Write("We have not finished the NAME_SELECTION tutorial...");
             await RandomDelay(3000, 6000);
 
+            ////////////////////////////////////////
+            //  determine a valid available name  //
+            ////////////////////////////////////////
+
+            var nameFound = false;
+            var nameOwned = false;
+
+            //get desired name in settings (if there is one)
             var name = Context.Settings.TutorialCodename;
 
-            if (Context.Settings.TutorialGenerateCodename)
+            if (!String.IsNullOrEmpty(name))
             {
-                var suggestedNames = await Context.Inventory.TutorialGetSuggestedCodenames();
-
-                if (suggestedNames.Success && suggestedNames.Codenames != null && suggestedNames.Codenames.Count > 0)
+                //check desired name
+                var nameCheck = await Context.Inventory.CheckCodenameAvailable(name);
+                //name is available
+                if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.Success)
                 {
-                    var randomIndex = Random.Next(0, suggestedNames.Codenames.Count - 1);
-                    name = suggestedNames.Codenames[randomIndex];
+                    nameFound = true;
                 }
-                else
+                //name is not available
+                else if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.CurrentOwner)
                 {
-                    if (string.IsNullOrWhiteSpace(name) && Context.Settings.AuthType == AuthType.Ptc) name = Context.Settings.Username;
-                    else name = Guid.NewGuid().ToString().Replace("{", string.Empty).Replace("}", string.Empty).Replace("-", string.Empty).Substring(0, 13);
-                    //Logger.Write($"Failed to generate a name, no suggested names returned.", LogLevel.Error);
-                    //return;
+                    nameFound = true;
+                    nameOwned = true;
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(name))
+            //try the username
+            if (!nameFound)
+            {
+                //set
+                name = Context.Settings.Username;
+                if (name.Contains("@")) name = name.Substring(0, name.IndexOf("@"));
+                //check desired name
+                var nameCheck = await Context.Inventory.CheckCodenameAvailable(name);
+                //name is available
+                if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.Success)
+                {
+                    nameFound = true;
+                }
+                //name is not available
+                else if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.CurrentOwner)
+                {
+                    nameFound = true;
+                    nameOwned = true;
+                }
+                else
+                { await RandomDelay(2000, 4000); }
+            }
+
+            //if we still don't have a verified name, let's try a name suggestion
+            if (!nameFound)
+            {
+                var suggestedNames = await Context.Inventory.TutorialGetSuggestedCodenames();
+                if (suggestedNames.Success && suggestedNames.Codenames != null && suggestedNames.Codenames.Count > 0)
+                {
+                    if (suggestedNames.Codenames.Count() > 1)
+                    {
+                        var randomIndex = Random.Next(0, suggestedNames.Codenames.Count - 1);
+                        name = suggestedNames.Codenames[randomIndex];
+                    }
+                    else
+                    {
+                        name = suggestedNames.Codenames[0];
+                    }
+                    nameFound = true;
+                }
+                else
+                { await RandomDelay(2000, 4000); }
+            }
+
+            //still no name? make one up incrementally
+            if (!nameFound)
+            {
+                var baseName = Context.Settings.Username;
+                if (baseName.Contains("@")) baseName = baseName.Substring(0, baseName.IndexOf("@"));
+                if (!string.IsNullOrEmpty(baseName))
+                {
+                    for (int i = 2; i < 100; i++)
+                    {
+                        //set
+                        name = baseName + i.ToString();
+
+                        //check desired name
+                        var nameCheck = await Context.Inventory.CheckCodenameAvailable(name);
+
+                        //name is available
+                        if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.Success)
+                        {
+                            nameFound = true;
+                            break;
+                        }
+                        //name is not available
+                        else if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.CurrentOwner)
+                        {
+                            nameFound = true;
+                            nameOwned = true;
+                            break;
+                        }
+                        else
+                        { await RandomDelay(2000, 4000); }
+                    }
+                }
+            }
+
+            //still no name? make one up incrementally
+            if (!nameFound)
+            {
+                do
+                {
+                    name = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", "").Substring(Random.Next(9, 12));
+
+                    //check desired name
+                    var nameCheck = await Context.Inventory.CheckCodenameAvailable(name);
+
+                    //name is available
+                    if (nameCheck.Status == CheckCodenameAvailableResponse.Types.Status.Success)
+                    {
+                        nameFound = true;
+                        break;
+                    }
+                    else
+                    { await RandomDelay(2000, 4000); }
+
+                } while (!nameFound);
+
+            }
+
+            //if we have found a valid unregistered name, let's do it!
+            if (nameFound && !nameOwned && !string.IsNullOrWhiteSpace(name))
             {
                 var response = await Context.Client.Misc.ClaimCodename(name);
 
                 if (response.Status == ClaimCodenameResponse.Types.Status.Success || response.Status == ClaimCodenameResponse.Types.Status.CurrentOwner)
                 {
-                    Logger.Write($"Name claimed : {name}", LogLevel.Tutorial);
+                    if (!silent) Logger.Write($"Name claimed : {name}", LogLevel.Tutorial);
+                    nameOwned = true;
                     await RandomDelay();
                 }
             }
 
-            var result = await Context.Inventory.TutorialMarkComplete(TutorialState.NameSelection, _playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
 
+            var result = await Context.Inventory.TutorialMarkComplete(TutorialState.NameSelection, _playerProfile.PlayerData.ContactSettings.SendMarketingEmails, _playerProfile.PlayerData.ContactSettings.SendPushNotifications);
             if (result.Success)
             {
                 //remove cached tutorial entry, so we do not try again before player data is updated.
                 _playerProfile.PlayerData = result.PlayerData;
-                Logger.Write($"Completed the NAME_SELECTION tutorial.", LogLevel.Tutorial);
+                if (!silent) Logger.Write($"Completed the NAME_SELECTION tutorial.", LogLevel.Tutorial);
             }
             else
             {
-                Logger.Write($"We could not complete the NAME_SELECTION tutorial.", LogLevel.Error);
+                if (!silent) Logger.Write($"We could not complete the NAME_SELECTION tutorial.", LogLevel.Error);
             }
+
         }
 
         #endregion

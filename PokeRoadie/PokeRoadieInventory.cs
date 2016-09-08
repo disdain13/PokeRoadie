@@ -664,6 +664,10 @@ namespace PokeRoadie
         {
             return await Context.Client.Misc.ClaimCodename(codeName);
         }
+        public async Task<CheckCodenameAvailableResponse> CheckCodenameAvailable(string codeName)
+        {
+            return await Context.Client.Misc.CheckCodenameAvailable(codeName);
+        }
         public async Task<GetSuggestedCodenamesResponse> TutorialGetSuggestedCodenames()
         {
             return await Context.Client.Misc.GetSuggestedCodenames();
