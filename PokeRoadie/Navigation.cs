@@ -3,9 +3,9 @@
 using System;
 using System.Threading.Tasks;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Helpers;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Helpers;
 
 using POGOProtos.Networking.Responses;
 using POGOProtos.Map.Fort;

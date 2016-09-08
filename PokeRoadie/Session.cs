@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
-using PokemonGo.RocketAPI.Logging;
+using PokeRoadie.Api.Logging;
 
 #endregion
 

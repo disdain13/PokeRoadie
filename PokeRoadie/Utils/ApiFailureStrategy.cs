@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.Helpers;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Exceptions;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Enums;
+using PokeRoadie.Api.Extensions;
+using PokeRoadie.Api.Helpers;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Exceptions;
 
 using POGOProtos.Inventory.Item;
 using POGOProtos.Networking.Envelopes;
@@ -23,7 +23,7 @@ using POGOProtos.Map.Fort;
 using POGOProtos.Map.Pokemon;
 
 using PokeRoadie.Extensions;
-using PokemonGo.RocketAPI.Rpc;
+using PokeRoadie.Api.Rpc;
 
 #endregion
 
@@ -55,7 +55,8 @@ namespace PokeRoadie.Utils
 
             if (_retryCount % 5 == 0)
             {
-                Logger.Write($"The ApiOperation call failed {_retryCount} times, attempting re-authentication...", LogLevel.Error);
+                if (Context.Settings.ShowDebugMessages)
+                    Logger.Write($"The ApiOperation call failed {_retryCount} times, attempting re-authentication.", LogLevel.Error);
                 return (await DoLogin(_retryCount));
             }
             else
@@ -73,48 +74,55 @@ namespace PokeRoadie.Utils
         {
             //wait a second
             await Task.Delay(1000);
-            //atempt re-auth
-            var loginResponse = await Context.Client.Login.AttemptLogin();
-            //if success return
-            if (loginResponse.Result == LoginResponseTypes.Success)
-            {
-                Logger.Append("Success!");
-                return ApiOperation.Retry;
-            }
-            //log
-            Logger.Append("Failed!");
-            Logger.Write($"Re-Authentication failed : {loginResponse.Result}{(loginResponse.Message == null ? "" : " - " + loginResponse.Message)}", LogLevel.Error);
             //set context for another login attempt
             Context.Logic.NeedsNewLogin = true;
-            //determine failure response
-            var delay = 5000;
-            var exitCode = 0;
-            switch (loginResponse.Result)
-            {
-                case LoginResponseTypes.GoogleOffline:
-                    delay = 30000;
-                    break;
-                case LoginResponseTypes.PtcOffline:
-                    delay = 30000;
-                    break;
-                case LoginResponseTypes.GoogleTwoStepAuthError:
-                    exitCode = 2;
-                    break;
-                case LoginResponseTypes.AccountNotVerified:
-                    exitCode = 3;
-                    break;
-                default:
-                    break;
-            }
+            //disable long distance travel flag
+            Context.Logic.IsTravelingLongDistance = false;
+            //abort more attempts
+            return ApiOperation.Abort;
 
-            //if we have an exit code, close the application
-            if (exitCode > 0) await Context.Logic.CloseApplication(exitCode);
+            ////atempt re-auth
+            //var loginResponse = await Context.Client.Login.AttemptLogin();
+            ////if success return
+            //if (loginResponse.Result == LoginResponseTypes.Success)
+            //{
+            //    //Logger.Append("Success!");
+            //    return ApiOperation.Retry;
+            //}
+            ////log
+            ////Logger.Append("Failed!");
+            //Logger.Write($"Re-Authentication failed : {loginResponse.Result}{(loginResponse.Message == null ? "" : " - " + loginResponse.Message)}", LogLevel.Error);
+            ////set context for another login attempt
+            //Context.Logic.NeedsNewLogin = true;
+            ////determine failure response
+            //var delay = 5000;
+            //var exitCode = 0;
+            //switch (loginResponse.Result)
+            //{
+            //    case LoginResponseTypes.GoogleOffline:
+            //        delay = 30000;
+            //        break;
+            //    case LoginResponseTypes.PtcOffline:
+            //        delay = 30000;
+            //        break;
+            //    case LoginResponseTypes.GoogleTwoStepAuthError:
+            //        exitCode = 2;
+            //        break;
+            //    case LoginResponseTypes.AccountNotVerified:
+            //        exitCode = 3;
+            //        break;
+            //    default:
+            //        break;
+            //}
 
-            //wait for delay if needed
-            if (delay > 0) await Task.Delay(delay);
+            ////if we have an exit code, close the application
+            //if (exitCode > 0) await Context.Logic.CloseApplication(exitCode);
 
-            //return abort
-            return (retryCount > 5) ? ApiOperation.Abort : ApiOperation.Retry;
+            ////wait for delay if needed
+            //if (delay > 0) await Task.Delay(delay);
+
+            ////return abort
+            //return (retryCount > 5) ? ApiOperation.Abort : ApiOperation.Retry;
 
         }
         public void HandleApiSuccess(RequestEnvelope request, ResponseEnvelope response)

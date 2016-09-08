@@ -8,8 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using PokemonGo.RocketAPI.Exceptions;
-using PokemonGo.RocketAPI.Logging;
+using PokeRoadie.Api.Exceptions;
+using PokeRoadie.Api.Logging;
 
 #endregion
 

@@ -10,7 +10,7 @@ namespace PokeRoadie.Logging
     {
         public DateTime Date { get; set; }
         public string Message { get; set; }
-        public PokemonGo.RocketAPI.Logging.LogLevel Level { get; set; }
+        public PokeRoadie.Api.Logging.LogLevel Level { get; set; }
         public ConsoleColor Color { get; set; }
     }
 }

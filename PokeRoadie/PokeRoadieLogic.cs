@@ -7,13 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.Helpers;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Exceptions;
-using PokemonGo.RocketAPI.Rpc;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Enums;
+using PokeRoadie.Api.Extensions;
+using PokeRoadie.Api.Helpers;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Exceptions;
+using PokeRoadie.Api.Rpc;
 
 using POGOProtos.Inventory;
 using POGOProtos.Inventory.Item;
@@ -97,7 +97,7 @@ namespace PokeRoadie
         private int xloCount = 0;
         private volatile bool isRunning;
         //private volatile bool inFlight = false;
-        private volatile bool inTravel = false;
+        
 
         #endregion
         #region " Timers "
@@ -138,6 +138,7 @@ namespace PokeRoadie
         #endregion
         #region " Properties "
         public Context Context { get; set; }
+        public bool IsTravelingLongDistance { get; set; }
         public bool CanCatch { get { return Context.Settings.CatchPokemon && Context.Session.Current.CatchEnabled && !softBan && Context.Navigation.LastKnownSpeed <= Context.Settings.MaxCatchSpeed && noWorkTimer <= DateTime.Now; } }
         public bool CanVisit { get { return Context.Settings.VisitPokestops && Context.Session.Current.VisitEnabled && !softBan; } }
         public bool CanVisitGyms { get { return Context.Settings.VisitGyms && Context.Statistics.Currentlevel > 4 && !softBan; } }
@@ -993,13 +994,13 @@ namespace PokeRoadie
             if (Context.Settings.MaxDistance != 0 &&
             distanceFromStart > Context.Settings.MaxDistance)
             {
-                inTravel = true;
+                IsTravelingLongDistance = true;
                 Logger.Write($"We have traveled outside the max distance of {Context.Settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
-                await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
+                await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distanceFromStart > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
                 gymTries.Clear();
                 locationAttemptCount = 0;
                 Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
-                inTravel = false;
+                IsTravelingLongDistance = false;
             }
 
             //if destinations are enabled
@@ -1030,14 +1031,14 @@ namespace PokeRoadie
                                 if (!RaiseSyncEvent(OnChangeDestination, destination, newIndex))
                                     OnChangeDestination(destination, newIndex);
                             }
-                            inTravel = true;
+                            IsTravelingLongDistance = true;
                             Logger.Write($"Moving to new destination - {destination.Name} - {destination.Latitude}:{destination.Longitude}", LogLevel.Navigation, ConsoleColor.White);
                             Logger.Write("Preparing for long distance travel...", LogLevel.None, ConsoleColor.White);
                             await Context.Navigation.HumanLikeWalking(destination.GetGeo(), Context.Settings.LongDistanceSpeed, GetLongTask(), false);
                             Logger.Write($"Arrived at destination - {destination.Name}!", LogLevel.Navigation, ConsoleColor.White);
                             gymTries.Clear();
                             locationAttemptCount = 0;
-                            inTravel = false;
+                            IsTravelingLongDistance = false;
 
                             //reset destination timer
                             Context.Settings.DestinationEndDate = DateTime.Now.AddMinutes(Context.Settings.MinutesPerDestination);
@@ -1123,13 +1124,13 @@ namespace PokeRoadie
                         }
                         else
                         {
-                            inTravel = true;
+                            IsTravelingLongDistance = true;
                             Logger.Write($"Since there are no locations, let's go back to the waypoint center {wayPointGeo} {distanceFromStart}m", LogLevel.Navigation, ConsoleColor.White);
                             await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distanceFromStart > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
                             gymTries.Clear();
                             locationAttemptCount = 0;
                             Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
-                            inTravel = false;
+                            IsTravelingLongDistance = false;
                         }
                     }
                 }
@@ -1267,7 +1268,7 @@ namespace PokeRoadie
             //if (Context.Settings.TransferPokemon) await TransferPokemon();
         }
 
-        private async Task ProcessFortList(List<FortData> pokeStopList, GetMapObjectsResponse mapObjects)
+        private async Task ProcessFortList(List<FortData> pokeStopList, GetMapObjectsResponse mapObjects, bool holdSpeed = false)
         {
             if (pokeStopList.Count == 0) return;
 
@@ -1343,7 +1344,7 @@ namespace PokeRoadie
                 if (NeedsNewLogin) break;
 
                 //if we are not currently traveling long distance
-                if (!inTravel)
+                if (!IsTravelingLongDistance)
                 {
                     //check destinations
                     if (Context.Settings.DestinationsEnabled && Context.Settings.DestinationEndDate.HasValue && DateTime.Now > Context.Settings.DestinationEndDate.Value)
@@ -1370,11 +1371,11 @@ namespace PokeRoadie
                 finalList.RemoveAt(0);
                 if (pokeStop.Type != FortType.Gym)
                 {
-                    await ProcessPokeStop(pokeStop, mapObjects);
+                    await ProcessPokeStop(pokeStop, mapObjects, holdSpeed);
                 }
                 else
                 {
-                    await ProcessGym(pokeStop, mapObjects);
+                    await ProcessGym(pokeStop, mapObjects, holdSpeed);
                 }
                 //if (pokestopCount == 0 && gymCount > 0)
                 // await RandomHelper.RandomDelay(1000, 2000);
@@ -1383,7 +1384,7 @@ namespace PokeRoadie
             }
         }
 
-        private async Task ProcessGym(FortData pokeStop, GetMapObjectsResponse mapObjects)
+        private async Task ProcessGym(FortData pokeStop, GetMapObjectsResponse mapObjects, bool holdSpeed = false)
         {
             if (!gymTries.Contains(pokeStop.Id))
             {
@@ -1406,7 +1407,11 @@ namespace PokeRoadie
 
                     var name = $"(GYM) {fortInfo.Name} in {distance:0.##} m distance";
                     Logger.Write(name, LogLevel.None, ConsoleColor.Cyan);
-                    await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), Context.Settings.MinSpeed, GetShortTask());
+                    //await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), Context.Settings.MinSpeed, GetShortTask());
+                    await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), holdSpeed ? Context.Settings.LongDistanceSpeed : distance > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distance > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distance > Context.Settings.MaxDistance / 2 ? false : true);
+
+                    if (CanCatch)
+                        await ProcessNearby(mapObjects);
 
                     var fortDetails = await Context.Client.Fort.GetGymDetails(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
 
@@ -1533,7 +1538,7 @@ namespace PokeRoadie
             }
         }
 
-        private async Task ProcessPokeStop(FortData pokeStop, GetMapObjectsResponse mapObjects)
+        private async Task ProcessPokeStop(FortData pokeStop, GetMapObjectsResponse mapObjects, bool holdSpeed = false)
         {
             if (CanCatch)
                 await ProcessNearby(mapObjects);
@@ -1554,7 +1559,7 @@ namespace PokeRoadie
             }
 
             Logger.Write($"{fortInfo.Name}{(pokeStop.LureInfo == null ? "" : " WITH LURE")} in {distance:0.##} m distance", LogLevel.Pokestop);
-            await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), distance > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distance > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distance > Context.Settings.MaxDistance / 2 ? false : true);
+            await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), holdSpeed ? Context.Settings.LongDistanceSpeed : distance > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distance > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distance > Context.Settings.MaxDistance / 2 ? false : true);
 
             if (CanCatch)
                 await ProcessNearby(mapObjects);
@@ -2626,9 +2631,9 @@ namespace PokeRoadie
 
             if (totalActivecount > 0)
             {
-                if (inTravel) Logger.Write($"Slight course change...", LogLevel.Navigation);
-                await ProcessFortList(pokeStopList, mapObjects);
-                if (inTravel)
+                if (IsTravelingLongDistance) Logger.Write($"Slight course change...", LogLevel.Navigation);
+                await ProcessFortList(pokeStopList, mapObjects, true);
+                if (IsTravelingLongDistance)
                 {
                     var speedInMetersPerSecond = Context.Settings.LongDistanceSpeed / 3.6;
                     var sourceLocation = new GeoCoordinate(Context.Client.CurrentLatitude, Context.Client.CurrentLongitude);

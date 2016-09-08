@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Helpers;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Helpers;
 
 using POGOProtos.Data;
 using POGOProtos.Enums;

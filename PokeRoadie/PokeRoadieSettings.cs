@@ -9,9 +9,9 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.Logging;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Enums;
+using PokeRoadie.Api.Logging;
 
 using POGOProtos.Inventory.Item;
 using POGOProtos.Enums;
@@ -22,7 +22,7 @@ using PokeRoadie.Forms;
 
 namespace PokeRoadie
 {
-    public class PokeRoadieSettings : PokemonGo.RocketAPI.ISettings
+    public class PokeRoadieSettings : PokeRoadie.Api.ISettings
     {
 
         #region " Members "

@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.Helpers;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Exceptions;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Enums;
+using PokeRoadie.Api.Extensions;
+using PokeRoadie.Api.Helpers;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Exceptions;
 
 using POGOProtos.Inventory.Item;
 using POGOProtos.Networking.Responses;

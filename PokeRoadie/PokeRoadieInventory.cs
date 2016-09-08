@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Exceptions;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Exceptions;
 
 using POGOProtos.Inventory;
 using POGOProtos.Inventory.Item;
@@ -18,7 +18,7 @@ using POGOProtos.Data;
 using POGOProtos.Data.Player;
 using POGOProtos.Enums;
 using POGOProtos.Settings.Master;
-using PokemonGo.RocketAPI.Extensions;
+using PokeRoadie.Api.Extensions;
 using POGOProtos.Map.Fort;
 using PokeRoadie.Extensions;
 
