@@ -479,6 +479,8 @@ namespace PokeRoadie
                 {
                     Logger.Write("====== Aggregate Data ======", LogLevel.None, ConsoleColor.Yellow);
                     Logger.Write($"{allPokemon.Count} Total Pokemon", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"{Context.Session.Current.CatchCount}/{Context.Settings.MaxPokemonCatches} Pokemons catched this session", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"{Context.Session.Current.VisitCount}/{Context.Settings.MaxPokestopVisits} Pokestops visited this session", LogLevel.None, ConsoleColor.White);
                     Logger.Write("====== CP======", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"< 100 CP: {allPokemon.Where(x => x.Cp < 100).Count()}", LogLevel.None, ConsoleColor.White);
                     Logger.Write($"100-499 CP: {allPokemon.Where(x => x.Cp >= 100 && x.Cp < 500).Count()}", LogLevel.None, ConsoleColor.White);
