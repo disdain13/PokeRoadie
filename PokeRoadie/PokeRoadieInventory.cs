@@ -227,7 +227,7 @@ namespace PokeRoadie
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax).OrderByDescending(x => Context.Utility.CalculatePokemonValue(x)).ThenBy(n => n.StaminaMax).Take(limit);
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax && x.PokemonId != PokemonId.Grimer && x.PokemonId != PokemonId.Jynx).OrderByDescending(x => Context.Utility.CalculatePokemonValue(x)).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsCP(int limit)
@@ -411,7 +411,7 @@ namespace PokeRoadie
         public async Task<List<PokemonData>> GetPokemonToPowerUp()
         {
             var query = (await GetPokemons()).Where(p =>
-                  String.IsNullOrWhiteSpace(p.DeployedFortId));
+                  String.IsNullOrWhiteSpace(p.DeployedFortId) && p.GetMaxCP() > p.Cp);
 
             //list filter
             if (Context.Settings.UsePokemonsToPowerUpList)

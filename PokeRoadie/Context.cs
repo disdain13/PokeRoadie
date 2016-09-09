@@ -1,13 +1,16 @@
 ﻿#region " Imports "
 
 using PokeRoadie.Utils;
+using System;
 using System.ComponentModel;
+using System.Runtime.Remoting.Contexts;
 
 #endregion
 
 namespace PokeRoadie
 {
-    public class Context
+    //[Synchronization]
+    public class Context// : ContextBoundObject
     {
         public PokeRoadieLogic Logic { get; set; }
         public ApiFailureStrategy ApiFailureStrategy { get; set;}

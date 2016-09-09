@@ -139,7 +139,7 @@ namespace PokeRoadie
             TotalItemsRemoved += count;
         }
 
-        public void GetStardust(int stardust)
+        public void SetStardust(int stardust)
         {
             TotalStardust = stardust;
         }

@@ -214,7 +214,7 @@ namespace PokeRoadie
 
                 var playerName = Context.Statistics.GetUsername(Context.Client, _playerProfile);
                 Context.Statistics.UpdateConsoleTitle(Context.Client, Context.Inventory);
-
+                Context.Statistics.SetStardust(_playerProfile.PlayerData.Currencies.ToArray()[1].Amount);
                 var currentLevelInfos = await Context.Statistics._getcurrentLevelInfos();
                 //get all ordered by id, then cp
                 var allPokemon = (await Context.Inventory.GetPokemons()).OrderBy(x => x.PokemonId).ThenByDescending(x => x.Cp).ToList();
@@ -1528,62 +1528,70 @@ namespace PokeRoadie
                                 }
 
                                 //gym tutorial
-                                if (!_playerProfile.PlayerData.TutorialState.Contains(TutorialState.GymTutorial))
-                                    await TutorialGeneric(TutorialState.GymTutorial, "GYM");
+                                if (Context.Settings.CompleteTutorials)
+                                    if (!_playerProfile.PlayerData.TutorialState.Contains(TutorialState.GymTutorial))
+                                        await TutorialGeneric(TutorialState.GymTutorial, "GYM");
 
                                 fortString = $"{ fortDetails.Name} | { fortDetails.GymState.FortData.OwnedByTeam } | { pokeStop.GymPoints} | { fortDetails.GymState.Memberships.Count}";
                                 if (_playerProfile.PlayerData.Team != TeamColor.Neutral && fortDetails.GymState.FortData.OwnedByTeam == _playerProfile.PlayerData.Team)
                                 {
-                                    var maxCount = 0;
-                                    var points = fortDetails.GymState.FortData.GymPoints;
-                                    if (points < 1600) maxCount = 1;
-                                    else if (points < 4000) maxCount = 2;
-                                    else if (points < 8000) maxCount = 3;
-                                    else if (points < 12000) maxCount = 4;
-                                    else if (points < 16000) maxCount = 5;
-                                    else if (points < 20000) maxCount = 6;
-                                    else if (points < 30000) maxCount = 7;
-                                    else if (points < 40000) maxCount = 8;
-                                    else if (points < 50000) maxCount = 9;
-                                    else maxCount = 10;
-
-                                    var availableSlots = maxCount - fortDetails.GymState.Memberships.Count();
-
-                                    if (availableSlots > 0)
+                                    if (!string.IsNullOrEmpty(_playerProfile.PlayerData.Username))
                                     {
-                                        await PokeRoadieInventory.GetCachedInventory(Context.Client);
-                                        var pokemonList = await Context.Inventory.GetHighestsVNotDeployed(1);
-                                        var pokemon = pokemonList.FirstOrDefault();
+                                        var maxCount = 0;
+                                        var points = fortDetails.GymState.FortData.GymPoints;
+                                        if (points < 1600) maxCount = 1;
+                                        else if (points < 4000) maxCount = 2;
+                                        else if (points < 8000) maxCount = 3;
+                                        else if (points < 12000) maxCount = 4;
+                                        else if (points < 16000) maxCount = 5;
+                                        else if (points < 20000) maxCount = 6;
+                                        else if (points < 30000) maxCount = 7;
+                                        else if (points < 40000) maxCount = 8;
+                                        else if (points < 50000) maxCount = 9;
+                                        else maxCount = 10;
 
-                                        if (pokemon != null)
+                                        var availableSlots = maxCount - fortDetails.GymState.Memberships.Count();
+
+                                        if (availableSlots > 0)
                                         {
-                                            var response = await Context.Client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
+                                            await PokeRoadieInventory.GetCachedInventory(Context.Client);
+                                            var pokemonList = await Context.Inventory.GetHighestsVNotDeployed(1);
+                                            var pokemon = pokemonList.FirstOrDefault();
 
-                                            if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                                            if (pokemon != null)
                                             {
-                                                PokeRoadieInventory.IsDirty = true;
-                                                Logger.Write($"(GYM) Deployed {Context.Utility.GetMinStats(pokemon)} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+                                                var response = await Context.Client.Fort.FortDeployPokemon(fortInfo.FortId, pokemon.Id);
 
-                                                //raise event
-                                                if (OnDeployToGym != null)
+                                                if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
                                                 {
-                                                    if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
-                                                        OnDeployToGym(location, fortDetails, pokemon);
+                                                    PokeRoadieInventory.IsDirty = true;
+                                                    Logger.Write($"(GYM) Deployed {Context.Utility.GetMinStats(pokemon)} to {fortDetails.Name}", LogLevel.None, ConsoleColor.Green);
+
+                                                    //raise event
+                                                    if (OnDeployToGym != null)
+                                                    {
+                                                        if (!RaiseSyncEvent(OnDeployToGym, location, fortDetails, pokemon))
+                                                            OnDeployToGym(location, fortDetails, pokemon);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Red);
                                                 }
                                             }
                                             else
                                             {
-                                                Logger.Write($"(GYM) Deployment Failed at {fortString} - {response.Result}", LogLevel.None, ConsoleColor.Red);
+                                                Logger.Write($"(GYM) No available pokemon to deploy.", LogLevel.None, ConsoleColor.Cyan);
                                             }
                                         }
                                         else
                                         {
-                                            Logger.Write($"(GYM) No available pokemon to deploy.", LogLevel.None, ConsoleColor.Cyan);
+                                            Logger.Write($"(GYM) {fortString} is full - {fortDetails.GymState.Memberships.Count()}/{maxCount}", LogLevel.None, ConsoleColor.Cyan);
                                         }
                                     }
                                     else
                                     {
-                                        Logger.Write($"(GYM) {fortString} is full - {fortDetails.GymState.Memberships.Count()}/{maxCount}", LogLevel.None, ConsoleColor.Cyan);
+                                        Logger.Write($"(GYM) Deployment failed - You must have a username claimed to occupy a gym. Turn on CompleteTutorials in the settings.", LogLevel.None, ConsoleColor.Red);
                                     }
 
                                 }
@@ -1981,8 +1989,8 @@ namespace PokeRoadie
                         Context.Statistics.AddExperience(xp);
                     Context.Statistics.IncreasePokemons();
 
-                    var profile = await Context.Client.Player.GetPlayer();
-                    Context.Statistics.GetStardust(profile.PlayerData.Currencies.ToArray()[1].Amount);
+                    _playerProfile = await Context.Client.Player.GetPlayer();
+                    Context.Statistics.SetStardust(_playerProfile.PlayerData.Currencies.ToArray()[1].Amount);
 
                     //raise event
                     if (OnCatch != null)
@@ -2906,7 +2914,7 @@ namespace PokeRoadie
                         break;
                 }
 
-                query = orderBy == null ? query : thenBy == null ? query.OrderByDescending(orderBy) : query.OrderByDescending(orderBy).ThenByDescending(thenBy);
+                query = orderBy == null ? query : thenBy == null ? query.OrderBy(orderBy) : query.OrderBy(orderBy).ThenByDescending(thenBy);
 
                 await TransferPokemon(query.Take(Context.Settings.TransferTrimFatCount).ToList());
             }
@@ -2923,10 +2931,8 @@ namespace PokeRoadie
         {
             if (!Context.Settings.PowerUpPokemon) return;
             await PokeRoadieInventory.GetCachedInventory(Context.Client);
-            if (await Context.Inventory.GetStarDust() <= Context.Settings.MinStarDustForPowerUps) return;
-
+            if (Context.Statistics.TotalStardust < Context.Settings.MinStarDustForPowerUps) return;
             var pokemons = await Context.Inventory.GetPokemonToPowerUp();
-
             if (pokemons == null || pokemons.Count == 0) return;
             await PowerUpPokemon(pokemons);
         }
@@ -2943,46 +2949,85 @@ namespace PokeRoadie
             var finalList = new List<PokemonData>();
 
             //fixed by woshikie! Thanks!
-            foreach (var pokemon in pokemons)
+            foreach (var p in pokemons)
             {
-                if (pokemon.GetMaxCP() == pokemon.Cp) continue;
-
-                var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+                var settings = pokemonSettings.Single(x => x.PokemonId == p.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
-                if (familyCandy.Candy_ < (pokemon.GetLevel() / 10)) continue; //Checking if enough candies
-
-                if (Context.Settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < Context.Settings.MinCandyForPowerUps) //Checking if enough candies as specified by user
-                {
+                //Check if we have enough candies
+                if (familyCandy.Candy_ < (p.GetLevel() / 10))
                     continue;
-                }
 
-                if (pokemon.GetLevel() - Context.Statistics.Currentlevel >= 2) continue;//Checking is pokemon level is at max that user's level can level up to.
-                                                                                        //Checking is Pokemon is a duplicate. Do not want to power up duplicates!
-                if (finalList.FindAll(x => x.PokemonId == pokemon.PokemonId).Count > 0) continue;
-                finalList.Add(pokemon);
+                //Checking if enough candies as specified by user
+                if (Context.Settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < Context.Settings.MinCandyForPowerUps) 
+                    continue;
+
+                //Checking is pokemon level is at max that user's level can level up to.
+                if (p.GetLevel() - Context.Statistics.Currentlevel >= 2)
+                    continue;
+                //Checking is Pokemon is a duplicate. Do not want to power up duplicates!
+                if (finalList.FindAll(x => x.PokemonId == p.PokemonId).Count > 0) continue;
+
+                //add to final list
+                finalList.Add(p);
             }
 
             if (finalList.Count == 0) return;
 
             Logger.Write($"Found {finalList.Count()} pokemon to power up:", LogLevel.Info);
 
+            PokemonData pokemon = null;
             //foreach (var pokemon in finalList)
             for (int i = 0; i < finalList.Count; i++)
             {
-                var pokemon = finalList[i];
-                var upgradeResult = await Context.Client.Inventory.UpgradePokemon(pokemon.Id);
-                //Still need to check if there are enough stardust to powerup after every powerup
-                await PokeRoadieInventory.GetCachedInventory(Context.Client);
-                if (await Context.Inventory.GetStarDust() <= Context.Settings.MinStarDustForPowerUps)
+
+                //if (Context.Statistics.TotalStardust < Context.Settings.MinStarDustForPowerUps)
+                //{
+                //    Logger.Write($"Not enough stardust to continue...", LogLevel.Info);
+                //    break;
+                //}
+
+                if (pokemon == null) pokemon = finalList[i];
+                var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+                var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
+
+
+                if (Context.Statistics.TotalStardust < Context.Settings.MinStarDustForPowerUps)
                 {
                     Logger.Write($"Not enough stardust to continue...", LogLevel.Info);
                     break;
                 }
 
+                //Check if we have enough candies
+                if (familyCandy.Candy_ < (pokemon.GetLevel() / 10))
+                {
+                    Logger.Write($"Not enough candies to continue...", LogLevel.Info);
+                    pokemon = null;
+                    continue;
+                }
+                    
+
+                //Checking if enough candies as specified by user
+                if (Context.Settings.MinCandyForPowerUps != 0 && familyCandy.Candy_ < Context.Settings.MinCandyForPowerUps)
+                {
+                    Logger.Write($"Not enough candies to continue...", LogLevel.Info);
+                    pokemon = null;
+                    continue;
+                }
+
+                //Checking is pokemon level is at max that user's level can level up to.
+                if (pokemon.GetLevel() - Context.Statistics.Currentlevel >= 2)
+                {
+                    Logger.Write($"Pokemon has reached max level...", LogLevel.Info);
+                    pokemon = null;
+                    continue;
+                }
+
+                var upgradeResult = await Context.Client.Inventory.UpgradePokemon(pokemon.Id);
                 if (upgradeResult.Result == UpgradePokemonResponse.Types.Result.Success)
                 {
                     PokeRoadieInventory.IsDirty = true;
+                    pokemon = upgradeResult.UpgradedPokemon;
                     Logger.Write($"(POWER) Pokemon was powered up! {Context.Utility.GetMinStats(upgradeResult.UpgradedPokemon)}", LogLevel.None, ConsoleColor.White);
                     upgradedNumber++;
                     //raise event
@@ -2992,15 +3037,19 @@ namespace PokeRoadie
                             OnPowerUp(pokemon);
                     }
 
+                    //reload player stardust
+                    _playerProfile = await Context.Client.Player.GetPlayer();
+                    Context.Statistics.SetStardust(_playerProfile.PlayerData.Currencies.ToArray()[1].Amount);
+
                     //will put in later, needs to be on a setting ~ disdain13
-                    //i--; //This is so that the first pokemon on the list gets to be powered up until unable to anymore.
+                    i--; //This is so that the first pokemon on the list gets to be powered up until unable to anymore.
                 }
                 else
                 {
                     switch (upgradeResult.Result)
                     {
                         case UpgradePokemonResponse.Types.Result.ErrorInsufficientResources:
-                            Logger.Write($"(POWER) Ran out of candies to powerup {Context.Utility.GetMinStats(pokemon)}", LogLevel.None, ConsoleColor.Red);
+                            Logger.Write($"(POWER) Ran out of candies/stardust to powerup {Context.Utility.GetMinStats(pokemon)}", LogLevel.None, ConsoleColor.Red);
                             break;
                         case UpgradePokemonResponse.Types.Result.ErrorUpgradeNotAvailable:
                             Logger.Write($"(POWER) Reached max level {Context.Utility.GetMinStats(pokemon)}", LogLevel.None, ConsoleColor.Green);
@@ -3012,6 +3061,7 @@ namespace PokeRoadie
                 }
 
                 await RandomDelay(Context.Settings.PowerUpMinDelay, Context.Settings.PowerUpMaxDelay);
+
                 //fixed by woshikie! Thanks!
                 if (Context.Settings.MaxPowerUpsPerRound > 0 && upgradedNumber >= Context.Settings.MaxPowerUpsPerRound)
                     break;
