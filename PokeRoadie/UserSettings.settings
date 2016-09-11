@@ -272,9 +272,6 @@
     <Setting Name="CurveThrowChance" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">35</Value>
     </Setting>
-    <Setting Name="MissThrowChance" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
     <Setting Name="DevicePackageName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">htc10</Value>
     </Setting>
@@ -409,9 +406,6 @@
     </Setting>
     <Setting Name="PrioritizeGyms" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="DisplayStyle" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">disdain</Value>
     </Setting>
     <Setting Name="PowerUpAboveLV" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">0</Value>

@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Helpers;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Helpers;
 
 using POGOProtos.Data;
 using POGOProtos.Enums;
@@ -32,14 +32,14 @@ namespace PokeRoadie
 
         public string GetStats(PokemonData pokemon)
         {
-            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19, ' ')} {CalculatePokemonValue(pokemon).ToString().PadRight(3, ' ')} V | {pokemon.Cp.ToString().PadLeft(4, ' ')} Cp | {pokemon.GetPerfection().ToString("0.00").PadLeft(6, ' ')}% IV | Lvl {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString() + " Hp").PadLeft(10, ' ')} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {GetMoveName(pokemon.Move1).PadRight(14, ' ')}{CalculateMoveValue(GetMoveName(pokemon.Move1))} | {GetMoveName(pokemon.Move2).PadRight(14, ' ')}{CalculateMoveValue(GetMoveName(pokemon.Move2))}";
+            return $"{((pokemon.Favorite == 1 ? "*" : "") + pokemon.PokemonId.ToString()).PadRight(19)} {CalculatePokemonValue(pokemon).ToString().PadRight(3)} V | {pokemon.Cp.ToString().PadLeft(4)} Cp | {pokemon.GetPerfection().ToString("0.00").PadLeft(6)}% IV | Lvl {pokemon.GetLevel().ToString("00")} | {(pokemon.Stamina.ToString() + "/" + pokemon.StaminaMax.ToString() + " Hp").PadLeft(10)} | {pokemon.IndividualAttack.ToString("00").PadLeft(2)} A | {pokemon.IndividualDefense.ToString("00").PadLeft(2)} D | {pokemon.IndividualStamina.ToString("00").PadLeft(2)} S | {GetMoveName(pokemon.Move1).PadRight(14)}{CalculateMoveValue(GetMoveName(pokemon.Move1))} | {GetMoveName(pokemon.Move2).PadRight(14)}{CalculateMoveValue(GetMoveName(pokemon.Move2))}";
         }
 
         public string GetMinStats(PokemonData pokemon)
         {
             var name = pokemon.PokemonId.ToString();
             if (name.Length > 10) name = name.Substring(0, 10);
-            return $"{pokemon.PokemonId.ToString()} " + $"({CalculatePokemonValue(pokemon)}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}Hp)";
+            return $"{(String.IsNullOrWhiteSpace(pokemon.DeployedFortId) ? "" : "^") + (pokemon.Favorite == 1 ? "*" : "")}{name} " + $"({CalculatePokemonValue(pokemon)}V-{pokemon.Cp.ToString()}Cp-{pokemon.GetPerfection().ToString("0.00")}%-Lv{pokemon.GetLevel().ToString("00")}-{pokemon.StaminaMax.ToString()}Hp)";
         }
 
         #endregion
@@ -93,6 +93,7 @@ namespace PokeRoadie
         {
             var m1a = 100;
             var move1 = GetMove(Context.Settings.PokemonMoves, moveName);
+
             if (move1 == null) return 20;
             m1a = move1.Power + move1.Accuracy + move1.Hit;
             m1a = m1a < 51 ? 50 : m1a > 200 ? 200 : m1a;

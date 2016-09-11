@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-using PokemonGo.RocketAPI.Logging;
+using PokeRoadie.Api.Logging;
 
 #endregion
 

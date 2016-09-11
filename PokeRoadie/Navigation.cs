@@ -3,9 +3,9 @@
 using System;
 using System.Threading.Tasks;
 
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI.Helpers;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api.Helpers;
 
 using POGOProtos.Networking.Responses;
 using POGOProtos.Map.Fort;
@@ -162,7 +162,6 @@ namespace PokeRoadie
                 Context.Client.CurrentLatitude, Context.Client.CurrentLongitude,
                 Context.Settings.WaypointLatitude, Context.Settings.WaypointLongitude);
                 Logger.Write($"{Math.Round(distanceFromStart, 1)} meters from current waypoint ({Context.Settings.MaxDistance} meters max)", LogLevel.Debug);
-
             }
 
             var nextWaypointDistance = speedInMetersPerSecond;
@@ -210,7 +209,7 @@ namespace PokeRoadie
                     await functionExecutedWhileWalking();// look for pokemon
 
                 //check for needs new login
-                if (Context.Logic.NeedsNewLogin) return result;
+                if (PokeRoadieLogic.NeedsNewLogin) return result;
 
                 await Task.Delay(500);
             } while (sourceLocation.CalculateDistanceInMeters(targetLocation) >= dynamicLandingDistance);

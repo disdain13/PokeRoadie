@@ -33,14 +33,14 @@
   <TransferPriorityType>V</TransferPriorityType>
   <TransferPriorityType2>IV</TransferPriorityType2>
   <KeepDuplicateAmount>2</KeepDuplicateAmount>
-  <KeepAboveCP>0</KeepAboveCP>
   <KeepAboveIV>0</KeepAboveIV>
-  <KeepAboveLV>0</KeepAboveLV>
   <KeepAboveV>0</KeepAboveV>
-  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
+  <KeepAboveCP>0</KeepAboveCP>
+  <KeepAboveLV>0</KeepAboveLV>
   <AlwaysTransferBelowIV>0</AlwaysTransferBelowIV>
-  <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
   <AlwaysTransferBelowV>0</AlwaysTransferBelowV>
+  <AlwaysTransferBelowCP>0</AlwaysTransferBelowCP>
+  <AlwaysTransferBelowLV>0</AlwaysTransferBelowLV>
   <TransferTrimFatCount>0</TransferTrimFatCount>
   <NotTransferPokemonsThatCanEvolve>false</NotTransferPokemonsThatCanEvolve>
   <PowerUpPokemon>false</PowerUpPokemon>
@@ -77,7 +77,6 @@
   <GreatThrowChance>25</GreatThrowChance>
   <NiceThrowChance>25</NiceThrowChance>
   <CurveThrowChance>35</CurveThrowChance>
-  <MissThrowChance>10</MissThrowChance>
   <UseLuckyEggs>false</UseLuckyEggs>
   <UseIncense>false</UseIncense>
   <UseRevives>false</UseRevives>
@@ -87,7 +86,6 @@
   <DisplayRefreshMinutes>10</DisplayRefreshMinutes>
   <DisplayAggregateLog>false</DisplayAggregateLog>
   <DisplayAllPokemonInLog>false</DisplayAllPokemonInLog>
-  <DisplayStyle>disdain</DisplayStyle>
   <WaypointLatitude>0</WaypointLatitude>
   <WaypointLongitude>0</WaypointLongitude>
   <WaypointAltitude>0</WaypointAltitude>

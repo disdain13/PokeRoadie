@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PokemonGo.RocketAPI.Logging;
+using PokeRoadie.Api.Logging;
 
 namespace PokeRoadie.Logging.Providers
 {

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
-using PokemonGo.RocketAPI.Logging;
-using PokemonGo.RocketAPI;
-using PokemonGo.RocketAPI.Exceptions;
+using PokeRoadie.Api.Logging;
+using PokeRoadie.Api;
+using PokeRoadie.Api.Exceptions;
 
 using POGOProtos.Inventory;
 using POGOProtos.Inventory.Item;
@@ -18,7 +18,7 @@ using POGOProtos.Data;
 using POGOProtos.Data.Player;
 using POGOProtos.Enums;
 using POGOProtos.Settings.Master;
-using PokemonGo.RocketAPI.Extensions;
+using PokeRoadie.Api.Extensions;
 using POGOProtos.Map.Fort;
 using PokeRoadie.Extensions;
 
@@ -89,10 +89,6 @@ namespace PokeRoadie
             //Keep By IV filter
             if (Context.Settings.KeepAboveIV > 0)
                 query = query.Where(p => p.GetPerfection() < Context.Settings.KeepAboveIV);
-
-            //Keep By LV filter
-            if (PokeRoadieSettings.Current.KeepAboveLV > 0)
-                query = query.Where(p => p.GetLevel() < PokeRoadieSettings.Current.KeepAboveLV);
 
             //Keep By V filter
             if (Context.Settings.KeepAboveV > 0)
@@ -231,7 +227,7 @@ namespace PokeRoadie
         {
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
-            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax).OrderByDescending(x => Context.Utility.CalculatePokemonValue(x)).ThenBy(n => n.StaminaMax).Take(limit);
+            return pokemons.Where(x => string.IsNullOrWhiteSpace(x.DeployedFortId) && x.Stamina == x.StaminaMax && x.PokemonId != PokemonId.Grimer && x.PokemonId != PokemonId.Jynx).OrderByDescending(x => Context.Utility.CalculatePokemonValue(x)).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsCP(int limit)
@@ -415,7 +411,7 @@ namespace PokeRoadie
         public async Task<List<PokemonData>> GetPokemonToPowerUp()
         {
             var query = (await GetPokemons()).Where(p =>
-                  String.IsNullOrWhiteSpace(p.DeployedFortId));
+                  String.IsNullOrWhiteSpace(p.DeployedFortId) && p.GetMaxCP() > p.Cp);
 
             //list filter
             if (Context.Settings.UsePokemonsToPowerUpList)
@@ -667,6 +663,10 @@ namespace PokeRoadie
         public async Task<ClaimCodenameResponse> TutorialClaimCodeName(string codeName)
         {
             return await Context.Client.Misc.ClaimCodename(codeName);
+        }
+        public async Task<CheckCodenameAvailableResponse> CheckCodenameAvailable(string codeName)
+        {
+            return await Context.Client.Misc.CheckCodenameAvailable(codeName);
         }
         public async Task<GetSuggestedCodenamesResponse> TutorialGetSuggestedCodenames()
         {
