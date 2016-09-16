@@ -220,6 +220,26 @@ namespace PokeRoadie
             }
         }
 
+        public void Save(GeoCoordinate geo, string playerName, int playerLevel, string filePath)
+        {
+            try
+            {
+                var data = new Xml.Ping()
+                {
+                    Latitude = geo.Latitude,
+                    Longitude = geo.Longitude,
+                    Altitude = geo.Altitude,
+                    Name = playerName,
+                    Level = playerLevel
+                };
+                Xml.Serializer.SerializeToFile(data, filePath);
+            }
+            catch// (Exception e)
+            {
+                //Logger.Write($"Could not save the encounter information file for {encounterId} - {e.ToString()}", LogLevel.Error);
+            }
+        }
+
         #endregion
     }
 }

@@ -72,6 +72,10 @@ namespace PokeRoadie
         #endregion
         #region " Primary Methods "
 
+        private float GetLastKnownSpeedConverted()
+        {
+            return ((float)(LastKnownSpeed * (int)100)) / 100;
+        }
         private async Task<PlayerUpdateResponse> UpdatePlayerLocation(LocationData destination)
         {
             return await UpdatePlayerLocation(destination.Latitude,destination.Longitude,destination.Altitude);
@@ -94,10 +98,11 @@ namespace PokeRoadie
             if (!_lastSaveDate.HasValue || _lastSaveDate.Value < DateTime.Now)
             {
                 Context.Settings.Save();
+                Context.Session.Save();
                 _lastSaveDate = DateTime.Now.AddSeconds(10);
             }
 
-            var r = await Context.Client.Player.UpdatePlayerLocation(lat, lng, alt);
+            var r = await Context.Client.Player.UpdatePlayerLocation(lat, lng, alt, GetLastKnownSpeedConverted());
             OnChangeLocation?.Invoke(new LocationData(lat, lng, alt));
             return r;
         }

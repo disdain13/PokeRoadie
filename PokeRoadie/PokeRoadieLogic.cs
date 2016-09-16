@@ -518,6 +518,44 @@ namespace PokeRoadie
                 xloCount++;
 
                 if (!isRunning) return;
+
+                //pings 
+                if (Directory.Exists(Context.Directories.PingDirectory))
+                {
+                    var files = Directory.GetFiles(Context.Directories.PingDirectory)
+                    .Where(x => x.EndsWith(".xml")).ToList();
+
+                    foreach (var filePath in files)
+                    {
+                        if (!isRunning) break;
+                        if (File.Exists(filePath))
+                        {
+                            var info = new FileInfo(filePath);
+
+                            if (info.CreationTime.AddSeconds(60) < DateTime.Now)
+                            {
+                                try
+                                {
+                                    //pull the file
+
+                                    var ping = (Xml.Ping)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Ping));
+                                    var f = Xml.Serializer.Xlo(ping);
+                                    f.Wait();
+                                    if (f.Status == TaskStatus.RanToCompletion) File.Delete(filePath);
+                                }
+                                catch// (Exception ex)
+                                {
+                                    //System.Threading.Thread.Sleep(500);
+                                    //do nothing
+                                    //Logger.Write($"Pokestop {info.Name} failed xlo transition. {ex.Message}", LogLevel.Warning);
+                                }
+                            }
+                            System.Threading.Thread.Sleep(500);
+                        }
+                    }
+                }
+
+                //pokestops
                 if (Directory.Exists(Context.Directories.PokestopsDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.PokestopsDirectory)
@@ -553,6 +591,7 @@ namespace PokeRoadie
                     }
                 }
 
+                //gyms
                 if (Directory.Exists(Context.Directories.GymDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.GymDirectory)
@@ -585,6 +624,7 @@ namespace PokeRoadie
                     }
                 }
 
+                //encounters
                 if (Directory.Exists(Context.Directories.EncountersDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.EncountersDirectory)
@@ -651,12 +691,6 @@ namespace PokeRoadie
                     Context.Statistics.UpdateConsoleTitle(Context.Client, Context.Inventory);
                 }
             }
-        }
-
-        public void SaveState()
-        {
-            Context.Settings.Save();
-            Context.Session.Save();
         }
 
         #endregion
@@ -1080,6 +1114,8 @@ namespace PokeRoadie
                             Context.Settings.WaypointLongitude = destination.Longitude;
                             Context.Settings.WaypointAltitude = destination.Altitude;
                             Context.Settings.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (Context.Settings.MinSpeed / 3.6)).AddMinutes(Context.Settings.MinutesPerDestination);
+
+                            Context.Session.Save();
                             Context.Settings.Save();
 
                             //raise event
@@ -2142,6 +2178,8 @@ namespace PokeRoadie
             Context.Settings.WaypointLatitude = geo.Latitude;
             Context.Settings.WaypointLongitude = geo.Longitude;
             Context.Settings.WaypointAltitude = geo.Altitude;
+
+            Context.Session.Save();
             Context.Settings.Save();
         }
 

@@ -14,6 +14,7 @@ namespace PokeRoadie
         public string ConfigsDirectory { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
         public string PokestopsDirectory { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pokestops");
         public string EncountersDirectory { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Encounters");
+        public string PingDirectory { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Pings");
         public string GymDirectory { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Gyms");
         public string EggDirectory { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Temp\\Eggs");
 
@@ -37,7 +38,13 @@ namespace PokeRoadie
 
             TempDirectory  = Path.Combine(Directory.GetCurrentDirectory(), "Users", filteredName, "Temp");
             ConfigsDirectory  = Path.Combine(Directory.GetCurrentDirectory(), "Users", filteredName, "Configs");
-            EggDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Users", filteredName,  "Eggs");
+
+            EncountersDirectory = Path.Combine(TempDirectory, "Encounters");
+            PingDirectory = Path.Combine(TempDirectory, "Pings");
+            GymDirectory = Path.Combine(TempDirectory, "Gyms");
+            PokestopsDirectory = Path.Combine(TempDirectory, "Pokestops");
+            EggDirectory = Path.Combine(TempDirectory, "Eggs");
+
             CheckDirectoriesExist();
         }
 
