@@ -690,7 +690,6 @@ namespace PokeRoadie
                             Sym = childNode.InnerText;
                             break;
                         case "ele":
-                            // Ele = childNode.InnerText.Replace(".", ls == "," ? "." : ","); Added by Finfinder
                             Ele = childNode.InnerText;
                             break;
                         case "time":
