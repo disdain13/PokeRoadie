@@ -128,7 +128,7 @@ namespace PokeRoadie
         private bool softBan = false;
         private bool hasDisplayedConfigSettings;
         private List<string> gymTries = new List<string>();
-        private List<string> PokeStopVisited = new List<string>();
+        //private List<string> PokeStopVisited = new List<string>(); added by Finfinder
         private Random Random = new Random(DateTime.Now.Millisecond);
         private ulong lastMissedEncounterId = 0;
         private int locationAttemptCount = 0;
@@ -1034,7 +1034,19 @@ namespace PokeRoadie
                             var distance_check = Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude,
                             Context.Client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat), Convert.ToDouble(nextPoint.Lon));
                             
+                            /* Added by Finfinder
                             Logger.Write($"Go to destination of {nextPoint.Lat}, {nextPoint.Lon}, {nextPoint.Name}",LogLevel.Navigation,ConsoleColor.DarkMagenta);
+                            */
+                            
+                            //if (distance_check > 5000)
+                            //{
+                            // Logger.Write(
+                            // $"Your desired destination of {nextPoint.Lat}, {nextPoint.Lon} is too far from your current position of {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
+                            // LogLevel.Error);
+                            // break;
+                            //}
+
+                            
 
                             //Logger.Write(
                             // $"Your desired destination is {nextPoint.Lat}, {nextPoint.Lon} your location is {Context.Client.CurrentLatitude}, {Context.Client.CurrentLongitude}",
@@ -1084,7 +1096,9 @@ namespace PokeRoadie
                 Logger.Write($"We have traveled outside the max distance of {Context.Settings.MaxDistance}, returning to center at {wayPointGeo}", LogLevel.Navigation, ConsoleColor.White);
                 await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
                 gymTries.Clear();
+                /* Added by Finfinder
                 PokeStopVisited.Clear();
+                */
                 locationAttemptCount = 0;
                 Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
                 IsTravelingLongDistance = false;
@@ -1126,7 +1140,9 @@ namespace PokeRoadie
                             await Context.Navigation.HumanLikeWalking(destination.GetGeo(), Context.Settings.LongDistanceSpeed, GetLongTask(), false);
                             Logger.Write($"Arrived at destination - {destination.Name}!", LogLevel.Navigation, ConsoleColor.White);
                             gymTries.Clear();
+                            /* Added by Finfinder
                             PokeStopVisited.Clear();
+                            */
                             locationAttemptCount = 0;
                             IsTravelingLongDistance = false;
 
@@ -1157,7 +1173,9 @@ namespace PokeRoadie
             var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var unvisitedGymList = gymsList.Where(x => !gymTries.Contains(x.Id)).ToList();
+            /* Added by Finfinder
             var unvisitedPokeStop = stopList.Where(x => !PokeStopVisited.Contains(x.Id)).ToList();
+            */
 
             if (Context.Settings.VisitGyms) totalActivecount += unvisitedGymList.Count;
             if (Context.Settings.VisitPokestops) totalActivecount += stopList.Count;
@@ -1219,7 +1237,9 @@ namespace PokeRoadie
                             Logger.Write($"Since there are no locations, let's go back to the waypoint center {wayPointGeo} {distanceFromStart}m", LogLevel.Navigation, ConsoleColor.White);
                             await Context.Navigation.HumanLikeWalking(wayPointGeo, distanceFromStart > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distanceFromStart > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distanceFromStart > Context.Settings.MaxDistance / 2 ? false : true);
                             gymTries.Clear();
+                            /* Added by Finfinder
                             PokeStopVisited.Clear();
+                            */
                             locationAttemptCount = 0;
                             Logger.Write($"Arrived at center point {Math.Round(wayPointGeo.Latitude, 5)}", LogLevel.Navigation);
                             IsTravelingLongDistance = false;
@@ -1461,8 +1481,10 @@ namespace PokeRoadie
 
                 var pokeStop = finalList[0];
                 finalList.RemoveAt(0);
+                /* Added by Finfinder
                 if (!PokeStopVisited.Contains(pokeStop.Id))
                 {
+                */
                     if (pokeStop.Type != FortType.Gym)
                     {
                         await ProcessPokeStop(pokeStop, mapObjects, holdSpeed);
@@ -1470,8 +1492,10 @@ namespace PokeRoadie
                     else
                     {
                         await ProcessGym(pokeStop, mapObjects, holdSpeed);
+                    /* Added by Finfinder
                     }
                     PokeStopVisited.Add(pokeStop.Id);
+                    */
                 }
                 //if (pokestopCount == 0 && gymCount > 0)
                 // await RandomHelper.RandomDelay(1000, 2000);
@@ -1504,7 +1528,10 @@ namespace PokeRoadie
                     var name = $"(GYM) {fortInfo.Name} in {distance:0.##} m distance";
                     Logger.Write(name, LogLevel.None, ConsoleColor.Cyan);
                     //await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), Context.Settings.MinSpeed, GetShortTask());
+                    await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), holdSpeed ? Context.Settings.LongDistanceSpeed : distance > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, distance > Context.Settings.MaxDistance / 2 ? GetLongTask() : GetShortTask(), distance > Context.Settings.MaxDistance / 2 ? false : true);
+                    /* Added by Finfinder
                     await Context.Navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), holdSpeed ? Context.Settings.LongDistanceSpeed : distance > Context.Settings.MaxDistance / 2 ? Context.Settings.LongDistanceSpeed : Context.Settings.MinSpeed, ((distance > Context.Settings.MaxDistance / 2) && (Context.Settings.MaxDistance != 0)) ? GetLongTask() : GetShortTask(), distance > Context.Settings.MaxDistance / 2 ? false : true);
+                    */
 
                     if (CanCatch)
                         await ProcessNearby(mapObjects);
@@ -2753,9 +2780,13 @@ namespace PokeRoadie
             var gymsList = pokeStopList.Where(x => x.Type == FortType.Gym).ToList();
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var unvisitedGymList = gymsList.Where(x => !gymTries.Contains(x.Id)).ToList();
+            /* Added by Finfinder
             var unvisitedPokeStop = pokeStopList.ToList().Where(x => !PokeStopVisited.Contains(x.Id)).ToList();
+            */
 
             if (Context.Settings.VisitGyms) totalActivecount += unvisitedGymList.Count;
+            if (Context.Settings.VisitPokestops) totalActivecount += stopList.Count;
+            /* Added by Finfinder
             if (Context.Settings.VisitPokestops)
             {
                 if (path)
@@ -2763,12 +2794,15 @@ namespace PokeRoadie
                 else
                     totalActivecount += stopList.Count;
             }
+            */
             if (totalActivecount > 0)
             {
                 if (IsTravelingLongDistance) Logger.Write($"Slight course change...", LogLevel.Navigation);
+                /* Added by Findfinder
                 if (path)
                     await ProcessFortList(unvisitedPokeStop, mapObjects, false);
                 else
+                */
                     await ProcessFortList(pokeStopList, mapObjects, true);
                 if (IsTravelingLongDistance)
                 {
