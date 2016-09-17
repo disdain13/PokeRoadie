@@ -56,6 +56,7 @@ namespace PokeRoadie
             if (!Directory.Exists(EncountersDirectory)) Directory.CreateDirectory(EncountersDirectory);
             if (!Directory.Exists(GymDirectory)) Directory.CreateDirectory(GymDirectory);
             if (!Directory.Exists(EggDirectory)) Directory.CreateDirectory(EggDirectory);
+            if (!Directory.Exists(PingDirectory)) Directory.CreateDirectory(PingDirectory);
         }
     }
 }

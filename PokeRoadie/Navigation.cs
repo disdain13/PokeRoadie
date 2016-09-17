@@ -24,6 +24,7 @@ namespace PokeRoadie
 
         private const double SpeedDownTo = 2 / 3.6;
         private DateTime? _lastSaveDate;
+        private DateTime? _lastPingDate;
         private Random random = new Random(DateTime.Now.Millisecond);
         public event Action<LocationData> OnChangeLocation;
         public double LastKnownSpeed { get; set; }
@@ -95,11 +96,18 @@ namespace PokeRoadie
             Context.Settings.CurrentLatitude = lat;
             Context.Settings.CurrentLongitude = lng;
             Context.Settings.CurrentAltitude = alt;
+
             if (!_lastSaveDate.HasValue || _lastSaveDate.Value < DateTime.Now)
             {
                 Context.Settings.Save();
                 Context.Session.Save();
                 _lastSaveDate = DateTime.Now.AddSeconds(10);
+            }
+
+            if (!_lastPingDate.HasValue || _lastPingDate.Value < DateTime.Now)
+            {
+                Context.Utility.Save(new GeoCoordinate(lat, lng, alt), Context.Statistics.PlayerName, Context.Statistics.Currentlevel, System.IO.Path.Combine(Context.Directories.PingDirectory, DateTime.Now.Hour.ToString().PadLeft(2,'0') + DateTime.Now.Minute.ToString().PadLeft(2, '0') + DateTime.Now.Second.ToString().PadLeft(2, '0') + ".xml"));
+                _lastPingDate = DateTime.Now.AddMinutes(1);
             }
 
             var r = await Context.Client.Player.UpdatePlayerLocation(lat, lng, alt, GetLastKnownSpeedConverted());
