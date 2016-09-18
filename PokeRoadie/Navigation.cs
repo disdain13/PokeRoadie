@@ -211,10 +211,6 @@ namespace PokeRoadie
                     millisecondsUntilGetUpdatePlayerLocationResponse / 1000 * speedInMetersPerSecond);
                 nextWaypointBearing = sourceLocation.DegreeBearing(targetLocation);
                 waypoint = sourceLocation.CreateWaypoint(nextWaypointDistance, nextWaypointBearing);
-                if (Context.Client.Settings.ShowDebugMessages)
-                {
-                    Logger.Write($"Distance to target - {currentDistanceToTarget} meters", LogLevel.Debug);
-                }
 
                 requestSendDateTime = DateTime.Now;
                 result =
@@ -290,6 +286,10 @@ namespace PokeRoadie
                     millisecondsUntilGetUpdatePlayerLocationResponse / 1000 * speedInMetersPerSecond);
                 nextWaypointBearing = sourceLocation.DegreeBearing(targetLocation);
                 waypoint = sourceLocation.CreateWaypoint(nextWaypointDistance, nextWaypointBearing);
+                if (Context.Client.Settings.ShowDebugMessages)
+                {
+                    Logger.Write($"Distance to target - {currentDistanceToTarget} meters", LogLevel.Debug);
+                }
 
                 requestSendDateTime = DateTime.Now;
                 result =
