@@ -1,4 +1,4 @@
-﻿#region " Imports "
+#region " Imports "
 
 using System;
 using System.Threading.Tasks;
@@ -291,7 +291,7 @@ namespace PokeRoadie
                     Logger.Write($"Distance to target - {currentDistanceToTarget} meters", LogLevel.Debug);
                 }
 
-                    requestSendDateTime = DateTime.Now;
+                requestSendDateTime = DateTime.Now;
                 result =
                     await
                         UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude,
