@@ -213,6 +213,8 @@ namespace PokeRoadie
                 await PokeRoadieInventory.GetCachedInventory(Context.Client);
                 _playerProfile = await Context.Client.Player.GetPlayer();
 
+                PokeStopVisited.Clear();
+
                 var playerName = Context.Statistics.GetUsername(Context.Client, _playerProfile);
                 Context.Statistics.UpdateConsoleTitle(Context.Client, Context.Inventory);
                 Context.Statistics.SetStardust(_playerProfile.PlayerData.Currencies.ToArray()[1].Amount);
@@ -1164,6 +1166,7 @@ namespace PokeRoadie
 
             if (totalActivecount < 1)
             {
+                PokeStopVisited.Clear();
                 locationAttemptCount++;
                 if (locationAttemptCount == 1)
                 {
