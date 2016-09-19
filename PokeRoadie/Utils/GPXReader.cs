@@ -1,4 +1,4 @@
-﻿#region " Imports "
+#region " Imports "
 
 using System;
 using System.Collections.Generic;
@@ -690,7 +690,7 @@ namespace PokeRoadie
                             Sym = childNode.InnerText;
                             break;
                         case "ele":
-                            Ele = childNode.InnerText.Replace(".", ls == "," ? "." : ",");
+                            Ele = childNode.InnerText;
                             break;
                         case "time":
                             Time = childNode.InnerText;
