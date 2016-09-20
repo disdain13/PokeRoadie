@@ -707,7 +707,7 @@ namespace PokeRoadie
                     if (File.Exists(pokelist_file))
                         File.Delete(pokelist_file);
                     string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                    string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,previewLink";
+                    string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,True Value,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,previewLink";
                     File.WriteAllText(pokelist_file, $"{header.Replace(",", $"{ls}")}");
 
                     var AllPokemon = await GetHighestsPerfect();
