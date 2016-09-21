@@ -230,7 +230,8 @@ namespace PokeRoadie
                 }
                 else
                 {
-                    Logger.Write($"Time to Bonus: {new TimeSpan(_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs - DateTime.UtcNow.ToUnixTime())}", LogLevel.None, ConsoleColor.White);
+                    TimeSpan timeToBonus = TimeSpan.FromMilliseconds(_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs - DateTime.UtcNow.ToUnixTime());
+                    Logger.Write($"Time to Bonus: {timeToBonus.ToString(@"dd\.hh\:mm\:ss")}", LogLevel.None, ConsoleColor.White);
                 }
                 if (Client.Proxy != null)
                 {
