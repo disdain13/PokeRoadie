@@ -732,7 +732,7 @@ namespace PokeRoadie
                     if (File.Exists(pokelist_file))
                         File.Delete(pokelist_file);
                     string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                    string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,previewLink";
+                    string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,True Value,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,previewLink";
                     File.WriteAllText(pokelist_file, $"{header.Replace(",", $"{ls}")}");
 
                     var AllPokemon = await GetHighestsPerfect();
@@ -750,14 +750,15 @@ namespace PokeRoadie
                         foreach (var pokemon in AllPokemon)
                         {
                             string toEncode = $"{(int)pokemon.PokemonId}" + "," + trainerLevel + "," + PokemonInfo.GetLevel(pokemon) + "," + pokemon.Cp + "," + pokemon.Stamina;
-                            //Generate base64 code to make it viewable here https://jackhumbert.github.io/poke-rater/#MTUwLDIzLDE3LDE5MDIsMTE4
+                            //Generate base64 code to make it viewable here http://poke.isitin.org/#MTUwLDIzLDE3LDE5MDIsMTE4
                             var encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(toEncode));
                             var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                             var familiecandies = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId).Candy_;
                             string perfection = pokemon.GetPerfection().ToString("0.00");
                             perfection = perfection.Replace(",", ls == "," ? "." : ",");
+                            string truevalue = Context.Utility.CalculatePokemonValue(pokemon).ToString();
                             string content_part1 = $"{(int)pokemon.PokemonId},{pokemon.PokemonId},{pokemon.Nickname},{pokemon.Cp}/{PokemonInfo.CalculateMaxCP(pokemon)},";
-                            string content_part2 = $",{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},https://jackhumbert.github.io/poke-rater/#{encoded}";
+                            string content_part2 = $",{truevalue},{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},http://poke.isitin.org/#{encoded}";
                             string content = $"{content_part1.Replace(",", $"{ls}")}{perfection}{content_part2.Replace(",", $"{ls}")}";
                             w.WriteLine($"{content}");
 
