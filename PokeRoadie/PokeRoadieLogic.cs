@@ -211,7 +211,6 @@ namespace PokeRoadie
                 await PokeRoadieInventory.GetCachedInventory(Context.Client);
                 _playerProfile = await Context.Client.Player.GetPlayer();
                 PokeStopVisited.Clear();
-
                 var playerName = Context.Statistics.GetUsername(Context.Client, _playerProfile);
                 Context.Statistics.UpdateConsoleTitle(Context.Client, Context.Inventory);
                 Context.Statistics.SetStardust(_playerProfile.PlayerData.Currencies.ToArray()[1].Amount);
@@ -490,26 +489,22 @@ namespace PokeRoadie
             {
                 xloCount++;
                 if (!isRunning) return;
-
                 //pings 
                 if (Directory.Exists(Context.Directories.PingDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.PingDirectory)
                     .Where(x => x.EndsWith(".xml")).ToList();
-
                     foreach (var filePath in files)
                     {
                         if (!isRunning) break;
                         if (File.Exists(filePath))
                         {
                             var info = new FileInfo(filePath);
-
                             if (info.CreationTime.AddSeconds(60) < DateTime.Now)
                             {
                                 try
                                 {
                                     //pull the file
-
                                     var ping = (Xml.Ping)Xml.Serializer.DeserializeFromFile(filePath, typeof(Xml.Ping));
                                     var f = Xml.Serializer.Xlo(ping);
                                     f.Wait();
@@ -526,7 +521,6 @@ namespace PokeRoadie
                         }
                     }
                 }
-
                 //pokestops
                 if (Directory.Exists(Context.Directories.PokestopsDirectory))
                 {
@@ -560,7 +554,6 @@ namespace PokeRoadie
                     }
                 }
                 //gyms
-                //gyms
                 if (Directory.Exists(Context.Directories.GymDirectory))
                 {
                     var files = Directory.GetFiles(Context.Directories.GymDirectory)
@@ -590,7 +583,6 @@ namespace PokeRoadie
                         }
                     }
                 }
-                //encounters
                 //encounters
                 if (Directory.Exists(Context.Directories.EncountersDirectory))
                 {
@@ -653,7 +645,6 @@ namespace PokeRoadie
                 }
             }
         }
-
         #endregion
         #region " Navigation Methods "
         private List<GpxReader.Trk> GetGpxTracks()
@@ -1007,7 +998,6 @@ namespace PokeRoadie
                             Context.Settings.WaypointLongitude = destination.Longitude;
                             Context.Settings.WaypointAltitude = destination.Altitude;
                             Context.Settings.DestinationEndDate = DateTime.Now.AddSeconds(distanceFromStart / (Context.Settings.MinSpeed / 3.6)).AddMinutes(Context.Settings.MinutesPerDestination);
-
                             Context.Session.Save();
                             Context.Settings.Save();
                             //raise event
@@ -1195,7 +1185,6 @@ namespace PokeRoadie
             {
                 if (!isRunning) break;
                 var distance = Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude, Context.Client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
-
                 if (!_recentEncounters.Contains(pokemon.EncounterId) && (!Context.Settings.UsePokemonToNotCatchList || !Context.Settings.PokemonsNotToCatch.Contains(pokemon.PokemonId)))
                 {
                     _recentEncounters.Add(pokemon.EncounterId);
@@ -1919,7 +1908,6 @@ namespace PokeRoadie
             Context.Settings.WaypointLatitude = geo.Latitude;
             Context.Settings.WaypointLongitude = geo.Longitude;
             Context.Settings.WaypointAltitude = geo.Altitude;
-
             Context.Session.Save();
             Context.Settings.Save();
         }
@@ -2400,7 +2388,6 @@ namespace PokeRoadie
             var stopList = pokeStopList.Where(x => x.Type != FortType.Gym).ToList();
             var unvisitedGymList = gymsList.Where(x => !gymTries.Contains(x.Id)).ToList();
             var unvisitedPokeStop = pokeStopList.ToList().Where(x => !PokeStopVisited.Contains(x.Id)).ToList();
-
             if (Context.Settings.VisitGyms) totalActivecount += unvisitedGymList.Count;
             if (Context.Settings.VisitPokestops)
             {
