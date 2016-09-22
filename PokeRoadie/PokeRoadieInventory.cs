@@ -167,16 +167,40 @@ namespace PokeRoadie
                     if (Context.Settings.NotTransferPokemonsThatCanEvolve && (settings.CandyToEvolve > 0 && familyCandy.Candy_ / settings.CandyToEvolve > amountToSkip))
                         amountToSkip = familyCandy.Candy_ / settings.CandyToEvolve;
 
-                    results.AddRange(query.Where(x => x.PokemonId == pokemon.Key)
-                        .Skip(amountToSkip)
-                        .ToList());
+                    if (amountToSkip > 0)
+                    {
+                        results.AddRange(query.Where(x => x.PokemonId == pokemon.Key).Skip(amountToSkip).ToList());
+                    }
+                    else
+                    {
+                        results.AddRange(query.Where(x => x.PokemonId == pokemon.Key).ToList());
+                    }
 
                 }
                 return results;
             }
 
+            List<PokemonData> results2 = 
+                
+                (Context.Settings.KeepDuplicateAmount < 1) ?
+                
+                (thenBy == null) ?
+                query
+                    .GroupBy(p => p.PokemonId)
+                    .Where(x => x.Count() > 1)
+                    .SelectMany(p => p.OrderByDescending(orderBy)
+                    .ToList()).ToList()
+                :
+                query
+                    .GroupBy(p => p.PokemonId)
+                    .Where(x => x.Count() > 1)
+                    .SelectMany(p => p.OrderByDescending(orderBy)
+                    .ThenByDescending(thenBy)
+                    .ToList()).ToList()
 
-            List<PokemonData> results2 = (thenBy == null) ? 
+                :
+
+                (thenBy == null) ?
                 query
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Count() > 1)
@@ -191,6 +215,7 @@ namespace PokeRoadie
                     .ThenByDescending(thenBy)
                     .Skip(Context.Settings.KeepDuplicateAmount)
                     .ToList()).ToList();
+
 
             //merge together the two lists
             foreach (var result in results1)
