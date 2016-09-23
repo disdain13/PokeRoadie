@@ -221,6 +221,16 @@ namespace PokeRoadie
                 Logger.Write($"Team: {_playerProfile.PlayerData.Team}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Level: {currentLevelInfos}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Pokemon: {allPokemon.Count}", LogLevel.None, ConsoleColor.White);
+                var buddyPokemon = allPokemon.Where(x => x.Id == _playerProfile.PlayerData.BuddyPokemon.Id).FirstOrDefault();
+                if (buddyPokemon == null)
+                {
+                    Logger.Write($"Buddy: No Buddy Set!", LogLevel.None, ConsoleColor.White);
+                }
+                else
+                {
+                    Logger.Write($"Buddy: {buddyPokemon.PokemonId}, Total Candy: {buddyPokemon.BuddyCandyAwarded}", LogLevel.None, ConsoleColor.White);
+                }
+
                 Logger.Write("====== Deployment Summary ======", LogLevel.None, ConsoleColor.Yellow);
                 Logger.Write($"Deployed: {deployedPokemon.Count}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Min Needed: {Context.Settings.MinGymsBeforeBonusPickup}", LogLevel.None, ConsoleColor.White);
