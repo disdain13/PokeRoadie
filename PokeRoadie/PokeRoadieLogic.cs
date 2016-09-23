@@ -262,11 +262,11 @@ namespace PokeRoadie
                 var pokeBalls = items.Where(x => x.ItemId == ItemId.ItemPokeBall).FirstOrDefault();
                 var pokeBallsCount = pokeBalls == null ? 0 : pokeBalls.Count;
                 var greatBalls = items.Where(x => x.ItemId == ItemId.ItemGreatBall).FirstOrDefault();
-                var greatBallsCount = greatBalls == null ? 0 : pokeBalls.Count;
+                var greatBallsCount = greatBalls == null ? 0 : greatBalls.Count;
                 var ultraBalls = items.Where(x => x.ItemId == ItemId.ItemUltraBall).FirstOrDefault();
-                var ultraBallsCount = ultraBalls == null ? 0 : pokeBalls.Count;
+                var ultraBallsCount = ultraBalls == null ? 0 : ultraBalls.Count;
                 var masterBalls = items.Where(x => x.ItemId == ItemId.ItemMasterBall).FirstOrDefault();
-                var masterBallsCount = masterBalls == null ? 0 : pokeBalls.Count;
+                var masterBallsCount = masterBalls == null ? 0 : masterBalls.Count;
                 var potions = items.Where(x => x.ItemId == ItemId.ItemPotion).FirstOrDefault();
                 var potionsCount = potions == null ? 0 : potions.Count;
                 var superPotions = items.Where(x => x.ItemId == ItemId.ItemSuperPotion).FirstOrDefault();
