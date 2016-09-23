@@ -1,4 +1,4 @@
-﻿#region " Imports "
+#region " Imports "
 
 using System;
 using System.IO;
@@ -15,6 +15,7 @@ using PokeRoadie.Api.Logging;
 
 using POGOProtos.Inventory.Item;
 using POGOProtos.Enums;
+using POGOProtos.Data;
 
 using PokeRoadie.Forms;
 
@@ -36,9 +37,11 @@ namespace PokeRoadie
         private ICollection<PokemonId> _pokemonsNotToCatch;
         private ICollection<PokemonId> _pokemonsToPowerUp;
         private IList<LocationData> _destinations;
+        private IList<PokemonData> _pokemontasks;
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
+        private static string specificpokemons_file = Path.Combine(configs_path, "SpecificPokemons.ini");
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -287,9 +290,20 @@ namespace PokeRoadie
         {
             get
             {
-                //Type of pokemons to evolve
+                //Global destinations
                 _destinations = _destinations ?? LoadDestinations();
                 return _destinations;
+            }
+        }
+
+        [XmlIgnore()]
+        public IList<PokemonData> PokemonTasks
+        {
+            get
+            {
+                //Global destinations
+                _pokemontasks = _pokemontasks ?? SpecificPokemons();
+                return _pokemontasks;
             }
         }
 
@@ -1150,6 +1164,70 @@ namespace PokeRoadie
                     d.Altitude = CurrentAltitude;
                     d.Name = "Default Location";
                     list.Add(d);
+                }
+            }
+            return list;
+        }
+
+        private IList<PokemonData> SpecificPokemons()
+        {
+            var list = new List<PokemonData>();
+            if (!Directory.Exists(configs_path))
+                Directory.CreateDirectory(configs_path);
+            if (File.Exists(specificpokemons_file))
+            {
+                using (StreamReader r = new StreamReader(specificpokemons_file))
+                {
+                    var line = r.ReadLine();
+                    while (line != null)
+                    {
+                        if (line.Contains(":"))
+                        {
+                            var pokemon = line.Split(':');
+
+
+                            if (pokemon != null && pokemon.Length > 3 && pokemon[0].Length > 0 && pokemon[1].Length > 0 && pokemon[2].Length > 0 && pokemon[3].Length > 0)
+                            {
+                                try
+                                {
+                                    string task = pokemon[0];
+                                    string name = pokemon[1];
+                                    int cp = Convert.ToInt16(pokemon[2]);
+                                    double iv = Convert.ToDouble(pokemon[3]);
+                                    switch (task) {
+                                        case "fav":
+                                            Logger.Write($"Favourited {name} with {cp}CP {iv}IV", LogLevel.Info);
+                                            break;
+                                        case "unfav":
+                                            Logger.Write($"Un-favourited {name} with {cp}CP {iv}IV", LogLevel.Info);
+                                            break;
+                                        case "evolve":
+                                            Logger.Write($"Evolved {name} with {cp}CP {iv}IV", LogLevel.Info);
+                                            break;
+                                        case "powerup":
+                                            Logger.Write($"Powered Up {name} with {cp}CP {iv}IV", LogLevel.Info);
+                                            break;
+                                        case "transfer":
+                                            Logger.Write($"Transfered {name} with {cp}CP {iv}IV", LogLevel.Info);
+                                            break;
+                                    }
+                                }
+                                catch (FormatException e)
+                                {
+                                    Logger.Write($"Pokemons in \"\\Configs\\SpecificPokemons.ini\" file is invalid. Pokemons will not be used. {e.ToString()}", LogLevel.Error);
+                                    return null;
+                                }
+                            }
+                            else
+                            {
+                                Logger.Write($"Pokemons in \"\\Configs\\SpecificPokemons.ini\" file is invalid. 1 line per pokemon, formatted like - TASK:NAME:CP:IV", LogLevel.Error);
+                                return null;
+                            }
+
+                        }
+                        line = r.ReadLine();
+                    }
+                    r.Close();
                 }
             }
             return list;
