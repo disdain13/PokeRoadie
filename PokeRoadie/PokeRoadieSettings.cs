@@ -1185,30 +1185,24 @@ namespace PokeRoadie
                         {
                             var pokemon = line.Split(':');
 
-
                             if (pokemon != null && pokemon.Length > 3 && pokemon[0].Length > 0 && pokemon[1].Length > 0 && pokemon[2].Length > 0 && pokemon[3].Length > 0)
                             {
                                 try
                                 {
                                     string task = pokemon[0];
                                     string name = pokemon[1];
-                                    int cp = Convert.ToInt16(pokemon[2]);
+                                    int cp = Convert.ToInt32(pokemon[2]);
                                     double iv = Convert.ToDouble(pokemon[3]);
                                     switch (task) {
                                         case "fav":
-                                            Logger.Write($"Favourited {name} with {cp}CP {iv}IV", LogLevel.Info);
                                             break;
                                         case "unfav":
-                                            Logger.Write($"Un-favourited {name} with {cp}CP {iv}IV", LogLevel.Info);
                                             break;
                                         case "evolve":
-                                            Logger.Write($"Evolved {name} with {cp}CP {iv}IV", LogLevel.Info);
                                             break;
                                         case "powerup":
-                                            Logger.Write($"Powered Up {name} with {cp}CP {iv}IV", LogLevel.Info);
                                             break;
                                         case "transfer":
-                                            Logger.Write($"Transfered {name} with {cp}CP {iv}IV", LogLevel.Info);
                                             break;
                                     }
                                 }
