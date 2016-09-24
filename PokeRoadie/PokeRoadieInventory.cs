@@ -1,4 +1,4 @@
-﻿#region " Imports "
+#region " Imports "
 
 using System;
 using System.IO;
@@ -519,27 +519,48 @@ namespace PokeRoadie
             var query = (await GetPokemons()).Where(p =>
                   String.IsNullOrWhiteSpace(p.DeployedFortId) && p.Favorite == 0);
 
+            var specific = query;
+            
+            for (int i = 0; i < Context.Settings.PokemonPicker.Count; i++)
+            {
+                
+                var pokemon = Context.Settings.PokemonPicker[i];
+                if (pokemon.Task == "fav") // need to add Task to PokemonData for this to work
+                {
+                    specific = specific.Where(p => p.Id == pokemon.Id);
+                }
+            }
+
+
             //Favorite By CP filter
             if (Context.Settings.FavoriteAboveCp > 0)
                 query = query.Where(p => p.Cp > Context.Settings.FavoriteAboveCp);
-            if (query.Count() == 0) return new List<PokemonData>();
+            if (query.Count() == 0 && specific.Count() ==0) return new List<PokemonData>();
 
             //Favorite By IV filter
             if (Context.Settings.FavoriteAboveIV > 0)
                 query = query.Where(p => p.GetPerfection() > Context.Settings.FavoriteAboveIV);
-            if (query.Count() == 0) return new List<PokemonData>();
+            if (query.Count() == 0 && specific.Count() == 0) return new List<PokemonData>();
 
             //Favorite By V filter
             if (Context.Settings.FavoriteAboveV > 0)
                 query = query.Where(p => Context.Utility.CalculatePokemonValue(p) > Context.Settings.FavoriteAboveV);
-            if (query.Count() == 0) return new List<PokemonData>();
+            if (query.Count() == 0 && specific.Count() == 0) return new List<PokemonData>();
 
             //Favorite By LV filter
             if (Context.Settings.FavoriteAboveLV > 0)
                 query = query.Where(p => p.GetLevel() > Context.Settings.FavoriteAboveLV);
-            if (query.Count() == 0) return new List<PokemonData>();
+            if (query.Count() == 0 && specific.Count() == 0) return new List<PokemonData>();
 
-            return query.ToList();
+            if (specific.Count() > 0)
+            {
+                return query.Concat(specific).ToList();
+            }
+            else
+            {
+                return query.ToList();
+            }
+            
 
         }
 
@@ -732,7 +753,7 @@ namespace PokeRoadie
                     if (File.Exists(pokelist_file))
                         File.Delete(pokelist_file);
                     string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                    string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,previewLink";
+                    string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,True Value,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,ID,previewLink";
                     File.WriteAllText(pokelist_file, $"{header.Replace(",", $"{ls}")}");
 
                     var AllPokemon = await GetHighestsPerfect();
@@ -750,14 +771,15 @@ namespace PokeRoadie
                         foreach (var pokemon in AllPokemon)
                         {
                             string toEncode = $"{(int)pokemon.PokemonId}" + "," + trainerLevel + "," + PokemonInfo.GetLevel(pokemon) + "," + pokemon.Cp + "," + pokemon.Stamina;
-                            //Generate base64 code to make it viewable here https://jackhumbert.github.io/poke-rater/#MTUwLDIzLDE3LDE5MDIsMTE4
+                            //Generate base64 code to make it viewable here http://poke.isitin.org/#MTUwLDIzLDE3LDE5MDIsMTE4
                             var encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(toEncode));
                             var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                             var familiecandies = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId).Candy_;
                             string perfection = pokemon.GetPerfection().ToString("0.00");
                             perfection = perfection.Replace(",", ls == "," ? "." : ",");
+                            string truevalue = Context.Utility.CalculatePokemonValue(pokemon).ToString();
                             string content_part1 = $"{(int)pokemon.PokemonId},{pokemon.PokemonId},{pokemon.Nickname},{pokemon.Cp}/{PokemonInfo.CalculateMaxCP(pokemon)},";
-                            string content_part2 = $",{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},https://jackhumbert.github.io/poke-rater/#{encoded}";
+                            string content_part2 = $",{truevalue},{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},{pokemon.Id},http://poke.isitin.org/#{encoded}";
                             string content = $"{content_part1.Replace(",", $"{ls}")}{perfection}{content_part2.Replace(",", $"{ls}")}";
                             w.WriteLine($"{content}");
 

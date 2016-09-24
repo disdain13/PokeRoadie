@@ -1,4 +1,4 @@
-﻿#region " Imports "
+#region " Imports "
 
 using System;
 using System.IO;
@@ -15,6 +15,7 @@ using PokeRoadie.Api.Logging;
 
 using POGOProtos.Inventory.Item;
 using POGOProtos.Enums;
+using POGOProtos.Data;
 
 using PokeRoadie.Forms;
 
@@ -36,9 +37,11 @@ namespace PokeRoadie
         private ICollection<PokemonId> _pokemonsNotToCatch;
         private ICollection<PokemonId> _pokemonsToPowerUp;
         private IList<LocationData> _destinations;
+        private IList<PokemonData> _pokemonpicker;
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
+        private static string pokemonpicker_file = Path.Combine(configs_path, "PokemonPicker.ini");
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -287,9 +290,20 @@ namespace PokeRoadie
         {
             get
             {
-                //Type of pokemons to evolve
+                //Global destinations
                 _destinations = _destinations ?? LoadDestinations();
                 return _destinations;
+            }
+        }
+
+        [XmlIgnore()]
+        public IList<PokemonData> PokemonPicker
+        {
+            get
+            {
+                //Pokemon picker
+                _pokemonpicker = _pokemonpicker ?? PickPokemons();
+                return _pokemonpicker;
             }
         }
 
@@ -1150,6 +1164,67 @@ namespace PokeRoadie
                     d.Altitude = CurrentAltitude;
                     d.Name = "Default Location";
                     list.Add(d);
+                }
+            }
+            return list;
+        }
+
+        private IList<PokemonData> PickPokemons()
+        {
+            var list = new List<PokemonData>();
+            if (!Directory.Exists(configs_path))
+                Directory.CreateDirectory(configs_path);
+            if (File.Exists(pokemonpicker_file))
+            {
+                using (StreamReader r = new StreamReader(pokemonpicker_file))
+                {
+                    var line = r.ReadLine();
+                    while (line != null)
+                    {
+                        if (line.Contains(":"))
+                        {
+                            var selection = line.Split(':');
+
+
+                            if (selection != null && selection.Length > 0 && selection[0].Length > 0 && selection[1].Length >0)
+                            {
+                                try
+                                {
+                                    string task = selection[0];
+                                    ulong id = Convert.ToUInt64(selection[1]);
+
+                                    if (task == "fav" || task == "unfav" || task == "evolve" || task == "powerup" || task == "transfer")
+                                    {
+                                        var newSelection = new PokemonData();
+                                        newSelection.Id = id;
+                                        //newSelection.Task = task; // need to add Task to PokemonData for this to work
+                                        list.Add(newSelection);
+                                    }
+                                }
+                                catch (FormatException e)
+                                {
+                                    Logger.Write($"Pokemons in \"\\Configs\\SpecificPokemons.ini\" file is invalid. Pokemons will not be used. {e.ToString()}", LogLevel.Error);
+                                    return null;
+                                }
+                            }
+                            else
+                            {
+                                Logger.Write($"Pokemons in \"\\Configs\\SpecificPokemons.ini\" file is invalid. 1 line per pokemon, formatted like - TASK:ID", LogLevel.Error);
+                                return null;
+                            }
+
+                        }
+                        line = r.ReadLine();
+                    }
+                    r.Close();
+                }
+            }
+            else
+            {
+                using (StreamWriter w = File.CreateText(pokemonpicker_file))
+                {
+                    w.Write($"");
+                    w.Close();
                 }
             }
             return list;
