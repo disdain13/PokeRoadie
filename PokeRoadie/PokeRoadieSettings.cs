@@ -41,7 +41,7 @@ namespace PokeRoadie
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
-        private static string specificpokemons_file = Path.Combine(configs_path, "SpecificPokemons.ini");
+        private static string pokemonpicker_file = Path.Combine(configs_path, "PokemonPicker.ini");
         [XmlIgnore()]
         public DateTime? DestinationEndDate { get; set; }
 
@@ -301,7 +301,7 @@ namespace PokeRoadie
         {
             get
             {
-                //Pokemon Selector
+                //Pokemon picker
                 _pokemonpicker = _pokemonpicker ?? PickPokemons();
                 return _pokemonpicker;
             }
@@ -1174,9 +1174,9 @@ namespace PokeRoadie
             var list = new List<PokemonData>();
             if (!Directory.Exists(configs_path))
                 Directory.CreateDirectory(configs_path);
-            if (File.Exists(specificpokemons_file))
+            if (File.Exists(pokemonpicker_file))
             {
-                using (StreamReader r = new StreamReader(specificpokemons_file))
+                using (StreamReader r = new StreamReader(pokemonpicker_file))
                 {
                     var line = r.ReadLine();
                     while (line != null)
@@ -1221,7 +1221,7 @@ namespace PokeRoadie
             }
             else
             {
-                using (StreamWriter w = File.CreateText(specificpokemons_file))
+                using (StreamWriter w = File.CreateText(pokemonpicker_file))
                 {
                     w.Write($"");
                     w.Close();
