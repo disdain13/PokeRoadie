@@ -37,7 +37,7 @@ namespace PokeRoadie
         private ICollection<PokemonId> _pokemonsNotToCatch;
         private ICollection<PokemonId> _pokemonsToPowerUp;
         private IList<LocationData> _destinations;
-        private IList<PokemonData> _pokemontasks;
+        private IList<PokemonData> _pokemonpicker;
         private ICollection<KeyValuePair<ItemId, int>> _itemRecycleFilter;
         private ICollection<MoveData> _pokemonMoveDetails;
         private static string destinationcoords_file = Path.Combine(configs_path, "DestinationCoords.ini");
@@ -297,13 +297,13 @@ namespace PokeRoadie
         }
 
         [XmlIgnore()]
-        public IList<PokemonData> PokemonTasks
+        public IList<PokemonData> PokemonPicker
         {
             get
             {
-                //Global destinations
-                _pokemontasks = _pokemontasks ?? SpecificPokemons();
-                return _pokemontasks;
+                //Pokemon Selector
+                _pokemonpicker = _pokemonpicker ?? PickPokemons();
+                return _pokemonpicker;
             }
         }
 
@@ -1169,7 +1169,7 @@ namespace PokeRoadie
             return list;
         }
 
-        private IList<PokemonData> SpecificPokemons()
+        private IList<PokemonData> PickPokemons()
         {
             var list = new List<PokemonData>();
             if (!Directory.Exists(configs_path))
@@ -1183,27 +1183,22 @@ namespace PokeRoadie
                     {
                         if (line.Contains(":"))
                         {
-                            var pokemon = line.Split(':');
+                            var selection = line.Split(':');
 
-                            if (pokemon != null && pokemon.Length > 3 && pokemon[0].Length > 0 && pokemon[1].Length > 0 && pokemon[2].Length > 0 && pokemon[3].Length > 0)
+
+                            if (selection != null && selection.Length > 0 && selection[0].Length > 0 && selection[1].Length >0)
                             {
                                 try
                                 {
-                                    string task = pokemon[0];
-                                    string name = pokemon[1];
-                                    int cp = Convert.ToInt32(pokemon[2]);
-                                    double iv = Convert.ToDouble(pokemon[3]);
-                                    switch (task) {
-                                        case "fav":
-                                            break;
-                                        case "unfav":
-                                            break;
-                                        case "evolve":
-                                            break;
-                                        case "powerup":
-                                            break;
-                                        case "transfer":
-                                            break;
+                                    string task = selection[0];
+                                    ulong id = Convert.ToUInt64(selection[1]);
+
+                                    if (task == "fav" || task == "unfav" || task == "evolve" || task == "powerup" || task == "transfer")
+                                    {
+                                        var newSelection = new PokemonData();
+                                        newSelection.Id = id;
+                                        //newSelection.Task = task; // need to add Task to PokemonData for this to work
+                                        list.Add(newSelection);
                                     }
                                 }
                                 catch (FormatException e)
@@ -1214,7 +1209,7 @@ namespace PokeRoadie
                             }
                             else
                             {
-                                Logger.Write($"Pokemons in \"\\Configs\\SpecificPokemons.ini\" file is invalid. 1 line per pokemon, formatted like - TASK:NAME:CP:IV", LogLevel.Error);
+                                Logger.Write($"Pokemons in \"\\Configs\\SpecificPokemons.ini\" file is invalid. 1 line per pokemon, formatted like - TASK:ID", LogLevel.Error);
                                 return null;
                             }
 
@@ -1222,6 +1217,14 @@ namespace PokeRoadie
                         line = r.ReadLine();
                     }
                     r.Close();
+                }
+            }
+            else
+            {
+                using (StreamWriter w = File.CreateText(specificpokemons_file))
+                {
+                    w.Write($"");
+                    w.Close();
                 }
             }
             return list;
