@@ -221,6 +221,20 @@ namespace PokeRoadie
                 Logger.Write($"Team: {_playerProfile.PlayerData.Team}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Level: {currentLevelInfos}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Pokemon: {allPokemon.Count}", LogLevel.None, ConsoleColor.White);
+                Logger.Write("====== Buddy Info ======", LogLevel.None, ConsoleColor.Yellow);
+                var buddyPokemon = allPokemon.Where(x => x.Id == _playerProfile.PlayerData.BuddyPokemon.Id).FirstOrDefault();
+                if (buddyPokemon == null)
+                {
+                    Logger.Write($"Buddy: No Buddy Set!", LogLevel.None, ConsoleColor.White);
+                }
+                else
+                {
+                    var buddyTotalKm = _playerProfile.PlayerData.BuddyPokemon.LastKmAwarded - _playerProfile.PlayerData.BuddyPokemon.StartKmWalked;
+                    Logger.Write($"Buddy: {buddyPokemon.PokemonId}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"Total Candy Earned: {buddyPokemon.BuddyCandyAwarded}", LogLevel.None, ConsoleColor.White);
+                    Logger.Write($"Total Distance Walked: {buddyTotalKm:0.##} km", LogLevel.None, ConsoleColor.White);
+                }
+
                 Logger.Write("====== Deployment Summary ======", LogLevel.None, ConsoleColor.Yellow);
                 Logger.Write($"Deployed: {deployedPokemon.Count}", LogLevel.None, ConsoleColor.White);
                 Logger.Write($"Min Needed: {Context.Settings.MinGymsBeforeBonusPickup}", LogLevel.None, ConsoleColor.White);
