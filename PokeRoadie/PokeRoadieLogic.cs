@@ -2625,8 +2625,8 @@ namespace PokeRoadie
                     break;
                 }
 
-                //Check if we have enough candies
-                if (familyCandy.Candy_ < (pokemon.GetLevel() / 10))
+                //Check if we have enough candies (tweaked to Ceiling)
+                if (familyCandy.Candy_ < Math.Ceiling(pokemon.GetLevel() / 10))
                 {
                     Logger.Write($"Not enough candies to continue...", LogLevel.Info);
                     pokemon = null;
@@ -2685,6 +2685,7 @@ namespace PokeRoadie
                             Logger.Write($"(POWER ERROR) Unable to powerup {Context.Utility.GetMinStats(pokemon)} - {upgradeResult.Result.ToString()}", LogLevel.None, ConsoleColor.Red);
                             break;
                     }
+                    pokemon = null; // Stop repeated failed attempts
                 }
 
                 await RandomDelay(Context.Settings.PowerUpMinDelay, Context.Settings.PowerUpMaxDelay);
