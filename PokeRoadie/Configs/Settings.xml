@@ -21,6 +21,8 @@
   <SpeedCurveDistance>40</SpeedCurveDistance>
   <UseGPXPathing>false</UseGPXPathing>
   <GPXFile>GPXFILE.gpx</GPXFile>
+  <CurrentTrackPoint>0</CurrentTrackPoint>
+  <CurrentTrackSegment>0</CurrentTrackSegment>
   <EnableWandering>false</EnableWandering>
   <EvolvePokemon>false</EvolvePokemon>
   <EvolvePriorityType>V</EvolvePriorityType>
@@ -135,5 +137,6 @@
   <PokeballRefillDelayMinutes>15</PokeballRefillDelayMinutes>
   <PokemonProcessDelayMinutes>5</PokemonProcessDelayMinutes>
   <PrioritizeGyms>false</PrioritizeGyms>
+
 
 </PokeRoadieSettings>

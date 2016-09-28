@@ -912,14 +912,21 @@ namespace PokeRoadie
                     var track = tracks.ElementAt(curTrk);
                     var trackSegments = track.Segments;
                     var maxTrkSeg = trackSegments.Count - 1;
+                    var CurrTrSeg = Context.Settings.CurrentTrackSegment;
+                    var CurrTrPt = Context.Settings.CurrentTrackPoint;
+                    curTrkSeg = CurrTrSeg;
+                    if (curTrkSeg > maxTrkSeg)
+                        curTrkSeg = 0;
+                    CurrTrSeg = curTrkSeg;
                     while (curTrkSeg <= maxTrkSeg)
                     {
                         if (!isRunning) break;
-                        var trackPoints = track.Segments.ElementAt(0).TrackPoints;
+                        var trackPoints = track.Segments.ElementAt(curTrkSeg).TrackPoints;
                         var maxTrkPt = trackPoints.Count - 1;
-                        var newIndex = Context.Settings.DestinationIndex;
-                        if (newIndex > maxTrkPt)
-                            newIndex = 0;
+                        curTrkPt = CurrTrPt;
+                        if (curTrkPt > maxTrkPt)
+                            curTrkPt = 0;
+                        CurrTrPt = curTrkPt;
                         while (curTrkPt <= maxTrkPt)
                         {
                             //check running flag
@@ -927,14 +934,6 @@ namespace PokeRoadie
                             //check session
                             await Context.Session.Check();
                             if (NeedsNewLogin) return;
-                            if (newIndex > curTrkPt)
-                            {
-                                if (curTrkPt >= maxTrkPt)
-                                    curTrkPt = 0;
-                                else
-                                    curTrkPt++;
-                                continue;
-                            }
                             //get waypoint and distance check
                             var nextPoint = trackPoints.ElementAt(curTrkPt);
                             var distance_check = Navigation.CalculateDistanceInMeters(Context.Client.CurrentLatitude,
@@ -949,14 +948,14 @@ namespace PokeRoadie
                                 curTrkPt = 0;
                             else
                                 curTrkPt++;
-                            newIndex = curTrkPt;
+                            CurrTrPt = curTrkPt;
                             //set new index and default location
-                            Context.Settings.DestinationIndex = newIndex;
+                            Context.Settings.CurrentTrackPoint = CurrTrPt;
+                            Context.Settings.CurrentTrackSegment = CurrTrSeg;
                             Context.Settings.WaypointLatitude = Convert.ToDouble(nextPoint.Lat);
                             Context.Settings.WaypointLongitude = Convert.ToDouble(nextPoint.Lon);
                             Context.Session.Save();
                             Context.Settings.Save();
-                            //raise event
                             gymTries.Clear();
                             PokeStopVisited.Clear();
                             locationAttemptCount = 0;
@@ -965,6 +964,16 @@ namespace PokeRoadie
                             curTrkSeg = 0;
                         else
                             curTrkSeg++;
+                        CurrTrSeg = curTrkSeg;
+                        CurrTrPt = 0;
+                        //set new index
+                        Context.Settings.CurrentTrackPoint = 0;
+                        Context.Settings.CurrentTrackSegment = CurrTrSeg;
+                        Context.Session.Save();
+                        Context.Settings.Save();
+                        gymTries.Clear();
+                        PokeStopVisited.Clear();
+                        locationAttemptCount = 0;
                     } //end trksegs
                     if (curTrk >= maxTrkSeg)
                         curTrk = 0;

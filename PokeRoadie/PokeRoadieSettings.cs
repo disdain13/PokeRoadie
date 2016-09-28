@@ -79,6 +79,9 @@ namespace PokeRoadie
         public virtual int SpeedCurveDistance { get; set; }
         public virtual bool UseGPXPathing { get; set; }
         public virtual string GPXFile { get; set; }
+        public virtual int CurrentTrackPoint { get; set; }
+        public virtual int CurrentTrackSegment { get; set; }
+
         public virtual bool EnableWandering { get; set; }
 
         //evolution
@@ -494,6 +497,9 @@ namespace PokeRoadie
             this.TransferPokemon = UserSettings.Default.TransferPokemon;
             this.KeepDuplicateAmount = UserSettings.Default.KeepDuplicateAmount;
             this.UseGPXPathing = UserSettings.Default.UseGPXPathing;
+            this.CurrentTrackPoint = UserSettings.Default.CurrentTrackPoint;
+            this.CurrentTrackSegment = UserSettings.Default.CurrentTrackSegment;
+
             this.UseLuckyEggs = UserSettings.Default.UseLuckyEggs;
             this.UsePokemonToNotCatchList = UserSettings.Default.UsePokemonToNotCatchList;
             this.MinSpeed = UserSettings.Default.MinSpeed;
@@ -712,6 +718,8 @@ namespace PokeRoadie
                     //this.FlyingEnabled = obj.FlyingEnabled;
                     this.LongDistanceSpeed = obj.LongDistanceSpeed;
                     this.GPXFile = obj.GPXFile;
+                    this.CurrentTrackPoint = obj.CurrentTrackPoint;
+                    this.CurrentTrackSegment = obj.CurrentTrackSegment;
                     this.KeepAboveCP = obj.KeepAboveCP;
                     this.KeepAboveIV = obj.KeepAboveIV;
                     this.KeepAboveLV = obj.KeepAboveLV;
