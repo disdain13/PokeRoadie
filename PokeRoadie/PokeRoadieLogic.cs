@@ -230,7 +230,8 @@ namespace PokeRoadie
                 }
                 else
                 {
-                    Logger.Write($"Time to Bonus: {new TimeSpan(_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs - DateTime.UtcNow.ToUnixTime())}", LogLevel.None, ConsoleColor.White);
+                    TimeSpan timeToBonus = TimeSpan.FromMilliseconds(_playerProfile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs - DateTime.UtcNow.ToUnixTime());
+                    Logger.Write($"Time to Bonus: {timeToBonus.ToString(@"hh\:mm\:ss")}", LogLevel.None, ConsoleColor.White);
                 }
                 if (Client.Proxy != null)
                 {
@@ -2614,7 +2615,8 @@ namespace PokeRoadie
                 //    break;
                 //}
 
-                if (pokemon == null) pokemon = finalList[i];
+                //The if statement is making the loop attempt to power the first pokemon in the list only.
+                /*if (pokemon == null)*/ pokemon = finalList[i];
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
