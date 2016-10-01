@@ -2615,7 +2615,8 @@ namespace PokeRoadie
                 //    break;
                 //}
 
-                if (pokemon == null) pokemon = finalList[i];
+                //The if statement is making the loop attempt to power the first pokemon in the list only.
+                /*if (pokemon == null)*/ pokemon = finalList[i];
                 var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                 var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
 
